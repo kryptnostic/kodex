@@ -1,9 +1,9 @@
-package com.kryptnostic.indexing;
+package com.kryptnostic.api.v1.indexing;
 
 import java.util.Set;
 
-import com.kryptnostic.indexing.analysis.Analyzer;
-import com.kryptnostic.indexing.metadata.Metadatum;
+import com.kryptnostic.api.v1.indexing.analysis.Analyzer;
+import com.kryptnostic.api.v1.indexing.metadata.Metadatum;
 
 public interface IndexingService {
 	Set<Metadatum> index( String documentId , String document );

@@ -1,6 +1,6 @@
-package com.kryptnostic.search;
+package com.kryptnostic.api.v1.search;
 
-import com.kryptnostic.multivariate.gf2.SimplePolynomialFunction;
+import cern.colt.bitvector.BitVector;
 
 
 /**
@@ -8,5 +8,5 @@ import com.kryptnostic.multivariate.gf2.SimplePolynomialFunction;
  * @author Matthew Tamayo-Rios <matthew@kryptnostic.com>
  */
 public interface DocumentSearcherFactory {
-	SimplePolynomialFunction createSearcher( String token );
+	BitVector createSearchToken( String token );
 }

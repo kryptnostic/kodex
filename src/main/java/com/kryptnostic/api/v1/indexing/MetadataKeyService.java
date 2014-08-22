@@ -1,9 +1,9 @@
-package com.kryptnostic.indexing;
+package com.kryptnostic.api.v1.indexing;
 
 import java.util.Set;
 
-import com.kryptnostic.indexing.metadata.Metadata;
-import com.kryptnostic.indexing.metadata.Metadatum;
+import com.kryptnostic.api.v1.indexing.metadata.Metadata;
+import com.kryptnostic.api.v1.indexing.metadata.Metadatum;
 
 /**
  * MetadataKeyService handles mapping tokens and nonces to lookup keys.

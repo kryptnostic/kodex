@@ -104,6 +104,7 @@ dependencies {
         compile( project(":fhe-core:kryptnostic-api") )
         compile( project(":fhe-core:kryptnostic-core") )
     } else {
+        logger.quiet("$project.name is using jar dependencies.")
         compile "com.kryptnostic:kryptnostic-api:${fhe_core_version}"
     	compile "com.kryptnostic:kryptnostic-core:${fhe_core_version}"
     }
