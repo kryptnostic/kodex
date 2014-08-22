@@ -1,4 +1,4 @@
-package com.kryptnostic.api.v1.serialization;
+package com.kryptnostic.api.v1.serialization.jackson;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -15,12 +15,11 @@ import cern.colt.bitvector.BitVector;
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.google.common.collect.Lists;
 import com.kryptnostic.bitwise.BitVectors;
 import com.kryptnostic.linear.BitUtils;
 
-public class SerializationTests {
+public class BitVectorTests {
 
     private static final int LEN = 256;
     private final String LIST_SEPARATOR = ",";
@@ -28,11 +27,7 @@ public class SerializationTests {
 
     @BeforeClass
     public static void init() {
-        mapper = new ObjectMapper();
-        SimpleModule module = new SimpleModule();
-        module.addDeserializer(BitVector.class, new BitVectorDeserializer());
-        module.addSerializer(BitVector.class, new BitVectorSerializer());
-        mapper.registerModule(module);
+        mapper = new KodexObjectMapperFactory().getObjectMapper(); 
     }
 
     @Test

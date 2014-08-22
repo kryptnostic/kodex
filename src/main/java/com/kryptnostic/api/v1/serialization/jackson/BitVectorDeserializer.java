@@ -1,4 +1,4 @@
-package com.kryptnostic.api.v1.serialization;
+package com.kryptnostic.api.v1.serialization.jackson;
 
 import java.io.IOException;
 
