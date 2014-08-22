@@ -70,5 +70,4 @@ public class SearchRequest {
         return sortScore;
     }
 
-
 }
