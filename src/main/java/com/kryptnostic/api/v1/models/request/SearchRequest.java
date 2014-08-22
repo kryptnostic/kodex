@@ -44,6 +44,10 @@ public class SearchRequest {
         this.sortDate = sortDate.or(SortDirection.DESC);
         this.sortScore = sortDate.or(SortDirection.DESC);
     }
+    
+    public static SearchRequest searchToken(@JsonProperty(SEARCH_FUNCTION_PROPERTY) String searchToken) {
+    	return new SearchRequest(searchToken, Optional.absent(), Optional.absent(), Optional.absent(), Optional.absent());
+    }
 
     @JsonProperty(SEARCH_FUNCTION_PROPERTY)
     public BitVector getSearchToken() {
