@@ -13,17 +13,17 @@ public interface KryptnosticServicesFactory {
     /**
      * @return KryptnosticStorage
      */
-    KryptnosticStorage createStorageService();
+    KryptnosticStorage  createStorageService();
     /**
      * @return KryptnosticSearch
      */
-    KryptnosticSearch createSearchService();
+    KryptnosticSearch   createSearchService();
     /**
      * @return MetadataKeyService
      */
-    MetadataKeyService createMetadataKeyService();
+    MetadataKeyService  createMetadataKeyService();
     /**
      * @return IndexingService
      */
-    IndexingService createIndexingService();
+    IndexingService     createIndexingService();
 }
