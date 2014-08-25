@@ -10,12 +10,10 @@ public interface KryptnosticSearch {
     String SEARCH = "/search";
 
     /**
-     * Upload a document
+     * Search on stored documents.
      * 
-     * @param document
-     * @return The ID of the newly saved document
+     * @return SearchResult
      */
-
     @POST(SEARCH)
     SearchResult search(@Body SearchRequest request );
 }
