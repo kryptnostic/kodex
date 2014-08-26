@@ -5,7 +5,6 @@ import cern.colt.bitvector.BitVector;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Optional;
-import com.kryptnostic.bitwise.BitVectors;
 
 /**
  * Search request for submittin
@@ -32,12 +31,12 @@ public class SearchRequest {
     }
 
     @JsonCreator
-    public SearchRequest(@JsonProperty(SEARCH_FUNCTION_PROPERTY) String searchToken,
+    public SearchRequest(@JsonProperty(SEARCH_FUNCTION_PROPERTY) BitVector searchToken,
             @JsonProperty(MAX_RESULTS_PROPERTY) Optional<Integer> maxResults,
             @JsonProperty(OFFSET_PROPERTY) Optional<Integer> offset,
             @JsonProperty(SORT_DATE_PROPERTY) Optional<SortDirection> sortDate,
             @JsonProperty(SORT_SCORE_PROPERTY) Optional<SortDirection> sortScore) {
-        this.searchToken = BitVectors.unmarshalBitvector(searchToken);
+        this.searchToken = searchToken;
         // 0 = unlimited
         this.maxResults = maxResults.or(DEFAULT_MAX_RESULTS);
         this.offset = offset.or(0);
