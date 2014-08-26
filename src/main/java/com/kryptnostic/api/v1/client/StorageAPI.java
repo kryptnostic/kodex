@@ -12,7 +12,7 @@ import com.kryptnostic.api.v1.models.request.MetadataRequest;
 import com.kryptnostic.api.v1.models.response.BasicResponse;
 import com.kryptnostic.api.v1.models.response.DocumentResponse;
 
-public interface KryptnosticStorage {
+public interface StorageAPI {
     String DOCUMENT = "/document";
     String METADATA = "/metadata";
     String ID = "id";

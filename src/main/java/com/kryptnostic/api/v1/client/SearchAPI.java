@@ -6,7 +6,7 @@ import retrofit.http.POST;
 import com.kryptnostic.api.v1.models.SearchResult;
 import com.kryptnostic.api.v1.models.request.SearchRequest;
 
-public interface KryptnosticSearch {
+public interface SearchAPI {
     String SEARCH = "/search";
 
     /**
