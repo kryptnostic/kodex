@@ -9,7 +9,7 @@ import com.google.common.base.Optional;
 /**
  * Search request for submittin
  * 
- * @author Matthew Tamayo-Rios <matthew@kryptnostic.com>
+ * @author Matthew Tamayo-Rios &lt;matthew@kryptnostic.com&gt;
  */
 public class SearchRequest {
     private static final String SEARCH_FUNCTION_PROPERTY = "query";
