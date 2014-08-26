@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/kryptnostic/kodex.svg?branch=develop)](https://travis-ci.org/kryptnostic/kodex)
 kodex
 =====
 
