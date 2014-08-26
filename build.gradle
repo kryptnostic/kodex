@@ -26,7 +26,7 @@ apply plugin: "eclipse"
 apply plugin: "idea"
 apply from: "publish.gradle"
 
-ext.sourceCompatibility=JavaVersion.VERSION_1_8
+sourceCompatibility=JavaVersion.VERSION_1_6
 
 repositories {
   mavenCentral()  
@@ -131,7 +131,11 @@ artifacts {
 eclipse {
     ext.downloadSources = true
     ext.downloadJavadoc = true
-    ext.sourceCompatibility=JavaVersion.VERSION_1_8
+    ext.sourceCompatibility=JavaVersion.VERSION_1_6
+    classpath {
+         containers.remove('org.eclipse.jdt.launching.JRE_CONTAINER')
+         containers 'org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6'
+    }
 }
 
 task wrapper(type: Wrapper) {

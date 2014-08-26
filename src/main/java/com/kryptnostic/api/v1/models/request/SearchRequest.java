@@ -45,8 +45,8 @@ public class SearchRequest {
     }
 
     public static SearchRequest searchToken(BitVector searchToken) {
-        return new SearchRequest(searchToken, Optional.absent(), Optional.absent(), Optional.absent(),
-                Optional.absent());
+        return new SearchRequest(searchToken, Optional.<Integer> absent(), Optional.<Integer> absent(),
+                Optional.<SortDirection> absent(), Optional.<SortDirection> absent());
     }
 
     @JsonProperty(SEARCH_FUNCTION_PROPERTY)

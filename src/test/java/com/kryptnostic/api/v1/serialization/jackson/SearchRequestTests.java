@@ -32,8 +32,7 @@ public class SearchRequestTests {
     @Test
     public void serializeTest() throws JsonGenerationException, JsonMappingException, IOException {
         BitVector searchToken = BitUtils.randomVector(LEN);
-        SearchRequest req = new SearchRequest(searchToken, Optional.absent(), Optional.absent(), Optional.absent(),
-                Optional.absent());
+        SearchRequest req = SearchRequest.searchToken(searchToken);
 
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         mapper.writeValue(out, req);
