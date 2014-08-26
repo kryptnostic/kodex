@@ -59,16 +59,16 @@ if ( (branch.equals("develop") || branch.equals("master") ) && ( System.getenv("
                         resolveStrategy = Closure.DELEGATE_FIRST
                         name 'fhe-core'
                         description 'Kryptnostic test libraries'
-                        url 'https://www.github.com/kryptnostic/fhe-core'
+                        url 'https://www.github.com/kryptnostic/kodex'
                         scm {
-                            url 'https://www.github.com/kryptnostic/fhe-core'
-                            connection 'https://www.github.com/kryptnostic/fhe-core'
-                            developerConnection 'https://www.github.com/kryptnostic/fhe-core'
+                            url 'https://www.github.com/kryptnostic/kodex'
+                            connection 'https://www.github.com/kryptnostic/kodex'
+                            developerConnection 'https://www.github.com/kryptnostic/kodex'
                         }
                         licenses {
                             license {
-                                name 'Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License'
-                                url 'https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode'
+                                name 'The Apache License, Version 2.0'
+                                url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
                                 distribution 'repo'
                             }
                         }
