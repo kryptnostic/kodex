@@ -3,3 +3,5 @@ kodex
 =====
 
 API and Models for talking with Kryptnostic backend services
+
+For questions or feedback please contact [info@kryptnostic.com](mailto:info@kryptnostic.com)
