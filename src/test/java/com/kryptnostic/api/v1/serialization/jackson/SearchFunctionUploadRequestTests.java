@@ -12,10 +12,11 @@ import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.kryptnostic.api.v1.models.request.SearchFunctionUploadRequest;
-import com.kryptnostic.api.v1.models.request.SearchRequest;
+import com.kryptnostic.kodex.v1.serialization.jackson.KodexObjectMapperFactory;
 import com.kryptnostic.multivariate.PolynomialFunctions;
 import com.kryptnostic.multivariate.gf2.SimplePolynomialFunction;
+import com.kryptnostic.search.v1.models.request.SearchFunctionUploadRequest;
+import com.kryptnostic.search.v1.models.request.SearchRequest;
 
 public class SearchFunctionUploadRequestTests {
     private static final int LEN = 256;
