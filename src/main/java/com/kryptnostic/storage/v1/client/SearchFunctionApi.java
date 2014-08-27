@@ -1,7 +1,6 @@
 package com.kryptnostic.storage.v1.client;
 
-import org.springframework.web.bind.annotation.RequestBody;
-
+import retrofit.http.Body;
 import retrofit.http.GET;
 import retrofit.http.POST;
 
@@ -13,7 +12,7 @@ public interface SearchFunctionApi {
     String SEARCH_FUNCTION = "/searchFunction";
     
     @POST(SEARCH_FUNCTION)
-    BasicResponse<Boolean> setFunction(@RequestBody SimplePolynomialFunction function);
+    BasicResponse<Boolean> setFunction(@Body SimplePolynomialFunction function);
     
     @GET(SEARCH_FUNCTION)
     BasicResponse<SimplePolynomialFunction> getFunction() throws ResourceNotFoundException;
