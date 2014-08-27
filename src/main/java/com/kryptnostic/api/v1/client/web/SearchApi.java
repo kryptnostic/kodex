@@ -1,4 +1,4 @@
-package com.kryptnostic.api.v1.client;
+package com.kryptnostic.api.v1.client.web;
 
 import java.util.List;
 
@@ -8,7 +8,7 @@ import retrofit.http.POST;
 import com.kryptnostic.api.v1.models.SearchResult;
 import com.kryptnostic.api.v1.models.request.SearchRequest;
 
-public interface SearchAPI {
+public interface SearchApi {
     String SEARCH = "/search";
 
     /**

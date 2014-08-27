@@ -1,4 +1,4 @@
-package com.kryptnostic.api.v1.client;
+package com.kryptnostic.api.v1.client.web;
 
 import retrofit.http.Body;
 import retrofit.http.GET;
@@ -8,13 +8,11 @@ import retrofit.http.Path;
 import com.kryptnostic.api.v1.exceptions.types.BadRequestException;
 import com.kryptnostic.api.v1.exceptions.types.ResourceNotFoundException;
 import com.kryptnostic.api.v1.models.request.DocumentRequest;
-import com.kryptnostic.api.v1.models.request.MetadataRequest;
 import com.kryptnostic.api.v1.models.response.BasicResponse;
 import com.kryptnostic.api.v1.models.response.DocumentResponse;
 
-public interface StorageAPI {
+public interface DocumentApi {
     String DOCUMENT = "/document";
-    String METADATA = "/metadata";
     String ID = "id";
 
     /**
@@ -44,13 +42,4 @@ public interface StorageAPI {
      */
     @GET(DOCUMENT + "/{" + ID + "}")
     DocumentResponse getDocument(@Path(ID) String id) throws ResourceNotFoundException;
-
-    /**
-     * Upload damn metaz
-     * 
-     * @param metadata
-     * @return BasicResponse with empty body
-     */
-    @POST(METADATA)
-    BasicResponse<String> uploadMetadata(@Body MetadataRequest metadata) throws BadRequestException;
 }
