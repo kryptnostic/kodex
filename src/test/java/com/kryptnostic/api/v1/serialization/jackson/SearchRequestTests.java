@@ -5,7 +5,6 @@ import java.io.IOException;
 
 import org.junit.Assert;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import cern.colt.bitvector.BitVector;
@@ -14,7 +13,6 @@ import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.base.Optional;
 import com.kryptnostic.bitwise.BitVectors;
 import com.kryptnostic.kodex.v1.serialization.jackson.KodexObjectMapperFactory;
 import com.kryptnostic.linear.BitUtils;
@@ -38,8 +36,10 @@ public class SearchRequestTests {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         mapper.writeValue(out, req);
 
-        String str = "{\"query\":\"" + BitVectors.marshalBitvector(searchToken)
-                + "\",\"maxResults\":30,\"offset\":0,\"sortDate\":\"DESC\",\"sortScore\":\"DESC\"}";
+        String str = "{\"query\":[\"" + BitVectors.marshalBitvector(searchToken)
+                + "\"],\"maxResults\":30,\"offset\":0,\"sortDate\":\"DESC\",\"sortScore\":\"DESC\"}";
+
+        System.out.println(str);
 
         Assert.assertEquals(str, out.toString());
     }
@@ -48,8 +48,8 @@ public class SearchRequestTests {
     public void deserializeTest() throws JsonParseException, JsonMappingException, IOException {
         BitVector searchToken = BitUtils.randomVector(LEN);
         SearchRequest req = SearchRequest.searchToken(searchToken);
-        String str = "{\"query\":\"" + BitVectors.marshalBitvector(searchToken)
-                + "\",\"maxResults\":30,\"offset\":0,\"sortDate\":\"DESC\",\"sortScore\":\"DESC\"}";
+        String str = "{\"query\":[\"" + BitVectors.marshalBitvector(searchToken)
+                + "\"],\"maxResults\":30,\"offset\":0,\"sortDate\":\"DESC\",\"sortScore\":\"DESC\"}";
 
         SearchRequest out = mapper.readValue(str, SearchRequest.class);
 

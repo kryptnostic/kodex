@@ -1,5 +1,8 @@
 package com.kryptnostic.search.v1.models.request;
 
+import java.util.Arrays;
+import java.util.Collection;
+
 import cern.colt.bitvector.BitVector;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -20,7 +23,7 @@ public class SearchRequest {
 
     public static final int DEFAULT_MAX_RESULTS = 30;
 
-    private final BitVector searchToken;
+    private final Collection<BitVector> searchToken;
     private final int maxResults;
     private final int offset;
     private final SortDirection sortDate;
@@ -31,7 +34,7 @@ public class SearchRequest {
     }
 
     @JsonCreator
-    public SearchRequest(@JsonProperty(SEARCH_FUNCTION_PROPERTY) BitVector searchToken,
+    public SearchRequest(@JsonProperty(SEARCH_FUNCTION_PROPERTY) Collection<BitVector> searchToken,
             @JsonProperty(MAX_RESULTS_PROPERTY) Optional<Integer> maxResults,
             @JsonProperty(OFFSET_PROPERTY) Optional<Integer> offset,
             @JsonProperty(SORT_DATE_PROPERTY) Optional<SortDirection> sortDate,
@@ -45,12 +48,16 @@ public class SearchRequest {
     }
 
     public static SearchRequest searchToken(BitVector searchToken) {
-        return new SearchRequest(searchToken, Optional.<Integer> absent(), Optional.<Integer> absent(),
+        return SearchRequest.searchToken(Arrays.asList(searchToken));
+    }
+
+    public static SearchRequest searchToken(Collection<BitVector> searchTokens) {
+        return new SearchRequest(searchTokens, Optional.<Integer> absent(), Optional.<Integer> absent(),
                 Optional.<SortDirection> absent(), Optional.<SortDirection> absent());
     }
 
     @JsonProperty(SEARCH_FUNCTION_PROPERTY)
-    public BitVector getSearchToken() {
+    public Collection<BitVector> getSearchToken() {
         return searchToken;
     }
 

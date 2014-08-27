@@ -1,7 +1,5 @@
 package com.kryptnostic.search.v1.client;
 
-import java.util.Collection;
-
 import retrofit.http.Body;
 import retrofit.http.POST;
 
@@ -17,5 +15,5 @@ public interface SearchApi {
      * @return SearchResult
      */
     @POST(SEARCH)
-    SearchResultResponse search(@Body Collection<SearchRequest> requests);
+    SearchResultResponse search(@Body SearchRequest requests);
 }
