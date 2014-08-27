@@ -14,7 +14,6 @@ public interface SearchAPI {
     /**
      * Search on stored documents.
      * 
-     * @param SearchRequest request.
      * @return SearchResult
      */
     @POST(SEARCH)
@@ -22,8 +21,7 @@ public interface SearchAPI {
 
     /**
      * Search on stored documents.
-     * 
-     * @param List<SearchRequest> requests.
+     *   
      * @return SearchResult
      */
     @POST(SEARCH)

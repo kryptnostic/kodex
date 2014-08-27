@@ -5,8 +5,8 @@ import java.util.Map;
 
 public interface Analyzer {
     /**
-     * @return Map<String,List<Integer>>, a Map of tokens to a List of start indices for that token in the source
-     *         String.
+     * @param source
+     * @return Map of tokens to List of index in document
      */
     Map<String, List<Integer>> analyze(String source);
 }
