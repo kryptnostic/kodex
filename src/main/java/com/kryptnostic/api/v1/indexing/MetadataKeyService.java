@@ -7,7 +7,7 @@ import com.kryptnostic.api.v1.indexing.metadata.Metadatum;
 
 /**
  * MetadataKeyService handles mapping tokens and nonces to lookup keys.
- * @author Matthew Tamayo-Rios <matthew@kryptnostic.com>
+ * @author Matthew Tamayo-Rios &lt;matthew@kryptnostic.com&gt;
  *
  */
 public interface MetadataKeyService {
