@@ -15,9 +15,10 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Optional;
-import com.kryptnostic.api.v1.models.request.SearchRequest;
 import com.kryptnostic.bitwise.BitVectors;
+import com.kryptnostic.kodex.v1.serialization.jackson.KodexObjectMapperFactory;
 import com.kryptnostic.linear.BitUtils;
+import com.kryptnostic.search.v1.models.request.SearchRequest;
 
 public class SearchRequestTests {
 
