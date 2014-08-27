@@ -6,6 +6,7 @@ import com.fasterxml.jackson.core.Version;
 import com.fasterxml.jackson.databind.module.SimpleDeserializers;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.module.SimpleSerializers;
+import com.kryptnostic.multivariate.gf2.SimplePolynomialFunction;
 
 @SuppressWarnings("serial")
 public class KodexModule extends SimpleModule {
@@ -26,9 +27,11 @@ public class KodexModule extends SimpleModule {
 
         SimpleSerializers serializers = new SimpleSerializers();
         serializers.addSerializer(BitVector.class, new BitVectorSerializer());
+        serializers.addSerializer(SimplePolynomialFunction.class, new SimplePolynomialFunctionSerializer());
 
         SimpleDeserializers deserializers = new SimpleDeserializers();
         deserializers.addDeserializer(BitVector.class, new BitVectorDeserializer());
+        deserializers.addDeserializer(SimplePolynomialFunction.class, new SimplePolynomialFunctionDeserializer());
 
         context.addSerializers(serializers);
         context.addDeserializers(deserializers);
