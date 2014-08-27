@@ -40,15 +40,14 @@ public class SearchFunctionUploadRequestTests {
     }
 
     @Test
-    @Ignore
     public void deserializeTest() throws JsonParseException, JsonMappingException, IOException {
         SimplePolynomialFunction function = PolynomialFunctions.randomFunction(LEN, LEN);
         SearchFunctionUploadRequest req = new SearchFunctionUploadRequest(function);
 
         String str = "{\"function\":\"" + PolynomialFunctions.marshalSimplePolynomialFunction(function) + "\"}";
 
-        SearchRequest out = mapper.readValue(str, SearchRequest.class);
+        SearchFunctionUploadRequest out = mapper.readValue(str, SearchFunctionUploadRequest.class);
 
-        Assert.assertEquals(req, out);
+        Assert.assertEquals(req.getFunction(), out.getFunction());
     }
 }

@@ -44,16 +44,18 @@ public class SearchRequestTests {
     }
 
     @Test
-    @Ignore
     public void deserializeTest() throws JsonParseException, JsonMappingException, IOException {
         BitVector searchToken = BitUtils.randomVector(LEN);
-        SearchRequest req = new SearchRequest(searchToken, Optional.of(new Integer(30)), Optional.of(new Integer(0)),
-                Optional.of(SearchRequest.SortDirection.DESC), Optional.of(SearchRequest.SortDirection.DESC));
+        SearchRequest req = SearchRequest.searchToken(searchToken);
         String str = "{\"query\":\"" + BitVectors.marshalBitvector(searchToken)
                 + "\",\"maxResults\":30,\"offset\":0,\"sortDate\":\"DESC\",\"sortScore\":\"DESC\"}";
 
         SearchRequest out = mapper.readValue(str, SearchRequest.class);
 
-        Assert.assertEquals(req, out);
+        Assert.assertEquals(req.getSearchToken(), out.getSearchToken());
+        Assert.assertEquals(req.getMaxResults(), out.getMaxResults());
+        Assert.assertEquals(req.getOffset(), out.getOffset());
+        Assert.assertEquals(req.getSortDate(), out.getSortDate());
+        Assert.assertEquals(req.getSortScore(), out.getSortDate());
     }
 }
