@@ -40,7 +40,7 @@ public interface StorageAPI {
      * Retrieve a document's text
      * 
      * @param id
-     * @return
+     * @return DocumentResponse containing document
      */
     @GET(DOCUMENT + "/{" + ID + "}")
     DocumentResponse getDocument(@Path(ID) String id) throws ResourceNotFoundException;
@@ -49,7 +49,7 @@ public interface StorageAPI {
      * Upload damn metaz
      * 
      * @param metadata
-     * @return
+     * @return BasicResponse with empty body
      */
     @POST(METADATA)
     BasicResponse<String> uploadMetadata(@Body MetadataRequest metadata) throws BadRequestException;
