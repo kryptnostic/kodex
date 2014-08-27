@@ -8,7 +8,7 @@ public interface SearchService {
     /**
      * Submit search query on stored documents.
      * 
-     * @return Set &lt;Metadatum&gt;
+     * @return Set &lt;Metadatum&gt; a collection of Metadatum associating the query with documents.
      */
     public Set<Metadatum> search(String query);
 }

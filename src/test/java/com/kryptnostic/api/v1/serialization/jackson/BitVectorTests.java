@@ -36,13 +36,13 @@ public class BitVectorTests {
         BitVector bv = BitUtils.randomVector(LEN);
         mapper.writeValue(out, bv);
 
-        Assert.assertEquals(wrapQuotes(BitVectors.marshalBitvector(bv)), new String(out.toByteArray()));
+        Assert.assertEquals(TestUtil.wrapQuotes(BitVectors.marshalBitvector(bv)), new String(out.toByteArray()));
     }
 
     @Test
     public void deserializeBitvectorTest() throws JsonGenerationException, JsonMappingException, IOException {
         BitVector bv = BitUtils.randomVector(LEN);
-        String serialized = wrapQuotes(BitVectors.marshalBitvector(bv));
+        String serialized = TestUtil.wrapQuotes(BitVectors.marshalBitvector(bv));
         BitVector out = mapper.readValue(serialized, BitVector.class);
 
         Assert.assertEquals(bv, out);
@@ -87,15 +87,11 @@ public class BitVectorTests {
         String expectedResult = "";
         Iterator<BitVector> iter = vectors.iterator();
         while (iter.hasNext()) {
-            expectedResult += wrapQuotes(BitVectors.marshalBitvector(iter.next()));
+            expectedResult += TestUtil.wrapQuotes(BitVectors.marshalBitvector(iter.next()));
             if (iter.hasNext()) {
                 expectedResult += LIST_SEPARATOR;
             }
         }
         return "[" + expectedResult + "]";
-    }
-
-    private String wrapQuotes(String m) {
-        return "\"" + m + "\"";
     }
 }
