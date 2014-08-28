@@ -1,32 +1,31 @@
 package com.kryptnostic.storage.v1.models.request;
 
+import cern.colt.bitvector.BitVector;
+
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class IndexableMetadata {
-    private String key;
-    private String data;
-
-    public IndexableMetadata() {
-
-    }
-
-    public IndexableMetadata(String key, String data) {
+    private static final String KEY = "key";
+    private static final String DATA = "data";
+    
+    private final BitVector key;
+    private final String data;
+    
+    @JsonCreator
+    public IndexableMetadata( @JsonProperty(KEY) BitVector key, @JsonProperty(DATA)String data) {
         super();
         this.key = key;
         this.data = data;
     }
 
-    public String getKey() {
+    @JsonProperty(KEY)
+    public BitVector getKey() {
         return key;
     }
 
-    public void setKey(String key) {
-        this.key = key;
-    }
-
+    @JsonProperty(DATA)
     public String getData() {
         return data;
-    }
-
-    public void setData(String data) {
-        this.data = data;
     }
 }

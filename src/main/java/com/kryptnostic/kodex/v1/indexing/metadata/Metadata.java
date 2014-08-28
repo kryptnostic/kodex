@@ -6,6 +6,6 @@ import java.util.Map;
 import cern.colt.bitvector.BitVector;
 
 public interface Metadata {
-    Map<String, List<Metadatum>> getMetadataMap();
+    Map<BitVector, List<Metadatum>> getMetadataMap();
     public List<BitVector> getNonces();
 }
