@@ -4,16 +4,17 @@ import cern.colt.bitvector.BitVector;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.kryptnostic.kodex.v1.indexing.metadata.Metadatum;
 
 public class IndexableMetadata {
     private static final String KEY = "key";
     private static final String DATA = "data";
-    
+
     private final BitVector key;
-    private final String data;
-    
+    private final Metadatum data;
+
     @JsonCreator
-    public IndexableMetadata( @JsonProperty(KEY) BitVector key, @JsonProperty(DATA)String data) {
+    public IndexableMetadata(@JsonProperty(KEY) BitVector key, @JsonProperty(DATA) Metadatum data) {
         super();
         this.key = key;
         this.data = data;
@@ -25,7 +26,7 @@ public class IndexableMetadata {
     }
 
     @JsonProperty(DATA)
-    public String getData() {
+    public Metadatum getData() {
         return data;
     }
 }
