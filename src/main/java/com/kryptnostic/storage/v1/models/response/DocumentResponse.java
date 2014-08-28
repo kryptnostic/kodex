@@ -1,20 +1,22 @@
 package com.kryptnostic.storage.v1.models.response;
 
-import java.util.HashMap;
-import java.util.Map;
-
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.kryptnostic.kodex.v1.models.response.BasicResponse;
-import com.kryptnostic.kodex.v1.models.response.ResponseKey;
+import com.kryptnostic.storage.v1.models.Document;
 
-public class DocumentResponse extends BasicResponse<Map<String, String>> {
+public class DocumentResponse extends BasicResponse<Document> {
 
-    public DocumentResponse() {
-        data = new HashMap<String, String>();
+    @JsonCreator
+    public DocumentResponse(@JsonProperty(DATA) Document document, @JsonProperty(STATUS) int status,
+            @JsonProperty(SUCCESS) boolean success) {
+        super(document, status, success);
     }
 
-    public DocumentResponse(String document, int status, boolean success) {
-        super(new HashMap<String, String>(), status, success);
-        data.put(ResponseKey.DOCUMENT_KEY, document);
+    @JsonIgnore
+    public DocumentResponse(String body, int status, boolean success) {
+        super(new Document(body), status, success);
     }
 
 }
