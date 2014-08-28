@@ -2,6 +2,7 @@ package com.kryptnostic.storage.v1;
 
 import com.kryptnostic.kodex.v1.exceptions.types.BadRequestException;
 import com.kryptnostic.kodex.v1.exceptions.types.ResourceNotFoundException;
+import com.kryptnostic.storage.v1.models.Document;
 
 public interface StorageService {
     /**
@@ -30,5 +31,5 @@ public interface StorageService {
      * @return document text
      * @throws ResourceNotFoundException
      */
-    String getDocument(String id) throws ResourceNotFoundException;
+    Document getDocument(String id) throws ResourceNotFoundException;
 }
