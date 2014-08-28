@@ -1,8 +1,8 @@
 package com.kryptnostic.search.v1;
 
-import java.util.Set;
+import java.util.Collection;
 
-import com.kryptnostic.kodex.v1.indexing.metadata.Metadatum;
+import com.kryptnostic.search.v1.models.SearchResult;
 
 public interface SearchService {
     /**
@@ -10,5 +10,5 @@ public interface SearchService {
      * 
      * @return Set &lt;Metadatum&gt; a collection of Metadatum associating the query with documents.
      */
-    public Set<Metadatum> search(String query);
+    public Collection<SearchResult> search(String query);
 }
