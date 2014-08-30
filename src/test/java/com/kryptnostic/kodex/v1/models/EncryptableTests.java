@@ -1,10 +1,8 @@
 package com.kryptnostic.kodex.v1.models;
 
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.util.Arrays;
 
-import org.apache.commons.codec.binary.StringUtils;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -13,8 +11,6 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.kryptnostic.crypto.PrivateKey;
 import com.kryptnostic.crypto.PublicKey;
 import com.kryptnostic.kodex.v1.indexing.metadata.Metadatum;
-import com.kryptnostic.kodex.v1.models.Encryptable;
-import com.kryptnostic.kodex.v1.models.HEncryptable;
 
 public class EncryptableTests {
 

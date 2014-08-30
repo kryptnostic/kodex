@@ -32,7 +32,7 @@ public class BaseSerializationTest {
     }
     
     @SuppressWarnings("unchecked")
-    protected <T> T deserialize(String in, Class type) throws JsonParseException, JsonMappingException, IOException {
+    protected <T> T deserialize(String in, @SuppressWarnings("rawtypes") Class type) throws JsonParseException, JsonMappingException, IOException {
         return (T) mapper.readValue(in, type);
     }
 }
