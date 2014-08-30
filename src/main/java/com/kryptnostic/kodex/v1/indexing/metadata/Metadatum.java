@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.collect.ImmutableList;
 
 public class Metadatum implements Serializable {
-
+    private static final long serialVersionUID = 4781351075278356424L;
     public static final String DOCUMENT_ID = "documentId";
     public static final String TOKEN = "token";
     public static final String LOCATIONS = "locations";
@@ -40,6 +40,7 @@ public class Metadatum implements Serializable {
         return locations;
     }
 
+    @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
@@ -49,7 +50,8 @@ public class Metadatum implements Serializable {
         return result;
     }
 
-    public boolean equals(Metadatum obj) {
+    @Override
+    public boolean equals(Object obj) {
         if (this == obj) {
             return true;
         }
