@@ -11,6 +11,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.kryptnostic.crypto.PrivateKey;
 import com.kryptnostic.crypto.PublicKey;
 import com.kryptnostic.kodex.v1.indexing.metadata.Metadatum;
+import com.kryptnostic.kodex.v1.models.Encryptable.EncryptionScheme;
 
 public class EncryptableTests {
 
@@ -19,7 +20,7 @@ public class EncryptableTests {
     @Test
     public void hencryptableStringConstructionTest() {
         String plain = "I am cool";
-        Encryptable<String> plainString = new HEncryptable<String>(plain);
+        Encryptable<String> plainString = new Encryptable<String>(plain, EncryptionScheme.FHE);
 
         Assert.assertNull(plainString.getEncryptedData());
         Assert.assertNull(plainString.getEncryptedClassName());
@@ -31,7 +32,7 @@ public class EncryptableTests {
     public void hencryptableStringEncryptionTest() throws JsonParseException, JsonMappingException, IOException,
             ClassNotFoundException {
         String plain = "I am cool";
-        Encryptable<String> plainString = new HEncryptable<String>(plain);
+        Encryptable<String> plainString = new Encryptable<String>(plain, EncryptionScheme.FHE);
 
         PrivateKey privateKey = new PrivateKey(PRIVATE_KEY_BLOCK_SIZE * 2, PRIVATE_KEY_BLOCK_SIZE);
         PublicKey publicKey = new PublicKey(privateKey);
@@ -58,7 +59,7 @@ public class EncryptableTests {
     @Test
     public void hencryptableMetadatumConstructionTest() {
         Metadatum m = new Metadatum("ABC", "ABC", Arrays.asList(1, 2, 3));
-        Encryptable<Metadatum> plainString = new HEncryptable<Metadatum>(m);
+        Encryptable<Metadatum> plainString = new Encryptable<Metadatum>(m, EncryptionScheme.FHE);
 
         Assert.assertNull(plainString.getEncryptedData());
         Assert.assertNull(plainString.getEncryptedClassName());
@@ -70,7 +71,7 @@ public class EncryptableTests {
     public void hencryptableMetadatumEncryptionTest() throws JsonParseException, JsonMappingException, IOException,
             ClassNotFoundException {
         Metadatum m = new Metadatum("ABC", "ABC", Arrays.asList(1, 2, 3));
-        Encryptable<Metadatum> plainString = new HEncryptable<Metadatum>(m);
+        Encryptable<Metadatum> plainString = new Encryptable<Metadatum>(m, EncryptionScheme.FHE);
 
         PrivateKey privateKey = new PrivateKey(PRIVATE_KEY_BLOCK_SIZE * 2, PRIVATE_KEY_BLOCK_SIZE);
         PublicKey publicKey = new PublicKey(privateKey);

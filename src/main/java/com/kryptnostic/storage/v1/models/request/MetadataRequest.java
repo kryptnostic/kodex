@@ -9,15 +9,15 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class MetadataRequest {
     private static final String METADATA = "metadata";
 
-    private final Collection<IndexableMetadata> metadata;
+    private final Collection<IndexedMetadata> metadata;
 
     @JsonCreator
-    public MetadataRequest(@JsonProperty(METADATA) Collection<IndexableMetadata> metadata) {
+    public MetadataRequest(@JsonProperty(METADATA) Collection<IndexedMetadata> metadata) {
         this.metadata = metadata;
     }
 
     @JsonProperty(METADATA)
-    public Collection<IndexableMetadata> getMetadata() {
+    public Collection<IndexedMetadata> getMetadata() {
         return Collections.unmodifiableCollection(metadata);
     }
 }
