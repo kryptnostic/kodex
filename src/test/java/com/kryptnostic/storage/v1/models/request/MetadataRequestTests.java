@@ -188,7 +188,8 @@ public class MetadataRequestTests extends BaseSerializationTest {
 
     @Test
     /**
-     * Does serialization of an Encryptable work if you opt to encrypt it explicitly, rather than registering an FHE SecurityConfiguration?
+     * Does serialization of an Encryptable work if you opt to encrypt it explicitly, rather than registering
+     *  an FHE SecurityConfiguration?
      * @throws JsonGenerationException
      * @throws JsonMappingException
      * @throws IOException
@@ -215,5 +216,40 @@ public class MetadataRequestTests extends BaseSerializationTest {
         String actual = serialize(req);
 
         Assert.assertEquals(expected, actual);
+    }
+
+    /**
+     * @throws JsonGenerationException
+     * @throws JsonMappingException
+     * @throws IOException
+     */
+    @Test
+    public void testSerializeNull() throws JsonGenerationException, JsonMappingException, IOException {
+        initKeylessImplicitEncryption();
+        // kill the pubkey
+        this.pubKey = null;
+
+        BitVector key = BitUtils.randomVector(INDEX_LENGTH);
+        Metadatum metadatum = new Metadatum("TEST", "test", Arrays.asList(1, 2, 3));
+        Encryptable<Metadatum> data = new Encryptable<Metadatum>(metadatum, EncryptionScheme.FHE);
+
+        // implicit encryption via objectmapper
+
+        // Create our request with our (PLAIN) Encryptable. It will get encrypted upon serialization
+        MetadataRequest req = new MetadataRequest(Arrays.asList(new IndexedMetadata(key, data)));
+
+        String actual = serialize(req);
+
+        MetadataRequest nulledReq = deserialize(actual, MetadataRequest.class);
+
+        String output = serialize(nulledReq);
+
+        String expected = "{\"metadata\":[{\"key\":" + wrapQuotes(BitVectors.marshalBitvector(key)) + ",\"data\":{\""
+                + Encryptable.FIELD_ENCRYPTED_DATA + "\":null,\"" + Encryptable.FIELD_ENCRYPTED_CLASS_NAME
+                + "\":null,\"" + Encryptable.FIELD_SCHEME + "\":" + wrapQuotes(EncryptionScheme.FHE.toString())
+                + "}}]}";
+
+        // ensure our serialization leaks no information and is completely null
+        Assert.assertEquals(output, expected);
     }
 }

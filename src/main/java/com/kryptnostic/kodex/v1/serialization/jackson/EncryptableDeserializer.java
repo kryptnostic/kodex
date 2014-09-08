@@ -54,11 +54,15 @@ public class EncryptableDeserializer extends JsonDeserializer<Encryptable> {
     }
 
     private Ciphertext deserializeCiphertext(JsonNode encryptedNode) throws IOException {
+        if (encryptedNode.isNull()) {
+            return null;
+        }
         return new Ciphertext(encryptedNode.get("contents").binaryValue(), getLengthsArray(encryptedNode));
     }
 
     /**
-     * If a private key is available, decrypt the encryptedObject and return plain, otherwise return the still-encrypted object
+     * If a private key is available, decrypt the encryptedObject and return plain, otherwise return the still-encrypted
+     * object
      * 
      * This locates a private key based on a securityConfiguration
      * 

@@ -1,6 +1,7 @@
 package com.kryptnostic.kodex.v1.models;
 
 import java.io.IOException;
+import java.io.Serializable;
 
 import org.apache.commons.codec.binary.StringUtils;
 
@@ -17,7 +18,12 @@ import com.kryptnostic.crypto.PrivateKey;
 import com.kryptnostic.crypto.PublicKey;
 import com.kryptnostic.kodex.v1.serialization.jackson.KodexObjectMapperFactory;
 
-public class Encryptable<T> {
+public class Encryptable<T> implements Serializable {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -7059092630170813226L;
+
     private final static ObjectMapper mapper = ( new KodexObjectMapperFactory() ).getObjectMapper(null);
 
     private static final String MSG_UNRECOGNIZED = "Encryption scheme not recognized";
