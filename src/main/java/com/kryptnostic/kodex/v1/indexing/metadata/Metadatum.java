@@ -1,14 +1,12 @@
 package com.kryptnostic.kodex.v1.indexing.metadata;
 
-import java.io.Serializable;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.collect.ImmutableList;
 
-public class Metadatum implements Serializable {
-    private static final long serialVersionUID = 4781351075278356424L;
+public class Metadatum {
     public static final String DOCUMENT_ID = "documentId";
     public static final String TOKEN = "token";
     public static final String LOCATIONS = "locations";

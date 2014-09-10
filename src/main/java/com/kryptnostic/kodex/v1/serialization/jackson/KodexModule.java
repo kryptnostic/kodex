@@ -7,7 +7,7 @@ import com.fasterxml.jackson.databind.module.SimpleDeserializers;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.module.SimpleSerializers;
 import com.kryptnostic.kodex.v1.models.Encryptable;
-import com.kryptnostic.kodex.v1.security.SecurityConfiguration;
+import com.kryptnostic.kodex.v1.models.FheEncryptable;
 import com.kryptnostic.kodex.v1.security.SecurityConfigurationMapping;
 import com.kryptnostic.multivariate.gf2.SimplePolynomialFunction;
 
@@ -40,14 +40,13 @@ public class KodexModule extends SimpleModule {
         serializers.addSerializer(BitVector.class, new BitVectorSerializer());
         serializers.addSerializer(SimplePolynomialFunction.class, new SimplePolynomialFunctionSerializer());
         serializers.addSerializer(Encryptable.class, new EncryptableSerializer(securityConfiguration));
-        
+
         SimpleDeserializers deserializers = new SimpleDeserializers();
         deserializers.addDeserializer(BitVector.class, new BitVectorDeserializer());
         deserializers.addDeserializer(SimplePolynomialFunction.class, new SimplePolynomialFunctionDeserializer());
-        deserializers.addDeserializer(Encryptable.class, new EncryptableDeserializer(securityConfiguration));
-        
+        // deserializers.addDeserializer(Encryptable.class, new EncryptableDeserializer(securityConfiguration));
+
         context.addSerializers(serializers);
         context.addDeserializers(deserializers);
-        
     }
 }

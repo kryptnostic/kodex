@@ -14,11 +14,11 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.jsontype.TypeDeserializer;
 import com.google.common.collect.Lists;
-import com.hazelcast.util.Base64;
 import com.kryptnostic.crypto.Ciphertext;
 import com.kryptnostic.kodex.v1.models.Encryptable;
-import com.kryptnostic.kodex.v1.models.Encryptable.EncryptionScheme;
+import com.kryptnostic.kodex.v1.models.FheEncryptable;
 import com.kryptnostic.kodex.v1.security.SecurityConfiguration;
 import com.kryptnostic.kodex.v1.security.SecurityConfigurationMapping;
 
@@ -28,6 +28,14 @@ public class EncryptableDeserializer extends JsonDeserializer<Encryptable> {
 
     public EncryptableDeserializer(SecurityConfigurationMapping securityConfiguration) {
         this.securityConfiguration = securityConfiguration;
+    }
+
+    @Override
+    public Encryptable deserializeWithType(JsonParser jp, DeserializationContext ctxt, TypeDeserializer typeDeserializer)
+            throws IOException, JsonProcessingException {
+        
+        
+        return null;
     }
 
     @Override
@@ -41,16 +49,11 @@ public class EncryptableDeserializer extends JsonDeserializer<Encryptable> {
 
         Ciphertext encryptedData = deserializeCiphertext(encryptedDataNode);
         Ciphertext encryptedClassName = deserializeCiphertext(encryptedClassNameNode);
-        Encryptable.EncryptionScheme scheme = deserializeEncryptionScheme(node);
 
-        Encryptable<?> encryptedObject = new Encryptable(encryptedData, encryptedClassName, scheme);
+        FheEncryptable<?> encryptedObject = new FheEncryptable(encryptedData, encryptedClassName);
 
         // decrypt if private key is available
         return decryptIfPossible(encryptedObject);
-    }
-
-    private EncryptionScheme deserializeEncryptionScheme(JsonNode node) {
-        return Encryptable.EncryptionScheme.valueOf(node.get(Encryptable.FIELD_SCHEME).asText());
     }
 
     private Ciphertext deserializeCiphertext(JsonNode encryptedNode) throws IOException {
@@ -76,12 +79,12 @@ public class EncryptableDeserializer extends JsonDeserializer<Encryptable> {
             JsonMappingException, IOException {
         Encryptable decryptedObject = null;
         if (securityConfiguration != null) {
-            SecurityConfiguration<?, ?> config = securityConfiguration.get(encryptedObject.getScheme());
+            SecurityConfiguration<?, ?> config = securityConfiguration.get(encryptedObject.getClass());
             if (config != null) {
                 Object privateKey = config.getPrivateKey();
                 if (privateKey != null) {
                     try {
-                        decryptedObject = encryptedObject.decrypt(privateKey);
+                        decryptedObject = encryptedObject.decrypt(securityConfiguration);
                     } catch (ClassNotFoundException e) {
                         // TODO Auto-generated catch block
                         e.printStackTrace();

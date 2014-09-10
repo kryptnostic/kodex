@@ -1,37 +1,25 @@
 package com.kryptnostic.kodex.v1.models;
 
 import java.io.IOException;
-import java.io.Serializable;
 
-import org.apache.commons.codec.binary.StringUtils;
-
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Preconditions;
 import com.kryptnostic.crypto.Ciphertext;
-import com.kryptnostic.crypto.PrivateKey;
-import com.kryptnostic.crypto.PublicKey;
-import com.kryptnostic.kodex.v1.serialization.jackson.KodexObjectMapperFactory;
+import com.kryptnostic.kodex.v1.security.SecurityConfiguration;
+import com.kryptnostic.kodex.v1.security.SecurityConfigurationMapping;
 
-public class Encryptable<T> implements Serializable {
-    /**
-     * 
-     */
-    private static final long serialVersionUID = -7059092630170813226L;
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = As.PROPERTY, property = Encryptable.FIELD_CLASS)
+public abstract class Encryptable<T> {
 
-    private final static ObjectMapper mapper = ( new KodexObjectMapperFactory() ).getObjectMapper(null);
-
-    private static final String MSG_UNRECOGNIZED = "Encryption scheme not recognized";
-    private static final String MSG_INVALID_KEY = "Encryption scheme recognized, but provided type of key is not supported";
-
-    public static final String FIELD_SCHEME = "s";
-    public static final String FIELD_ENCRYPTED_CLASS_NAME = "c";
-    public static final String FIELD_ENCRYPTED_DATA = "d";
+    public static final String FIELD_CLASS = "@class";
+    public static final String FIELD_ENCRYPTED_CLASS_NAME = "name";
+    public static final String FIELD_ENCRYPTED_DATA = "data";
 
     @JsonIgnore
     private final boolean encrypted;
@@ -43,35 +31,54 @@ public class Encryptable<T> implements Serializable {
     private final Ciphertext encryptedData;
     @JsonProperty(FIELD_ENCRYPTED_CLASS_NAME)
     private final Ciphertext encryptedClassName;
-    @JsonProperty(FIELD_SCHEME)
-    private final EncryptionScheme scheme;
 
-    public enum EncryptionScheme {
-        AES, FHE
-    };
-
-    public Encryptable(T data, EncryptionScheme scheme) {
+    public Encryptable(T data) {
         this.encrypted = false;
         this.data = data;
         this.className = data.getClass().getName();
         this.encryptedData = null;
         this.encryptedClassName = null;
-        this.scheme = scheme;
     }
 
-    @JsonCreator
-    public Encryptable(@JsonProperty(FIELD_ENCRYPTED_DATA) Ciphertext ciphertext,
-            @JsonProperty(FIELD_ENCRYPTED_CLASS_NAME) Ciphertext className,
-            @JsonProperty(FIELD_SCHEME) EncryptionScheme scheme) {
+    public Encryptable(Ciphertext ciphertext, Ciphertext className) {
         this.encrypted = true;
         this.data = null;
         this.className = null;
         this.encryptedData = ciphertext;
         this.encryptedClassName = className;
-        this.scheme = scheme;
     }
 
-    public final Encryptable<T> encrypt(Object key) throws JsonProcessingException {
+    public Encryptable(Ciphertext ciphertext, Ciphertext className, SecurityConfigurationMapping mapping)
+            throws JsonParseException, JsonMappingException, IOException, ClassNotFoundException {
+        if (canDecryptWith(mapping)) {
+            Encryptable<T> encrypted = createEncrypted(ciphertext, className);
+            Encryptable<T> decrypted = encrypted.decryptWith(mapping);
+            this.encrypted = false;
+            this.data = decrypted.getData();
+            this.className = decrypted.getClassName();
+            this.encryptedData = null;
+            this.encryptedClassName = null;
+        } else {
+            this.encrypted = true;
+            this.data = null;
+            this.className = null;
+            this.encryptedData = ciphertext;
+            this.encryptedClassName = className;
+        }
+    }
+
+    protected abstract Encryptable<T> createEncrypted(Ciphertext ciphertext, Ciphertext className);
+
+    protected boolean canDecryptWith(SecurityConfigurationMapping mapping) {
+        SecurityConfiguration config = null;
+        if (mapping != null) {
+            config = mapping.get(this.getClass());
+            return config.getPrivateKey() != null;
+        }
+        return false;
+    }
+
+    public final Encryptable<T> encrypt(SecurityConfigurationMapping service) throws JsonProcessingException {
         if (this.encrypted) {
             return this;
         }
@@ -79,27 +86,16 @@ public class Encryptable<T> implements Serializable {
         Preconditions.checkNotNull(this.className);
         Preconditions.checkState(this.encryptedData == null);
         Preconditions.checkState(this.encryptedClassName == null);
-        Preconditions.checkState(this.scheme != null);
 
-        switch (this.scheme) {
-            case FHE:
-                if (!( key instanceof PublicKey )) {
-                    throw new UnsupportedOperationException(MSG_INVALID_KEY);
-                }
-                return encryptWithFhe((PublicKey) key);
-        }
+        checkServiceMapping(service);
 
-        throw new UnsupportedOperationException(MSG_UNRECOGNIZED);
+        return encryptWith(service);
     }
 
-    private Encryptable<T> encryptWithFhe(PublicKey key) throws JsonProcessingException {
-        Ciphertext encryptedData = key.encryptIntoEnvelope(mapper.writeValueAsBytes(getData()));
-        Ciphertext encryptedClassName = key.encryptIntoEnvelope(getClassName().getBytes());
-        return new Encryptable<T>(encryptedData, encryptedClassName, EncryptionScheme.FHE);
-    }
+    protected abstract Encryptable<T> encryptWith(SecurityConfigurationMapping service) throws JsonProcessingException;
 
-    public final Encryptable<T> decrypt(Object key) throws JsonParseException, JsonMappingException, IOException,
-            ClassNotFoundException {
+    public final Encryptable<T> decrypt(SecurityConfigurationMapping service) throws JsonParseException,
+            JsonMappingException, IOException, ClassNotFoundException {
         if (!this.encrypted) {
             return this;
         }
@@ -107,26 +103,30 @@ public class Encryptable<T> implements Serializable {
         Preconditions.checkState(this.className == null);
         Preconditions.checkNotNull(this.encryptedData);
         Preconditions.checkNotNull(this.encryptedClassName);
-        Preconditions.checkState(this.scheme != null);
 
-        switch (scheme) {
-            case FHE:
-                if (!( key instanceof PrivateKey )) {
-                    throw new UnsupportedOperationException(MSG_INVALID_KEY);
-                }
-                return decryptWithFhe((PrivateKey) key);
-        }
+        checkServiceMapping(service);
 
-        throw new UnsupportedOperationException(MSG_UNRECOGNIZED);
+        return decryptWith(service);
     }
 
-    protected Encryptable<T> decryptWithFhe(PrivateKey key) throws JsonParseException, JsonMappingException,
-            IOException, ClassNotFoundException {
-        String className = StringUtils.newStringUtf8(key.decryptFromEnvelope(getEncryptedClassName()));
-        byte[] objectBytes = key.decryptFromEnvelope(getEncryptedData());
-        @SuppressWarnings("unchecked")
-        T obj = mapper.<T> readValue(objectBytes, (Class<T>) Class.forName(className));
-        return new Encryptable<T>(obj, this.scheme);
+    private void checkServiceMapping(SecurityConfigurationMapping service) {
+        if (service == null) {
+            throw new NullPointerException("Security configuration mapping not defined for "
+                    + this.getClass().getCanonicalName());
+        }
+    }
+
+    protected abstract Encryptable<T> decryptWith(SecurityConfigurationMapping service) throws JsonParseException,
+            JsonMappingException, IOException, ClassNotFoundException;
+
+    @SuppressWarnings("rawtypes")
+    protected SecurityConfiguration getSecurityConfig(SecurityConfigurationMapping service) {
+        Class clazz = this.getClass();
+        SecurityConfiguration config = service.get(clazz);
+        if (config == null) {
+            throw new NullPointerException("Security configuration is not defined for " + clazz.getCanonicalName());
+        }
+        return config;
     }
 
     @JsonIgnore
@@ -147,11 +147,6 @@ public class Encryptable<T> implements Serializable {
     @JsonProperty(FIELD_ENCRYPTED_CLASS_NAME)
     public Ciphertext getEncryptedClassName() {
         return encryptedClassName;
-    }
-
-    @JsonProperty(FIELD_SCHEME)
-    public EncryptionScheme getScheme() {
-        return scheme;
     }
 
     @JsonIgnore

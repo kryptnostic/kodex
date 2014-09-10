@@ -5,7 +5,9 @@ import java.util.Arrays;
 
 import org.hamcrest.CoreMatchers;
 import org.junit.Assert;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import cern.colt.bitvector.BitVector;
 
@@ -17,7 +19,7 @@ import com.kryptnostic.crypto.PrivateKey;
 import com.kryptnostic.crypto.PublicKey;
 import com.kryptnostic.kodex.v1.indexing.metadata.Metadatum;
 import com.kryptnostic.kodex.v1.models.Encryptable;
-import com.kryptnostic.kodex.v1.models.Encryptable.EncryptionScheme;
+import com.kryptnostic.kodex.v1.models.FheEncryptable;
 import com.kryptnostic.kodex.v1.security.SecurityConfigurationMapping;
 import com.kryptnostic.kodex.v1.serialization.jackson.KodexObjectMapperFactory;
 import com.kryptnostic.linear.BitUtils;
@@ -28,16 +30,17 @@ public class MetadataRequestTests extends BaseSerializationTest {
 
     private PrivateKey privKey;
     private PublicKey pubKey;
+    private SecurityConfigurationMapping config;
+
+    @Rule
+    public ExpectedException exception = ExpectedException.none();
 
     private void initImplicitEncryption() {
         // register key with object mapper
         this.privKey = new PrivateKey(128, 64);
         this.pubKey = new PublicKey(privKey);
 
-        SecurityConfigurationMapping config = new SecurityConfigurationMapping().add(EncryptionScheme.FHE, pubKey,
-                privKey);
-
-        this.mapper = new KodexObjectMapperFactory().getObjectMapper(config);
+        resetSecurityConfiguration();
     }
 
     @Test
@@ -50,10 +53,10 @@ public class MetadataRequestTests extends BaseSerializationTest {
 
         BitVector key = BitUtils.randomVector(INDEX_LENGTH);
         Metadatum metadatum = new Metadatum("TEST", "test", Arrays.asList(1, 2, 3));
-        Encryptable<Metadatum> data = new Encryptable<Metadatum>(metadatum, EncryptionScheme.FHE);
+        Encryptable<Metadatum> data = new FheEncryptable<Metadatum>(metadatum);
 
         // explicit encryption to generate some json
-        data = data.encrypt(pubKey);
+        data = (FheEncryptable<Metadatum>) data.encrypt(this.config);
 
         String encryptedData = serialize(data.getEncryptedData());
         String encryptedClassName = serialize(data.getEncryptedClassName());
@@ -63,14 +66,17 @@ public class MetadataRequestTests extends BaseSerializationTest {
 
         String expected = "{\"metadata\":[{\"key\":" + wrapQuotes(BitVectors.marshalBitvector(key)) + ",\"data\":{\""
                 + Encryptable.FIELD_ENCRYPTED_DATA + "\":" + encryptedData + ",\""
-                + Encryptable.FIELD_ENCRYPTED_CLASS_NAME + "\":" + encryptedClassName + ",\""
-                + Encryptable.FIELD_SCHEME + "\":\"" + EncryptionScheme.FHE + "\"}}]}";
+                + Encryptable.FIELD_ENCRYPTED_CLASS_NAME + "\":" + encryptedClassName + ",\"" + Encryptable.FIELD_CLASS
+                + "\":\"" + data.getClass().getCanonicalName() + "\"}}]}";
 
         MetadataRequest deserialized = deserialize(expected, MetadataRequest.class);
 
         IndexedMetadata meta = deserialized.getMetadata().iterator().next();
 
+        // Ensure the key matches
         Assert.assertEquals(key, meta.getKey());
+        // Ensure we decrypted the metadata successfully
+        Assert.assertNull(meta.getData().getEncryptedClassName());
         Assert.assertEquals(metadatum.getClass().getName(), meta.getData().getClassName());
         Assert.assertEquals(metadatum, meta.getData().getData());
     }
@@ -81,22 +87,26 @@ public class MetadataRequestTests extends BaseSerializationTest {
      * @throws IOException
      */
     public void testImplicitDeserializationKeyless() throws IOException {
-        initKeylessImplicitEncryption();
+        initImplicitEncryption();
+
+        // kill private key!
+        this.privKey = null;
+        resetSecurityConfiguration();
 
         BitVector key = BitUtils.randomVector(INDEX_LENGTH);
         Metadatum metadatum = new Metadatum("TEST", "test", Arrays.asList(1, 2, 3));
-        Encryptable<Metadatum> data = new Encryptable<Metadatum>(metadatum, EncryptionScheme.FHE);
+        Encryptable<Metadatum> data = new FheEncryptable<Metadatum>(metadatum);
 
         // explicit encryption to generate some json
-        data = data.encrypt(pubKey);
+        data = data.encrypt(config);
 
         String encryptedData = serialize(data.getEncryptedData());
         String encryptedClassName = serialize(data.getEncryptedClassName());
 
         String expected = "{\"metadata\":[{\"key\":" + wrapQuotes(BitVectors.marshalBitvector(key)) + ",\"data\":{\""
+                + Encryptable.FIELD_CLASS + "\":\"" + data.getClass().getCanonicalName() + "\",\""
                 + Encryptable.FIELD_ENCRYPTED_DATA + "\":" + encryptedData + ",\""
-                + Encryptable.FIELD_ENCRYPTED_CLASS_NAME + "\":" + encryptedClassName + ",\""
-                + Encryptable.FIELD_SCHEME + "\":\"" + EncryptionScheme.FHE + "\"}}]}";
+                + Encryptable.FIELD_ENCRYPTED_CLASS_NAME + "\":" + encryptedClassName + "}}]}";
 
         MetadataRequest deserialized = deserialize(expected, MetadataRequest.class);
 
@@ -117,11 +127,10 @@ public class MetadataRequestTests extends BaseSerializationTest {
     }
 
     private void initKeylessImplicitEncryption() {
-        initImplicitEncryption();
-
-        // remove private key and reset objectMapper
+        this.pubKey = null;
         this.privKey = null;
-        this.mapper = new KodexObjectMapperFactory().getObjectMapper(null);
+
+        resetSecurityConfiguration();
     }
 
     @Test
@@ -136,7 +145,7 @@ public class MetadataRequestTests extends BaseSerializationTest {
         initImplicitEncryption();
         BitVector key = BitUtils.randomVector(INDEX_LENGTH);
         Metadatum metadatum = new Metadatum("TEST", "test", Arrays.asList(1, 2, 3));
-        Encryptable<Metadatum> data = new Encryptable<Metadatum>(metadatum, EncryptionScheme.FHE);
+        Encryptable<Metadatum> data = new FheEncryptable<Metadatum>(metadatum);
 
         // implicit encryption via objectmapper
 
@@ -145,45 +154,52 @@ public class MetadataRequestTests extends BaseSerializationTest {
 
         String actual = serialize(req);
 
-        String expectedSubstring = "{\"metadata\":[{\"key\":" + wrapQuotes(BitVectors.marshalBitvector(key))
-                + ",\"data\":{\"" + Encryptable.FIELD_ENCRYPTED_DATA + "\":";
+        String expectedSubstring = "{\"metadata\":[{\"key\":" + wrapQuotes(BitVectors.marshalBitvector(key));
+
+        String expectedTypeSubstring = "\"@class\":\"" + data.getClass().getCanonicalName() + "\"";
 
         // weak substring assertion that does not test ciphertext validity
         // ciphertext validity is covered in serializationDeserializationTest
         Assert.assertThat(actual, CoreMatchers.containsString(expectedSubstring));
+        Assert.assertThat(actual, CoreMatchers.containsString(expectedTypeSubstring));
     }
 
-    @Test
     /**
-     * Does serialization of an Encryptable properly produce null fields if you don't properly register public/private keys?
+     * Does serialization of an Encryptable properly throw an exception if you don't properly register public/private
+     * keys?
+     * 
      * @throws JsonGenerationException
      * @throws JsonMappingException
      * @throws IOException
      */
+    @Test
     public void testSerializationWithImplicitEncryptionKeyless() throws JsonGenerationException, JsonMappingException,
             IOException {
         initKeylessImplicitEncryption();
-        // kill the pubkey
-        this.pubKey = null;
 
         BitVector key = BitUtils.randomVector(INDEX_LENGTH);
         Metadatum metadatum = new Metadatum("TEST", "test", Arrays.asList(1, 2, 3));
-        Encryptable<Metadatum> data = new Encryptable<Metadatum>(metadatum, EncryptionScheme.FHE);
+        Encryptable<Metadatum> data = new FheEncryptable<Metadatum>(metadatum);
 
         // implicit encryption via objectmapper
 
         // Create our request with our (PLAIN) Encryptable. It will get encrypted upon serialization
         MetadataRequest req = new MetadataRequest(Arrays.asList(new IndexedMetadata(key, data)));
 
-        String actual = serialize(req);
+        boolean caught = false;
+        try {
+            serialize(req);
+        } catch (JsonMappingException e) {
+            if (e.getCause() instanceof NullPointerException) {
+                caught = true;
+            }
+        }
+        Assert.assertTrue(caught);
+    }
 
-        String expected = "{\"metadata\":[{\"key\":" + wrapQuotes(BitVectors.marshalBitvector(key)) + ",\"data\":{\""
-                + Encryptable.FIELD_ENCRYPTED_DATA + "\":null,\"" + Encryptable.FIELD_ENCRYPTED_CLASS_NAME
-                + "\":null,\"" + Encryptable.FIELD_SCHEME + "\":" + wrapQuotes(EncryptionScheme.FHE.toString())
-                + "}}]}";
-
-        // ensure our serialization leaks no information and is completely null
-        Assert.assertEquals(actual, expected);
+    private void resetSecurityConfiguration() {
+        this.config = new SecurityConfigurationMapping().add(FheEncryptable.class, pubKey, privKey);
+        this.mapper = new KodexObjectMapperFactory().getObjectMapper(config);
     }
 
     @Test
@@ -198,58 +214,28 @@ public class MetadataRequestTests extends BaseSerializationTest {
             IOException {
         BitVector key = BitUtils.randomVector(INDEX_LENGTH);
         Metadatum metadatum = new Metadatum("TEST", "test", Arrays.asList(1, 2, 3));
-        Encryptable<Metadatum> data = new Encryptable<Metadatum>(metadatum, EncryptionScheme.FHE);
+        Encryptable<Metadatum> data = new FheEncryptable<Metadatum>(metadatum);
 
         // explicit encryption
         PrivateKey privKey = new PrivateKey(128, 64);
         PublicKey pubKey = new PublicKey(privKey);
-        data = data.encrypt(pubKey);
+
+        SecurityConfigurationMapping tmpConfig = new SecurityConfigurationMapping().add(FheEncryptable.class, pubKey,
+                privKey);
+
+        data = (FheEncryptable<Metadatum>) data.encrypt(tmpConfig);
 
         // create the metadataRequest with our (ENCRYPTED) Encryptable
         MetadataRequest req = new MetadataRequest(Arrays.asList(new IndexedMetadata(key, data)));
 
         String expected = "{\"metadata\":[{\"key\":" + wrapQuotes(BitVectors.marshalBitvector(key)) + ",\"data\":{\""
+                + Encryptable.FIELD_CLASS + "\":\"" + data.getClass().getCanonicalName() + "\",\""
                 + Encryptable.FIELD_ENCRYPTED_DATA + "\":" + serialize(data.getEncryptedData()) + ",\""
-                + Encryptable.FIELD_ENCRYPTED_CLASS_NAME + "\":" + serialize(data.getEncryptedClassName()) + ",\""
-                + Encryptable.FIELD_SCHEME + "\":\"" + EncryptionScheme.FHE + "\"}}]}";
+                + Encryptable.FIELD_ENCRYPTED_CLASS_NAME + "\":" + serialize(data.getEncryptedClassName()) + "}}]}";
 
         String actual = serialize(req);
 
         Assert.assertEquals(expected, actual);
     }
 
-    /**
-     * @throws JsonGenerationException
-     * @throws JsonMappingException
-     * @throws IOException
-     */
-    @Test
-    public void testSerializeNull() throws JsonGenerationException, JsonMappingException, IOException {
-        initKeylessImplicitEncryption();
-        // kill the pubkey
-        this.pubKey = null;
-
-        BitVector key = BitUtils.randomVector(INDEX_LENGTH);
-        Metadatum metadatum = new Metadatum("TEST", "test", Arrays.asList(1, 2, 3));
-        Encryptable<Metadatum> data = new Encryptable<Metadatum>(metadatum, EncryptionScheme.FHE);
-
-        // implicit encryption via objectmapper
-
-        // Create our request with our (PLAIN) Encryptable. It will get encrypted upon serialization
-        MetadataRequest req = new MetadataRequest(Arrays.asList(new IndexedMetadata(key, data)));
-
-        String actual = serialize(req);
-
-        MetadataRequest nulledReq = deserialize(actual, MetadataRequest.class);
-
-        String output = serialize(nulledReq);
-
-        String expected = "{\"metadata\":[{\"key\":" + wrapQuotes(BitVectors.marshalBitvector(key)) + ",\"data\":{\""
-                + Encryptable.FIELD_ENCRYPTED_DATA + "\":null,\"" + Encryptable.FIELD_ENCRYPTED_CLASS_NAME
-                + "\":null,\"" + Encryptable.FIELD_SCHEME + "\":" + wrapQuotes(EncryptionScheme.FHE.toString())
-                + "}}]}";
-
-        // ensure our serialization leaks no information and is completely null
-        Assert.assertEquals(output, expected);
-    }
 }

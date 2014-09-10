@@ -11,16 +11,16 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.kryptnostic.crypto.PrivateKey;
 import com.kryptnostic.crypto.PublicKey;
 import com.kryptnostic.kodex.v1.indexing.metadata.Metadatum;
-import com.kryptnostic.kodex.v1.models.Encryptable.EncryptionScheme;
+import com.kryptnostic.kodex.v1.security.SecurityConfigurationMapping;
 
 public class EncryptableTests {
 
     private static final int PRIVATE_KEY_BLOCK_SIZE = 64;
 
     @Test
-    public void hencryptableStringConstructionTest() {
+    public void encryptableStringConstructionTest() {
         String plain = "I am cool";
-        Encryptable<String> plainString = new Encryptable<String>(plain, EncryptionScheme.FHE);
+        Encryptable<String> plainString = new FheEncryptable<String>(plain);
 
         Assert.assertNull(plainString.getEncryptedData());
         Assert.assertNull(plainString.getEncryptedClassName());
@@ -29,15 +29,17 @@ public class EncryptableTests {
     }
 
     @Test
-    public void hencryptableStringEncryptionTest() throws JsonParseException, JsonMappingException, IOException,
+    public void encryptableStringEncryptionTest() throws JsonParseException, JsonMappingException, IOException,
             ClassNotFoundException {
         String plain = "I am cool";
-        Encryptable<String> plainString = new Encryptable<String>(plain, EncryptionScheme.FHE);
+        Encryptable<String> plainString = new FheEncryptable<String>(plain);
 
         PrivateKey privateKey = new PrivateKey(PRIVATE_KEY_BLOCK_SIZE * 2, PRIVATE_KEY_BLOCK_SIZE);
         PublicKey publicKey = new PublicKey(privateKey);
-
-        Encryptable<String> cipherString = plainString.encrypt(publicKey);
+        
+        SecurityConfigurationMapping config = new SecurityConfigurationMapping().add(FheEncryptable.class, publicKey, privateKey);
+        
+        Encryptable<String> cipherString = plainString.encrypt(config);
 
         Assert.assertNull(plainString.getEncryptedData());
         Assert.assertNull(plainString.getEncryptedClassName());
@@ -49,7 +51,7 @@ public class EncryptableTests {
         Assert.assertTrue(cipherString.isEncrypted());
         Assert.assertNull(cipherString.getData());
 
-        Encryptable<String> decryptedString = cipherString.decrypt(privateKey);
+        Encryptable<String> decryptedString = cipherString.decrypt(config);
         Assert.assertNull(decryptedString.getEncryptedData());
         Assert.assertNull(decryptedString.getEncryptedClassName());
         Assert.assertFalse(decryptedString.isEncrypted());
@@ -57,9 +59,9 @@ public class EncryptableTests {
     }
 
     @Test
-    public void hencryptableMetadatumConstructionTest() {
+    public void encryptableMetadatumConstructionTest() {
         Metadatum m = new Metadatum("ABC", "ABC", Arrays.asList(1, 2, 3));
-        Encryptable<Metadatum> plainString = new Encryptable<Metadatum>(m, EncryptionScheme.FHE);
+        Encryptable<Metadatum> plainString = new FheEncryptable<Metadatum>(m);
 
         Assert.assertNull(plainString.getEncryptedData());
         Assert.assertNull(plainString.getEncryptedClassName());
@@ -68,15 +70,17 @@ public class EncryptableTests {
     }
 
     @Test
-    public void hencryptableMetadatumEncryptionTest() throws JsonParseException, JsonMappingException, IOException,
+    public void encryptableMetadatumEncryptionTest() throws JsonParseException, JsonMappingException, IOException,
             ClassNotFoundException {
         Metadatum m = new Metadatum("ABC", "ABC", Arrays.asList(1, 2, 3));
-        Encryptable<Metadatum> plainString = new Encryptable<Metadatum>(m, EncryptionScheme.FHE);
+        Encryptable<Metadatum> plainString = new FheEncryptable<Metadatum>(m);
 
         PrivateKey privateKey = new PrivateKey(PRIVATE_KEY_BLOCK_SIZE * 2, PRIVATE_KEY_BLOCK_SIZE);
         PublicKey publicKey = new PublicKey(privateKey);
+        
+        SecurityConfigurationMapping config = new SecurityConfigurationMapping().add(FheEncryptable.class, publicKey, privateKey);
 
-        Encryptable<Metadatum> cipherString = plainString.encrypt(publicKey);
+        Encryptable<Metadatum> cipherString = plainString.encrypt(config);
 
         Assert.assertNull(plainString.getEncryptedData());
         Assert.assertNull(plainString.getEncryptedClassName());
@@ -88,12 +92,11 @@ public class EncryptableTests {
         Assert.assertTrue(cipherString.isEncrypted());
         Assert.assertNull(cipherString.getData());
 
-        Encryptable<Metadatum> decryptedString = cipherString.decrypt(privateKey);
+        Encryptable<Metadatum> decryptedString = cipherString.decrypt(config);
         Assert.assertNull(decryptedString.getEncryptedData());
         Assert.assertNull(decryptedString.getEncryptedClassName());
         Assert.assertFalse(decryptedString.isEncrypted());
         Assert.assertEquals(m, (Metadatum) decryptedString.getData());
-
     }
 
 }
