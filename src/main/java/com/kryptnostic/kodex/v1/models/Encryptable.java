@@ -1,6 +1,7 @@
 package com.kryptnostic.kodex.v1.models;
 
 import java.io.IOException;
+import java.io.Serializable;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -15,8 +16,8 @@ import com.kryptnostic.kodex.v1.security.SecurityConfiguration;
 import com.kryptnostic.kodex.v1.security.SecurityConfigurationMapping;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = As.PROPERTY, property = Encryptable.FIELD_CLASS)
-public abstract class Encryptable<T> {
-
+public abstract class Encryptable<T> implements Serializable {
+    private static final long serialVersionUID = 5128167833341065251L;
     public static final String FIELD_CLASS = "@class";
     public static final String FIELD_ENCRYPTED_CLASS_NAME = "name";
     public static final String FIELD_ENCRYPTED_DATA = "data";
