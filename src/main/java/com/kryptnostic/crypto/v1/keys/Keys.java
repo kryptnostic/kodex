@@ -1,4 +1,4 @@
-package com.kryptnostic.heracles.v1.keys;
+package com.kryptnostic.crypto.v1.keys;
 
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;

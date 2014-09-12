@@ -1,4 +1,4 @@
-package com.kryptnostic.heracles.v1.ciphers;
+package com.kryptnostic.crypto.v1.ciphers;
 
 import java.nio.ByteBuffer;
 import java.security.AlgorithmParameters;
@@ -21,7 +21,7 @@ import javax.crypto.spec.SecretKeySpec;
 
 import org.apache.commons.codec.binary.StringUtils;
 
-import com.kryptnostic.heracles.v1.keys.SecretKeyFactoryType;
+import com.kryptnostic.crypto.v1.keys.SecretKeyFactoryType;
 
 public class CryptoService {
     private static final int DEFAULT_PASSWORD_ITERATIONS = 65536;

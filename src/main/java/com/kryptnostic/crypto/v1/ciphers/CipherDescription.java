@@ -1,4 +1,4 @@
-package com.kryptnostic.heracles.v1.ciphers;
+package com.kryptnostic.crypto.v1.ciphers;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;

@@ -1,4 +1,4 @@
-package com.kryptnostic.heracles.v1.keys;
+package com.kryptnostic.crypto.v1.keys;
 
 import java.io.IOException;
 import java.security.KeyStore;
@@ -9,6 +9,8 @@ import java.security.cert.CertificateException;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import com.kryptnostic.crypto.v1.keys.Keystores;
 
 public class KeystoresTest {
     private static final String KEYSTORE = "security/rhizome.jks";

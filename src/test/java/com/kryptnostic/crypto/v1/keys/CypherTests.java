@@ -1,4 +1,4 @@
-package com.kryptnostic.heracles.v1.keys;
+package com.kryptnostic.crypto.v1.keys;
 
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
@@ -14,9 +14,9 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.kryptnostic.heracles.v1.ciphers.BlockCiphertext;
-import com.kryptnostic.heracles.v1.ciphers.CryptoService;
-import com.kryptnostic.heracles.v1.ciphers.Cypher;
+import com.kryptnostic.crypto.v1.ciphers.BlockCiphertext;
+import com.kryptnostic.crypto.v1.ciphers.CryptoService;
+import com.kryptnostic.crypto.v1.ciphers.Cypher;
 
 public class CypherTests {
     private static CryptoService crypto;

@@ -1,4 +1,4 @@
-package com.kryptnostic.heracles.v1.ciphers;
+package com.kryptnostic.crypto.v1.ciphers;
 
 class CipherConstants {
     static final String AES_CIPHER = "AES";
