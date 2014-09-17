@@ -4,6 +4,7 @@ import java.util.List;
 
 import cern.colt.bitvector.BitVector;
 
+import com.kryptnostic.kodex.v1.security.SecurityService;
 import com.kryptnostic.multivariate.gf2.SimplePolynomialFunction;
 
 /**
@@ -21,4 +22,6 @@ public interface KryptnosticContext {
     void addNonces(List<BitVector> nonces);
 
     BitVector generateNonce();
+    
+    SecurityService getSecurityService();
 }
