@@ -14,7 +14,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kryptnostic.crypto.Ciphertext;
 import com.kryptnostic.crypto.PrivateKey;
 import com.kryptnostic.crypto.PublicKey;
-import com.kryptnostic.kodex.v1.security.SecurityConfiguration;
+import com.kryptnostic.kodex.v1.exceptions.types.SecurityConfigurationException;
 import com.kryptnostic.kodex.v1.security.SecurityConfigurationMapping;
 import com.kryptnostic.kodex.v1.serialization.jackson.KodexObjectMapperFactory;
 
@@ -34,15 +34,13 @@ public class FheEncryptable<T> extends Encryptable<T> {
     public FheEncryptable(@JsonProperty(FIELD_ENCRYPTED_DATA) Ciphertext ciphertext,
             @JsonProperty(FIELD_ENCRYPTED_CLASS_NAME) Ciphertext className,
             @JacksonInject SecurityConfigurationMapping mapping) throws JsonParseException, JsonMappingException,
-            IOException, ClassNotFoundException {
+            IOException, ClassNotFoundException, SecurityConfigurationException {
         super(ciphertext, className, mapping);
     }
 
     @Override
     protected Encryptable<T> encryptWith(SecurityConfigurationMapping service) throws JsonProcessingException {
-        @SuppressWarnings("rawtypes")
-        SecurityConfiguration config = getSecurityConfig(service);
-        PublicKey key = (PublicKey) config.getPublicKey();
+        PublicKey key = service.get(FheEncryptable.class, PublicKey.class);
         if (key == null) {
             throw new NullPointerException("No public key found");
         }
@@ -54,9 +52,7 @@ public class FheEncryptable<T> extends Encryptable<T> {
     @Override
     protected Encryptable<T> decryptWith(SecurityConfigurationMapping service) throws JsonParseException,
             JsonMappingException, IOException, ClassNotFoundException {
-        @SuppressWarnings("rawtypes")
-        SecurityConfiguration config = getSecurityConfig(service);
-        PrivateKey key = (PrivateKey) config.getPrivateKey();
+        PrivateKey key = service.get(FheEncryptable.class, PrivateKey.class);
         String className = StringUtils.newStringUtf8(key.decryptFromEnvelope(getEncryptedClassName()));
         byte[] objectBytes = key.decryptFromEnvelope(getEncryptedData());
         @SuppressWarnings("unchecked")
@@ -67,6 +63,11 @@ public class FheEncryptable<T> extends Encryptable<T> {
     @Override
     protected Encryptable<T> createEncrypted(Ciphertext ciphertext, Ciphertext className) {
         return new FheEncryptable<T>(ciphertext, className);
+    }
+
+    @Override
+    protected boolean canDecryptWith(SecurityConfigurationMapping mapping) {
+        return mapping.contains(FheEncryptable.class, PrivateKey.class);
     }
 
 }

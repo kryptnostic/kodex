@@ -44,7 +44,6 @@ public class KodexModule extends SimpleModule {
         SimpleDeserializers deserializers = new SimpleDeserializers();
         deserializers.addDeserializer(BitVector.class, new BitVectorDeserializer());
         deserializers.addDeserializer(SimplePolynomialFunction.class, new SimplePolynomialFunctionDeserializer());
-        // deserializers.addDeserializer(Encryptable.class, new EncryptableDeserializer(securityConfiguration));
 
         context.addSerializers(serializers);
         context.addDeserializers(deserializers);

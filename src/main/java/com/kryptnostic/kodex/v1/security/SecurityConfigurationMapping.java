@@ -1,23 +1,32 @@
 package com.kryptnostic.kodex.v1.security;
 
-import java.util.Map;
-
-import com.google.common.collect.Maps;
+import com.google.common.collect.HashBasedTable;
+import com.google.common.collect.Table;
 
 public class SecurityConfigurationMapping {
 
-    private final Map<Class, SecurityConfiguration<?, ?>> map;
+    private final Table<Class, Class, Object> table;
 
     public SecurityConfigurationMapping() {
-        map = Maps.newHashMap();
+        table = HashBasedTable.create();
     }
 
-    public SecurityConfigurationMapping add(Class scheme, Object publicKey, Object privateKey) {
-        map.put(scheme, new SecurityConfiguration(publicKey, privateKey));
+    public SecurityConfigurationMapping add(Class encryptableClass, Object value) {
+        if (value != null) {
+            table.put(encryptableClass, value.getClass(), value);
+        }
         return this;
     }
 
-    public SecurityConfiguration<?, ?> get(Class scheme) {
-        return map.get(scheme);
+    public <T> T remove(Class encryptableClass, Class<T> valueClass) {
+        return (T) table.remove(encryptableClass, valueClass);
+    }
+
+    public <T> T get(Class encryptableClass, Class<T> valueClass) {
+        return (T) table.get(encryptableClass, valueClass);
+    }
+
+    public boolean contains(Class encryptableClass, Class valueClass) {
+        return table.contains(encryptableClass, valueClass);
     }
 }

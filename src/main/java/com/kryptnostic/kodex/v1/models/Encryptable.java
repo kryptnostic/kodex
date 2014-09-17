@@ -12,7 +12,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.google.common.base.Preconditions;
 import com.kryptnostic.crypto.Ciphertext;
-import com.kryptnostic.kodex.v1.security.SecurityConfiguration;
+import com.kryptnostic.kodex.v1.exceptions.types.SecurityConfigurationException;
 import com.kryptnostic.kodex.v1.security.SecurityConfigurationMapping;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = As.PROPERTY, property = Encryptable.FIELD_CLASS)
@@ -29,9 +29,9 @@ public abstract class Encryptable<T> implements Serializable {
     @JsonIgnore
     private final String className;
     @JsonProperty(FIELD_ENCRYPTED_DATA)
-    private final Ciphertext encryptedData;
+    protected final Ciphertext encryptedData;
     @JsonProperty(FIELD_ENCRYPTED_CLASS_NAME)
-    private final Ciphertext encryptedClassName;
+    protected final Ciphertext encryptedClassName;
 
     public Encryptable(T data) {
         this.encrypted = false;
@@ -50,7 +50,8 @@ public abstract class Encryptable<T> implements Serializable {
     }
 
     public Encryptable(Ciphertext ciphertext, Ciphertext className, SecurityConfigurationMapping mapping)
-            throws JsonParseException, JsonMappingException, IOException, ClassNotFoundException {
+            throws JsonParseException, JsonMappingException, IOException, ClassNotFoundException,
+            SecurityConfigurationException {
         if (canDecryptWith(mapping)) {
             Encryptable<T> encrypted = createEncrypted(ciphertext, className);
             Encryptable<T> decrypted = encrypted.decryptWith(mapping);
@@ -70,16 +71,10 @@ public abstract class Encryptable<T> implements Serializable {
 
     protected abstract Encryptable<T> createEncrypted(Ciphertext ciphertext, Ciphertext className);
 
-    protected boolean canDecryptWith(SecurityConfigurationMapping mapping) {
-        SecurityConfiguration config = null;
-        if (mapping != null) {
-            config = mapping.get(this.getClass());
-            return config.getPrivateKey() != null;
-        }
-        return false;
-    }
+    protected abstract boolean canDecryptWith(SecurityConfigurationMapping mapping);
 
-    public final Encryptable<T> encrypt(SecurityConfigurationMapping service) throws JsonProcessingException {
+    public final Encryptable<T> encrypt(SecurityConfigurationMapping service) throws JsonProcessingException,
+            SecurityConfigurationException {
         if (this.encrypted) {
             return this;
         }
@@ -93,10 +88,11 @@ public abstract class Encryptable<T> implements Serializable {
         return encryptWith(service);
     }
 
-    protected abstract Encryptable<T> encryptWith(SecurityConfigurationMapping service) throws JsonProcessingException;
+    protected abstract Encryptable<T> encryptWith(SecurityConfigurationMapping service) throws JsonProcessingException,
+            SecurityConfigurationException;
 
     public final Encryptable<T> decrypt(SecurityConfigurationMapping service) throws JsonParseException,
-            JsonMappingException, IOException, ClassNotFoundException {
+            JsonMappingException, IOException, ClassNotFoundException, SecurityConfigurationException {
         if (!this.encrypted) {
             return this;
         }
@@ -118,17 +114,7 @@ public abstract class Encryptable<T> implements Serializable {
     }
 
     protected abstract Encryptable<T> decryptWith(SecurityConfigurationMapping service) throws JsonParseException,
-            JsonMappingException, IOException, ClassNotFoundException;
-
-    @SuppressWarnings("rawtypes")
-    protected SecurityConfiguration getSecurityConfig(SecurityConfigurationMapping service) {
-        Class clazz = this.getClass();
-        SecurityConfiguration config = service.get(clazz);
-        if (config == null) {
-            throw new NullPointerException("Security configuration is not defined for " + clazz.getCanonicalName());
-        }
-        return config;
-    }
+            JsonMappingException, IOException, ClassNotFoundException, SecurityConfigurationException;
 
     @JsonIgnore
     public T getData() {

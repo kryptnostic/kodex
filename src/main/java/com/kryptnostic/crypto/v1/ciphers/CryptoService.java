@@ -71,7 +71,7 @@ public class CryptoService {
         Cipher cipher = cypher.getInstance();
         cipher.init(Cipher.DECRYPT_MODE, spec, new IvParameterSpec(ciphertext.getIv()));
         int length = ByteBuffer.wrap(cipher.update(ciphertext.getEncryptedLength())).getInt();
-        String plaintext = StringUtils.newStringUtf8(cipher.doFinal(ciphertext.getCiphertext()));
+        String plaintext = StringUtils.newStringUtf8(cipher.doFinal(ciphertext.getContents()));
         return plaintext.substring(0, length);
     }
 
