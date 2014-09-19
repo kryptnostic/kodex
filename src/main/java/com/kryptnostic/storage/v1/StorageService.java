@@ -3,6 +3,7 @@ package com.kryptnostic.storage.v1;
 import com.kryptnostic.kodex.v1.exceptions.types.BadRequestException;
 import com.kryptnostic.kodex.v1.exceptions.types.ResourceNotFoundException;
 import com.kryptnostic.storage.v1.models.Document;
+import com.kryptnostic.storage.v1.models.request.MetadataRequest;
 
 public interface StorageService {
     /**
@@ -32,4 +33,12 @@ public interface StorageService {
      * @throws ResourceNotFoundException
      */
     Document getDocument(String id) throws ResourceNotFoundException;
+    
+    /**
+     * Push metadata to the service
+     * @param metadata
+     * @return
+     * @throws BadRequestException 
+     */
+    String uploadMetadata(MetadataRequest metadata) throws BadRequestException;
 }

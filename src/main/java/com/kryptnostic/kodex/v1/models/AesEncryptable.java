@@ -116,6 +116,9 @@ public class AesEncryptable<T> extends Encryptable<T> {
 
     @Override
     protected boolean canDecryptWith(SecurityConfigurationMapping mapping) {
+        if (mapping == null) {
+            return false;
+        }
         return mapping.contains(AesEncryptable.class, CryptoService.class);
     }
 
