@@ -1,5 +1,7 @@
 package com.kryptnostic.storage.v1;
 
+import java.util.Collection;
+
 import com.kryptnostic.kodex.v1.exceptions.types.BadRequestException;
 import com.kryptnostic.kodex.v1.exceptions.types.ResourceNotFoundException;
 import com.kryptnostic.storage.v1.models.Document;
@@ -41,4 +43,10 @@ public interface StorageService {
      * @throws BadRequestException 
      */
     String uploadMetadata(MetadataRequest metadata) throws BadRequestException;
+    
+    /**
+     * 
+     * @return Collection of documentIds
+     */
+    Collection<String> getDocumentIds();
 }

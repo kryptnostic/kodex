@@ -1,5 +1,7 @@
 package com.kryptnostic.storage.v1.client;
 
+import java.util.Collection;
+
 import retrofit.http.Body;
 import retrofit.http.GET;
 import retrofit.http.POST;
@@ -42,4 +44,11 @@ public interface DocumentApi {
      */
     @GET(DOCUMENT + "/{" + ID + "}")
     DocumentResponse getDocument(@Path(ID) String id) throws ResourceNotFoundException;
+
+    /**
+     * 
+     * @return Collection of document ids
+     */
+    @GET(DOCUMENT)
+    BasicResponse<Collection<String>> getDocumentIds();
 }
