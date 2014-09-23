@@ -1,0 +1,45 @@
+package com.kryptnostic.kodex.v1.serialization.jackson;
+
+import java.io.IOException;
+
+import org.junit.Assert;
+import org.junit.Test;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kryptnostic.multivariate.CompoundPolynomialFunctionGF2;
+import com.kryptnostic.multivariate.CompoundPolynomialFunctions;
+import com.kryptnostic.multivariate.PolynomialFunctions;
+import com.kryptnostic.multivariate.gf2.CompoundPolynomialFunction;
+import com.kryptnostic.multivariate.gf2.SimplePolynomialFunction;
+
+public class CompoundPolynomialFunctionTests {
+
+    @Test
+    public void testCpfSerialization() throws JsonProcessingException {
+        SimplePolynomialFunction f = PolynomialFunctions.randomFunction( 128 , 512 );
+        SimplePolynomialFunction g = PolynomialFunctions.randomFunction( 512 , 256 );
+        SimplePolynomialFunction h = PolynomialFunctions.randomFunction( 256 , 64 );
+        CompoundPolynomialFunction cpf = CompoundPolynomialFunctions.fromFunctions( f , g , h );
+
+        KodexObjectMapperFactory factory = new KodexObjectMapperFactory();
+        ObjectMapper mapper = factory.getObjectMapper();
+        String serializedCpf = mapper.writeValueAsString(cpf);
+        Assert.assertNotNull(serializedCpf);
+    }
+    
+    @Test
+    public void testCpfDeserialization() throws IOException {
+        SimplePolynomialFunction f = PolynomialFunctions.randomFunction( 128 , 512 );
+        SimplePolynomialFunction g = PolynomialFunctions.randomFunction( 512 , 256 );
+        SimplePolynomialFunction h = PolynomialFunctions.randomFunction( 256 , 64 );
+        CompoundPolynomialFunction cpf = CompoundPolynomialFunctions.fromFunctions( f , g , h );
+
+        KodexObjectMapperFactory factory = new KodexObjectMapperFactory();
+        ObjectMapper mapper = factory.getObjectMapper();
+        String serializedCpf = mapper.writeValueAsString(cpf);
+        
+        CompoundPolynomialFunction recovered = mapper.readValue(serializedCpf, CompoundPolynomialFunctionGF2.class);
+        Assert.assertEquals(cpf, recovered);
+    }
+}
