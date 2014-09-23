@@ -3,22 +3,22 @@ package com.kryptnostic;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
-import org.junit.BeforeClass;
+import org.junit.Before;
 
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kryptnostic.kodex.v1.serialization.jackson.KodexObjectMapperFactory;
 
 public class BaseSerializationTest {
 
-    protected static ObjectMapper mapper;
+    protected ObjectMapper mapper;
 
-    @BeforeClass
-    public static void init() {
-        mapper = new KodexObjectMapperFactory().getObjectMapper();
-
+    @Before
+    public void init() {
+        mapper = new KodexObjectMapperFactory().getObjectMapper(null);
     }
 
     protected String wrapQuotes(String m) {
@@ -30,9 +30,16 @@ public class BaseSerializationTest {
         mapper.writeValue(out, val);
         return out.toString();
     }
+
+    @SuppressWarnings("unchecked")
+    protected <T> T deserialize(String in, @SuppressWarnings("rawtypes") Class type) throws JsonParseException,
+            JsonMappingException, IOException {
+        return (T) mapper.readValue(in, type);
+    }
     
     @SuppressWarnings("unchecked")
-    protected <T> T deserialize(String in, Class type) throws JsonParseException, JsonMappingException, IOException {
+    protected <T> T deserialize(String in, @SuppressWarnings("rawtypes") TypeReference type) throws JsonParseException,
+            JsonMappingException, IOException {
         return (T) mapper.readValue(in, type);
     }
 }

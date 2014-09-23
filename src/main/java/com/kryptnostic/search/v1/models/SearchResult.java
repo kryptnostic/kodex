@@ -4,20 +4,20 @@ import java.util.Collection;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.kryptnostic.kodex.v1.indexing.metadata.Metadatum;
+import com.kryptnostic.kodex.v1.models.Encryptable;
 
 public class SearchResult {
     private static final String METADATA = "metadata";
     private static final String SCORE = "score";
     private static final String DATE = "date";
     
-    private final Collection<Metadatum> metadata;
+    private final Collection<Encryptable<?>> metadata;
     private final Integer score;
     private final String date;
 
     @JsonCreator
     public SearchResult(
-            @JsonProperty( METADATA ) Collection<Metadatum> metadata, 
+            @JsonProperty( METADATA ) Collection<Encryptable<?>> metadata, 
             @JsonProperty( SCORE ) Integer score, 
             @JsonProperty( DATE ) String date) {
         this.metadata = metadata;
@@ -26,7 +26,7 @@ public class SearchResult {
     }
 
     @JsonProperty( METADATA ) 
-    public Collection<Metadatum> getMetadata() {
+    public Collection<Encryptable<?>> getMetadata() {
         return metadata;
     }
 

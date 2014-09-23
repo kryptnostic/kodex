@@ -2,9 +2,12 @@ package com.kryptnostic.kodex.v1.client;
 
 import com.kryptnostic.kodex.v1.indexing.IndexingService;
 import com.kryptnostic.kodex.v1.indexing.MetadataKeyService;
+import com.kryptnostic.kodex.v1.security.SecurityService;
 import com.kryptnostic.search.v1.client.SearchApi;
 import com.kryptnostic.storage.v1.client.DocumentApi;
 import com.kryptnostic.storage.v1.client.MetadataApi;
+import com.kryptnostic.storage.v1.client.NonceApi;
+import com.kryptnostic.storage.v1.client.SearchFunctionApi;
 
 /**
  * KryptonsticServicesFactory to decouple services used in Kryptnostic client interfaces from the Kodex.
@@ -19,7 +22,14 @@ public interface KryptnosticServicesFactory {
 
     SearchApi createSearchApi();
 
-    MetadataKeyService createMetadataKeyService();
+    MetadataKeyService createMetadataKeyService(KryptnosticContext context);
 
     IndexingService createIndexingService();
+
+    NonceApi createNonceService();
+
+    SecurityService createSecurityService();
+
+    SearchFunctionApi createSearchFunctionService();
+
 }
