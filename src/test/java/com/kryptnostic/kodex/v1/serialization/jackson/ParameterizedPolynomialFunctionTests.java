@@ -12,7 +12,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kryptnostic.linear.BitUtils;
 import com.kryptnostic.multivariate.PolynomialFunctions;
 import com.kryptnostic.multivariate.gf2.SimplePolynomialFunction;
-import com.kryptnostic.multivariate.parameterization.ParameterizedPolynomialFunctionGF2;
 import com.kryptnostic.multivariate.parameterization.ParameterizedPolynomialFunctions;
 
 public class ParameterizedPolynomialFunctionTests {
