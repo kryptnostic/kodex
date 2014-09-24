@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.module.SimpleSerializers;
 import com.kryptnostic.kodex.v1.models.Encryptable;
 import com.kryptnostic.kodex.v1.security.SecurityConfigurationMapping;
+import com.kryptnostic.multivariate.gf2.Monomial;
 
 @SuppressWarnings("serial")
 public class KodexModule extends SimpleModule {
@@ -36,11 +37,13 @@ public class KodexModule extends SimpleModule {
 
         SimpleSerializers serializers = new SimpleSerializers();
         serializers.addSerializer(BitVector.class, new BitVectorSerializer());
+        serializers.addSerializer(Monomial.class, new MonomialSerializer());
 //        serializers.addSerializer(SimplePolynomialFunction.class, new SimplePolynomialFunctionSerializer());
         serializers.addSerializer(Encryptable.class, new EncryptableSerializer(securityConfiguration));
 
         SimpleDeserializers deserializers = new SimpleDeserializers();
         deserializers.addDeserializer(BitVector.class, new BitVectorDeserializer());
+        deserializers.addDeserializer(Monomial.class, new MonomialDeserializer());
 //        deserializers.addDeserializer(SimplePolynomialFunction.class, new SimplePolynomialFunctionDeserializer());
 
         context.addSerializers(serializers);
