@@ -5,8 +5,11 @@ import java.io.IOException;
 import org.junit.Assert;
 import org.junit.Test;
 
+import cern.colt.bitvector.BitVector;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kryptnostic.linear.BitUtils;
 import com.kryptnostic.multivariate.CompoundPolynomialFunctionGF2;
 import com.kryptnostic.multivariate.CompoundPolynomialFunctions;
 import com.kryptnostic.multivariate.PolynomialFunctions;
@@ -23,7 +26,7 @@ public class CompoundPolynomialFunctionTests {
         CompoundPolynomialFunction cpf = CompoundPolynomialFunctions.fromFunctions( f , g , h );
 
         KodexObjectMapperFactory factory = new KodexObjectMapperFactory();
-        ObjectMapper mapper = factory.getObjectMapper();
+        ObjectMapper mapper = factory.getObjectMapper(null);
         String serializedCpf = mapper.writeValueAsString(cpf);
         Assert.assertNotNull(serializedCpf);
     }
@@ -36,10 +39,11 @@ public class CompoundPolynomialFunctionTests {
         CompoundPolynomialFunction cpf = CompoundPolynomialFunctions.fromFunctions( f , g , h );
 
         KodexObjectMapperFactory factory = new KodexObjectMapperFactory();
-        ObjectMapper mapper = factory.getObjectMapper();
+        ObjectMapper mapper = factory.getObjectMapper(null);
         String serializedCpf = mapper.writeValueAsString(cpf);
         
-        CompoundPolynomialFunction recovered = mapper.readValue(serializedCpf, CompoundPolynomialFunctionGF2.class);
-        Assert.assertEquals(cpf, recovered);
+        CompoundPolynomialFunction recovered = mapper.readValue(serializedCpf, CompoundPolynomialFunction.class);
+        BitVector input = BitUtils.randomVector(128);
+        Assert.assertEquals(cpf.apply(input), recovered.apply(input));
     }
 }
