@@ -22,7 +22,7 @@ public class SimplePolynomialFunctionTests extends BaseSerializationTest {
     public void serializeSpfTest() throws JsonGenerationException, JsonMappingException, IOException {
         SimplePolynomialFunction spf = PolynomialFunctions.randomFunction(LEN, LEN);
 
-        String expected = wrapQuotes(PolynomialFunctions.marshalSimplePolynomialFunction(spf));
+        String expected = mapper.writeValueAsString(spf);
 
         Assert.assertEquals(expected, serialize(spf));
     }
@@ -30,8 +30,8 @@ public class SimplePolynomialFunctionTests extends BaseSerializationTest {
     @Test
     public void deserializeSpfTest() throws JsonParseException, JsonMappingException, IOException {
         SimplePolynomialFunction spf = PolynomialFunctions.randomFunction(LEN, LEN);
-        String serialized = wrapQuotes(PolynomialFunctions.marshalSimplePolynomialFunction(spf));
-        SimplePolynomialFunction out = deserialize(serialized, SimplePolynomialFunction.class);
+        String serialized = mapper.writeValueAsString(spf);
+        SimplePolynomialFunction out = mapper.readValue(serialized, SimplePolynomialFunction.class);
         Assert.assertEquals(spf, out);
 
         Assert.assertArrayEquals(spf.getContributions(), out.getContributions());

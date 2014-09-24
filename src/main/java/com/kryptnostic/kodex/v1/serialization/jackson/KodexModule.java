@@ -38,13 +38,11 @@ public class KodexModule extends SimpleModule {
         SimpleSerializers serializers = new SimpleSerializers();
         serializers.addSerializer(BitVector.class, new BitVectorSerializer());
         serializers.addSerializer(Monomial.class, new MonomialSerializer());
-//        serializers.addSerializer(SimplePolynomialFunction.class, new SimplePolynomialFunctionSerializer());
         serializers.addSerializer(Encryptable.class, new EncryptableSerializer(securityConfiguration));
 
         SimpleDeserializers deserializers = new SimpleDeserializers();
         deserializers.addDeserializer(BitVector.class, new BitVectorDeserializer());
         deserializers.addDeserializer(Monomial.class, new MonomialDeserializer());
-//        deserializers.addDeserializer(SimplePolynomialFunction.class, new SimplePolynomialFunctionDeserializer());
 
         context.addSerializers(serializers);
         context.addDeserializers(deserializers);
