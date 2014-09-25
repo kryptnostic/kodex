@@ -10,7 +10,6 @@ import cern.colt.bitvector.BitVector;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kryptnostic.linear.BitUtils;
-import com.kryptnostic.multivariate.CompoundPolynomialFunctionGF2;
 import com.kryptnostic.multivariate.CompoundPolynomialFunctions;
 import com.kryptnostic.multivariate.PolynomialFunctions;
 import com.kryptnostic.multivariate.gf2.CompoundPolynomialFunction;
