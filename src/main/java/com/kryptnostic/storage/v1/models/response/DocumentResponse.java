@@ -3,6 +3,7 @@ package com.kryptnostic.storage.v1.models.response;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.kryptnostic.kodex.v1.models.Encryptable;
 import com.kryptnostic.kodex.v1.models.response.BasicResponse;
 import com.kryptnostic.storage.v1.models.Document;
 
@@ -15,7 +16,7 @@ public class DocumentResponse extends BasicResponse<Document> {
     }
 
     @JsonIgnore
-    public DocumentResponse(String body, int status, boolean success) {
+    public DocumentResponse(Encryptable<String> body, int status, boolean success) {
         super(new Document(body), status, success);
     }
 
