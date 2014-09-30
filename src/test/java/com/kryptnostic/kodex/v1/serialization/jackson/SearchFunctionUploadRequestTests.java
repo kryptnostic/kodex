@@ -21,7 +21,7 @@ public class SearchFunctionUploadRequestTests extends BaseSerializationTest {
         SimplePolynomialFunction function = PolynomialFunctions.randomFunction(LEN, LEN);
         SearchFunctionUploadRequest req = new SearchFunctionUploadRequest(function);
 
-        String str = "{\"function\":" + mapper.writeValueAsString(function) + "}";
+        String str = "{\"function\":" + serialize(function) + "}";
 
         Assert.assertEquals(str, serialize(req));
     }
@@ -33,7 +33,7 @@ public class SearchFunctionUploadRequestTests extends BaseSerializationTest {
 
         String str = "{\"function\":" + mapper.writeValueAsString(function) + "}";
 
-        SearchFunctionUploadRequest out = mapper.readValue(str, SearchFunctionUploadRequest.class);
+        SearchFunctionUploadRequest out = deserialize(str, SearchFunctionUploadRequest.class);
 
         Assert.assertEquals(req.getFunction(), out.getFunction());
     }
