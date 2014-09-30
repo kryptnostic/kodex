@@ -7,28 +7,22 @@ import org.junit.Test;
 
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonMappingException;
-import com.kryptnostic.BaseSerializationTest;
-import com.kryptnostic.storage.v1.models.response.DocumentResponse;
+import com.kryptnostic.kodex.v1.models.AesEncryptable;
+import com.kryptnostic.storage.v1.models.request.AesEncryptableBase;
 
-public class DocumentResponseTests extends BaseSerializationTest {
+public class DocumentResponseTests extends AesEncryptableBase {
 
-    @Test
-    public void testSerialize() throws JsonGenerationException, JsonMappingException, IOException {
-        DocumentResponse resp = new DocumentResponse("this is my body", 200, true);
-
-        String expected = "{\"data\":{\"body\":\"this is my body\"},\"status\":200,\"success\":true}";
-
-        Assert.assertEquals(expected, serialize(resp));
-    }
+    // TODO add reflexive jackson annotation checker 
     
     @Test
-    public void testDeerialize() throws JsonGenerationException, JsonMappingException, IOException {
-        DocumentResponse resp = new DocumentResponse("this is my body", 200, true);
+    public void testDeserialize() throws JsonGenerationException, JsonMappingException, IOException {
+        initImplicitEncryption();
+        DocumentResponse resp = new DocumentResponse(new AesEncryptable<String>("this is my body"), 200, true);
 
-        String expected = "{\"data\":{\"body\":\"this is my body\"},\"status\":200,\"success\":true}";
+        String serialized = serialize(resp);
 
-        DocumentResponse result = deserialize(expected, DocumentResponse.class);
+        DocumentResponse result = deserialize(serialized, DocumentResponse.class);
         
-        Assert.assertEquals(resp.getData(), result.getData());
+        Assert.assertEquals(resp.getData().getBody().getData(), result.getData().getBody().getData());
     }
 }

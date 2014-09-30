@@ -1,8 +1,6 @@
 package com.kryptnostic.storage.v1.models.request;
 
 import java.io.IOException;
-import java.math.BigInteger;
-import java.security.SecureRandom;
 import java.util.Arrays;
 
 import org.hamcrest.CoreMatchers;
@@ -15,7 +13,6 @@ import cern.colt.bitvector.BitVector;
 
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonMappingException;
-import com.kryptnostic.BaseSerializationTest;
 import com.kryptnostic.bitwise.BitVectors;
 import com.kryptnostic.crypto.v1.ciphers.CryptoService;
 import com.kryptnostic.crypto.v1.ciphers.Cypher;
@@ -24,26 +21,14 @@ import com.kryptnostic.kodex.v1.indexing.metadata.Metadatum;
 import com.kryptnostic.kodex.v1.models.AesEncryptable;
 import com.kryptnostic.kodex.v1.models.Encryptable;
 import com.kryptnostic.kodex.v1.security.SecurityConfigurationMapping;
-import com.kryptnostic.kodex.v1.serialization.jackson.KodexObjectMapperFactory;
 import com.kryptnostic.linear.BitUtils;
 
-public class AesMetadataRequestTests extends BaseSerializationTest {
+public class AesMetadataRequestTests extends AesEncryptableBase {
 
-    private static final int INDEX_LENGTH = 256;
-
-    private CryptoService crypto;
-    private SecurityConfigurationMapping config;
+    private static final int INDEX_LENGTH = 256;    
 
     @Rule
     public ExpectedException exception = ExpectedException.none();
-
-    private void initImplicitEncryption() {
-        // register key with object mapper
-        this.crypto = new CryptoService(Cypher.AES_CTR_PKCS5_128, new BigInteger(130, new SecureRandom()).toString(32)
-                .toCharArray());
-
-        resetSecurityConfiguration();
-    }
 
     @Test
     /**
@@ -198,10 +183,7 @@ public class AesMetadataRequestTests extends BaseSerializationTest {
         Assert.assertTrue(caught);
     }
 
-    private void resetSecurityConfiguration() {
-        this.config = new SecurityConfigurationMapping().add(AesEncryptable.class, this.crypto);
-        this.mapper = new KodexObjectMapperFactory().getObjectMapper(config);
-    }
+    
 
     @Test
     /**
