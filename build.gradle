@@ -50,7 +50,6 @@ repositories {
 
 }
 
-ext.hazelcast_version='3.2.4'
 ext.fhe_core_version='0.1.1-SNAPSHOT'
 ext.retrofit_version='1.6.1'
 
@@ -69,7 +68,7 @@ dependencies {
      * GUAVA 
      * EventBus, FluentIterables, ListenableFutures and more
      */
-    compile 'com.google.guava:guava:15.0'
+    compile 'com.google.guava:guava:18.0'
 
     /*
      JODA TIME - A better datetime class.
@@ -90,15 +89,6 @@ dependencies {
      * Kryo serialization -- faster generic Java serialization
      */
     compile 'com.esotericsoftware.kryo:kryo:2.22'
-
-    /*
-     * HAZELCAST - DISTRIBUTED DATA GRID
-     * Transparent http clustering, distributed java.util collections
-     */
-    compile "com.hazelcast:hazelcast:${hazelcast_version}"
-    compile "com.hazelcast:hazelcast-client:${hazelcast_version}"
-    compile "com.hazelcast:hazelcast-wm:${hazelcast_version}"
-    compile "com.hazelcast:hazelcast-spring:${hazelcast_version}"
 
 	if( project.hasProperty('developmentMode') && project.developmentMode ) {
         logger.quiet("$project.name is using project dependencies.")
