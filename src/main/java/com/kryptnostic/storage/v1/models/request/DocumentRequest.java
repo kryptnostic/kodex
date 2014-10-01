@@ -1,21 +1,20 @@
 package com.kryptnostic.storage.v1.models.request;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.kryptnostic.storage.v1.models.Document;
+
 public class DocumentRequest {
-    private String document;
+    private static final String DOCUMENT="document";
+    private final Document document;
 
-    public DocumentRequest() {
-
-    }
-
-    public DocumentRequest(String document) {
+    @JsonCreator
+    public DocumentRequest(@JsonProperty(DOCUMENT) Document document) {
         this.document = document;
     }
-
-    public String getDocument() {
+    
+    @JsonProperty(DOCUMENT)
+    public Document getDocument() {
         return document;
-    }
-
-    public void setDocument(String document) {
-        this.document = document;
     }
 }
