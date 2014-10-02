@@ -15,6 +15,8 @@ import com.kryptnostic.multivariate.gf2.SimplePolynomialFunction;
  *
  */
 public interface KryptnosticContext {
+    void setSearchFunction(SimplePolynomialFunction fn);
+    
     SimplePolynomialFunction getSearchFunction();
 
     List<BitVector> getNonces();

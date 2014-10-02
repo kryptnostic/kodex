@@ -16,6 +16,8 @@ public interface StorageService {
      * @throws BadRequestException
      */
     String uploadDocument(String document) throws BadRequestException;
+    
+    String uploadDocumentWithoutMetadata(String document) throws BadRequestException;
 
     /**
      * Update a document.

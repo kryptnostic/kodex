@@ -27,7 +27,7 @@ import com.kryptnostic.kodex.v1.serialization.jackson.KodexObjectMapperFactory;
 
 public class AesEncryptable<T> extends Encryptable<T> {
 
-    private final static ObjectMapper mapper = ( new KodexObjectMapperFactory() ).getObjectMapper(null);
+    private static ObjectMapper mapper = ( new KodexObjectMapperFactory() ).getObjectMapper(null);
 
     public AesEncryptable(T data) {
         super(data);
@@ -122,4 +122,9 @@ public class AesEncryptable<T> extends Encryptable<T> {
         return mapping.contains(AesEncryptable.class, CryptoService.class);
     }
 
+    // TODO: a little bit yucky. we should centralize this config
+    public static void setObjectMapper(ObjectMapper mapper) {
+        AesEncryptable.mapper = mapper;
+    }
+    
 }
