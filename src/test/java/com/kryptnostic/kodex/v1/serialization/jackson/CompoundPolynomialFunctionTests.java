@@ -9,7 +9,7 @@ import cern.colt.bitvector.BitVector;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.kryptnostic.linear.BitUtils;
+import com.kryptnostic.bitwise.BitVectors;
 import com.kryptnostic.multivariate.CompoundPolynomialFunctions;
 import com.kryptnostic.multivariate.PolynomialFunctions;
 import com.kryptnostic.multivariate.gf2.CompoundPolynomialFunction;
@@ -42,7 +42,7 @@ public class CompoundPolynomialFunctionTests {
         String serializedCpf = mapper.writeValueAsString(cpf);
         
         CompoundPolynomialFunction recovered = mapper.readValue(serializedCpf, CompoundPolynomialFunction.class);
-        BitVector input = BitUtils.randomVector(128);
+        BitVector input = BitVectors.randomVector(128);
         Assert.assertEquals(cpf.apply(input), recovered.apply(input));
     }
 }

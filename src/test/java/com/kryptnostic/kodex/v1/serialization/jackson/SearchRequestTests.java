@@ -12,7 +12,6 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.kryptnostic.BaseSerializationTest;
 import com.kryptnostic.bitwise.BitVectors;
-import com.kryptnostic.linear.BitUtils;
 import com.kryptnostic.search.v1.models.request.SearchRequest;
 
 public class SearchRequestTests extends BaseSerializationTest {
@@ -21,7 +20,7 @@ public class SearchRequestTests extends BaseSerializationTest {
 
     @Test
     public void serializeTest() throws JsonGenerationException, JsonMappingException, IOException {
-        BitVector searchToken = BitUtils.randomVector(LEN);
+        BitVector searchToken = BitVectors.randomVector(LEN);
         SearchRequest req = SearchRequest.searchToken(searchToken);
 
         String str = "{\"query\":[\"" + BitVectors.marshalBitvector(searchToken)
@@ -32,7 +31,7 @@ public class SearchRequestTests extends BaseSerializationTest {
 
     @Test
     public void deserializeTest() throws JsonParseException, JsonMappingException, IOException {
-        BitVector searchToken = BitUtils.randomVector(LEN);
+        BitVector searchToken = BitVectors.randomVector(LEN);
         SearchRequest req = SearchRequest.searchToken(searchToken);
         String str = "{\"query\":[\"" + BitVectors.marshalBitvector(searchToken)
                 + "\"],\"maxResults\":30,\"offset\":0,\"sortDate\":\"DESC\",\"sortScore\":\"DESC\"}";

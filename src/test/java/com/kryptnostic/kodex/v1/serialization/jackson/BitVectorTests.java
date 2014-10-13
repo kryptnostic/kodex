@@ -15,7 +15,6 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.google.common.collect.Lists;
 import com.kryptnostic.BaseSerializationTest;
 import com.kryptnostic.bitwise.BitVectors;
-import com.kryptnostic.linear.BitUtils;
 
 public class BitVectorTests extends BaseSerializationTest {
 
@@ -24,14 +23,14 @@ public class BitVectorTests extends BaseSerializationTest {
 
     @Test
     public void serializeBitvectorTest() throws JsonGenerationException, JsonMappingException, IOException {
-        BitVector bv = BitUtils.randomVector(LEN);
+        BitVector bv = BitVectors.randomVector(LEN);
         String expected = wrapQuotes(BitVectors.marshalBitvector(bv));
         Assert.assertEquals(expected, serialize(bv));
     }
 
     @Test
     public void deserializeBitvectorTest() throws JsonGenerationException, JsonMappingException, IOException {
-        BitVector bv = BitUtils.randomVector(LEN);
+        BitVector bv = BitVectors.randomVector(LEN);
         String serialized = wrapQuotes(BitVectors.marshalBitvector(bv));
         BitVector out = deserialize(serialized, BitVector.class);
 
@@ -59,7 +58,7 @@ public class BitVectorTests extends BaseSerializationTest {
     private Collection<BitVector> generateCollection(int size) {
         Collection<BitVector> vectors = Lists.newArrayList();
         for (int i = 0; i < 10; i++) {
-            vectors.add(BitUtils.randomVector(LEN));
+            vectors.add(BitVectors.randomVector(LEN));
         }
         return vectors;
     }

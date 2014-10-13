@@ -11,7 +11,7 @@ import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.kryptnostic.BaseSerializationTest;
-import com.kryptnostic.linear.BitUtils;
+import com.kryptnostic.bitwise.BitVectors;
 import com.kryptnostic.multivariate.PolynomialFunctions;
 import com.kryptnostic.multivariate.gf2.SimplePolynomialFunction;
 
@@ -39,7 +39,7 @@ public class SimplePolynomialFunctionTests extends BaseSerializationTest {
 
         for (int i = 0; i < 10000; i++) {
 
-            BitVector rando = BitUtils.randomVector(LEN);
+            BitVector rando = BitVectors.randomVector(LEN);
 
             Assert.assertEquals(spf.apply(rando), out.apply(rando));
         }
