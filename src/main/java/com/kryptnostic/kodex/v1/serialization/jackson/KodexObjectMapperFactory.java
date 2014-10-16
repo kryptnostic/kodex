@@ -5,10 +5,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.guava.GuavaModule;
 import com.fasterxml.jackson.module.afterburner.AfterburnerModule;
 import com.kryptnostic.kodex.v1.security.SecurityConfigurationMapping;
-import com.kryptnostic.multivariate.BasePolynomialFunction;
-import com.kryptnostic.multivariate.CompoundPolynomialFunctionGF2;
-import com.kryptnostic.multivariate.OptimizedPolynomialFunctionGF2;
-import com.kryptnostic.multivariate.parameterization.ParameterizedPolynomialFunctionGF2;
+import com.kryptnostic.multivariate.polynomial.BasePolynomialFunction;
+import com.kryptnostic.multivariate.polynomial.CompoundPolynomialFunctionGF2;
+import com.kryptnostic.multivariate.polynomial.OptimizedPolynomialFunctionGF2;
+import com.kryptnostic.multivariate.polynomial.ParameterizedPolynomialFunctionGF2;
 
 public class KodexObjectMapperFactory {
 
