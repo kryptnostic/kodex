@@ -18,7 +18,7 @@ public class SearchFunctionUploadRequestTests extends BaseSerializationTest {
 
     @Test
     public void serializeTest() throws JsonGenerationException, JsonMappingException, IOException {
-        SimplePolynomialFunction function = SimplePolynomialFunctions.randomFunction(LEN, LEN);
+        SimplePolynomialFunction function = SimplePolynomialFunctions.lightRandomFunction(LEN, LEN);
         SearchFunctionUploadRequest req = new SearchFunctionUploadRequest(function);
 
         String str = "{\"function\":" + serialize(function) + "}";
@@ -28,7 +28,7 @@ public class SearchFunctionUploadRequestTests extends BaseSerializationTest {
 
     @Test
     public void deserializeTest() throws JsonParseException, JsonMappingException, IOException {
-        SimplePolynomialFunction function = SimplePolynomialFunctions.randomFunction(LEN, LEN);
+        SimplePolynomialFunction function = SimplePolynomialFunctions.lightRandomFunction(LEN, LEN);
         SearchFunctionUploadRequest req = new SearchFunctionUploadRequest(function);
 
         String str = "{\"function\":" + mapper.writeValueAsString(function) + "}";

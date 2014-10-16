@@ -19,9 +19,9 @@ public class CompoundPolynomialFunctionTests {
 
     @Test
     public void testCpfSerialization() throws JsonProcessingException {
-        SimplePolynomialFunction f = SimplePolynomialFunctions.randomFunction( 128 , 512 );
-        SimplePolynomialFunction g = SimplePolynomialFunctions.randomFunction( 512 , 256 );
-        SimplePolynomialFunction h = SimplePolynomialFunctions.randomFunction( 256 , 64 );
+        SimplePolynomialFunction f = SimplePolynomialFunctions.lightRandomFunction( 128 , 512 );
+        SimplePolynomialFunction g = SimplePolynomialFunctions.lightRandomFunction( 512 , 256 );
+        SimplePolynomialFunction h = SimplePolynomialFunctions.lightRandomFunction( 256 , 64 );
         CompoundPolynomialFunction cpf = CompoundPolynomialFunctions.fromFunctions( f , g , h );
 
         KodexObjectMapperFactory factory = new KodexObjectMapperFactory();
@@ -32,9 +32,9 @@ public class CompoundPolynomialFunctionTests {
     
     @Test
     public void testCpfDeserialization() throws IOException {
-        SimplePolynomialFunction f = SimplePolynomialFunctions.randomFunction( 128 , 512 );
-        SimplePolynomialFunction g = SimplePolynomialFunctions.randomFunction( 512 , 256 );
-        SimplePolynomialFunction h = SimplePolynomialFunctions.randomFunction( 256 , 64 );
+        SimplePolynomialFunction f = SimplePolynomialFunctions.lightRandomFunction( 128 , 512 );
+        SimplePolynomialFunction g = SimplePolynomialFunctions.lightRandomFunction( 512 , 256 );
+        SimplePolynomialFunction h = SimplePolynomialFunctions.lightRandomFunction( 256 , 64 );
         CompoundPolynomialFunction cpf = CompoundPolynomialFunctions.fromFunctions( f , g , h );
 
         KodexObjectMapperFactory factory = new KodexObjectMapperFactory();
