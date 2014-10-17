@@ -10,16 +10,16 @@ import cern.colt.bitvector.BitVector;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kryptnostic.bitwise.BitVectors;
-import com.kryptnostic.multivariate.PolynomialFunctions;
 import com.kryptnostic.multivariate.gf2.SimplePolynomialFunction;
-import com.kryptnostic.multivariate.parameterization.ParameterizedPolynomialFunctions;
+import com.kryptnostic.multivariate.util.ParameterizedPolynomialFunctions;
+import com.kryptnostic.multivariate.util.SimplePolynomialFunctions;
 
 public class ParameterizedPolynomialFunctionTests {
 
     @Test
     public void testPpfSerialization() throws JsonProcessingException {
-        SimplePolynomialFunction base = PolynomialFunctions.randomFunction(128, 128);
-        SimplePolynomialFunction[] pipelines = { PolynomialFunctions.identity(128) };
+        SimplePolynomialFunction base = SimplePolynomialFunctions.lightRandomFunction(128, 128);
+        SimplePolynomialFunction[] pipelines = { SimplePolynomialFunctions.identity(128) };
         SimplePolynomialFunction parameterized = ParameterizedPolynomialFunctions.fromUnshiftedVariables(
                 base.getInputLength(), base, pipelines);
 
@@ -31,8 +31,8 @@ public class ParameterizedPolynomialFunctionTests {
 
     @Test
     public void testPpfDeserialization() throws IOException {
-        SimplePolynomialFunction base = PolynomialFunctions.randomFunction(128, 128);
-        SimplePolynomialFunction[] pipelines = { PolynomialFunctions.identity(128) };
+        SimplePolynomialFunction base = SimplePolynomialFunctions.lightRandomFunction(128, 128);
+        SimplePolynomialFunction[] pipelines = { SimplePolynomialFunctions.identity(128) };
         SimplePolynomialFunction parameterized = ParameterizedPolynomialFunctions.fromUnshiftedVariables(
                 base.getInputLength(), base, pipelines);
 

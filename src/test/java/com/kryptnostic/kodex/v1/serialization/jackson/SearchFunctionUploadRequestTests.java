@@ -9,8 +9,8 @@ import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.kryptnostic.BaseSerializationTest;
-import com.kryptnostic.multivariate.PolynomialFunctions;
 import com.kryptnostic.multivariate.gf2.SimplePolynomialFunction;
+import com.kryptnostic.multivariate.util.SimplePolynomialFunctions;
 import com.kryptnostic.search.v1.models.request.SearchFunctionUploadRequest;
 
 public class SearchFunctionUploadRequestTests extends BaseSerializationTest {
@@ -18,7 +18,7 @@ public class SearchFunctionUploadRequestTests extends BaseSerializationTest {
 
     @Test
     public void serializeTest() throws JsonGenerationException, JsonMappingException, IOException {
-        SimplePolynomialFunction function = PolynomialFunctions.randomFunction(LEN, LEN);
+        SimplePolynomialFunction function = SimplePolynomialFunctions.lightRandomFunction(LEN, LEN);
         SearchFunctionUploadRequest req = new SearchFunctionUploadRequest(function);
 
         String str = "{\"function\":" + serialize(function) + "}";
@@ -28,7 +28,7 @@ public class SearchFunctionUploadRequestTests extends BaseSerializationTest {
 
     @Test
     public void deserializeTest() throws JsonParseException, JsonMappingException, IOException {
-        SimplePolynomialFunction function = PolynomialFunctions.randomFunction(LEN, LEN);
+        SimplePolynomialFunction function = SimplePolynomialFunctions.lightRandomFunction(LEN, LEN);
         SearchFunctionUploadRequest req = new SearchFunctionUploadRequest(function);
 
         String str = "{\"function\":" + mapper.writeValueAsString(function) + "}";

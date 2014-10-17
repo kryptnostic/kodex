@@ -10,18 +10,18 @@ import cern.colt.bitvector.BitVector;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kryptnostic.bitwise.BitVectors;
-import com.kryptnostic.multivariate.CompoundPolynomialFunctions;
-import com.kryptnostic.multivariate.PolynomialFunctions;
 import com.kryptnostic.multivariate.gf2.CompoundPolynomialFunction;
 import com.kryptnostic.multivariate.gf2.SimplePolynomialFunction;
+import com.kryptnostic.multivariate.util.CompoundPolynomialFunctions;
+import com.kryptnostic.multivariate.util.SimplePolynomialFunctions;
 
 public class CompoundPolynomialFunctionTests {
 
     @Test
     public void testCpfSerialization() throws JsonProcessingException {
-        SimplePolynomialFunction f = PolynomialFunctions.randomFunction( 128 , 512 );
-        SimplePolynomialFunction g = PolynomialFunctions.randomFunction( 512 , 256 );
-        SimplePolynomialFunction h = PolynomialFunctions.randomFunction( 256 , 64 );
+        SimplePolynomialFunction f = SimplePolynomialFunctions.lightRandomFunction( 128 , 512 );
+        SimplePolynomialFunction g = SimplePolynomialFunctions.lightRandomFunction( 512 , 256 );
+        SimplePolynomialFunction h = SimplePolynomialFunctions.lightRandomFunction( 256 , 64 );
         CompoundPolynomialFunction cpf = CompoundPolynomialFunctions.fromFunctions( f , g , h );
 
         KodexObjectMapperFactory factory = new KodexObjectMapperFactory();
@@ -32,9 +32,9 @@ public class CompoundPolynomialFunctionTests {
     
     @Test
     public void testCpfDeserialization() throws IOException {
-        SimplePolynomialFunction f = PolynomialFunctions.randomFunction( 128 , 512 );
-        SimplePolynomialFunction g = PolynomialFunctions.randomFunction( 512 , 256 );
-        SimplePolynomialFunction h = PolynomialFunctions.randomFunction( 256 , 64 );
+        SimplePolynomialFunction f = SimplePolynomialFunctions.lightRandomFunction( 128 , 512 );
+        SimplePolynomialFunction g = SimplePolynomialFunctions.lightRandomFunction( 512 , 256 );
+        SimplePolynomialFunction h = SimplePolynomialFunctions.lightRandomFunction( 256 , 64 );
         CompoundPolynomialFunction cpf = CompoundPolynomialFunctions.fromFunctions( f , g , h );
 
         KodexObjectMapperFactory factory = new KodexObjectMapperFactory();

@@ -12,15 +12,15 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.kryptnostic.BaseSerializationTest;
 import com.kryptnostic.bitwise.BitVectors;
-import com.kryptnostic.multivariate.PolynomialFunctions;
 import com.kryptnostic.multivariate.gf2.SimplePolynomialFunction;
+import com.kryptnostic.multivariate.util.SimplePolynomialFunctions;
 
 public class SimplePolynomialFunctionTests extends BaseSerializationTest {
     private static final int LEN = 256;
 
     @Test
     public void serializeSpfTest() throws JsonGenerationException, JsonMappingException, IOException {
-        SimplePolynomialFunction spf = PolynomialFunctions.randomFunction(LEN, LEN);
+        SimplePolynomialFunction spf = SimplePolynomialFunctions.lightRandomFunction(LEN, LEN);
 
         String expected = mapper.writeValueAsString(spf);
 
@@ -29,7 +29,7 @@ public class SimplePolynomialFunctionTests extends BaseSerializationTest {
 
     @Test
     public void deserializeSpfTest() throws JsonParseException, JsonMappingException, IOException {
-        SimplePolynomialFunction spf = PolynomialFunctions.randomFunction(LEN, LEN);
+        SimplePolynomialFunction spf = SimplePolynomialFunctions.lightRandomFunction(LEN, LEN);
         String serialized = mapper.writeValueAsString(spf);
         SimplePolynomialFunction out = mapper.readValue(serialized, SimplePolynomialFunction.class);
         Assert.assertEquals(spf, out);
