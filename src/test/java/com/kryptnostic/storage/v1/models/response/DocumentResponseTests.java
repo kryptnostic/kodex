@@ -7,22 +7,25 @@ import org.junit.Test;
 
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonMappingException;
-import com.kryptnostic.kodex.v1.models.AesEncryptable;
+import com.kryptnostic.kodex.v1.exceptions.types.SecurityConfigurationException;
+import com.kryptnostic.kodex.v1.models.utils.AesEncryptableUtils;
 import com.kryptnostic.storage.v1.models.request.AesEncryptableBase;
 
 public class DocumentResponseTests extends AesEncryptableBase {
 
-    // TODO add reflexive jackson annotation checker 
-    
+    // TODO add jackson annotation checker
+
     @Test
-    public void testDeserialize() throws JsonGenerationException, JsonMappingException, IOException {
+    public void testDeserialize() throws JsonGenerationException, JsonMappingException, IOException,
+            SecurityConfigurationException, ClassNotFoundException {
         initImplicitEncryption();
-        DocumentResponse resp = new DocumentResponse(new AesEncryptable<String>("this is my body"), 200, true);
+        DocumentResponse resp = new DocumentResponse(AesEncryptableUtils.createEncryptedDocument("document1", "test cool thing",
+                config), 200, true);
 
         String serialized = serialize(resp);
 
         DocumentResponse result = deserialize(serialized, DocumentResponse.class);
-        
-        Assert.assertEquals(resp.getData().getBody().getData(), result.getData().getBody().getData());
+
+        Assert.assertEquals(resp.getData(), result.getData());
     }
 }

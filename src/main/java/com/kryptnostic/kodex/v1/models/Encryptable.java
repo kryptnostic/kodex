@@ -15,6 +15,12 @@ import com.kryptnostic.crypto.Ciphertext;
 import com.kryptnostic.kodex.v1.exceptions.types.SecurityConfigurationException;
 import com.kryptnostic.kodex.v1.security.SecurityConfigurationMapping;
 
+/**
+ * Note: It doesn't make sense to override equals because the encrypted bytes are random 
+ * @author sinaiman
+ *
+ * @param <T> The type of the wrapped data you want to encrypt
+ */
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = As.PROPERTY, property = Encryptable.FIELD_CLASS)
 public abstract class Encryptable<T> implements Serializable {
     private static final long serialVersionUID = 5128167833341065251L;

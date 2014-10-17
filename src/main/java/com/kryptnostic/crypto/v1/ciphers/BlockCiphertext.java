@@ -55,29 +55,15 @@ public class BlockCiphertext extends Ciphertext {
         return result;
     }
 
-    @Override
     public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
+        if (super.equals(obj)) {
+            BlockCiphertext other = (BlockCiphertext) obj;
+            boolean ivEquals = Arrays.equals(iv, other.iv);
+            boolean saltEquals = Arrays.equals(salt, other.salt);
+            boolean encryptedLengthEquals = Arrays.equals(encryptedLength, other.encryptedLength);
+        
+            return ivEquals && saltEquals && encryptedLengthEquals;
         }
-        if (obj == null) {
-            return false;
-        }
-        if (!( obj instanceof BlockCiphertext )) {
-            return false;
-        }
-        BlockCiphertext other = (BlockCiphertext) obj;
-        if (!Arrays.equals( encryptedLength , other.encryptedLength )) {
-            return false;
-        }
-        if (!Arrays.equals( iv , other.iv )) {
-            return false;
-        }
-        if (!Arrays.equals( salt , other.salt )) {
-            return false;
-        }
-        return true;
+        return false;
     }
-    
-    
 }

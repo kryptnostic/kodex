@@ -1,9 +1,11 @@
 package com.kryptnostic.storage.v1;
 
 import java.util.Collection;
+import java.util.Map;
 
 import com.kryptnostic.kodex.v1.exceptions.types.BadRequestException;
 import com.kryptnostic.kodex.v1.exceptions.types.ResourceNotFoundException;
+import com.kryptnostic.kodex.v1.indexing.metadata.Metadatum;
 import com.kryptnostic.storage.v1.models.Document;
 import com.kryptnostic.storage.v1.models.request.MetadataRequest;
 
@@ -51,4 +53,6 @@ public interface StorageService {
      * @return Collection of documentIds
      */
     Collection<String> getDocumentIds();
+    
+    Map<Integer, String> getDocumentFragments(Metadatum m, int i);
 }

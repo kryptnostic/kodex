@@ -10,6 +10,11 @@ import com.kryptnostic.kodex.v1.models.AesEncryptable;
 import com.kryptnostic.kodex.v1.security.SecurityConfigurationMapping;
 import com.kryptnostic.kodex.v1.serialization.jackson.KodexObjectMapperFactory;
 
+/**
+ * Provides some utilities for setting up AES encryption
+ * @author sinaiman
+ *
+ */
 public class AesEncryptableBase extends BaseSerializationTest {
     protected CryptoService crypto;
     protected SecurityConfigurationMapping config;

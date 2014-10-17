@@ -17,7 +17,7 @@ import com.kryptnostic.kodex.v1.security.SecurityConfigurationMapping;
 public class EncryptableTests {
 
     private static final int PRIVATE_KEY_BLOCK_SIZE = 64;
-
+    
     @Test
     public void encryptableStringConstructionTest() {
         String plain = "I am cool";

@@ -18,7 +18,7 @@ public class ParameterizedPolynomialFunctionTests {
 
     @Test
     public void testPpfSerialization() throws JsonProcessingException {
-        SimplePolynomialFunction base = SimplePolynomialFunctions.lightRandomFunction(128, 128);
+        SimplePolynomialFunction base = SimplePolynomialFunctions.randomFunction(128, 128);
         SimplePolynomialFunction[] pipelines = { SimplePolynomialFunctions.identity(128) };
         SimplePolynomialFunction parameterized = ParameterizedPolynomialFunctions.fromUnshiftedVariables(
                 base.getInputLength(), base, pipelines);
@@ -31,7 +31,7 @@ public class ParameterizedPolynomialFunctionTests {
 
     @Test
     public void testPpfDeserialization() throws IOException {
-        SimplePolynomialFunction base = SimplePolynomialFunctions.lightRandomFunction(128, 128);
+        SimplePolynomialFunction base = SimplePolynomialFunctions.randomFunction(128, 128);
         SimplePolynomialFunction[] pipelines = { SimplePolynomialFunctions.identity(128) };
         SimplePolynomialFunction parameterized = ParameterizedPolynomialFunctions.fromUnshiftedVariables(
                 base.getInputLength(), base, pipelines);
