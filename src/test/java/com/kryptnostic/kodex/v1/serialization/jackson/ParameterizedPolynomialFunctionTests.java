@@ -9,7 +9,7 @@ import cern.colt.bitvector.BitVector;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.kryptnostic.linear.BitUtils;
+import com.kryptnostic.bitwise.BitVectors;
 import com.kryptnostic.multivariate.gf2.SimplePolynomialFunction;
 import com.kryptnostic.multivariate.util.ParameterizedPolynomialFunctions;
 import com.kryptnostic.multivariate.util.SimplePolynomialFunctions;
@@ -41,7 +41,7 @@ public class ParameterizedPolynomialFunctionTests {
         String serializedPpf = mapper.writeValueAsString(parameterized);
 
         SimplePolynomialFunction recovered = mapper.readValue(serializedPpf, SimplePolynomialFunction.class);
-        BitVector input = BitUtils.randomVector(128);
+        BitVector input = BitVectors.randomVector(128);
         Assert.assertEquals(parameterized.apply(input), recovered.apply(input));
     }
 }

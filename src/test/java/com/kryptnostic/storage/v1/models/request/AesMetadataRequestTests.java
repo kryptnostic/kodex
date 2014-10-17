@@ -21,7 +21,6 @@ import com.kryptnostic.kodex.v1.indexing.metadata.Metadatum;
 import com.kryptnostic.kodex.v1.models.AesEncryptable;
 import com.kryptnostic.kodex.v1.models.Encryptable;
 import com.kryptnostic.kodex.v1.security.SecurityConfigurationMapping;
-import com.kryptnostic.linear.BitUtils;
 
 public class AesMetadataRequestTests extends AesEncryptableBase {
 
@@ -38,7 +37,7 @@ public class AesMetadataRequestTests extends AesEncryptableBase {
     public void testImplicitDeserialization() throws IOException, SecurityConfigurationException {
         initImplicitEncryption();
 
-        BitVector key = BitUtils.randomVector(INDEX_LENGTH);
+        BitVector key = BitVectors.randomVector(INDEX_LENGTH);
         Metadatum metadatum = new Metadatum("TEST", "test", Arrays.asList(1, 2, 3));
         Encryptable<Metadatum> data = new AesEncryptable<Metadatum>(metadatum);
 
@@ -76,7 +75,7 @@ public class AesMetadataRequestTests extends AesEncryptableBase {
     public void testImplicitDeserializationKeyless() throws IOException, SecurityConfigurationException {
         initImplicitEncryption();
 
-        BitVector key = BitUtils.randomVector(INDEX_LENGTH);
+        BitVector key = BitVectors.randomVector(INDEX_LENGTH);
         Metadatum metadatum = new Metadatum("TEST", "test", Arrays.asList(1, 2, 3));
         Encryptable<Metadatum> data = new AesEncryptable<Metadatum>(metadatum);
 
@@ -129,7 +128,7 @@ public class AesMetadataRequestTests extends AesEncryptableBase {
     public void testSerializationWithImplicitEncryption() throws JsonGenerationException, JsonMappingException,
             IOException {
         initImplicitEncryption();
-        BitVector key = BitUtils.randomVector(INDEX_LENGTH);
+        BitVector key = BitVectors.randomVector(INDEX_LENGTH);
         Metadatum metadatum = new Metadatum("TEST", "test", Arrays.asList(1, 2, 3));
         Encryptable<Metadatum> data = new AesEncryptable<Metadatum>(metadatum);
 
@@ -163,7 +162,7 @@ public class AesMetadataRequestTests extends AesEncryptableBase {
             IOException {
         initKeylessImplicitEncryption();
 
-        BitVector key = BitUtils.randomVector(INDEX_LENGTH);
+        BitVector key = BitVectors.randomVector(INDEX_LENGTH);
         Metadatum metadatum = new Metadatum("TEST", "test", Arrays.asList(1, 2, 3));
         Encryptable<Metadatum> data = new AesEncryptable<Metadatum>(metadatum);
 
@@ -195,7 +194,7 @@ public class AesMetadataRequestTests extends AesEncryptableBase {
      */
     public void testSerializationWithExplicitEncryption() throws JsonGenerationException, JsonMappingException,
             IOException, SecurityConfigurationException {
-        BitVector key = BitUtils.randomVector(INDEX_LENGTH);
+        BitVector key = BitVectors.randomVector(INDEX_LENGTH);
         Metadatum metadatum = new Metadatum("TEST", "test", Arrays.asList(1, 2, 3));
         Encryptable<Metadatum> data = new AesEncryptable<Metadatum>(metadatum);
 

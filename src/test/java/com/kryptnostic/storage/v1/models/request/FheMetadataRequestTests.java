@@ -23,7 +23,6 @@ import com.kryptnostic.kodex.v1.models.Encryptable;
 import com.kryptnostic.kodex.v1.models.FheEncryptable;
 import com.kryptnostic.kodex.v1.security.SecurityConfigurationMapping;
 import com.kryptnostic.kodex.v1.serialization.jackson.KodexObjectMapperFactory;
-import com.kryptnostic.linear.BitUtils;
 
 /**
  * @TODO
@@ -60,7 +59,7 @@ public class FheMetadataRequestTests extends BaseSerializationTest {
     public void testImplicitDeserialization() throws IOException, SecurityConfigurationException {
         initImplicitEncryption();
 
-        BitVector key = BitUtils.randomVector(INDEX_LENGTH);
+        BitVector key = BitVectors.randomVector(INDEX_LENGTH);
         Metadatum metadatum = new Metadatum("TEST", "test", Arrays.asList(1, 2, 3));
         Encryptable<Metadatum> data = new FheEncryptable<Metadatum>(metadatum);
 
@@ -102,7 +101,7 @@ public class FheMetadataRequestTests extends BaseSerializationTest {
         this.privKey = null;
         resetSecurityConfiguration();
 
-        BitVector key = BitUtils.randomVector(INDEX_LENGTH);
+        BitVector key = BitVectors.randomVector(INDEX_LENGTH);
         Metadatum metadatum = new Metadatum("TEST", "test", Arrays.asList(1, 2, 3));
         Encryptable<Metadatum> data = new FheEncryptable<Metadatum>(metadatum);
 
@@ -152,7 +151,7 @@ public class FheMetadataRequestTests extends BaseSerializationTest {
     public void testSerializationWithImplicitEncryption() throws JsonGenerationException, JsonMappingException,
             IOException {
         initImplicitEncryption();
-        BitVector key = BitUtils.randomVector(INDEX_LENGTH);
+        BitVector key = BitVectors.randomVector(INDEX_LENGTH);
         Metadatum metadatum = new Metadatum("TEST", "test", Arrays.asList(1, 2, 3));
         Encryptable<Metadatum> data = new FheEncryptable<Metadatum>(metadatum);
 
@@ -186,7 +185,7 @@ public class FheMetadataRequestTests extends BaseSerializationTest {
             IOException {
         initKeylessImplicitEncryption();
 
-        BitVector key = BitUtils.randomVector(INDEX_LENGTH);
+        BitVector key = BitVectors.randomVector(INDEX_LENGTH);
         Metadatum metadatum = new Metadatum("TEST", "test", Arrays.asList(1, 2, 3));
         Encryptable<Metadatum> data = new FheEncryptable<Metadatum>(metadatum);
 
@@ -222,7 +221,7 @@ public class FheMetadataRequestTests extends BaseSerializationTest {
      */
     public void testSerializationWithExplicitEncryption() throws JsonGenerationException, JsonMappingException,
             IOException, SecurityConfigurationException {
-        BitVector key = BitUtils.randomVector(INDEX_LENGTH);
+        BitVector key = BitVectors.randomVector(INDEX_LENGTH);
         Metadatum metadatum = new Metadatum("TEST", "test", Arrays.asList(1, 2, 3));
         Encryptable<Metadatum> data = new FheEncryptable<Metadatum>(metadatum);
 
