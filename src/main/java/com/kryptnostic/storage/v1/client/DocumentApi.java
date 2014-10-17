@@ -6,13 +6,12 @@ import java.util.List;
 import retrofit.http.Body;
 import retrofit.http.GET;
 import retrofit.http.POST;
+import retrofit.http.PUT;
 import retrofit.http.Path;
 
-import com.kryptnostic.kodex.v1.exceptions.types.BadRequestException;
 import com.kryptnostic.kodex.v1.exceptions.types.ResourceNotFoundException;
-import com.kryptnostic.kodex.v1.indexing.metadata.Metadatum;
 import com.kryptnostic.kodex.v1.models.response.BasicResponse;
-import com.kryptnostic.storage.v1.models.request.DocumentRequest;
+import com.kryptnostic.storage.v1.models.DocumentBlock;
 import com.kryptnostic.storage.v1.models.response.DocumentFragmentResponse;
 import com.kryptnostic.storage.v1.models.response.DocumentResponse;
 
@@ -21,22 +20,23 @@ public interface DocumentApi {
     String ID = "id";
 
     /**
-     * Upload a document
+     * Request a new document be created for later updating
      * 
-     * @param document
-     * @return The ID of the newly saved document
+     * @return The ID of the newly created document
      */
-    @POST(DOCUMENT)
-    BasicResponse<String> uploadDocument(@Body DocumentRequest document) throws BadRequestException;
+    @PUT(DOCUMENT)
+    BasicResponse<String> createDocument();
 
     /**
-     * Update a document
+     * Update a document using a DocumentBlock
      * 
-     * @param document
-     * @return The ID of the newly saved document
+     * @param id Id of document to update
+     * @param block
+     *            A single block for the document
+     * @return The progress and verification data for the updated document
      */
-    @POST(DOCUMENT + "/{" + ID + "}")
-    BasicResponse<String> updateDocument(@Path(ID) String id, @Body DocumentRequest document)
+    @POST(DOCUMENT)
+    BasicResponse<String> updateDocument(@Path(ID) String id, @Body DocumentBlock block)
             throws ResourceNotFoundException;
 
     /**
@@ -57,11 +57,14 @@ public interface DocumentApi {
 
     /**
      * 
-     * @param id Document identifier
-     * @param offsets List of positions from which to obtain fragments
-     * @param characterWindow Number of characters to return surrounding each offset 
+     * @param id
+     *            Document identifier
+     * @param offsets
+     *            List of positions from which to obtain fragments
+     * @param characterWindow
+     *            Number of characters to return surrounding each offset
      * @return
      */
     @GET(DOCUMENT + "/{" + ID + "}/fragments")
-    DocumentFragmentResponse getDocumentFragments(String id, List<Integer> offsets, int characterWindow);
+    DocumentFragmentResponse getDocumentFragments(String id, List<Integer> offsets, int characterWindow)  throws ResourceNotFoundException;
 }

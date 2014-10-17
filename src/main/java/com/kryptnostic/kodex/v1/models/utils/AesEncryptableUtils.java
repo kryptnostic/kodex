@@ -83,4 +83,10 @@ public class AesEncryptableUtils {
         
         return hashFunction.hashString(blockHashes, Charsets.UTF_8).toString();
     }
+
+
+    public static String readBlocks(Collection<DocumentBlock> blocks, SecurityConfigurationMapping mapping) {
+        // TODO Auto-generated method stub
+        return null;
+    }
 }

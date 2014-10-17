@@ -1,25 +1,44 @@
 package com.kryptnostic.storage.v1;
 
+import java.io.IOException;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.kryptnostic.kodex.v1.exceptions.types.BadRequestException;
 import com.kryptnostic.kodex.v1.exceptions.types.ResourceNotFoundException;
-import com.kryptnostic.kodex.v1.indexing.metadata.Metadatum;
+import com.kryptnostic.kodex.v1.exceptions.types.SecurityConfigurationException;
+import com.kryptnostic.kodex.v1.models.Encryptable;
 import com.kryptnostic.storage.v1.models.Document;
 import com.kryptnostic.storage.v1.models.request.MetadataRequest;
 
 public interface StorageService {
     /**
-     * Upload a document.
+     * Upload a document. Also indexes the document, resulting in the generation and upload of document metadata
      * 
      * @param document
      * @return ID of newly saved document
      * @throws BadRequestException
+     * @throws IOException 
+     * @throws SecurityConfigurationException 
+     * @throws ResourceNotFoundException 
      */
-    String uploadDocument(String document) throws BadRequestException;
+    String uploadDocument(String document) throws BadRequestException, SecurityConfigurationException, IOException, ResourceNotFoundException;
     
-    String uploadDocumentWithoutMetadata(String document) throws BadRequestException;
+    /**
+     * Simply uploads the document without indexing it
+     * @param document
+     * @return Id of the newly saved document
+     * @throws BadRequestException
+     * @throws IOException 
+     * @throws SecurityConfigurationException 
+     */
+    
+    String updateDocumentWithoutMetadata(String id, String document) throws BadRequestException, SecurityConfigurationException, IOException;
+    
+    String uploadDocumentWithoutMetadata(String document) throws BadRequestException, SecurityConfigurationException, IOException;
 
     /**
      * Update a document.
@@ -28,8 +47,11 @@ public interface StorageService {
      * @param document
      * @return ID of newly saved document
      * @throws ResourceNotFoundException
+     * @throws IOException 
+     * @throws SecurityConfigurationException 
+     * @throws BadRequestException 
      */
-    String updateDocument(String id, String document) throws ResourceNotFoundException;
+    String updateDocument(String id, String document) throws ResourceNotFoundException, BadRequestException, SecurityConfigurationException, IOException;
 
     /**
      * Retrieve a document's text.
@@ -54,5 +76,18 @@ public interface StorageService {
      */
     Collection<String> getDocumentIds();
     
-    Map<Integer, String> getDocumentFragments(Metadatum m, int i);
+    /**
+     * 
+     * @param id
+     * @param offsets
+     * @param characterWindow
+     * @return
+     * @throws ResourceNotFoundException
+     * @throws SecurityConfigurationException
+     * @throws ClassNotFoundException
+     * @throws IOException
+     * @throws JsonMappingException
+     * @throws JsonParseException
+     */
+    Map<Integer, String> getDocumentFragments(String id, List<Integer> offsets, int characterWindow) throws ResourceNotFoundException, JsonParseException, JsonMappingException, IOException, ClassNotFoundException, SecurityConfigurationException;
 }
