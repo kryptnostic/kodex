@@ -1,5 +1,7 @@
 package com.kryptnostic.crypto.v1.ciphers;
 
+import java.util.Arrays;
+
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.kryptnostic.crypto.Ciphertext;
@@ -10,6 +12,7 @@ import com.kryptnostic.crypto.Ciphertext;
  * @author Matthew Tamayo-Rios &lt;matthew@kryptnostic.com&gt;
  */
 public class BlockCiphertext extends Ciphertext {
+    private static final long serialVersionUID = 5566319942401654333L;
     private static final String FIELD_IV = "iv";
     private static final String FIELD_SALT = "salt";
     private static final String FIELD_ENCRYPTED_LENGTH = "length";
@@ -41,4 +44,40 @@ public class BlockCiphertext extends Ciphertext {
     public byte[] getEncryptedLength() {
         return encryptedLength;
     }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + Arrays.hashCode( encryptedLength );
+        result = prime * result + Arrays.hashCode( iv );
+        result = prime * result + Arrays.hashCode( salt );
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (!( obj instanceof BlockCiphertext )) {
+            return false;
+        }
+        BlockCiphertext other = (BlockCiphertext) obj;
+        if (!Arrays.equals( encryptedLength , other.encryptedLength )) {
+            return false;
+        }
+        if (!Arrays.equals( iv , other.iv )) {
+            return false;
+        }
+        if (!Arrays.equals( salt , other.salt )) {
+            return false;
+        }
+        return true;
+    }
+    
+    
 }
