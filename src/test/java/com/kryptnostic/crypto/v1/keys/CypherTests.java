@@ -9,7 +9,6 @@ import java.security.spec.InvalidParameterSpecException;
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
-import javax.crypto.ShortBufferException;
 
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -36,17 +35,5 @@ public class CypherTests {
         String actual = crypto.decrypt( bc );
         Assert.assertEquals( expected , actual );
     }
-    
-    @Test
-    public void randomAccessTest() throws InvalidKeyException, InvalidKeySpecException, NoSuchAlgorithmException,
-            NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, InvalidParameterSpecException,
-            InvalidAlgorithmParameterException, ShortBufferException {
-        String expected = "hello world!";
-        BlockCiphertext bc = crypto.encrypt( expected );
-        
-        bc = crypto.accessBytes(bc, 0, 12*8);
-        
-        String actual = crypto.decrypt( bc );
-        Assert.assertEquals( expected , actual );
-    }
+
 }

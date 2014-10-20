@@ -1,6 +1,5 @@
 package com.kryptnostic.crypto.v1.ciphers;
 
-import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.security.AlgorithmParameters;
 import java.security.InvalidAlgorithmParameterException;
@@ -16,7 +15,6 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
-import javax.crypto.ShortBufferException;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
@@ -93,66 +91,4 @@ public class CryptoService {
         super.finalize();
     }
     
-    private static final int AES_BLOCK_SIZE = 16;
-
-    public BlockCiphertext accessBytes(BlockCiphertext blockCiphertext, final long offset, final long length)
-            throws InvalidKeyException, InvalidAlgorithmParameterException, NoSuchAlgorithmException,
-            NoSuchPaddingException, InvalidKeySpecException, IllegalBlockSizeException, BadPaddingException,
-            ShortBufferException, InvalidParameterSpecException {
-        
-        if (!cypher.getCipherDescription().getAlgorithm().getValue().equals("AES") || !cypher.getCipherDescription().getMode().equals(Mode.CTR)) {
-            throw new IllegalArgumentException("Invalid algorithm, only AES/CTR mode supported");
-        }
-
-        if (offset < 0) {
-            throw new IllegalArgumentException("Invalid offset");
-        }
-
-        final IvParameterSpec iv = new IvParameterSpec(blockCiphertext.getIv());
-
-        final int skip = (int) ( offset % AES_BLOCK_SIZE );
-        final IvParameterSpec calculatedIvForOffset = calculateIVForOffset(iv, offset - skip);
-
-        Cipher cipher = cypher.getInstance();
-        SecretKeySpec spec = getKeyspec(blockCiphertext.getSalt());
-        cipher.init(Cipher.ENCRYPT_MODE, spec, calculatedIvForOffset);
-//        final byte[] skipBuffer = new byte[skip];
-//        
-//        cipher.update(skipBuffer, 0, skip, skipBuffer);
-//        Arrays.fill(skipBuffer, (byte) 0);
-        
-        AlgorithmParameters params = cipher.getParameters();
-        byte[] ivBytes = params.getParameterSpec(IvParameterSpec.class).getIV();
-        byte[] lenBytes = new byte[INTEGER_BYTES];
-
-        ByteBuffer lenBuf = ByteBuffer.wrap(lenBytes);
-        lenBuf.putInt((int) length/8);
-
-        byte[] encryptedLength = cipher.update(lenBytes);
-        byte[] contentBuffer = blockCiphertext.getContents();
-        
-        final byte[] encryptedBytes = new byte[cipher.getOutputSize((int)length/8)];
-        int tail = (int) (length % AES_BLOCK_SIZE);
-        cipher.update(contentBuffer, (int)(offset - skip)/8, (int)(length + tail)/8, encryptedBytes);
-
-        return new BlockCiphertext(ivBytes, blockCiphertext.getSalt(), encryptedBytes, encryptedLength);
-    }
-
-    private static IvParameterSpec calculateIVForOffset(final IvParameterSpec iv, final long blockOffset) {
-        final BigInteger ivBI = new BigInteger(1, iv.getIV());
-        final BigInteger ivForOffsetBI = ivBI.add(BigInteger.valueOf(blockOffset / AES_BLOCK_SIZE));
-
-        final byte[] ivForOffsetBA = ivForOffsetBI.toByteArray();
-        final IvParameterSpec ivForOffset;
-        if (ivForOffsetBA.length >= AES_BLOCK_SIZE) {
-            ivForOffset = new IvParameterSpec(ivForOffsetBA, ivForOffsetBA.length - AES_BLOCK_SIZE, AES_BLOCK_SIZE);
-        } else {
-            final byte[] ivForOffsetBASized = new byte[AES_BLOCK_SIZE];
-            System.arraycopy(ivForOffsetBA, 0, ivForOffsetBASized, AES_BLOCK_SIZE - ivForOffsetBA.length,
-                    ivForOffsetBA.length);
-            ivForOffset = new IvParameterSpec(ivForOffsetBASized);
-        }
-
-        return ivForOffset;
-    }
 }
