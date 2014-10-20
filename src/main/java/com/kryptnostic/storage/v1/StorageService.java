@@ -24,8 +24,9 @@ public interface StorageService {
      * @throws IOException 
      * @throws SecurityConfigurationException 
      * @throws ResourceNotFoundException 
+     * @throws ClassNotFoundException 
      */
-    String uploadDocument(String document) throws BadRequestException, SecurityConfigurationException, IOException, ResourceNotFoundException;
+    String uploadDocument(String document) throws BadRequestException, SecurityConfigurationException, IOException, ResourceNotFoundException, ClassNotFoundException;
     
     /**
      * Simply uploads the document without indexing it
@@ -34,11 +35,13 @@ public interface StorageService {
      * @throws BadRequestException
      * @throws IOException 
      * @throws SecurityConfigurationException 
+     * @throws ClassNotFoundException 
      */
     
-    String updateDocumentWithoutMetadata(String id, String document) throws BadRequestException, SecurityConfigurationException, IOException;
+    String updateDocumentWithoutMetadata(String id, String document) throws BadRequestException, SecurityConfigurationException, IOException, ClassNotFoundException;
     
-    String uploadDocumentWithoutMetadata(String document) throws BadRequestException, SecurityConfigurationException, IOException;
+    String uploadDocumentWithoutMetadata(String document) throws BadRequestException, SecurityConfigurationException,
+            IOException, ClassNotFoundException;
 
     /**
      * Update a document.
@@ -50,8 +53,9 @@ public interface StorageService {
      * @throws IOException 
      * @throws SecurityConfigurationException 
      * @throws BadRequestException 
+     * @throws ClassNotFoundException 
      */
-    String updateDocument(String id, String document) throws ResourceNotFoundException, BadRequestException, SecurityConfigurationException, IOException;
+    String updateDocument(String id, String document) throws ResourceNotFoundException, BadRequestException, SecurityConfigurationException, IOException, ClassNotFoundException;
 
     /**
      * Retrieve a document's text.

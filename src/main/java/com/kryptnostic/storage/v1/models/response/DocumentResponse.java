@@ -1,13 +1,12 @@
 package com.kryptnostic.storage.v1.models.response;
 
-import java.util.Collection;
-
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.kryptnostic.kodex.v1.models.response.BasicResponse;
 import com.kryptnostic.storage.v1.models.Document;
-import com.kryptnostic.storage.v1.models.DocumentBlock;
+import com.kryptnostic.storage.v1.models.DocumentBlocks;
+import com.kryptnostic.storage.v1.models.DocumentMetadata;
 
 public class DocumentResponse extends BasicResponse<Document> {
 
@@ -18,8 +17,9 @@ public class DocumentResponse extends BasicResponse<Document> {
     }
 
     @JsonIgnore
-    public DocumentResponse(String documentId, Collection<DocumentBlock> blocks, String verify, int status, boolean success) {
-        super(new Document(documentId, blocks, verify), status, success);
+    public DocumentResponse(DocumentMetadata metadata, DocumentBlocks blocks, int status,
+            boolean success) {
+        super(new Document(metadata, blocks), status, success);
     }
 
 }

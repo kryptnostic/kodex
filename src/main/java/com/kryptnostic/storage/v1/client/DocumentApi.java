@@ -12,6 +12,8 @@ import retrofit.http.Path;
 import com.kryptnostic.kodex.v1.exceptions.types.ResourceNotFoundException;
 import com.kryptnostic.kodex.v1.models.response.BasicResponse;
 import com.kryptnostic.storage.v1.models.DocumentBlock;
+import com.kryptnostic.storage.v1.models.request.DocumentCreationRequest;
+import com.kryptnostic.storage.v1.models.request.DocumentFragmentRequest;
 import com.kryptnostic.storage.v1.models.response.DocumentFragmentResponse;
 import com.kryptnostic.storage.v1.models.response.DocumentResponse;
 
@@ -25,18 +27,19 @@ public interface DocumentApi {
      * @return The ID of the newly created document
      */
     @PUT(DOCUMENT)
-    BasicResponse<String> createDocument();
+    BasicResponse<String> createDocument(@Body DocumentCreationRequest request);
 
     /**
      * Update a document using a DocumentBlock
      * 
-     * @param id Id of document to update
+     * @param id
+     *            Id of document to update
      * @param block
      *            A single block for the document
      * @return The progress and verification data for the updated document
      */
-    @POST(DOCUMENT)
-    BasicResponse<String> updateDocument(@Path(ID) String id, @Body DocumentBlock block)
+    @POST(DOCUMENT + "/{" + ID + "}")
+    BasicResponse<String> updateDocument(@Path(ID) String documentId, @Body DocumentBlock block)
             throws ResourceNotFoundException;
 
     /**
@@ -46,7 +49,7 @@ public interface DocumentApi {
      * @return DocumentResponse containing document
      */
     @GET(DOCUMENT + "/{" + ID + "}")
-    DocumentResponse getDocument(@Path(ID) String id) throws ResourceNotFoundException;
+    DocumentResponse getDocument(@Path(ID) String documentId) throws ResourceNotFoundException;
 
     /**
      * 
@@ -66,5 +69,6 @@ public interface DocumentApi {
      * @return
      */
     @GET(DOCUMENT + "/{" + ID + "}/fragments")
-    DocumentFragmentResponse getDocumentFragments(String id, List<Integer> offsets, int characterWindow)  throws ResourceNotFoundException;
+    DocumentFragmentResponse getDocumentFragments(@Path(ID) String documentId, DocumentFragmentRequest request)
+            throws ResourceNotFoundException;
 }
