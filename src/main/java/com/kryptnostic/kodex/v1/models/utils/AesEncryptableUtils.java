@@ -143,10 +143,10 @@ public class AesEncryptableUtils {
         return hashFunction.hashString(blockHashes, Charsets.UTF_8).toString();
     }
 
-    public static String readBlocks(DocumentBlocks blocks, SecurityConfigurationMapping mapping)
+    public static String readBlocks(DocumentBlock[] blocks, SecurityConfigurationMapping mapping)
             throws JsonParseException, JsonMappingException, IOException, ClassNotFoundException, SecurityConfigurationException {
         String res = "";
-        for (DocumentBlock block : blocks.getBlocks()) {
+        for (DocumentBlock block : blocks ) {
             res += block.getBlock().decrypt(mapping).getData();
         }
         return res;
