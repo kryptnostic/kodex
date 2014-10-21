@@ -7,6 +7,9 @@ import java.util.List;
 
 import org.apache.commons.codec.binary.StringUtils;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.google.common.base.Charsets;
 import com.google.common.collect.Lists;
 import com.google.common.hash.HashFunction;
@@ -23,6 +26,8 @@ public class AesEncryptableUtils {
 
     private static final HashFunction hashFunction = Hashing.sha256();
 
+    public static final int CHUNK_MAX = 4096;
+    
     public static class VerifiedStringBlocks {
         private final String verificationHash;
         private final List<AesEncryptable<String>> strings;
@@ -47,21 +52,30 @@ public class AesEncryptableUtils {
      *            Original string, potentially > 4KB
      * @return Collection of AesEncryptable-wrapped 4KB strings that can be concatenated to form the entire original
      *         string
+     * @throws SecurityConfigurationException
+     * @throws JsonProcessingException
      */
-    public static List<AesEncryptable<String>> chunkString(String documentBody) {
-        final int CHUNK_MAX = 4096;
+    public static List<AesEncryptable<String>> chunkString(String documentBody,
+            SecurityConfigurationMapping securityMapping) throws JsonProcessingException,
+            SecurityConfigurationException {
         byte[] bytes = documentBody.getBytes();
+        int bytesLeft = bytes.length;
         int counter = 0;
-
+        
         List<AesEncryptable<String>> encryptedChunks = Lists.newArrayList();
-        while (counter < bytes.length) {
-            final byte[] byteChunk = Arrays.copyOfRange(bytes, counter, counter + CHUNK_MAX);
+        while (bytesLeft > 0) {
+            int finish = bytesLeft + CHUNK_MAX;
+            if (bytesLeft < CHUNK_MAX) {
+                finish = bytesLeft;
+            }
+            final byte[] byteChunk = Arrays.copyOfRange(bytes, counter, finish);
 
             String strChunk = StringUtils.newStringUtf8(byteChunk);
 
             AesEncryptable<String> encryptedChunk = new AesEncryptable<String>(strChunk);
-            encryptedChunks.add(encryptedChunk);
+            encryptedChunks.add((AesEncryptable<String>) encryptedChunk.encrypt(securityMapping));
 
+            bytesLeft -= CHUNK_MAX;
             counter += CHUNK_MAX;
         }
 
@@ -71,9 +85,9 @@ public class AesEncryptableUtils {
     public static VerifiedStringBlocks chunkStringWithVerification(String documentBody,
             SecurityConfigurationMapping securityMapping) throws SecurityConfigurationException, IOException,
             ClassNotFoundException {
-        List<AesEncryptable<String>> encryptableStrings = AesEncryptableUtils.chunkString(documentBody);
-        String verify = AesEncryptableUtils.generateVerificationHashFromEncryptables(encryptableStrings,
-                securityMapping);
+        List<AesEncryptable<String>> encryptableStrings = AesEncryptableUtils
+                .chunkString(documentBody, securityMapping);
+        String verify = AesEncryptableUtils.generateVerificationHashFromEncryptables(encryptableStrings);
 
         return new VerifiedStringBlocks(verify, encryptableStrings);
     }
@@ -85,49 +99,56 @@ public class AesEncryptableUtils {
         VerifiedStringBlocks processedString = chunkStringWithVerification(body, securityMapping);
 
         return createEncryptedDocument(documentId, body, processedString.getVerificationHash(),
-                processedString.getStrings(), securityMapping);
+                processedString.getStrings());
     }
 
     public static Document createEncryptedDocument(String documentId, String body, String verify,
-            List<AesEncryptable<String>> encryptableStrings, SecurityConfigurationMapping securityMapping)
-            throws SecurityConfigurationException, IOException, ClassNotFoundException {
+            List<AesEncryptable<String>> encryptableStrings) throws SecurityConfigurationException, IOException,
+            ClassNotFoundException {
         DocumentBlocks blocks = new DocumentBlocks();
 
         int index = 0;
         for (AesEncryptable<String> encryptedString : encryptableStrings) {
-            DocumentBlock block = new DocumentBlock(encryptedString, verify, encryptableStrings.size(), index);
-            blocks.add(block);
+            DocumentBlock block = new DocumentBlock((AesEncryptable<String>) encryptedString, verify,
+                    encryptableStrings.size(), index);
+            blocks.getBlocks().add(block);
             index++;
         }
 
         return new Document(new DocumentMetadata(documentId, verify), blocks);
     }
 
-    public static String generateVerificationHashFromBlocks(Collection<DocumentBlock> blocks,
-            SecurityConfigurationMapping securityMapping) throws SecurityConfigurationException, IOException,
-            ClassNotFoundException {
+    public static String generateVerificationHashFromBlocks(Collection<DocumentBlock> blocks)
+            throws SecurityConfigurationException, IOException, ClassNotFoundException {
         List<AesEncryptable<String>> strs = Lists.newArrayList();
 
         for (DocumentBlock b : blocks) {
             strs.add(b.getBlock());
         }
 
-        return AesEncryptableUtils.generateVerificationHashFromEncryptables(strs, securityMapping);
+        return AesEncryptableUtils.generateVerificationHashFromEncryptables(strs);
     }
 
-    public static String generateVerificationHashFromEncryptables(List<AesEncryptable<String>> encryptableStrings,
-            SecurityConfigurationMapping securityMapping) throws SecurityConfigurationException, IOException,
-            ClassNotFoundException {
+    public static String generateVerificationHashFromEncryptables(List<AesEncryptable<String>> encryptableStrings)
+            throws SecurityConfigurationException {
         String blockHashes = "";
-        for (AesEncryptable<String> decryptedString : encryptableStrings) {
-            decryptedString = (AesEncryptable<String>) decryptedString.decrypt(securityMapping);
-            blockHashes += hashFunction.hashBytes(decryptedString.getData().getBytes()).toString();
+        for (AesEncryptable<String> encryptableString : encryptableStrings) {
+            if (!encryptableString.isEncrypted()) {
+                throw new SecurityConfigurationException(
+                        "Encryptable string must be encrypted, but was found in a decrypted state. Please apply encryption before generating a verification hash.");
+            }
+            blockHashes += hashFunction.hashBytes(encryptableString.getEncryptedData().getContents()).toString();
         }
 
         return hashFunction.hashString(blockHashes, Charsets.UTF_8).toString();
     }
 
-    public static String readBlocks(Collection<DocumentBlock> blocks, SecurityConfigurationMapping mapping) {
-        throw new UnsupportedOperationException("not yet implemented");
+    public static String readBlocks(DocumentBlocks blocks, SecurityConfigurationMapping mapping)
+            throws JsonParseException, JsonMappingException, IOException, ClassNotFoundException, SecurityConfigurationException {
+        String res = "";
+        for (DocumentBlock block : blocks.getBlocks()) {
+            res += block.getBlock().decrypt(mapping).getData();
+        }
+        return res;
     }
 }

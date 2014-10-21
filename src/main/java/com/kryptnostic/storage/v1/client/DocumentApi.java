@@ -68,7 +68,7 @@ public interface DocumentApi {
      *            Number of characters to return surrounding each offset
      * @return
      */
-    @GET(DOCUMENT + "/{" + ID + "}/fragments")
-    DocumentFragmentResponse getDocumentFragments(@Path(ID) String documentId, DocumentFragmentRequest request)
+    @POST(DOCUMENT + "/{" + ID + "}/fragments")
+    DocumentFragmentResponse getDocumentFragments(@Path(ID) String documentId, @Body DocumentFragmentRequest request)
             throws ResourceNotFoundException;
 }

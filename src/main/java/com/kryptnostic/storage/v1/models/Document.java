@@ -36,6 +36,6 @@ public class Document implements Serializable {
     @Override
     public boolean equals(Object o) {
         Document d = (Document) o;
-        return blocks.size() == d.blocks.size() && metadata.equals(d.metadata);
+        return blocks.equals(d.blocks) && metadata.equals(d.metadata);
     }
 }

@@ -1,14 +1,17 @@
 package com.kryptnostic.storage.v1.models;
 
 import java.io.IOException;
+import java.util.Collection;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.google.common.base.Charsets;
+import com.google.common.hash.HashFunction;
+import com.google.common.hash.Hashing;
 import com.kryptnostic.kodex.v1.exceptions.types.SecurityConfigurationException;
+import com.kryptnostic.kodex.v1.models.Encryptable;
 import com.kryptnostic.kodex.v1.models.utils.AesEncryptableUtils;
-import com.kryptnostic.kodex.v1.models.utils.AesEncryptableUtils.VerifiedStringBlocks;
 import com.kryptnostic.storage.v1.models.request.AesEncryptableBase;
 
 public class DocumentTests extends AesEncryptableBase {
@@ -19,7 +22,11 @@ public class DocumentTests extends AesEncryptableBase {
 
         Document d1 = AesEncryptableUtils.createEncryptedDocument("document1", "cool document", config);
         Document d2 = AesEncryptableUtils.createEncryptedDocument("document1", "cool document", config);
-        Assert.assertEquals(d1, d2);
+        
+        Assert.assertEquals(d1, d1);
+        
+        // these will have different verification hashes
+        Assert.assertNotEquals(d1, d2);
 
         Document d3 = AesEncryptableUtils.createEncryptedDocument("document2", "cool document", config);
         Assert.assertNotEquals(d1, d3);
@@ -49,7 +56,29 @@ public class DocumentTests extends AesEncryptableBase {
         String out = serialize(doc.getBlocks());
         DocumentBlocks result = deserialize(out, DocumentBlocks.class);
 
-        Assert.assertEquals(doc.getBlocks().get(0).getBlock().decrypt(config).getData(), result.get(0).getBlock()
-                .decrypt(config).getData());
+        Assert.assertEquals(doc.getBlocks().getBlocks().get(0).getBlock().decrypt(config).getData(), result.getBlocks()
+                .get(0).getBlock().decrypt(config).getData());
+    }
+
+    @Test
+    public void testDocumentVerification() throws SecurityConfigurationException, IOException, ClassNotFoundException {
+        initImplicitEncryption();
+
+        HashFunction hashFunction = Hashing.sha256();
+
+        Document doc = AesEncryptableUtils.createEncryptedDocument("test", "this is a test", config);
+
+        String verify = doc.getMetadata().getVerify();
+
+        Collection<DocumentBlock> blocks = doc.getBlocks().getBlocks();
+        String hash = "";
+        for (DocumentBlock block : blocks) {
+            Encryptable<String> encryptableString = block.getBlock();
+            hash += hashFunction.hashBytes(encryptableString.getEncryptedData().getContents()).toString();
+        }
+
+        String hashString = hashFunction.hashString(hash, Charsets.UTF_8).toString();
+
+        Assert.assertEquals(hashString, verify);
     }
 }
