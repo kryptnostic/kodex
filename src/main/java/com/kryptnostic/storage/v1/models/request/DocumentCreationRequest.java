@@ -10,7 +10,8 @@ public class DocumentCreationRequest {
     private final int numBlocks;
 
     @JsonCreator
-    public DocumentCreationRequest(@JsonProperty(FIELD_VERIFICATION) String verificationHash,@JsonProperty(FIELD_NUM_BLOCKS) int numBlocks ) {
+    public DocumentCreationRequest(@JsonProperty(FIELD_VERIFICATION) String verificationHash,
+            @JsonProperty(FIELD_NUM_BLOCKS) int numBlocks) {
         this.verificationHash = verificationHash;
         this.numBlocks = numBlocks;
     }
@@ -19,7 +20,7 @@ public class DocumentCreationRequest {
     public String getVerificationHash() {
         return verificationHash;
     }
-    
+
     @JsonProperty(FIELD_NUM_BLOCKS)
     public int getNumBlocks() {
         return numBlocks;

@@ -27,7 +27,7 @@ public class AesEncryptableUtils {
     private static final HashFunction hashFunction = Hashing.sha256();
 
     public static final int CHUNK_MAX = 4096;
-    
+
     public static class VerifiedStringBlocks {
         private final String verificationHash;
         private final List<AesEncryptable<String>> strings;
@@ -61,7 +61,7 @@ public class AesEncryptableUtils {
         byte[] bytes = documentBody.getBytes();
         int bytesLeft = bytes.length;
         int counter = 0;
-        
+
         List<AesEncryptable<String>> encryptedChunks = Lists.newArrayList();
         while (bytesLeft > 0) {
             int finish = bytesLeft + CHUNK_MAX;
@@ -115,7 +115,8 @@ public class AesEncryptableUtils {
             index++;
         }
 
-        return new Document(new DocumentMetadata(documentId, verify , index ), blocks.getBlocks().toArray(new DocumentBlock[0]));
+        return new Document(new DocumentMetadata(documentId, verify, index), blocks.getBlocks().toArray(
+                new DocumentBlock[0]));
     }
 
     public static String generateVerificationHashFromBlocks(Collection<DocumentBlock> blocks)
@@ -144,9 +145,10 @@ public class AesEncryptableUtils {
     }
 
     public static String readBlocks(DocumentBlock[] blocks, SecurityConfigurationMapping mapping)
-            throws JsonParseException, JsonMappingException, IOException, ClassNotFoundException, SecurityConfigurationException {
+            throws JsonParseException, JsonMappingException, IOException, ClassNotFoundException,
+            SecurityConfigurationException {
         String res = "";
-        for (DocumentBlock block : blocks ) {
+        for (DocumentBlock block : blocks) {
             res += block.getBlock().decrypt(mapping).getData();
         }
         return res;
