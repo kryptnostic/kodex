@@ -1,7 +1,6 @@
 package com.kryptnostic.storage.v1.models;
 
 import java.io.IOException;
-import java.util.Collection;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -56,7 +55,7 @@ public class DocumentTests extends AesEncryptableBase {
         String out = serialize(doc.getBlocks());
         DocumentBlocks result = deserialize(out, DocumentBlocks.class);
 
-        Assert.assertEquals(doc.getBlocks().getBlocks().get(0).getBlock().decrypt(config).getData(), result.getBlocks()
+        Assert.assertEquals(doc.getBlocks()[0].getBlock().decrypt(config).getData(), result.getBlocks()
                 .get(0).getBlock().decrypt(config).getData());
     }
 
@@ -70,7 +69,7 @@ public class DocumentTests extends AesEncryptableBase {
 
         String verify = doc.getMetadata().getVerify();
 
-        Collection<DocumentBlock> blocks = doc.getBlocks().getBlocks();
+        DocumentBlock[] blocks = doc.getBlocks();
         String hash = "";
         for (DocumentBlock block : blocks) {
             Encryptable<String> encryptableString = block.getBlock();

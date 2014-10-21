@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.collect.Lists;
 
 public class DocumentBlocks implements Serializable {
+    private static final long serialVersionUID = -7306228218357504656L;
 
     private static final String FIELD_BLOCKS = "blocks";
 
@@ -40,5 +41,4 @@ public class DocumentBlocks implements Serializable {
         DocumentBlocks other = (DocumentBlocks) o;
         return size() == other.size();
     }
-
 }

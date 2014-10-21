@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.kryptnostic.kodex.v1.models.response.BasicResponse;
 import com.kryptnostic.storage.v1.models.Document;
-import com.kryptnostic.storage.v1.models.DocumentBlocks;
+import com.kryptnostic.storage.v1.models.DocumentBlock;
 import com.kryptnostic.storage.v1.models.DocumentMetadata;
 
 public class DocumentResponse extends BasicResponse<Document> {
@@ -17,7 +17,7 @@ public class DocumentResponse extends BasicResponse<Document> {
     }
 
     @JsonIgnore
-    public DocumentResponse(DocumentMetadata metadata, DocumentBlocks blocks, int status,
+    public DocumentResponse(DocumentMetadata metadata, DocumentBlock[] blocks, int status,
             boolean success) {
         super(new Document(metadata, blocks), status, success);
     }

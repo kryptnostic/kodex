@@ -115,7 +115,7 @@ public class AesEncryptableUtils {
             index++;
         }
 
-        return new Document(new DocumentMetadata(documentId, verify), blocks);
+        return new Document(new DocumentMetadata(documentId, verify , index ), blocks.getBlocks().toArray(new DocumentBlock[0]));
     }
 
     public static String generateVerificationHashFromBlocks(Collection<DocumentBlock> blocks)

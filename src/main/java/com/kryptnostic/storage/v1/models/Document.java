@@ -6,21 +6,22 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Document implements Serializable {
+    private static final long serialVersionUID = -8243618155514369238L;
     public static final String FIELD_METADATA = "metadata";
     public static final String FIELD_BLOCKS = "blocks";
 
     private final DocumentMetadata metadata;
-    private final DocumentBlocks blocks;
+    private final DocumentBlock[] blocks;
 
     @JsonCreator
     public Document(@JsonProperty(FIELD_METADATA) DocumentMetadata metadata,
-            @JsonProperty(FIELD_BLOCKS) DocumentBlocks blocks) {
+            @JsonProperty(FIELD_BLOCKS) DocumentBlock[] blocks) {
         this.metadata = metadata;
         this.blocks = blocks;
     }
 
     @JsonProperty(FIELD_BLOCKS)
-    public DocumentBlocks getBlocks() {
+    public DocumentBlock[] getBlocks() {
         return blocks;
     }
 
@@ -36,6 +37,6 @@ public class Document implements Serializable {
     @Override
     public boolean equals(Object o) {
         Document d = (Document) o;
-        return blocks.equals(d.blocks) && metadata.equals(d.metadata);
+        return (blocks.length == d.blocks.length) && metadata.equals(d.metadata);
     }
 }
