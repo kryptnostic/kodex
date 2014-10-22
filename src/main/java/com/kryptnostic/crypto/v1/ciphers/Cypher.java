@@ -9,25 +9,33 @@ import javax.crypto.NoSuchPaddingException;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.google.common.base.Preconditions;
+import com.google.common.collect.ImmutableSet;
 
 /**
  * Purposefully named type-safe wrapper for working with Java's insane crypto API.
  * @author Matthew Tamayo-Rios &lt;matthew@kryptnostic.com&gt;
  */
+
 public enum Cypher {
-    AES_CTR_128( BlockCipher.AES , Mode.CTR , Padding.NONE, 128 ),
-    AES_CTR_256( BlockCipher.AES , Mode.CTR , Padding.NONE, 256 ),
-    AES_CTR_PKCS5_128( BlockCipher.AES , Mode.CTR , Padding.PKCS5, 128 ),
-    AES_CTR_PKCS5_256( BlockCipher.AES , Mode.CTR , Padding.PKCS5, 256 );
+    AES_CTR_128( CryptoAlgorithm.AES , Mode.CTR , Padding.NONE, 128 ),
+    AES_CTR_256( CryptoAlgorithm.AES , Mode.CTR , Padding.NONE, 256 ),
+    AES_CTR_PKCS5_128( CryptoAlgorithm.AES , Mode.CTR , Padding.PKCS5, 128 ),
+    AES_CTR_PKCS5_256( CryptoAlgorithm.AES , Mode.CTR , Padding.PKCS5, 256 ),
+    RSA_OAEP_SHA1_1024( CryptoAlgorithm.RSA, Mode.ECB, Padding.OAEPWithSHA1AndMGF1Padding, 1024 ),
+    RSA_OAEP_SHA1_2048( CryptoAlgorithm.RSA, Mode.ECB, Padding.OAEPWithSHA1AndMGF1Padding, 2048 ),
+    RSA_OAEP_SHA1_4096( CryptoAlgorithm.RSA, Mode.ECB, Padding.OAEPWithSHA1AndMGF1Padding, 4098 ),
+    RSA_OAEP_SHA256_1024( CryptoAlgorithm.RSA, Mode.ECB, Padding.OAEPWithSHA256AndMGF1Padding, 1024 ),
+    RSA_OAEP_SHA256_2048( CryptoAlgorithm.RSA, Mode.ECB, Padding.OAEPWithSHA256AndMGF1Padding, 2048 ),
+    RSA_OAEP_SHA256_4096( CryptoAlgorithm.RSA, Mode.ECB, Padding.OAEPWithSHA256AndMGF1Padding, 4096 );
     
     private static final String CIPHER_ENCODING = "%s/%s/%s";
     private final CipherDescription description;
     
-    private Cypher( BlockCipher algorithm , Mode mode , Padding padding, int keySize ) {
+    private Cypher( CryptoAlgorithm algorithm , Mode mode , Padding padding, int keySize ) {
         description = new CipherDescription( algorithm , mode , padding , keySize );
     }
     
-    @JsonValue 
+    @JsonValue
     public CipherDescription getCipherDescription() {
         return description;
     }
@@ -44,10 +52,19 @@ public enum Cypher {
         return description.getKeySize();
     }
     
+    public String getName() {
+        return getName();
+    }
+     
+//    @JsonCreator
+    public static Cypher createCipher( String name ) {
+        return valueOf( name );
+    }
+    
     @JsonCreator
-    public static Cypher createCipher( CipherDescription description ) {
-        Preconditions.checkArgument( description.getKeySize() == 128 || description.getKeySize() == 256 , "Only 128 bit and 256 key sizes are supported." );
-        if( description.getAlgorithm().equals( BlockCipher.AES ) ) {
+    public static Cypher createCipher(CipherDescription description ) {
+        Preconditions.checkArgument( ImmutableSet.of( 128,256,1024,2048,4096).contains( description.getKeySize() ), "Only 128 bit and 256 key sizes are supported." );
+        if( description.getAlgorithm().equals( CryptoAlgorithm.AES ) ) {
             if( description.getMode().equals( Mode.CTR ) ) {
                 if( description.getPadding().equals( Padding.NONE ) ) {
                     if( description.getKeySize() == 128 ) {
@@ -63,8 +80,35 @@ public enum Cypher {
                     } else {
                         return unrecognizedCipher("An unsupported key size was specified.");
                     }
-                } else {
-                    return unrecognizedCipher();
+                } 
+            } 
+        } else if( description.getAlgorithm().equals( CryptoAlgorithm.RSA ) ) {
+            if( description.getMode().equals( Mode.ECB ) ) {
+                switch( description.getPadding() ) {
+                    case OAEPWithSHA1AndMGF1Padding:
+                        switch( description.getKeySize() ) {
+                            case 1024:
+                                return RSA_OAEP_SHA1_1024;
+                            case 2048:
+                                return RSA_OAEP_SHA1_2048;
+                            case 4096:
+                                return RSA_OAEP_SHA1_4096;
+                            default:
+                                return unrecognizedCipher();
+                        }
+                    case OAEPWithSHA256AndMGF1Padding:
+                        switch( description.getKeySize() ) {
+                            case 1024:
+                                return RSA_OAEP_SHA256_1024;
+                            case 2048:
+                                return RSA_OAEP_SHA256_2048;
+                            case 4096:
+                                return RSA_OAEP_SHA256_4096;
+                            default:
+                                return unrecognizedCipher();
+                        }
+                    default:
+                        return unrecognizedCipher();
                 }
             } else {
                 return unrecognizedCipher();
@@ -80,4 +124,6 @@ public enum Cypher {
     private static final Cypher unrecognizedCipher( String additionalInfo ) {
         throw new InvalidParameterException( "Unrecognized cipher description: " + additionalInfo );
     }
+    
+    
 }

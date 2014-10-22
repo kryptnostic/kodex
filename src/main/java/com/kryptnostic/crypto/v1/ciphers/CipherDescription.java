@@ -9,14 +9,14 @@ public class CipherDescription {
     private static final String PADDING_PROPERTY = "padding";
     private static final String KEYSIZE_PROPERTY = "keySize";
     
-    private final BlockCipher algorithm;
+    private final CryptoAlgorithm algorithm;
     private final Mode mode;
     private final Padding padding;
     private final int keySize;
     
     @JsonCreator
     public CipherDescription( 
-            @JsonProperty(ALGORITHM_PROPERTY) BlockCipher algorithm , 
+            @JsonProperty(ALGORITHM_PROPERTY) CryptoAlgorithm algorithm , 
             @JsonProperty(MODE_PROPERTY) Mode mode , 
             @JsonProperty(PADDING_PROPERTY) Padding padding, 
             @JsonProperty(KEYSIZE_PROPERTY) int keySize ) {
@@ -27,7 +27,7 @@ public class CipherDescription {
     }
 
     @JsonProperty(ALGORITHM_PROPERTY) 
-    public BlockCipher getAlgorithm() {
+    public CryptoAlgorithm getAlgorithm() {
         return algorithm;
     }
     
