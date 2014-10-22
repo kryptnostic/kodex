@@ -7,14 +7,20 @@ import retrofit.http.POST;
 import com.kryptnostic.kodex.v1.exceptions.types.ResourceNotFoundException;
 import com.kryptnostic.kodex.v1.models.response.BasicResponse;
 import com.kryptnostic.multivariate.gf2.SimplePolynomialFunction;
-import com.kryptnostic.search.v1.models.request.SearchFunctionUploadRequest;
+import com.kryptnostic.storage.v1.models.request.QueryHasherPairRequest;
 
 public interface SearchFunctionApi {
     String SEARCH_FUNCTION = "/searchFunction";
+
+    @POST(SEARCH_FUNCTION + "/hasher")
+    BasicResponse<String> setQueryHasherPair(@Body QueryHasherPairRequest request);
     
-    @POST(SEARCH_FUNCTION)
-    BasicResponse<Boolean> setFunction(@Body SearchFunctionUploadRequest request);
+    @GET(SEARCH_FUNCTION + "/hasher/left")
+    BasicResponse<SimplePolynomialFunction> getLeftQueryHasher() throws ResourceNotFoundException;
     
+    @GET(SEARCH_FUNCTION + "/hasher/right")
+    BasicResponse<SimplePolynomialFunction> getRightQueryHasher() throws ResourceNotFoundException;
+
     @GET(SEARCH_FUNCTION)
     BasicResponse<SimplePolynomialFunction> getFunction() throws ResourceNotFoundException;
 }
