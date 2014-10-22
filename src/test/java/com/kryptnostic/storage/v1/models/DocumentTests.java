@@ -21,17 +21,15 @@ public class DocumentTests extends AesEncryptableBase {
 
         Document d1 = AesEncryptableUtils.createEncryptedDocument("document1", "cool document", config);
         Document d2 = AesEncryptableUtils.createEncryptedDocument("document1", "cool document", config);
-        
+
         Assert.assertEquals(d1, d1);
-        
-        // these will have different verification hashes
-        Assert.assertNotEquals(d1, d2);
+        Assert.assertEquals(d1, d2);
 
         Document d3 = AesEncryptableUtils.createEncryptedDocument("document2", "cool document", config);
         Assert.assertNotEquals(d1, d3);
 
         Document d4 = AesEncryptableUtils.createEncryptedDocument("document1", "cool document cool", config);
-        Assert.assertNotEquals(d1, d4);
+        Assert.assertEquals(d1, d4);
         Assert.assertNotEquals(d1, d3);
     }
 
@@ -53,10 +51,10 @@ public class DocumentTests extends AesEncryptableBase {
 
         Document doc = AesEncryptableUtils.createEncryptedDocument("test", "this is a test", config);
         String out = serialize(doc.getBlocks());
-        DocumentBlocks result = deserialize(out, DocumentBlocks.class);
+        DocumentBlock[] result = deserialize(out, DocumentBlock[].class);
 
-        Assert.assertEquals(doc.getBlocks()[0].getBlock().decrypt(config).getData(), result.getBlocks()
-                .get(0).getBlock().decrypt(config).getData());
+        Assert.assertEquals(doc.getBlocks()[0].getBlock().decrypt(config).getData(),
+                result[0].getBlock().decrypt(config).getData());
     }
 
     @Test
@@ -67,17 +65,12 @@ public class DocumentTests extends AesEncryptableBase {
 
         Document doc = AesEncryptableUtils.createEncryptedDocument("test", "this is a test", config);
 
-        String verify = doc.getMetadata().getVerify();
-
         DocumentBlock[] blocks = doc.getBlocks();
-        String hash = "";
         for (DocumentBlock block : blocks) {
             Encryptable<String> encryptableString = block.getBlock();
-            hash += hashFunction.hashBytes(encryptableString.getEncryptedData().getContents()).toString();
+            Assert.assertEquals(hashFunction.hashBytes(encryptableString.getEncryptedData().getContents()).toString(),
+                    block.getVerify());
         }
 
-        String hashString = hashFunction.hashString(hash, Charsets.UTF_8).toString();
-
-        Assert.assertEquals(hashString, verify);
     }
 }
