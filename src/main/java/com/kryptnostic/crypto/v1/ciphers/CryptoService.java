@@ -20,6 +20,7 @@ import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 
 import org.apache.commons.codec.binary.StringUtils;
+import org.apache.commons.lang3.tuple.Pair;
 
 import com.kryptnostic.crypto.v1.keys.SecretKeyFactoryType;
 
@@ -43,10 +44,10 @@ public class CryptoService {
         this.iterations = iterations;
         this.secretKeyFactoryType = secretKeyFactoryType;
     }
-
-    public BlockCiphertext encrypt(String plaintext) throws InvalidKeySpecException, NoSuchAlgorithmException,
-            NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException,
-            InvalidParameterSpecException {
+    
+    public BlockCiphertext encrypt( byte[] bytes ) throws InvalidKeySpecException, NoSuchAlgorithmException,
+    NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException,
+    InvalidParameterSpecException {
         byte[] salt = Cyphers.generateSalt();
         SecretKeySpec secretKeySpec = getKeyspec(salt);
         Cipher cipher = cypher.getInstance();
@@ -56,23 +57,35 @@ public class CryptoService {
         byte[] lenBytes = new byte[INTEGER_BYTES];
 
         ByteBuffer lenBuf = ByteBuffer.wrap(lenBytes);
-        lenBuf.putInt(plaintext.length());
+        lenBuf.putInt( bytes.length );
 
         byte[] encryptedLength = cipher.update(lenBytes);
-        byte[] encryptedBytes = cipher.doFinal(StringUtils.getBytesUtf8(plaintext));
-
+        byte[] encryptedBytes = cipher.doFinal( bytes );
+        
         return new BlockCiphertext(iv, salt, encryptedBytes, encryptedLength);
     }
+    
+    public BlockCiphertext encrypt(String plaintext) throws InvalidKeySpecException, NoSuchAlgorithmException,
+            NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException,
+            InvalidParameterSpecException {
+        return encrypt(StringUtils.getBytesUtf8(plaintext) );
+    }
 
-    public String decrypt(BlockCiphertext ciphertext) throws InvalidKeyException, InvalidAlgorithmParameterException,
-            NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeySpecException, IllegalBlockSizeException,
-            BadPaddingException {
+    public Pair<Integer,byte[]> rawDecrypt( BlockCiphertext ciphertext ) throws InvalidKeyException, InvalidAlgorithmParameterException,
+    NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeySpecException, IllegalBlockSizeException,
+    BadPaddingException {
         SecretKeySpec spec = getKeyspec(ciphertext.getSalt());
         Cipher cipher = cypher.getInstance();
         cipher.init(Cipher.DECRYPT_MODE, spec, new IvParameterSpec(ciphertext.getIv()));
         int length = ByteBuffer.wrap(cipher.update(ciphertext.getEncryptedLength())).getInt();
-        String plaintext = StringUtils.newStringUtf8(cipher.doFinal(ciphertext.getContents()));
-        return plaintext.substring(0, length);
+        return Pair.of( length, cipher.doFinal(ciphertext.getContents()) );
+    }
+    
+    public String decrypt(BlockCiphertext ciphertext) throws InvalidKeyException, InvalidAlgorithmParameterException,
+            NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeySpecException, IllegalBlockSizeException,
+            BadPaddingException {
+        Pair<Integer, byte[]> decryptedInfo = rawDecrypt( ciphertext );
+        return StringUtils.newStringUtf8( decryptedInfo.getRight() ).substring( 0 , decryptedInfo.getLeft() );
     }
 
     private SecretKeySpec getKeyspec(byte[] salt) throws NoSuchAlgorithmException, InvalidKeySpecException {
