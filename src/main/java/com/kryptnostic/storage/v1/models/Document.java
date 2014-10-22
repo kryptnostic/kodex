@@ -3,7 +3,9 @@ package com.kryptnostic.storage.v1.models;
 import java.io.Serializable;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.kryptnostic.kodex.v1.security.SecurityConfigurationMapping;
 
 public class Document implements Serializable {
     private static final long serialVersionUID = -8243618155514369238L;
@@ -31,12 +33,20 @@ public class Document implements Serializable {
     }
 
     /**
+     * @return The decrypted document text
+     */
+    @JsonIgnore
+    public String getBody(SecurityConfigurationMapping mapping) {
+        throw new UnsupportedOperationException("not yet implemented");
+    }
+
+    /**
      * This does not check for block content equality because blocks are encrypted This uses the verification hash,
      * which is not guaranteed to be consistent with the document blocks
      */
     @Override
     public boolean equals(Object o) {
         Document d = (Document) o;
-        return (blocks.length == d.blocks.length) && metadata.equals(d.metadata);
+        return ( blocks.length == d.blocks.length ) && metadata.equals(d.metadata);
     }
 }

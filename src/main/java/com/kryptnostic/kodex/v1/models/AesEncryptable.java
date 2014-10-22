@@ -126,5 +126,5 @@ public class AesEncryptable<T> extends Encryptable<T> {
     public static void setObjectMapper(ObjectMapper mapper) {
         AesEncryptable.mapper = mapper;
     }
-    
+
 }

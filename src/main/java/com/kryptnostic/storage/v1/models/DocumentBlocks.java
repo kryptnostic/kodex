@@ -6,6 +6,7 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.collect.Lists;
+import com.kryptnostic.kodex.v1.models.utils.AesEncryptableUtils;
 
 public class DocumentBlocks implements Serializable {
     private static final long serialVersionUID = -7306228218357504656L;
@@ -23,7 +24,6 @@ public class DocumentBlocks implements Serializable {
         this.blocks = blocks;
     }
 
-    
     public List<DocumentBlock> getBlocks() {
         return blocks;
     }
@@ -40,5 +40,9 @@ public class DocumentBlocks implements Serializable {
     public boolean equals(Object o) {
         DocumentBlocks other = (DocumentBlocks) o;
         return size() == other.size();
+    }
+
+    public static boolean isValid(DocumentBlock block) {
+        return AesEncryptableUtils.hashEncryptableBytes(block.getBlock()).equals(block.getVerify());
     }
 }
