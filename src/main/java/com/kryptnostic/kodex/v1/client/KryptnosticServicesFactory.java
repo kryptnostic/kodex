@@ -5,8 +5,8 @@ import com.kryptnostic.kodex.v1.indexing.MetadataKeyService;
 import com.kryptnostic.kodex.v1.security.SecurityService;
 import com.kryptnostic.search.v1.client.SearchApi;
 import com.kryptnostic.storage.v1.client.DocumentApi;
+import com.kryptnostic.storage.v1.client.DocumentKeyApi;
 import com.kryptnostic.storage.v1.client.MetadataApi;
-import com.kryptnostic.storage.v1.client.NonceApi;
 import com.kryptnostic.storage.v1.client.SearchFunctionApi;
 
 /**
@@ -26,7 +26,7 @@ public interface KryptnosticServicesFactory {
 
     IndexingService createIndexingService();
 
-    NonceApi createNonceService();
+    DocumentKeyApi createDocumentKeyService();
 
     SecurityService createSecurityService();
 

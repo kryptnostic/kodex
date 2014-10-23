@@ -6,6 +6,7 @@ import cern.colt.bitvector.BitVector;
 
 import com.kryptnostic.kodex.v1.security.SecurityService;
 import com.kryptnostic.multivariate.gf2.SimplePolynomialFunction;
+import com.kryptnostic.storage.v1.models.EncryptedSearchDocumentKey;
 
 /**
  * KryptnosticContext is responsible for maintaining shared state between the KryptnosticClient and Kryptnostic
@@ -19,9 +20,9 @@ public interface KryptnosticContext {
     
     SimplePolynomialFunction getSearchFunction();
 
-    List<BitVector> getNonces();
+    List<EncryptedSearchDocumentKey> getDocumentKeys();
 
-    void addNonces(List<BitVector> nonces);
+    void addDocumentKeys(List<EncryptedSearchDocumentKey> keys);
 
     BitVector generateNonce();
     
