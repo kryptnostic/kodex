@@ -5,18 +5,19 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.collect.ImmutableList;
+import com.kryptnostic.sharing.v1.DocumentId;
 
 public class Metadatum {
     public static final String DOCUMENT_ID = "documentId";
     public static final String TOKEN = "token";
     public static final String LOCATIONS = "locations";
 
-    private final String documentId;
+    private final DocumentId documentId;
     private final String token;
     private final List<Integer> locations;
 
     @JsonCreator
-    public Metadatum(@JsonProperty(DOCUMENT_ID) String documentId, @JsonProperty(TOKEN) String token,
+    public Metadatum(@JsonProperty(DOCUMENT_ID) DocumentId documentId, @JsonProperty(TOKEN) String token,
             @JsonProperty(LOCATIONS) Iterable<Integer> locations) {
         this.documentId = documentId;
         this.token = token;
@@ -24,7 +25,7 @@ public class Metadatum {
     }
 
     @JsonProperty(DOCUMENT_ID)
-    public String getDocumentId() {
+    public DocumentId getDocumentId() {
         return documentId;
     }
 

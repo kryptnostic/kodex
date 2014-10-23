@@ -55,6 +55,10 @@ public class DocumentKodex<T> {
     public Map<T, byte[]> getKeys() {
         return keys;
     }
+    
+    public byte[] get( T id ) {
+        return Preconditions.checkNotNull( keys.get( id ) , "Unable to find key with id = " + id );
+    }
 
     public byte[] get( PrivateKey key, T id ) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException {
         return  Cyphers.decrypt( cypher , key , Preconditions.checkNotNull( keys.get( id ) , "Unable to find key with id = " + id ) );

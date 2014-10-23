@@ -30,7 +30,7 @@ public class Kodex {
     public void unseal( PrivateKey privateKey ) throws InvalidKeyException, IllegalBlockSizeException, BadPaddingException, NoSuchAlgorithmException, NoSuchPaddingException {
         try {
             lock.writeLock().lock();
-            service = new AesCryptoService(Cypher.AES_CTR_128,Cyphers.decrypt( seal , privateKey, encryptedKey) );
+            service = new AesCryptoService(Cypher.AES_CTR_PKCS5_128,Cyphers.decrypt( seal , privateKey, encryptedKey) );
         } finally {
             lock.writeLock().unlock();
         }

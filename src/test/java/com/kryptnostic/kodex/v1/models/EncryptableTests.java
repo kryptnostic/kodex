@@ -13,11 +13,13 @@ import com.kryptnostic.crypto.PublicKey;
 import com.kryptnostic.kodex.v1.exceptions.types.SecurityConfigurationException;
 import com.kryptnostic.kodex.v1.indexing.metadata.Metadatum;
 import com.kryptnostic.kodex.v1.security.SecurityConfigurationMapping;
+import com.kryptnostic.sharing.v1.DocumentId;
+import com.kryptnostic.users.v1.UserKey;
 
 public class EncryptableTests {
 
     private static final int PRIVATE_KEY_BLOCK_SIZE = 64;
-    
+    private static final UserKey user = new UserKey("kryptnostic","tester");
     @Test
     public void encryptableStringConstructionTest() {
         String plain = "I am cool";
@@ -62,7 +64,7 @@ public class EncryptableTests {
 
     @Test
     public void encryptableMetadatumConstructionTest() {
-        Metadatum m = new Metadatum("ABC", "ABC", Arrays.asList(1, 2, 3));
+        Metadatum m = new Metadatum( new DocumentId( "ABC", user) ,  "ABC", Arrays.asList(1, 2, 3));
         Encryptable<Metadatum> plainString = new FheEncryptable<Metadatum>(m);
 
         Assert.assertNull(plainString.getEncryptedData());
@@ -74,7 +76,7 @@ public class EncryptableTests {
     @Test
     public void encryptableMetadatumEncryptionTest() throws JsonParseException, JsonMappingException, IOException,
             ClassNotFoundException, SecurityConfigurationException {
-        Metadatum m = new Metadatum("ABC", "ABC", Arrays.asList(1, 2, 3));
+        Metadatum m = new Metadatum( new DocumentId( "ABC", user) , "ABC", Arrays.asList(1, 2, 3));
         Encryptable<Metadatum> plainString = new FheEncryptable<Metadatum>(m);
 
         PrivateKey privateKey = new PrivateKey(PRIVATE_KEY_BLOCK_SIZE * 2, PRIVATE_KEY_BLOCK_SIZE);

@@ -16,15 +16,15 @@ import com.kryptnostic.storage.v1.models.EncryptedSearchDocumentKey;
  *
  */
 public interface KryptnosticContext {
-    void setSearchFunction(SimplePolynomialFunction fn);
-    
+    void setSearchFunction( SimplePolynomialFunction fn );
+
     SimplePolynomialFunction getSearchFunction();
 
     List<EncryptedSearchDocumentKey> getDocumentKeys();
 
-    void addDocumentKeys(List<EncryptedSearchDocumentKey> keys);
+    void addDocumentKeys( List<EncryptedSearchDocumentKey> keys );
 
     BitVector generateNonce();
-    
+
     SecurityService getSecurityService();
 }
