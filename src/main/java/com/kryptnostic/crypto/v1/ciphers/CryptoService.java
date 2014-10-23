@@ -38,6 +38,10 @@ public class CryptoService extends AbstractCryptoService {
         this.secretKeyFactoryType = secretKeyFactoryType;
     }
     
+    public BlockCiphertext encrypt( byte[] plaintext ) throws InvalidKeyException, InvalidKeySpecException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, InvalidParameterSpecException {
+        return encrypt( plaintext, Cyphers.generateSalt() );
+    }
+    
     public BlockCiphertext encrypt(String plaintext) throws InvalidKeySpecException, NoSuchAlgorithmException,
             NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException,
             InvalidParameterSpecException {
