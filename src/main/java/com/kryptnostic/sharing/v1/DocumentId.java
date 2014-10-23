@@ -1,16 +1,28 @@
 package com.kryptnostic.sharing.v1;
 
+import java.io.IOException;
 import java.io.Serializable;
+
+import org.apache.commons.codec.binary.Base64;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kryptnostic.kodex.v1.constants.Names;
+import com.kryptnostic.kodex.v1.serialization.jackson.KodexObjectMapperFactory;
 import com.kryptnostic.users.v1.UserKey;
 
 public class DocumentId implements Serializable {
-    private static final long serialVersionUID = 8301034434310597675L;
-    protected final String      documentId;
-    protected final UserKey     user;
+    private static final long         serialVersionUID = 8301034434310597675L;
+
+    private static final ObjectMapper mapper           = new KodexObjectMapperFactory().getObjectMapper( null );
+    private static final Base64       codec            = new Base64();
+
+    protected final String            documentId;
+    protected final UserKey           user;
 
     @JsonCreator
     public DocumentId( @JsonProperty( Names.ID_FIELD ) String documentId, @JsonProperty( Names.USER_FIELD ) UserKey user ) {
@@ -18,16 +30,24 @@ public class DocumentId implements Serializable {
         this.user = user;
     }
 
+    @JsonProperty( Names.ID_FIELD )
     public String getDocumentId() {
         return documentId;
     }
 
+    @JsonProperty( Names.USER_FIELD )
     public UserKey getUser() {
         return user;
     }
 
     public static DocumentId fromUserAndId( String id, UserKey user ) {
         return new DocumentId( id, user );
+    }
+
+    public static DocumentId fromString( String base64Hash ) throws JsonParseException, JsonMappingException,
+            IOException {
+        byte[] bytes = codec.decode( base64Hash );
+        return mapper.readValue( bytes, DocumentId.class );
     }
 
     @Override
@@ -66,5 +86,16 @@ public class DocumentId implements Serializable {
             return false;
         }
         return true;
+    }
+
+    @Override
+    public String toString() {
+        try {
+            return codec.encodeAsString( mapper.writeValueAsBytes( this ) );
+        } catch ( JsonProcessingException e ) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            return super.toString();
+        }
     }
 }
