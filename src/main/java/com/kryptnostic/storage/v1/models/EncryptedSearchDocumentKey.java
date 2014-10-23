@@ -30,4 +30,10 @@ public class EncryptedSearchDocumentKey {
     public EncryptedSearchBridgeKey getBridgeKey() {
         return bridgeKey;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        EncryptedSearchDocumentKey other = (EncryptedSearchDocumentKey) o;
+        return searchNonce.equals(other.searchNonce) && bridgeKey.equals(other.bridgeKey);
+    }
 }

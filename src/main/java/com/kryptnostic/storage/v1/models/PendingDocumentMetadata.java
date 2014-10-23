@@ -1,9 +1,11 @@
 package com.kryptnostic.storage.v1.models;
 
+import java.io.Serializable;
+
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class PendingDocumentMetadata extends DocumentMetadata {
+public class PendingDocumentMetadata extends DocumentMetadata implements Serializable {
 
     public static final String FIELD_RECEIVED_BLOCKS = "receivedBlocks";
 
