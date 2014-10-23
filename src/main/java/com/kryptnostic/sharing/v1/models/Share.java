@@ -18,16 +18,16 @@ public class Share implements Serializable {
         this.encryptedSharingKey = encryptedSharingKey;
     }
 
-    @JsonProperty( Names.ID_FIELD ) 
+    @JsonProperty( Names.ID_FIELD )
     public byte[] getEncryptedDocumentId() {
         return encryptedDocumentId;
     }
 
-    @JsonProperty( Names.DOCUMENT_SHARING_KEY_FIELD ) 
+    @JsonProperty( Names.DOCUMENT_SHARING_KEY_FIELD )
     public byte[] getEncryptedSharingKey() {
         return encryptedSharingKey;
     }
-    
+
     public static Share fromSharingRequest( SharingRequest request ) {
         return new Share( request.getEncryptedDocumentId(), request.getEncryptedSharingKey() );
     }
