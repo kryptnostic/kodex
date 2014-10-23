@@ -20,6 +20,10 @@ import com.kryptnostic.kodex.v1.serialization.jackson.KodexObjectMapperFactory;
 
 public class FheEncryptable<T> extends Encryptable<T> {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -4740442054069941609L;
     private final static ObjectMapper mapper = ( new KodexObjectMapperFactory() ).getObjectMapper(null);
 
     public FheEncryptable(T data) {
