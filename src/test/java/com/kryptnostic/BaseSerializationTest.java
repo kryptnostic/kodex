@@ -8,6 +8,7 @@ import org.junit.Before;
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kryptnostic.kodex.v1.serialization.jackson.KodexObjectMapperFactory;
@@ -39,6 +40,12 @@ public class BaseSerializationTest {
 
     @SuppressWarnings("unchecked")
     protected <T> T deserialize(String in, @SuppressWarnings("rawtypes") TypeReference type) throws JsonParseException,
+            JsonMappingException, IOException {
+        return (T) mapper.readValue(in, type);
+    }
+    
+    @SuppressWarnings("unchecked")
+    protected <T> T deserialize(String in, @SuppressWarnings("rawtypes") JavaType type) throws JsonParseException,
             JsonMappingException, IOException {
         return (T) mapper.readValue(in, type);
     }
