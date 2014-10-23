@@ -17,7 +17,7 @@ public class BaseSerializationTest {
     protected ObjectMapper mapper;
 
     @Before
-    public void init() {
+    public final void init() {
         mapper = new KodexObjectMapperFactory().getObjectMapper(null);
     }
 
@@ -36,7 +36,7 @@ public class BaseSerializationTest {
             JsonMappingException, IOException {
         return (T) mapper.readValue(in, type);
     }
-    
+
     @SuppressWarnings("unchecked")
     protected <T> T deserialize(String in, @SuppressWarnings("rawtypes") TypeReference type) throws JsonParseException,
             JsonMappingException, IOException {
