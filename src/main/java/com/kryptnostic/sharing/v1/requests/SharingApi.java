@@ -17,20 +17,20 @@ import com.kryptnostic.sharing.v1.models.RevocationRequest;
 public interface SharingApi {
     String CONTROLLER     = "/share";
     String SHARE_DOCUMENT = "/document";
-    String KEY = "/key";
-    
-    @GET(SHARE_DOCUMENT)
-    IncomingShares getIncomingShares();
-    
-    @POST(KEY)
-    KeyUpdateResponse registerKey(@Body KeyRegistrationRequest request);
-    
-    @DELETE(KEY)
-    KeyUpdateResponse removeKeys( @Body List<UUID> ids );
-    
-    @POST(SHARE_DOCUMENT)
-    BasicResponse<String> shareDocument(@Body SharingRequest request);
+    String KEYS           = "/keys";
 
-    @DELETE(SHARE_DOCUMENT)
-    BasicResponse<String> revokeAccess(@Body RevocationRequest request);
+    @GET( SHARE_DOCUMENT )
+    IncomingShares getIncomingShares();
+
+    @POST( SHARE_DOCUMENT )
+    BasicResponse<String> shareDocument( @Body SharingRequest request );
+
+    @DELETE( SHARE_DOCUMENT )
+    BasicResponse<String> revokeAccess( @Body RevocationRequest request );
+
+    @POST( KEYS )
+    KeyUpdateResponse registerKeys( @Body KeyRegistrationRequest request );
+
+    @DELETE( KEYS )
+    KeyUpdateResponse removeKeys( @Body List<UUID> ids );
 }
