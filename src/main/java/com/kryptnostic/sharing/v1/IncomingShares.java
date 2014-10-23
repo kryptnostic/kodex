@@ -1,5 +1,6 @@
 package com.kryptnostic.sharing.v1;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Map;
 import java.util.UUID;
@@ -10,7 +11,7 @@ import com.google.common.collect.Maps;
 import com.kryptnostic.kodex.v1.constants.Names;
 import com.kryptnostic.sharing.v1.models.Share;
 
-public final class IncomingShares {
+public final class IncomingShares implements Serializable {
 
     private final Map<UUID, Share> shares;
 
@@ -23,15 +24,21 @@ public final class IncomingShares {
         this.shares = shares;
     }
 
+    @JsonProperty( Names.SHARES_FIELD )
+    public Map<UUID, Share> getShares() {
+        return shares;
+    }
+
     public void removeShares( Collection<UUID> sharesToRemove ) {
         shares.keySet().removeAll( sharesToRemove );
     }
-    
-    public void processSharingInformation( Share share ) {
+
+    public UUID processSharingInformation( Share share ) {
         UUID id = UUID.randomUUID();
         while ( shares.containsKey( id ) ) {
             id = UUID.randomUUID();
         }
         shares.put( id, share );
+        return id;
     }
 }

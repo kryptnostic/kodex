@@ -1,13 +1,15 @@
 package com.kryptnostic.storage.v1.models;
 
+import java.io.Serializable;
+
 import cern.colt.bitvector.BitVector;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.kryptnostic.crypto.EncryptedSearchBridgeKey;
 
-public class EncryptedSearchDocumentKey {
-
+public class EncryptedSearchDocumentKey implements Serializable {
+    private static final long serialVersionUID = -1727973926753941167L;
     public static final String FIELD_SEARCH_NONCE = "searchNonce";
     public static final String FIELD_BRIDGE_KEY = "bridgeKey";
 

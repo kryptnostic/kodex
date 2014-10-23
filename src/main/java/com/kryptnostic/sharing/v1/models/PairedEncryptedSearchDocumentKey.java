@@ -1,10 +1,12 @@
 package com.kryptnostic.sharing.v1.models;
 
+import java.io.Serializable;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.kryptnostic.kodex.v1.constants.Names;
 import com.kryptnostic.storage.v1.models.EncryptedSearchDocumentKey;
 
-public class PairedEncryptedSearchDocumentKey {
+public class PairedEncryptedSearchDocumentKey implements Serializable {
     private final EncryptedSearchDocumentKey searchDocumentKey;
     private final byte[]                     encryptedDocumentId;
 
@@ -19,7 +21,7 @@ public class PairedEncryptedSearchDocumentKey {
     public EncryptedSearchDocumentKey getSearchDocumentKey() {
         return searchDocumentKey;
     }
-    
+
     @JsonProperty( Names.ID_FIELD )
     public byte[] getEncryptedDocumentId() {
         return encryptedDocumentId;
