@@ -1,5 +1,6 @@
 package com.kryptnostic.sharing.v1;
 
+import java.util.Collection;
 import java.util.Map;
 import java.util.UUID;
 
@@ -22,6 +23,10 @@ public final class IncomingShares {
         this.shares = shares;
     }
 
+    public void removeShares( Collection<UUID> sharesToRemove ) {
+        shares.keySet().removeAll( sharesToRemove );
+    }
+    
     public void processSharingInformation( Share share ) {
         UUID id = UUID.randomUUID();
         while ( shares.containsKey( id ) ) {

@@ -1,4 +1,4 @@
-package com.kryptnostic.sharing.v1;
+package com.kryptnostic.sharing.v1.models;
 
 import java.util.Set;
 

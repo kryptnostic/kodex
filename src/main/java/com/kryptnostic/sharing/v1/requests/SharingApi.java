@@ -1,4 +1,7 @@
-package com.kryptnostic.sharing.v1;
+package com.kryptnostic.sharing.v1.requests;
+
+import java.util.List;
+import java.util.UUID;
 
 import retrofit.http.Body;
 import retrofit.http.DELETE;
@@ -6,7 +9,10 @@ import retrofit.http.GET;
 import retrofit.http.POST;
 
 import com.kryptnostic.kodex.v1.models.response.BasicResponse;
-import com.kryptnostic.sharing.v1.requests.KeyRegistrationRequest;
+import com.kryptnostic.sharing.v1.IncomingShares;
+import com.kryptnostic.sharing.v1.SharingRequest;
+import com.kryptnostic.sharing.v1.models.KeyUpdateResponse;
+import com.kryptnostic.sharing.v1.models.RevocationRequest;
 
 public interface SharingApi {
     String CONTROLLER     = "/share";
@@ -17,10 +23,10 @@ public interface SharingApi {
     IncomingShares getIncomingShares();
     
     @POST(KEY)
-    BasicResponse<String> registerKey(@Body KeyRegistrationRequest request);
+    KeyUpdateResponse registerKey(@Body KeyRegistrationRequest request);
     
     @DELETE(KEY)
-    BasicResponse<String> removeKey( @Body DocumentId id );
+    KeyUpdateResponse removeKeys( @Body List<UUID> ids );
     
     @POST(SHARE_DOCUMENT)
     BasicResponse<String> shareDocument(@Body SharingRequest request);
