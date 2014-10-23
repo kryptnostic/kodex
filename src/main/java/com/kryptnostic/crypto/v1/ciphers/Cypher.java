@@ -1,9 +1,11 @@
 package com.kryptnostic.crypto.v1.ciphers;
 
+import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidParameterException;
 import java.security.NoSuchAlgorithmException;
 
 import javax.crypto.Cipher;
+import javax.crypto.KeyGenerator;
 import javax.crypto.NoSuchPaddingException;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -53,7 +55,14 @@ public enum Cypher {
     }
     
     public String getName() {
-        return getName();
+        return description.getAlgorithm().getValue();
+    }
+    
+    public KeyGenerator getKeyGenerator() throws NoSuchAlgorithmException, InvalidAlgorithmParameterException {
+        if( description.getAlgorithm() == CryptoAlgorithm.AES ) {
+            return  KeyGenerator.getInstance( description.getAlgorithm().getValue() );
+        } 
+        throw new InvalidAlgorithmParameterException( "Key generators are only supported for AES algorithm." );
     }
      
 //    @JsonCreator

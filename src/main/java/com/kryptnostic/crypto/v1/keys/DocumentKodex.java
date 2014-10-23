@@ -3,7 +3,6 @@ package com.kryptnostic.crypto.v1.keys;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
-import java.security.PublicKey;
 import java.util.Arrays;
 import java.util.Map;
 
@@ -18,6 +17,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
 import com.kryptnostic.crypto.v1.ciphers.CipherDescription;
 import com.kryptnostic.crypto.v1.ciphers.Cypher;
+import com.kryptnostic.crypto.v1.ciphers.Cyphers;
 
 /**
  * Class is used to bootstrap a new device, without having to regenerate FHE keys. 
@@ -28,27 +28,22 @@ import com.kryptnostic.crypto.v1.ciphers.Cypher;
 public class DocumentKodex<T> {
     private static final String CYPHER_FIELD = "cipher";
     private static final String KEYS_FIELD = "keys";
-    private static final String VALIDATORS_FIELD = "validators";
     
     private final Cypher cypher;
     private final Map<T, byte[]> keys;
-    private final Map<T, byte[]> validators;
     
     public DocumentKodex( Cypher cypher ) {
         this.cypher = cypher;
         keys = Maps.newHashMap();
-        validators = Maps.newHashMap();
     }
 
     @JsonCreator
     public DocumentKodex( 
             @JsonProperty( CYPHER_FIELD ) CipherDescription cypher ,
-            @JsonProperty( KEYS_FIELD ) Map<T,byte[]> keys,
-            @JsonProperty( VALIDATORS_FIELD ) Map<T,byte[]> validators )
+            @JsonProperty( KEYS_FIELD ) Map<T,byte[]> keys )
     {
         this( Cypher.createCipher( cypher ) );
         this.keys.putAll( keys );
-        this.validators.putAll( validators );
     }
 
     @JsonProperty( CYPHER_FIELD ) 
@@ -61,21 +56,12 @@ public class DocumentKodex<T> {
         return keys;
     }
 
-    @JsonProperty( VALIDATORS_FIELD )
-    public Map<T, byte[]> getValidators() {
-        return validators;
-    }
-
     public byte[] get( PrivateKey key, T id ) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException {
-        Cipher cipher = cypher.getInstance();
-        cipher.init( Cipher.DECRYPT_MODE , key );
-        return  cipher.doFinal( Preconditions.checkNotNull( keys.get( id ) , "Unable to find key with id = " + id ) );
+        return  Cyphers.decrypt( cypher , key , Preconditions.checkNotNull( keys.get( id ) , "Unable to find key with id = " + id ) );
     }
     
-    public void put( PublicKey key, T id , byte[] secretKey ) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
-        Cipher cipher = cypher.getInstance();
-        cipher.init( Cipher.ENCRYPT_MODE , key );
-        keys.put( id , cipher.doFinal( secretKey ) );
+    public void put( T id , byte[] secretKey ) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
+        keys.put( id , secretKey );
     }
 
     @Override
@@ -84,10 +70,10 @@ public class DocumentKodex<T> {
         int result = 1;
         result = prime * result + ( ( cypher == null ) ? 0 : cypher.hashCode() );
         result = prime * result + ( ( keys == null ) ? 0 : keys.hashCode() );
-        result = prime * result + ( ( validators == null ) ? 0 : validators.hashCode() );
         return result;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
@@ -112,13 +98,6 @@ public class DocumentKodex<T> {
             return false;
         }
         
-        if (validators == null) {
-            if (other.validators != null) {
-                return false;
-            }
-        } else if (!mapEquals( validators, other.validators )) {
-            return false;
-        }
         return true;
     }
     

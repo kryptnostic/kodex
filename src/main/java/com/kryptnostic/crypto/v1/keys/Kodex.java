@@ -3,9 +3,9 @@ package com.kryptnostic.crypto.v1.keys;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.InvalidParameterSpecException;
-import java.util.Arrays;
 import java.util.Map;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -14,26 +14,23 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 
-import org.apache.commons.lang3.tuple.Pair;
-
+import com.kryptnostic.crypto.v1.ciphers.AesCryptoService;
 import com.kryptnostic.crypto.v1.ciphers.BlockCiphertext;
-import com.kryptnostic.crypto.v1.ciphers.CryptoService;
 import com.kryptnostic.crypto.v1.ciphers.Cypher;
+import com.kryptnostic.crypto.v1.ciphers.Cyphers;
 
 public class Kodex {
+    private static final byte[] empty = new byte[0];
     private ReadWriteLock lock = new ReentrantReadWriteLock();
-    private transient byte[] iv;
-    private transient byte[] key;
-    private transient CryptoService service;
+    private transient AesCryptoService service;
+    private Cypher seal; 
+    private byte[] encryptedKey;
+    private Map<String,BlockCiphertext> keyring;
     
-    Map<String,BlockCiphertext> keyring;
-    
-    public void unseal( char[] password ) {
+    public void unseal( PrivateKey privateKey ) throws InvalidKeyException, IllegalBlockSizeException, BadPaddingException, NoSuchAlgorithmException, NoSuchPaddingException {
         try {
             lock.writeLock().lock();
-            this.iv = Arrays.copyOf( iv , iv.length );
-            this.key = Arrays.copyOf( key , key.length );
-            service = new CryptoService(Cypher.AES_CTR_128, password);
+            service = new AesCryptoService(Cypher.AES_CTR_128,Cyphers.decrypt( seal , privateKey, encryptedKey) );
         } finally {
             lock.writeLock().unlock();
         }
@@ -41,21 +38,20 @@ public class Kodex {
     
     public <T> void setKey( KodexFactory<T> factory, T object ) throws InvalidKeyException, InvalidKeySpecException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, InvalidParameterSpecException, SealedKodexException {
         checkAndThrowIfSealed();
-        keyring.put( factory.getName( object ) , service.encrypt( factory.toBytes( object ) ) );
+        keyring.put( factory.getName( object ) , service.encrypt( factory.toBytes( object ) , empty ) );
     }
     
     public <T> T getKey( KodexFactory<T> factory, Class<T> clazz ) throws InvalidKeyException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeySpecException, IllegalBlockSizeException, BadPaddingException, SealedKodexException {
         checkAndThrowIfSealed();
-        Pair<Integer,byte[]> rawBytes = null;
+        byte[] rawBytes = null;
         try {
             lock.readLock().lock();
-            rawBytes = service.rawDecrypt( keyring.get( clazz.getName() ) );
-            assert rawBytes.getRight().length == rawBytes.getLeft();
+            rawBytes = service.decryptBytes( keyring.get( clazz.getName() ) );
         } finally {
             lock.readLock().unlock();
         }
         
-        return factory.fromBytes( rawBytes.getRight() );
+        return factory.fromBytes( rawBytes );
     }
     
     public void seal() {
@@ -64,10 +60,7 @@ public class Kodex {
         }
         try{ 
            lock.writeLock().lock();
-           Arrays.fill( iv , (byte) 0 );
-           Arrays.fill( key , (byte) 0 );
-           iv = null;
-           key = null;
+           service.destroy();
            service = null;
         } finally {
             lock.writeLock().unlock();
@@ -75,7 +68,7 @@ public class Kodex {
     }
     
     public boolean isSealed() {
-        return (iv==null)||(key==null);
+        return service == null;
     }
     
     public void checkAndThrowIfSealed() throws SealedKodexException {

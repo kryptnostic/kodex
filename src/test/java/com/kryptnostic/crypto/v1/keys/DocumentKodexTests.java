@@ -42,8 +42,8 @@ public class DocumentKodexTests {
         
         byte[] secretKey1 = Cyphers.generateSalt();
         byte[] secretKey2 = Cyphers.generateSalt();
-        kodex.put( keyPair.getPublic() , new UserKey("kryptnostic" , "test1" ) , secretKey1 );
-        kodex.put( keyPair.getPublic() , new UserKey("kryptnostic" , "test2" ) , secretKey2 );
+        kodex.put( new UserKey("kryptnostic" , "test1" ) , Cyphers.encrypt( kodex.getCypher() , keyPair.getPublic() , secretKey1 ) );
+        kodex.put( new UserKey("kryptnostic" , "test2" ) , Cyphers.encrypt( kodex.getCypher() , keyPair.getPublic() , secretKey2 ) );
         
         String serialized = mapper.writeValueAsString( kodex );
         logger.info("DocumentKodex<UserKey> JSON: {}", serialized );
@@ -54,7 +54,7 @@ public class DocumentKodexTests {
     
     public static void testPutGet(DocumentKodex<String> kodex, String id ) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException {
         byte[] secretKey = Cyphers.generateSalt();
-        kodex.put( keyPair.getPublic() , id , secretKey );
+        kodex.put( id , Cyphers.encrypt( kodex.getCypher() , keyPair.getPublic() , secretKey ) );
         byte[] actual = kodex.get( keyPair.getPrivate() , id );
         Assert.assertArrayEquals( secretKey , actual );
     }
