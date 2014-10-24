@@ -39,7 +39,7 @@ public interface KeyApi {
     BasicResponse<String> setPrivateKey( @Path(Names.REALM_FIELD) String realm , @Path( Names.USER_FIELD) String username , @Body BlockCiphertext encryptedPrivateKey );
     
     @GET( KODEX_KEY + PARAM.REALM + PARAM.USER )
-    Kodex getKodex(@Path(Names.REALM_FIELD) String realm , @Path( Names.USER_FIELD) String username);
+    Kodex<String> getKodex(@Path(Names.REALM_FIELD) String realm , @Path( Names.USER_FIELD) String username);
     
     @PUT( KODEX_KEY + PARAM.REALM + PARAM.USER )
     BasicResponse<String> setKodex(@Path(Names.REALM_FIELD) String realm , @Path( Names.USER_FIELD) String username , @Body Kodex kodex);
