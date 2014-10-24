@@ -10,9 +10,9 @@ import com.kryptnostic.multivariate.polynomial.CompoundPolynomialFunctionGF2;
 import com.kryptnostic.multivariate.polynomial.OptimizedPolynomialFunctionGF2;
 import com.kryptnostic.multivariate.polynomial.ParameterizedPolynomialFunctionGF2;
 
-public class KodexObjectMapperFactory {
-
-    public ObjectMapper getObjectMapper(SecurityConfigurationMapping securityConfig) {
+public final class KodexObjectMapperFactory {
+    private KodexObjectMapperFactory() {};
+    public static ObjectMapper getObjectMapper(SecurityConfigurationMapping securityConfig) {
         ObjectMapper mapper = new ObjectMapper();
         mapper.registerModule(new KodexModule(securityConfig));
         mapper.registerModule(new GuavaModule());
@@ -23,6 +23,17 @@ public class KodexObjectMapperFactory {
         Std injectableValues = new Std();
         injectableValues.addValue(SecurityConfigurationMapping.class, securityConfig);
         mapper.setInjectableValues(injectableValues);
+
+        return mapper;
+    }
+    
+    public static ObjectMapper getObjectMapper() {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new KodexModule());
+        mapper.registerModule(new GuavaModule());
+        mapper.registerModule(new AfterburnerModule());
+        mapper.registerSubtypes(CompoundPolynomialFunctionGF2.class, OptimizedPolynomialFunctionGF2.class,
+                BasePolynomialFunction.class, ParameterizedPolynomialFunctionGF2.class);
 
         return mapper;
     }

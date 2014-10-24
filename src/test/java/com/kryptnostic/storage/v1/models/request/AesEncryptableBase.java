@@ -29,7 +29,7 @@ public class AesEncryptableBase extends BaseSerializationTest {
     
     protected void resetSecurityConfiguration() {
         this.config = new SecurityConfigurationMapping().add(AesEncryptable.class, this.crypto);
-        this.mapper = new KodexObjectMapperFactory().getObjectMapper(config);
+        this.mapper = KodexObjectMapperFactory.getObjectMapper(config);
     }
 
 }

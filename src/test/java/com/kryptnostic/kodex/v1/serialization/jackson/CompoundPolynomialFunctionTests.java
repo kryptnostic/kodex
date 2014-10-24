@@ -25,8 +25,7 @@ public class CompoundPolynomialFunctionTests {
 
         CompoundPolynomialFunction cpf = CompoundPolynomialFunctions.fromFunctions( f , g , h );
 
-        KodexObjectMapperFactory factory = new KodexObjectMapperFactory();
-        ObjectMapper mapper = factory.getObjectMapper(null);
+        ObjectMapper mapper = KodexObjectMapperFactory.getObjectMapper();
         String serializedCpf = mapper.writeValueAsString(cpf);
         Assert.assertNotNull(serializedCpf);
     }
@@ -38,8 +37,7 @@ public class CompoundPolynomialFunctionTests {
         SimplePolynomialFunction h = SimplePolynomialFunctions.randomFunction( 256 , 64 );
         CompoundPolynomialFunction cpf = CompoundPolynomialFunctions.fromFunctions( f , g , h );
 
-        KodexObjectMapperFactory factory = new KodexObjectMapperFactory();
-        ObjectMapper mapper = factory.getObjectMapper(null);
+        ObjectMapper mapper = KodexObjectMapperFactory.getObjectMapper();
         String serializedCpf = mapper.writeValueAsString(cpf);
         
         CompoundPolynomialFunction recovered = mapper.readValue(serializedCpf, CompoundPolynomialFunction.class);

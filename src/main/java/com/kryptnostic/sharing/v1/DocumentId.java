@@ -18,7 +18,7 @@ import com.kryptnostic.users.v1.UserKey;
 public class DocumentId implements Serializable {
     private static final long         serialVersionUID = 8301034434310597675L;
 
-    private static final ObjectMapper mapper           = new KodexObjectMapperFactory().getObjectMapper( null );
+    private static final ObjectMapper mapper           = KodexObjectMapperFactory.getObjectMapper();
     private static final Base64       codec            = new Base64();
 
     protected final String            documentId;

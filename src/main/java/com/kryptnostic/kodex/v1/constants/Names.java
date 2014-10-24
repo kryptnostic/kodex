@@ -9,6 +9,7 @@ public final class Names {
     public static final String BUSINESS_TYPE_FIELD = "businessType";
     public static final String CLASS_FIELD                   = "@class";
     public static final String COUNTRY_FIELD = "country";
+    public static final String CYPHER_FIELD = "cypher";
     public static final String DOCUMENT_FIELD = "document";
     public static final String EMAIL_FIELD = "email";
     public static final String NAME_FIELD = "name";

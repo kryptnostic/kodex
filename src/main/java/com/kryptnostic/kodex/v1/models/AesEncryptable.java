@@ -27,7 +27,7 @@ import com.kryptnostic.kodex.v1.serialization.jackson.KodexObjectMapperFactory;
 
 public class AesEncryptable<T> extends Encryptable<T> {
     private static final long   serialVersionUID = -5071733999235074270L;
-    private static ObjectMapper mapper           = ( new KodexObjectMapperFactory() ).getObjectMapper( null );
+    private static ObjectMapper mapper           = KodexObjectMapperFactory.getObjectMapper( null );
 
     public AesEncryptable( T data ) {
         super( data );
