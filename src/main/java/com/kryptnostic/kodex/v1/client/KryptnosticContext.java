@@ -2,9 +2,12 @@ package com.kryptnostic.kodex.v1.client;
 
 import cern.colt.bitvector.BitVector;
 
+import com.kryptnostic.crypto.EncryptedSearchSharingKey;
+import com.kryptnostic.kodex.v1.exceptions.types.IrisException;
 import com.kryptnostic.kodex.v1.exceptions.types.ResourceNotFoundException;
 import com.kryptnostic.kodex.v1.security.SecurityService;
 import com.kryptnostic.multivariate.gf2.SimplePolynomialFunction;
+import com.kryptnostic.sharing.v1.DocumentId;
 
 /**
  * KryptnosticContext is responsible for maintaining shared state between the KryptnosticClient and Kryptnostic
@@ -15,7 +18,7 @@ import com.kryptnostic.multivariate.gf2.SimplePolynomialFunction;
  */
 public interface KryptnosticContext {
 
-    BitVector generateDocumentNonce();
+    BitVector generateSearchNonce();
 
     SecurityService getSecurityService();
 
@@ -26,4 +29,16 @@ public interface KryptnosticContext {
      * @throws ResourceNotFoundException If hash function does not exist on the server
      */
     SimplePolynomialFunction getGlobalHashFunction() throws ResourceNotFoundException;
+
+    EncryptedSearchSharingKey generateSharingKey();
+
+    BitVector encryptNonce( BitVector nonce );
+
+    void submitBridgeKeyWithSearchNonce(
+            DocumentId documentId,
+            EncryptedSearchSharingKey sharingKey,
+            BitVector searchNonce ) throws IrisException;
+
+    BitVector generateIndexForToken( String token, BitVector searchNonce, EncryptedSearchSharingKey sharingKey )
+            throws ResourceNotFoundException;
 }
