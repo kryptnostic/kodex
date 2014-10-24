@@ -7,9 +7,6 @@ import com.kryptnostic.kodex.v1.constants.Names;
 import com.kryptnostic.storage.v1.models.EncryptedSearchDocumentKey;
 
 public class PairedEncryptedSearchDocumentKey implements Serializable {
-    /**
-     * 
-     */
     private static final long serialVersionUID = -6584084313085024163L;
     private final EncryptedSearchDocumentKey searchDocumentKey;
     private final byte[]                     encryptedDocumentId;

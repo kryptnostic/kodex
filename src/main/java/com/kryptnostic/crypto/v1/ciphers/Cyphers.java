@@ -23,8 +23,7 @@ public final class Cyphers {
     private static final SecureRandom random;
     private static final Logger logger = LoggerFactory.getLogger(Cyphers.class);
     
-    private Cyphers() {
-    }
+    private Cyphers() {}
 
     static {
         random = new SecureRandom();

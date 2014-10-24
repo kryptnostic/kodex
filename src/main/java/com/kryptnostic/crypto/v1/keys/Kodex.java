@@ -1,5 +1,7 @@
 package com.kryptnostic.crypto.v1.keys;
 
+import java.io.IOException;
+import java.io.Serializable;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -16,23 +18,33 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
 import com.kryptnostic.crypto.v1.ciphers.AesCryptoService;
 import com.kryptnostic.crypto.v1.ciphers.BlockCiphertext;
+import com.kryptnostic.crypto.v1.ciphers.CipherDescription;
 import com.kryptnostic.crypto.v1.ciphers.CryptoAlgorithm;
 import com.kryptnostic.crypto.v1.ciphers.Cypher;
 import com.kryptnostic.crypto.v1.ciphers.Cyphers;
+import com.kryptnostic.kodex.v1.constants.Names;
 
-public class Kodex<K> {
+@JsonTypeInfo(
+    use = JsonTypeInfo.Id.CLASS,
+    include = As.PROPERTY,
+    property = Names.CLASS_FIELD )
+public class Kodex<K> implements Serializable {
+    private static final long             serialVersionUID     = 5021271922876183846L;
     private static final String           SEAL_FIELD           = "sealingAlgorithm";
     private static final String           KEY_PROTECTION_FIELD = "keyProtectionAlgorithm";
     private static final String           SEALED_KEY_FIELD     = "sealedKey";
     private static final String           KEY_RING_FIELD       = "keyRing";
 
     private static final byte[]           empty                = new byte[ 0 ];
-    private transient AesCryptoService    service;
+    private transient AesCryptoService    service              = null;
 
     private final ReadWriteLock           lock                 = new ReentrantReadWriteLock();
     private final Cypher                  seal;
@@ -64,31 +76,41 @@ public class Kodex<K> {
 
     @JsonCreator
     public Kodex(
-            @JsonProperty( SEAL_FIELD ) Cypher seal,
-            @JsonProperty( KEY_PROTECTION_FIELD ) Cypher keyProtectionAlgorithm,
+            @JsonProperty( SEAL_FIELD ) CipherDescription seal,
+            @JsonProperty( KEY_PROTECTION_FIELD ) CipherDescription keyProtectionAlgorithm,
             @JsonProperty( SEALED_KEY_FIELD ) byte[] encryptedKey,
             @JsonProperty( KEY_RING_FIELD ) Map<K, BlockCiphertext> keyring ) {
+        this( Cypher.createCipher( seal ), Cypher.createCipher( keyProtectionAlgorithm ), encryptedKey, keyring );
+    }
+
+    public Kodex( Cypher seal, Cypher keyProtectionAlgorithm, byte[] encryptedKey, Map<K, BlockCiphertext> keyring ) {
         Preconditions.checkArgument(
                 seal.getAlgorithm().equals( CryptoAlgorithm.RSA ),
                 "Kodex only supports RSA as a public sealing and unsealing algorithm" );
         this.seal = seal;
         this.keyProtectionAlgorithm = keyProtectionAlgorithm;
         this.encryptedKey = encryptedKey;
-        this.keyring = keyring;
+        this.keyring = Maps.newConcurrentMap();
+        this.keyring.putAll( keyring );
+        seal();
     }
 
+    @JsonProperty( SEAL_FIELD )
     public Cypher getSeal() {
         return seal;
     }
 
+    @JsonProperty( KEY_PROTECTION_FIELD )
     public Cypher getKeyProtectionAlgorithm() {
         return keyProtectionAlgorithm;
     }
 
+    @JsonProperty( SEALED_KEY_FIELD )
     public byte[] getEncryptedKey() {
         return encryptedKey;
     }
 
+    @JsonProperty( KEY_RING_FIELD )
     public Map<K, BlockCiphertext> getKeyring() {
         return keyring;
     }
@@ -103,16 +125,16 @@ public class Kodex<K> {
         }
     }
 
-    public <T> void setKey( K key, KodexMarshaller<T> factory, T object ) throws InvalidKeyException,
+    public <T> void setKey( K key, KodexMarshaller<T> marshaller, T object ) throws InvalidKeyException,
             InvalidKeySpecException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException,
-            BadPaddingException, InvalidParameterSpecException, SealedKodexException {
+            BadPaddingException, InvalidParameterSpecException, SealedKodexException, IOException {
         checkAndThrowIfSealed();
-        keyring.put( key, service.encrypt( factory.toBytes( object ), empty ) );
+        keyring.put( key, service.encrypt( marshaller.toBytes( object ), empty ) );
     }
 
-    public <T> T getKey( K key, KodexMarshaller<T> factory ) throws InvalidKeyException,
+    public <T> T getKey( K key, KodexMarshaller<T> marshaller ) throws InvalidKeyException,
             InvalidAlgorithmParameterException, NoSuchAlgorithmException, NoSuchPaddingException,
-            InvalidKeySpecException, IllegalBlockSizeException, BadPaddingException, SealedKodexException {
+            InvalidKeySpecException, IllegalBlockSizeException, BadPaddingException, SealedKodexException, IOException {
         checkAndThrowIfSealed();
         byte[] rawBytes = null;
         try {
@@ -122,7 +144,15 @@ public class Kodex<K> {
             lock.readLock().unlock();
         }
 
-        return factory.fromBytes( rawBytes );
+        return marshaller.fromBytes( rawBytes );
+    }
+
+    public boolean containsKey( K key ) throws SealedKodexException {
+        checkAndThrowIfSealed();
+        lock.readLock().lock();
+        boolean contained = keyring.containsKey( key );
+        lock.readLock().unlock();
+        return contained;
     }
 
     public void seal() {
@@ -138,6 +168,7 @@ public class Kodex<K> {
         }
     }
 
+    @JsonIgnore
     public boolean isSealed() {
         return service == null;
     }

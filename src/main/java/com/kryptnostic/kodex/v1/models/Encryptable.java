@@ -83,7 +83,7 @@ public abstract class Encryptable<T> implements Serializable {
 
     protected abstract Encryptable<T> createEncrypted( Ciphertext ciphertext, Ciphertext className );
 
-    protected abstract boolean canDecryptWith( Kodex<String> kodex );
+    protected abstract boolean canDecryptWith( Kodex<String> kodex ) throws SecurityConfigurationException;
 
     public final Encryptable<T> encrypt( Kodex<String> kodex ) throws JsonProcessingException, SecurityConfigurationException {
         if ( this.encrypted ) {
