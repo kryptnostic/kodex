@@ -4,6 +4,7 @@ import java.util.List;
 
 import cern.colt.bitvector.BitVector;
 
+import com.kryptnostic.kodex.v1.exceptions.types.ResourceNotFoundException;
 import com.kryptnostic.kodex.v1.security.SecurityService;
 import com.kryptnostic.multivariate.gf2.SimplePolynomialFunction;
 import com.kryptnostic.storage.v1.models.EncryptedSearchDocumentKey;
@@ -24,5 +25,11 @@ public interface KryptnosticContext {
 
     SecurityService getSecurityService();
 
-    SimplePolynomialFunction getGlobalHashFunction();
+    /**
+     * Get the global hash function required for search. Only make a request if necessary
+     * 
+     * @return
+     * @throws ResourceNotFoundException If hash function does not exist on the server
+     */
+    SimplePolynomialFunction getGlobalHashFunction() throws ResourceNotFoundException;
 }
