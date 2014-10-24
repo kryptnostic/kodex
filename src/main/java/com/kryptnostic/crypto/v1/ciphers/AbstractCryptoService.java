@@ -16,7 +16,12 @@ import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.kryptnostic.kodex.v1.constants.Names;
+
 public abstract class AbstractCryptoService {
+    
     protected final Cypher cypher;
     protected static final int INTEGER_BYTES = Integer.SIZE / Byte.SIZE;
 
@@ -56,9 +61,14 @@ public abstract class AbstractCryptoService {
         return plaintext;
     }
     
+    @JsonProperty(Names.CYPHER_FIELD)
     public Cypher getCypher() {
         return cypher;
     }
+    
+    @JsonIgnore
     protected abstract SecretKeySpec getSecretKeySpec( byte[] salt ) throws NoSuchAlgorithmException, InvalidKeySpecException;
+    
+    @JsonIgnore
     protected abstract SecretKeySpec getSecretKeySpec() throws NoSuchAlgorithmException, InvalidKeySpecException;
 }
