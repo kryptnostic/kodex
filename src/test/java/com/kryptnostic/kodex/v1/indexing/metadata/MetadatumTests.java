@@ -14,12 +14,12 @@ public class MetadatumTests extends BaseSerializationTest {
     @Test
     public void equalsTest() {
         UserKey user = new UserKey( "kryptnostic", "tester" );
-        Metadatum one = new Metadatum( new DocumentId( "ABC", user) , "ABC", Arrays.asList( 1, 2, 3 ) );
-        Metadatum two = new Metadatum( new DocumentId("ABC",user) , "ABC", Arrays.asList( 1, 2, 3 ) );
-        Metadatum three = new Metadatum( new DocumentId("ABC1",user) , "ABC", Arrays.asList( 1, 2, 3 ) );
-        Metadatum four = new Metadatum( new DocumentId("ABC",user) , "ABC1", Arrays.asList( 1, 2, 3 ) );
-        Metadatum five = new Metadatum( new DocumentId("ABC", user) ,"ABC", Arrays.asList( 1, 2, 3, 4 ) );
-        Metadatum six = new Metadatum( new DocumentId("ABC", user) ,"ABC", Arrays.asList( 1, 3, 2 ) );
+        Metadata one = new Metadata( new DocumentId( "ABC", user) , "ABC", Arrays.asList( 1, 2, 3 ) );
+        Metadata two = new Metadata( new DocumentId("ABC",user) , "ABC", Arrays.asList( 1, 2, 3 ) );
+        Metadata three = new Metadata( new DocumentId("ABC1",user) , "ABC", Arrays.asList( 1, 2, 3 ) );
+        Metadata four = new Metadata( new DocumentId("ABC",user) , "ABC1", Arrays.asList( 1, 2, 3 ) );
+        Metadata five = new Metadata( new DocumentId("ABC", user) ,"ABC", Arrays.asList( 1, 2, 3, 4 ) );
+        Metadata six = new Metadata( new DocumentId("ABC", user) ,"ABC", Arrays.asList( 1, 3, 2 ) );
 
         Assert.assertEquals( one, one );
         Assert.assertEquals( one, two );

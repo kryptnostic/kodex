@@ -18,7 +18,7 @@ import com.kryptnostic.bitwise.BitVectors;
 import com.kryptnostic.crypto.PrivateKey;
 import com.kryptnostic.crypto.PublicKey;
 import com.kryptnostic.kodex.v1.exceptions.types.SecurityConfigurationException;
-import com.kryptnostic.kodex.v1.indexing.metadata.Metadatum;
+import com.kryptnostic.kodex.v1.indexing.metadata.Metadata;
 import com.kryptnostic.kodex.v1.models.Encryptable;
 import com.kryptnostic.kodex.v1.models.FheEncryptable;
 import com.kryptnostic.kodex.v1.security.SecurityConfigurationMapping;
@@ -62,11 +62,11 @@ public class FheMetadataRequestTests extends BaseSerializationTest {
         initImplicitEncryption();
 
         BitVector key = BitVectors.randomVector(INDEX_LENGTH);
-        Metadatum metadatum = new Metadatum(new DocumentId("TEST",user), "test", Arrays.asList(1, 2, 3));
-        Encryptable<Metadatum> data = new FheEncryptable<Metadatum>(metadatum);
+        Metadata metadatum = new Metadata(new DocumentId("TEST",user), "test", Arrays.asList(1, 2, 3));
+        Encryptable<Metadata> data = new FheEncryptable<Metadata>(metadatum);
 
         // explicit encryption to generate some json
-        data = (FheEncryptable<Metadatum>) data.encrypt(this.config);
+        data = (FheEncryptable<Metadata>) data.encrypt(this.config);
 
         String encryptedData = serialize(data.getEncryptedData());
         String encryptedClassName = serialize(data.getEncryptedClassName());
@@ -104,8 +104,8 @@ public class FheMetadataRequestTests extends BaseSerializationTest {
         resetSecurityConfiguration();
 
         BitVector key = BitVectors.randomVector(INDEX_LENGTH);
-        Metadatum metadatum = new Metadatum(new DocumentId("TEST",user), "test", Arrays.asList(1, 2, 3));
-        Encryptable<Metadatum> data = new FheEncryptable<Metadatum>(metadatum);
+        Metadata metadatum = new Metadata(new DocumentId("TEST",user), "test", Arrays.asList(1, 2, 3));
+        Encryptable<Metadata> data = new FheEncryptable<Metadata>(metadatum);
 
         // explicit encryption to generate some json
         data = data.encrypt(config);
@@ -154,8 +154,8 @@ public class FheMetadataRequestTests extends BaseSerializationTest {
             IOException {
         initImplicitEncryption();
         BitVector key = BitVectors.randomVector(INDEX_LENGTH);
-        Metadatum metadatum = new Metadatum(new DocumentId("TEST",user), "test", Arrays.asList(1, 2, 3));
-        Encryptable<Metadatum> data = new FheEncryptable<Metadatum>(metadatum);
+        Metadata metadatum = new Metadata(new DocumentId("TEST",user), "test", Arrays.asList(1, 2, 3));
+        Encryptable<Metadata> data = new FheEncryptable<Metadata>(metadatum);
 
         // implicit encryption via objectmapper
 
@@ -188,8 +188,8 @@ public class FheMetadataRequestTests extends BaseSerializationTest {
         initKeylessImplicitEncryption();
 
         BitVector key = BitVectors.randomVector(INDEX_LENGTH);
-        Metadatum metadatum = new Metadatum(new DocumentId("TEST",user), "test", Arrays.asList(1, 2, 3));
-        Encryptable<Metadatum> data = new FheEncryptable<Metadatum>(metadatum);
+        Metadata metadatum = new Metadata(new DocumentId("TEST",user), "test", Arrays.asList(1, 2, 3));
+        Encryptable<Metadata> data = new FheEncryptable<Metadata>(metadatum);
 
         // implicit encryption via objectmapper
 
@@ -224,8 +224,8 @@ public class FheMetadataRequestTests extends BaseSerializationTest {
     public void testSerializationWithExplicitEncryption() throws JsonGenerationException, JsonMappingException,
             IOException, SecurityConfigurationException {
         BitVector key = BitVectors.randomVector(INDEX_LENGTH);
-        Metadatum metadatum = new Metadatum(new DocumentId("TEST",user), "test", Arrays.asList(1, 2, 3));
-        Encryptable<Metadatum> data = new FheEncryptable<Metadatum>(metadatum);
+        Metadata metadatum = new Metadata(new DocumentId("TEST",user), "test", Arrays.asList(1, 2, 3));
+        Encryptable<Metadata> data = new FheEncryptable<Metadata>(metadatum);
 
         // explicit encryption
         PrivateKey privKey = new PrivateKey(128, 64);
@@ -234,7 +234,7 @@ public class FheMetadataRequestTests extends BaseSerializationTest {
         SecurityConfigurationMapping tmpConfig = new SecurityConfigurationMapping().add(FheEncryptable.class, privKey)
                 .add(FheEncryptable.class, pubKey);
 
-        data = (FheEncryptable<Metadatum>) data.encrypt(tmpConfig);
+        data = (FheEncryptable<Metadata>) data.encrypt(tmpConfig);
 
         // create the metadataRequest with our (ENCRYPTED) Encryptable
         MetadataRequest req = new MetadataRequest(Arrays.asList(new IndexedMetadata(key, data)));

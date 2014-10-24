@@ -4,30 +4,29 @@ import cern.colt.bitvector.BitVector;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.kryptnostic.kodex.v1.indexing.metadata.Metadatum;
+import com.kryptnostic.kodex.v1.indexing.metadata.Metadata;
 import com.kryptnostic.kodex.v1.models.Encryptable;
 
-// TODO: use AES encryption for metadata
 public class IndexedMetadata {
-    private static final String KEY = "key";
-    private static final String DATA = "data";
+    private static final String         KEY  = "key";
+    private static final String         DATA = "data";
 
-    private final BitVector key;
-    private final Encryptable<Metadatum> data;
+    private final BitVector             key;
+    private final Encryptable<Metadata> data;
 
     @JsonCreator
-    public IndexedMetadata(@JsonProperty(KEY) BitVector key, @JsonProperty(DATA) Encryptable<Metadatum> data) {
+    public IndexedMetadata( @JsonProperty( KEY ) BitVector key, @JsonProperty( DATA ) Encryptable<Metadata> data ) {
         this.key = key;
         this.data = data;
     }
 
-    @JsonProperty(KEY)
+    @JsonProperty( KEY )
     public BitVector getKey() {
         return key;
     }
 
-    @JsonProperty(DATA)
-    public Encryptable<Metadatum> getData() {
+    @JsonProperty( DATA )
+    public Encryptable<Metadata> getData() {
         return data;
     }
 }
