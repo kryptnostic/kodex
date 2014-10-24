@@ -19,5 +19,5 @@ public interface SearchFunctionApi {
     BasicResponse<Boolean> hasQueryHasherPair();
 
     @GET( SEARCH_FUNCTION )
-    BasicResponse<SimplePolynomialFunction> getFunction() throws ResourceNotFoundException;
+    SimplePolynomialFunction getFunction() throws ResourceNotFoundException;
 }
