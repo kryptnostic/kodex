@@ -1,11 +1,12 @@
 package com.kryptnostic.kodex.v1.security;
 
+import com.kryptnostic.crypto.v1.keys.Kodex;
 import com.kryptnostic.users.v1.UserKey;
 
 public interface SecurityService {
-    public SecurityConfigurationMapping getSecurityConfigurationMapping();
+    Kodex getKodex();
 
-    public String getUserCredential();
+    String getUserCredential();
 
-    public UserKey getUserKey();
+    UserKey getUserKey();
 }
