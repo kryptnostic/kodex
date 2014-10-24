@@ -62,6 +62,5 @@ public class KodexTests {
         actual.unseal( pair.getPrivate() );
         
         Assert.assertEquals( expected.getKey( "test", marshaller ),  actual.getKey( "test", marshaller ) );
-
     }
 }
