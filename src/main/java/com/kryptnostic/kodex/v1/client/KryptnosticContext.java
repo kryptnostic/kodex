@@ -7,7 +7,6 @@ import cern.colt.bitvector.BitVector;
 import com.kryptnostic.kodex.v1.security.SecurityService;
 import com.kryptnostic.multivariate.gf2.SimplePolynomialFunction;
 import com.kryptnostic.storage.v1.models.EncryptedSearchDocumentKey;
-import com.kryptnostic.users.v1.UserKey;
 
 /**
  * KryptnosticContext is responsible for maintaining shared state between the KryptnosticClient and Kryptnostic

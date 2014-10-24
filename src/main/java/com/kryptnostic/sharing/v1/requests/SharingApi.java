@@ -7,11 +7,13 @@ import retrofit.http.Body;
 import retrofit.http.DELETE;
 import retrofit.http.GET;
 import retrofit.http.POST;
+import retrofit.http.PUT;
 
 import com.kryptnostic.kodex.v1.models.response.BasicResponse;
 import com.kryptnostic.sharing.v1.IncomingShares;
 import com.kryptnostic.sharing.v1.SharingRequest;
 import com.kryptnostic.sharing.v1.models.KeyUpdateResponse;
+import com.kryptnostic.sharing.v1.models.PairedEncryptedSearchDocumentKey;
 import com.kryptnostic.sharing.v1.models.RevocationRequest;
 
 public interface SharingApi {
@@ -31,6 +33,9 @@ public interface SharingApi {
     @POST( KEYS )
     KeyUpdateResponse registerKeys( @Body KeyRegistrationRequest request );
 
+    @PUT( KEYS )
+    KeyUpdateResponse registerKeys( @Body List<PairedEncryptedSearchDocumentKey> request );
+    
     @DELETE( KEYS )
     KeyUpdateResponse removeKeys( @Body List<UUID> ids );
 }
