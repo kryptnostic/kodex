@@ -5,7 +5,6 @@ import java.io.IOException;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.google.common.base.Charsets;
 import com.google.common.hash.HashFunction;
 import com.google.common.hash.Hashing;
 import com.kryptnostic.kodex.v1.exceptions.types.SecurityConfigurationException;
