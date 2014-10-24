@@ -55,7 +55,7 @@ public interface DocumentApi {
      * Postcondition: If this is the last block required to make the document valid, the document will be put into a
      * non-pending state and be available for reading
      * 
-     * @param id Id of document to update
+     * @param documentId Id of document to update
      * @param block A single block for the document
      * @return The progress and verification data for the updated document
      * @throws ResourceNotFoundException if specified documentId was not found
@@ -69,7 +69,7 @@ public interface DocumentApi {
     /**
      * Retrieve a document's text
      * 
-     * @param id
+     * @param documentId
      * @return DocumentResponse containing document
      */
     @GET( DOCUMENT + "/{" + ID + "}" )
@@ -83,11 +83,10 @@ public interface DocumentApi {
     BasicResponse<Collection<DocumentId>> getDocumentIds();
 
     /**
-     * 
-     * @param id Document identifier
-     * @param offsets List of positions from which to obtain fragments
-     * @param characterWindow Number of characters to return surrounding each offset
+     * @param documentId
+     * @param request
      * @return
+     * @throws ResourceNotFoundException
      */
     @POST( DOCUMENT + "/{" + ID + "}/fragments" )
     DocumentFragmentResponse getDocumentFragments( @Path( ID ) String documentId, @Body DocumentFragmentRequest request )
