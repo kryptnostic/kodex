@@ -21,11 +21,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kryptnostic.crypto.Ciphertext;
 import com.kryptnostic.crypto.v1.ciphers.BlockCiphertext;
 import com.kryptnostic.crypto.v1.ciphers.CryptoService;
+import com.kryptnostic.crypto.v1.keys.Kodex;
 import com.kryptnostic.kodex.v1.exceptions.types.SecurityConfigurationException;
-import com.kryptnostic.kodex.v1.security.SecurityConfigurationMapping;
 import com.kryptnostic.kodex.v1.serialization.jackson.KodexObjectMapperFactory;
 
 public class AesEncryptable<T> extends Encryptable<T> {
+    public static final String CRYPTOSERVICE_KODEX_KEY = CryptoService.class.getCanonicalName();
 
     /**
      * 
@@ -44,16 +45,16 @@ public class AesEncryptable<T> extends Encryptable<T> {
     @JsonCreator
     public AesEncryptable(@JsonProperty(FIELD_ENCRYPTED_DATA) BlockCiphertext ciphertext,
             @JsonProperty(FIELD_ENCRYPTED_CLASS_NAME) BlockCiphertext className,
-            @JacksonInject SecurityConfigurationMapping mapping) throws JsonParseException, JsonMappingException,
+            @JacksonInject Kodex<String> kodex) throws JsonParseException, JsonMappingException,
             IOException, ClassNotFoundException, SecurityConfigurationException {
-        super(ciphertext, className, mapping);
+        super(ciphertext, className, kodex);
     }
 
     @Override
-    protected Encryptable<T> encryptWith(SecurityConfigurationMapping service) throws JsonProcessingException,
+    protected Encryptable<T> encryptWith(Kodex<String> kodex) throws JsonProcessingException,
             SecurityConfigurationException {
         @SuppressWarnings("rawtypes")
-        CryptoService crypto = service.get(AesEncryptable.class, CryptoService.class);
+        CryptoService crypto = kodex.getKey( CRYPTOSERVICE_KODEX_KEY, factory );
 
         BlockCiphertext encryptedData = null;
         BlockCiphertext encryptedClassName = null;

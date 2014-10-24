@@ -4,16 +4,16 @@ import java.util.Arrays;
 
 import org.junit.Assert;
 
-public abstract class KodexFactoryTestsBase<T> {
-    private KodexFactory<T> kodexFactory;
+public abstract class KodexMarshallerTestsBase<T> {
+    protected AbstractKodexFactory<T> kodexMarshaller;
 
     public <S> void testFromBytes( byte[] bytes, S expected ) {
-        T recovered = kodexFactory.fromBytes( bytes );
+        T recovered = kodexMarshaller.fromBytes( bytes );
         Assert.assertEquals( expected, recovered );
     }
 
     public void testToBytes( byte[] expected, T object ) {
-        byte[] recovered = kodexFactory.toBytes( object );
+        byte[] recovered = kodexMarshaller.toBytes( object );
         Assert.assertTrue( Arrays.equals( expected, recovered ) );
     }
 }
