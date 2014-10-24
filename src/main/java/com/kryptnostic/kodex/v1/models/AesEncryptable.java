@@ -26,108 +26,107 @@ import com.kryptnostic.kodex.v1.security.SecurityConfigurationMapping;
 import com.kryptnostic.kodex.v1.serialization.jackson.KodexObjectMapperFactory;
 
 public class AesEncryptable<T> extends Encryptable<T> {
+    private static final long   serialVersionUID = -5071733999235074270L;
+    private static ObjectMapper mapper           = ( new KodexObjectMapperFactory() ).getObjectMapper( null );
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = -5071733999235074270L;
-    private static ObjectMapper mapper = ( new KodexObjectMapperFactory() ).getObjectMapper(null);
-
-    public AesEncryptable(T data) {
-        super(data);
+    public AesEncryptable( T data ) {
+        super( data );
     }
 
-    public AesEncryptable(BlockCiphertext ciphertext, BlockCiphertext className) {
-        super(ciphertext, className);
+    public AesEncryptable( BlockCiphertext ciphertext, BlockCiphertext className ) {
+        super( ciphertext, className );
     }
 
     @JsonCreator
-    public AesEncryptable(@JsonProperty(FIELD_ENCRYPTED_DATA) BlockCiphertext ciphertext,
-            @JsonProperty(FIELD_ENCRYPTED_CLASS_NAME) BlockCiphertext className,
-            @JacksonInject SecurityConfigurationMapping mapping) throws JsonParseException, JsonMappingException,
-            IOException, ClassNotFoundException, SecurityConfigurationException {
-        super(ciphertext, className, mapping);
+    public AesEncryptable(
+            @JsonProperty( FIELD_ENCRYPTED_DATA ) BlockCiphertext ciphertext,
+            @JsonProperty( FIELD_ENCRYPTED_CLASS_NAME ) BlockCiphertext className,
+            @JacksonInject SecurityConfigurationMapping mapping ) throws JsonParseException,
+            JsonMappingException,
+            IOException,
+            ClassNotFoundException,
+            SecurityConfigurationException {
+        super( ciphertext, className, mapping );
     }
 
     @Override
-    protected Encryptable<T> encryptWith(SecurityConfigurationMapping service) throws JsonProcessingException,
+    protected Encryptable<T> encryptWith( SecurityConfigurationMapping service ) throws JsonProcessingException,
             SecurityConfigurationException {
-        @SuppressWarnings("rawtypes")
-        CryptoService crypto = service.get(AesEncryptable.class, CryptoService.class);
+        CryptoService crypto = service.get( AesEncryptable.class, CryptoService.class );
 
         BlockCiphertext encryptedData = null;
         BlockCiphertext encryptedClassName = null;
         try {
-            encryptedData = crypto.encrypt(mapper.writeValueAsString(getData()));
-            encryptedClassName = crypto.encrypt(getClassName());
-        } catch (InvalidKeyException e) {
-            wrapSecurityConfigurationException(e);
-        } catch (InvalidKeySpecException e) {
-            wrapSecurityConfigurationException(e);
-        } catch (NoSuchAlgorithmException e) {
-            wrapSecurityConfigurationException(e);
-        } catch (NoSuchPaddingException e) {
-            wrapSecurityConfigurationException(e);
-        } catch (IllegalBlockSizeException e) {
-            wrapSecurityConfigurationException(e);
-        } catch (BadPaddingException e) {
-            wrapSecurityConfigurationException(e);
-        } catch (InvalidParameterSpecException e) {
-            wrapSecurityConfigurationException(e);
+            encryptedData = crypto.encrypt( mapper.writeValueAsString( getData() ) );
+            encryptedClassName = crypto.encrypt( getClassName() );
+        } catch ( InvalidKeyException e ) {
+            wrapSecurityConfigurationException( e );
+        } catch ( InvalidKeySpecException e ) {
+            wrapSecurityConfigurationException( e );
+        } catch ( NoSuchAlgorithmException e ) {
+            wrapSecurityConfigurationException( e );
+        } catch ( NoSuchPaddingException e ) {
+            wrapSecurityConfigurationException( e );
+        } catch ( IllegalBlockSizeException e ) {
+            wrapSecurityConfigurationException( e );
+        } catch ( BadPaddingException e ) {
+            wrapSecurityConfigurationException( e );
+        } catch ( InvalidParameterSpecException e ) {
+            wrapSecurityConfigurationException( e );
         }
-        return new AesEncryptable<T>(encryptedData, encryptedClassName);
+        return new AesEncryptable<T>( encryptedData, encryptedClassName );
 
     }
 
-    private void wrapSecurityConfigurationException(Exception e) throws SecurityConfigurationException {
-        throw new SecurityConfigurationException("Error occurred while trying to encrypt or decrypt data.", e);
+    private void wrapSecurityConfigurationException( Exception e ) throws SecurityConfigurationException {
+        throw new SecurityConfigurationException( "Error occurred while trying to encrypt or decrypt data.", e );
     }
 
     @Override
-    protected Encryptable<T> decryptWith(SecurityConfigurationMapping service) throws JsonParseException,
+    protected Encryptable<T> decryptWith( SecurityConfigurationMapping service ) throws JsonParseException,
             JsonMappingException, IOException, ClassNotFoundException, SecurityConfigurationException {
-        CryptoService crypto = service.get(AesEncryptable.class, CryptoService.class);
+        CryptoService crypto = service.get( AesEncryptable.class, CryptoService.class );
         String className = null;
         String objectString = null;
         try {
-            className = crypto.decrypt((BlockCiphertext) getEncryptedClassName());
-            objectString = crypto.decrypt((BlockCiphertext) getEncryptedData());
-        } catch (InvalidKeyException e) {
-            wrapSecurityConfigurationException(e);
-        } catch (InvalidAlgorithmParameterException e) {
-            wrapSecurityConfigurationException(e);
-        } catch (NoSuchAlgorithmException e) {
-            wrapSecurityConfigurationException(e);
-        } catch (NoSuchPaddingException e) {
-            wrapSecurityConfigurationException(e);
-        } catch (InvalidKeySpecException e) {
-            wrapSecurityConfigurationException(e);
-        } catch (IllegalBlockSizeException e) {
-            wrapSecurityConfigurationException(e);
-        } catch (BadPaddingException e) {
-            wrapSecurityConfigurationException(e);
+            className = crypto.decrypt( (BlockCiphertext) getEncryptedClassName() );
+            objectString = crypto.decrypt( (BlockCiphertext) getEncryptedData() );
+        } catch ( InvalidKeyException e ) {
+            wrapSecurityConfigurationException( e );
+        } catch ( InvalidAlgorithmParameterException e ) {
+            wrapSecurityConfigurationException( e );
+        } catch ( NoSuchAlgorithmException e ) {
+            wrapSecurityConfigurationException( e );
+        } catch ( NoSuchPaddingException e ) {
+            wrapSecurityConfigurationException( e );
+        } catch ( InvalidKeySpecException e ) {
+            wrapSecurityConfigurationException( e );
+        } catch ( IllegalBlockSizeException e ) {
+            wrapSecurityConfigurationException( e );
+        } catch ( BadPaddingException e ) {
+            wrapSecurityConfigurationException( e );
         }
 
-        @SuppressWarnings("unchecked")
-        T obj = mapper.<T> readValue(objectString, (Class<T>) Class.forName(className));
-        return new AesEncryptable<T>(obj);
+        @SuppressWarnings( "unchecked" )
+        T obj = mapper.<T> readValue( objectString, (Class<T>) Class.forName( className ) );
+        return new AesEncryptable<T>( obj );
     }
 
     @Override
-    protected Encryptable<T> createEncrypted(Ciphertext ciphertext, Ciphertext className) {
-        return new AesEncryptable<T>((BlockCiphertext) ciphertext, (BlockCiphertext) className);
+    protected Encryptable<T> createEncrypted( Ciphertext ciphertext, Ciphertext className ) {
+        return new AesEncryptable<T>( (BlockCiphertext) ciphertext, (BlockCiphertext) className );
     }
 
     @Override
-    protected boolean canDecryptWith(SecurityConfigurationMapping mapping) {
-        if (mapping == null) {
+    protected boolean canDecryptWith( SecurityConfigurationMapping mapping ) {
+        if ( mapping == null ) {
             return false;
         }
-        return mapping.contains(AesEncryptable.class, CryptoService.class);
+        return mapping.contains( AesEncryptable.class, CryptoService.class );
     }
 
     // TODO: a little bit yucky. we should centralize this config
-    public static void setObjectMapper(ObjectMapper mapper) {
+    public static void setObjectMapper( ObjectMapper mapper ) {
         AesEncryptable.mapper = mapper;
     }
 
