@@ -7,6 +7,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class DocumentMetadata implements Serializable {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -5144466271797672674L;
     public static final String FIELD_ID = "id";
     public static final String FIELD_VERSION = "version";
     public static final String FIELD_NUM_BLOCKS = "numBlocks";

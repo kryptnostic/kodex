@@ -54,8 +54,12 @@ public enum Cypher {
         return description.getKeySize();
     }
     
+    public CryptoAlgorithm getAlgorithm() {
+        return description.getAlgorithm();
+    }
+    
     public String getName() {
-        return description.getAlgorithm().getValue();
+        return getAlgorithm().getValue();
     }
     
     public KeyGenerator getKeyGenerator() throws NoSuchAlgorithmException, InvalidAlgorithmParameterException {

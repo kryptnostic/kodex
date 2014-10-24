@@ -13,6 +13,10 @@ import com.kryptnostic.sharing.v1.models.Share;
 
 public final class IncomingShares implements Serializable {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -4163211276862529808L;
     private final Map<UUID, Share> shares;
 
     public IncomingShares() {

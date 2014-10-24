@@ -8,6 +8,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.kryptnostic.kodex.v1.constants.Names;
 
 public final class KeyUpdateResponse implements Serializable {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 425136864440277920L;
     private final Map<UUID,byte[]> ids;
     public KeyUpdateResponse( @JsonProperty(Names.ID_FIELD+"s") Map<UUID,byte[]> ids ) {
         this.ids = ids;
