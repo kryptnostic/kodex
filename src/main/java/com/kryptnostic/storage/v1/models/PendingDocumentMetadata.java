@@ -7,6 +7,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class PendingDocumentMetadata extends DocumentMetadata implements Serializable {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 6679696827482237143L;
+
     public static final String FIELD_RECEIVED_BLOCKS = "receivedBlocks";
 
     private int receivedBlocks;
