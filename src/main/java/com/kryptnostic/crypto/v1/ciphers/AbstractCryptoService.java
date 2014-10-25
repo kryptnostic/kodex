@@ -21,8 +21,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.kryptnostic.kodex.v1.constants.Names;
 
 public abstract class AbstractCryptoService {
-
     protected final Cypher     cypher;
+
     protected static final int INTEGER_BYTES = Integer.SIZE / Byte.SIZE;
 
     public AbstractCryptoService( Cypher cypher ) {

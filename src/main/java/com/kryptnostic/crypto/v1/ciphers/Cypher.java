@@ -75,7 +75,7 @@ public enum Cypher {
     }
     
     @JsonCreator
-    public static Cypher createCipher(CipherDescription description ) {
+    public static Cypher createCipher( CipherDescription description ) {
         Preconditions.checkArgument( ImmutableSet.of( 128,256,1024,2048,4096).contains( description.getKeySize() ), "Only 128 bit and 256 key sizes are supported." );
         if( description.getAlgorithm().equals( CryptoAlgorithm.AES ) ) {
             if( description.getMode().equals( Mode.CTR ) ) {

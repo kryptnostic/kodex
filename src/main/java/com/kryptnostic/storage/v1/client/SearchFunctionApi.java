@@ -12,15 +12,12 @@ import com.kryptnostic.storage.v1.models.request.QueryHasherPairRequest;
 public interface SearchFunctionApi {
     String SEARCH_FUNCTION = "/searchFunction";
 
-    @POST(SEARCH_FUNCTION + "/hasher")
-    BasicResponse<String> setQueryHasherPair(@Body QueryHasherPairRequest request);
-    
-    @GET(SEARCH_FUNCTION + "/hasher/left")
-    BasicResponse<SimplePolynomialFunction> getLeftQueryHasher() throws ResourceNotFoundException;
-    
-    @GET(SEARCH_FUNCTION + "/hasher/right")
-    BasicResponse<SimplePolynomialFunction> getRightQueryHasher() throws ResourceNotFoundException;
+    @POST( SEARCH_FUNCTION + "/hasher" )
+    BasicResponse<String> setQueryHasherPair( @Body QueryHasherPairRequest request );
 
-    @GET(SEARCH_FUNCTION)
-    BasicResponse<SimplePolynomialFunction> getFunction() throws ResourceNotFoundException;
+    @GET( SEARCH_FUNCTION + "/hasher" )
+    BasicResponse<Boolean> hasQueryHasherPair();
+
+    @GET( SEARCH_FUNCTION )
+    SimplePolynomialFunction getFunction() throws ResourceNotFoundException;
 }

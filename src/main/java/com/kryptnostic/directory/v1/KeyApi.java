@@ -29,20 +29,14 @@ public interface KeyApi {
     @GET( PUBLIC_KEY + PARAM.REALM + PARAM.USER )
     PublicKeyEnvelope getPublicKey( @Path( Names.REALM_FIELD ) String realm, @Path( Names.USER_FIELD ) String username );
 
-    @PUT( PUBLIC_KEY + PARAM.REALM + PARAM.USER )
-    BasicResponse<String> setPublicKey(
-            @Path( Names.REALM_FIELD ) String realm,
-            @Path( Names.USER_FIELD ) String username,
-            @Body PublicKeyEnvelope publicKey );
+    @PUT( PUBLIC_KEY )
+    BasicResponse<String> setPublicKey(@Body PublicKeyEnvelope publicKey );
 
-    @GET( PRIVATE_KEY + PARAM.REALM + PARAM.USER )
-    BlockCiphertext getPrivateKey( @Path( Names.REALM_FIELD ) String realm, @Path( Names.USER_FIELD ) String username );
+    @GET( PRIVATE_KEY )
+    BlockCiphertext getPrivateKey();
 
-    @PUT( PRIVATE_KEY + PARAM.REALM + PARAM.USER )
-    BasicResponse<String> setPrivateKey(
-            @Path( Names.REALM_FIELD ) String realm,
-            @Path( Names.USER_FIELD ) String username,
-            @Body BlockCiphertext encryptedPrivateKey );
+    @PUT( PRIVATE_KEY )
+    BasicResponse<String> setPrivateKey(@Body BlockCiphertext encryptedPrivateKey );
 
     @GET( KODEX )
     Kodex<String> getKodex();

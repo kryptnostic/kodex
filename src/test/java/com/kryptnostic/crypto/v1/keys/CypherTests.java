@@ -37,7 +37,7 @@ public class CypherTests {
             NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, InvalidParameterSpecException,
             InvalidAlgorithmParameterException {
         String expected = StringUtils.newStringUtf8( "hello world!".getBytes( Charsets.UTF_8 ) );
-        BlockCiphertext bc = crypto.encrypt( expected, Charsets.UTF_8.toString() );
+        BlockCiphertext bc = crypto.encrypt( expected );
         String actual = crypto.decrypt( bc );
         Assert.assertEquals( expected, actual );
     }

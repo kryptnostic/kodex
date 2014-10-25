@@ -1,13 +1,13 @@
 package com.kryptnostic.kodex.v1.client;
 
-import java.util.List;
-
 import cern.colt.bitvector.BitVector;
 
+import com.kryptnostic.crypto.EncryptedSearchSharingKey;
+import com.kryptnostic.kodex.v1.exceptions.types.IrisException;
+import com.kryptnostic.kodex.v1.exceptions.types.ResourceNotFoundException;
 import com.kryptnostic.kodex.v1.security.SecurityService;
 import com.kryptnostic.multivariate.gf2.SimplePolynomialFunction;
-import com.kryptnostic.storage.v1.models.EncryptedSearchDocumentKey;
-import com.kryptnostic.users.v1.UserKey;
+import com.kryptnostic.sharing.v1.DocumentId;
 
 /**
  * KryptnosticContext is responsible for maintaining shared state between the KryptnosticClient and Kryptnostic
@@ -17,15 +17,28 @@ import com.kryptnostic.users.v1.UserKey;
  *
  */
 public interface KryptnosticContext {
-    void setSearchFunction( SimplePolynomialFunction fn );
 
-    SimplePolynomialFunction getSearchFunction();
-
-    List<EncryptedSearchDocumentKey> getDocumentKeys();
-
-    void addDocumentKeys( List<EncryptedSearchDocumentKey> keys );
-
-    BitVector generateNonce();
+    BitVector generateSearchNonce();
 
     SecurityService getSecurityService();
+
+    /**
+     * Get the global hash function required for search. Only make a request if necessary
+     * 
+     * @return
+     * @throws ResourceNotFoundException If hash function does not exist on the server
+     */
+    SimplePolynomialFunction getGlobalHashFunction() throws ResourceNotFoundException;
+
+    EncryptedSearchSharingKey generateSharingKey();
+
+    BitVector encryptNonce( BitVector nonce );
+
+    void submitBridgeKeyWithSearchNonce(
+            DocumentId documentId,
+            EncryptedSearchSharingKey sharingKey,
+            BitVector searchNonce ) throws IrisException;
+
+    BitVector generateIndexForToken( String token, BitVector searchNonce, EncryptedSearchSharingKey sharingKey )
+            throws ResourceNotFoundException;
 }

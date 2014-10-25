@@ -18,7 +18,6 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.base.Charsets;
 import com.kryptnostic.crypto.Ciphertext;
 import com.kryptnostic.crypto.v1.ciphers.BlockCiphertext;
 import com.kryptnostic.crypto.v1.ciphers.CryptoService;
@@ -33,7 +32,7 @@ import com.kryptnostic.kodex.v1.serialization.jackson.KodexObjectMapperFactory;
  */
 public class AesEncryptable<T> extends Encryptable<T> {
     private static final long                            serialVersionUID          = -5071733999235074270L;
-    private static ObjectMapper                          mapper                    = ( new KodexObjectMapperFactory() )
+    private static ObjectMapper                          mapper                    = KodexObjectMapperFactory
                                                                                            .getObjectMapper();
     private static JacksonKodexMarshaller<CryptoService> cryptoServiceKodexFactory = new JacksonKodexMarshaller<CryptoService>(
                                                                                            CryptoService.class,
@@ -68,8 +67,8 @@ public class AesEncryptable<T> extends Encryptable<T> {
         try {
             crypto = kodex.getKey( CryptoService.class.getCanonicalName(), cryptoServiceKodexFactory );
 
-            encryptedData = crypto.encrypt( mapper.writeValueAsString( getData() ), Charsets.UTF_8.toString() );
-            encryptedClassName = crypto.encrypt( getClassName(), Charsets.UTF_8.toString() );
+            encryptedData = crypto.encrypt( mapper.writeValueAsString( getData() ) );
+            encryptedClassName = crypto.encrypt( getClassName() );
         } catch ( InvalidKeyException e ) {
             wrapSecurityConfigurationException( e );
         } catch ( InvalidAlgorithmParameterException e ) {

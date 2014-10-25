@@ -23,6 +23,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.kryptnostic.crypto.v1.keys.SecretKeyFactoryType;
 import com.kryptnostic.kodex.v1.constants.Names;
 
+
 public class CryptoService extends AbstractCryptoService {
     private static final String        FACTORY_TYPE_FIELD          = "keyDerivationAlgorithm";
     private static final String        ITERATIONS_FIELD            = "iterations";
@@ -57,10 +58,13 @@ public class CryptoService extends AbstractCryptoService {
         return encrypt( plaintext, Cyphers.generateSalt() );
     }
 
-    public BlockCiphertext encrypt( String plaintext, String charsetName ) throws InvalidKeySpecException,
-            NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException,
-            InvalidKeyException, InvalidParameterSpecException {
-        return encrypt( StringUtils.getBytesUnchecked( plaintext, charsetName ), Cyphers.generateSalt() );
+    /**
+     * Note: plaintext String MUST be UTF_8 encoded.
+     */
+    public BlockCiphertext encrypt( String plaintext ) throws InvalidKeySpecException, NoSuchAlgorithmException,
+            NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException,
+            InvalidParameterSpecException {
+        return encrypt( StringUtils.getBytesUtf8( plaintext ), Cyphers.generateSalt() );
     }
 
     public String decrypt( BlockCiphertext ciphertext ) throws InvalidKeyException, InvalidAlgorithmParameterException,

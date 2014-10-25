@@ -23,8 +23,7 @@ public class ParameterizedPolynomialFunctionTests {
         SimplePolynomialFunction parameterized = ParameterizedPolynomialFunctions.fromUnshiftedVariables(
                 base.getInputLength(), base, pipelines);
 
-        KodexObjectMapperFactory factory = new KodexObjectMapperFactory();
-        ObjectMapper mapper = factory.getObjectMapper(null);
+        ObjectMapper mapper =  KodexObjectMapperFactory.getObjectMapper();
         String serializedPpf = mapper.writeValueAsString(parameterized);
         Assert.assertNotNull(serializedPpf);
     }
@@ -36,8 +35,7 @@ public class ParameterizedPolynomialFunctionTests {
         SimplePolynomialFunction parameterized = ParameterizedPolynomialFunctions.fromUnshiftedVariables(
                 base.getInputLength(), base, pipelines);
 
-        KodexObjectMapperFactory factory = new KodexObjectMapperFactory();
-        ObjectMapper mapper = factory.getObjectMapper(null);
+        ObjectMapper mapper =  KodexObjectMapperFactory.getObjectMapper();
         String serializedPpf = mapper.writeValueAsString(parameterized);
 
         SimplePolynomialFunction recovered = mapper.readValue(serializedPpf, SimplePolynomialFunction.class);

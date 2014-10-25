@@ -4,7 +4,7 @@ import java.util.Collection;
 
 import com.kryptnostic.search.v1.models.SearchResult;
 
-public interface SearchService {
+public interface SearchClient {
     /**
      * Submit search query on stored documents.
      * 

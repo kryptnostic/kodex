@@ -29,7 +29,8 @@ import com.kryptnostic.kodex.v1.exceptions.types.SecurityConfigurationException;
 import com.kryptnostic.kodex.v1.serialization.jackson.KodexObjectMapperFactory;
 
 public class FheEncryptable<T> extends Encryptable<T> {
-    private static ObjectMapper                       mapper                 = ( new KodexObjectMapperFactory() )
+    private static final long                         serialVersionUID       = -4740442054069941609L;
+    private final static ObjectMapper                 mapper                 = KodexObjectMapperFactory
                                                                                      .getObjectMapper();
     private static JacksonKodexMarshaller<PublicKey>  publicKeyKodexFactory  = new JacksonKodexMarshaller<PublicKey>(
                                                                                      PublicKey.class,
@@ -37,11 +38,6 @@ public class FheEncryptable<T> extends Encryptable<T> {
     private static JacksonKodexMarshaller<PrivateKey> privateKeyKodexFactory = new JacksonKodexMarshaller<PrivateKey>(
 
                                                                              PrivateKey.class, mapper );
-
-    /**
-     * 
-     */
-    private static final long                         serialVersionUID       = -4740442054069941609L;
 
     public FheEncryptable( T data ) {
         super( data );

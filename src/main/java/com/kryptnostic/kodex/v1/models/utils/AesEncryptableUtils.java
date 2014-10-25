@@ -47,7 +47,7 @@ public class AesEncryptableUtils {
 
     /**
      * 
-     * @param s Original string, potentially > 4KB
+     * @param documentBody Original string, potentially &gt; 4KB
      * @return Collection of AesEncryptable-wrapped 4KB strings that can be concatenated to form the entire original
      *         string
      * @throws SecurityConfigurationException
@@ -55,6 +55,7 @@ public class AesEncryptableUtils {
      */
     public static List<AesEncryptable<String>> chunkString( String documentBody, Kodex<String> kodex )
             throws JsonProcessingException, SecurityConfigurationException {
+
         byte[] bytes = documentBody.getBytes();
         int bytesLeft = bytes.length;
         int counter = 0;
@@ -89,7 +90,6 @@ public class AesEncryptableUtils {
             throws SecurityConfigurationException, IOException, ClassNotFoundException {
 
         VerifiedStringBlocks verifiedStrings = chunkStringWithVerification( body, kodex );
-
         return createEncryptedDocument( documentId, body, verifiedStrings.getStrings() );
     }
 
