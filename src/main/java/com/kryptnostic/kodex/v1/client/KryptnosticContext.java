@@ -41,4 +41,6 @@ public interface KryptnosticContext {
 
     BitVector generateIndexForToken( String token, BitVector searchNonce, EncryptedSearchSharingKey sharingKey )
             throws ResourceNotFoundException;
+
+    BitVector prepareSearchToken( String token ) throws IrisException;
 }
