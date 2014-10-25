@@ -140,7 +140,11 @@ public class Kodex<K> implements Serializable {
         byte[] rawBytes = null;
         try {
             lock.readLock().lock();
-            rawBytes = service.decryptBytes( keyring.get( key ) );
+            BlockCiphertext value = keyring.get( key );
+            if( value == null ) {
+                return null;
+            }
+            rawBytes = service.decryptBytes( value );
         } finally {
             lock.readLock().unlock();
         }
