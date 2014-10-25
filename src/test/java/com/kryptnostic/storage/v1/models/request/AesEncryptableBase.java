@@ -15,6 +15,8 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 
 import com.kryptnostic.BaseSerializationTest;
+import com.kryptnostic.crypto.PrivateKey;
+import com.kryptnostic.crypto.PublicKey;
 import com.kryptnostic.crypto.v1.ciphers.CryptoService;
 import com.kryptnostic.crypto.v1.ciphers.Cypher;
 import com.kryptnostic.crypto.v1.keys.JacksonKodexMarshaller;
@@ -42,6 +44,21 @@ public class AesEncryptableBase extends BaseSerializationTest {
         this.kodex.unseal( pair.getPrivate() );
         this.kodex.setKey( CryptoService.class.getCanonicalName(), new JacksonKodexMarshaller<CryptoService>(
                 CryptoService.class ), crypto );
+    }
+
+    protected void initFheEncryption() throws InvalidKeyException, InvalidKeySpecException, NoSuchAlgorithmException,
+            NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, InvalidParameterSpecException,
+            SealedKodexException, IOException {
+        PrivateKey privateKey = new PrivateKey( 128, 64 );
+        PublicKey publicKey = new PublicKey( privateKey );
+
+        kodex.unseal( pair.getPrivate() );
+        kodex.setKey( PrivateKey.class.getCanonicalName(), new JacksonKodexMarshaller<PrivateKey>(
+                PrivateKey.class,
+                mapper ), privateKey );
+        kodex.setKey( PublicKey.class.getCanonicalName(), new JacksonKodexMarshaller<PublicKey>(
+                PublicKey.class,
+                mapper ), publicKey );
     }
 
     protected void resetSecurityConfiguration() throws InvalidKeyException, NoSuchAlgorithmException,
