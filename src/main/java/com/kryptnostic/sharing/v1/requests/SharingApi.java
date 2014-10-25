@@ -21,21 +21,21 @@ public interface SharingApi {
     String SHARE_DOCUMENT = "/document";
     String KEYS           = "/keys";
 
-    @GET( SHARE_DOCUMENT )
+    @GET( CONTROLLER + SHARE_DOCUMENT )
     IncomingShares getIncomingShares();
 
-    @POST( SHARE_DOCUMENT )
+    @POST( CONTROLLER + SHARE_DOCUMENT )
     BasicResponse<String> shareDocument( @Body SharingRequest request );
 
-    @DELETE( SHARE_DOCUMENT )
+    @DELETE( CONTROLLER + SHARE_DOCUMENT )
     BasicResponse<String> revokeAccess( @Body RevocationRequest request );
 
-    @POST( KEYS )
+    @POST( CONTROLLER + KEYS )
     KeyUpdateResponse registerKeys( @Body KeyRegistrationRequest request );
 
-    @PUT( KEYS )
+    @PUT( CONTROLLER + KEYS )
     KeyUpdateResponse registerKeys( @Body List<PairedEncryptedSearchDocumentKey> request );
     
-    @DELETE( KEYS )
+    @DELETE( CONTROLLER + KEYS )
     KeyUpdateResponse removeKeys( @Body List<UUID> ids );
 }

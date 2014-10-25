@@ -26,24 +26,24 @@ public interface KeyApi {
         public static final String ID    = "/{" + Names.ID_FIELD + "}";
     }
 
-    @GET( PUBLIC_KEY + PARAM.REALM + PARAM.USER )
+    @GET( CONTROLLER+ PUBLIC_KEY + PARAM.REALM + PARAM.USER )
     PublicKeyEnvelope getPublicKey( @Path( Names.REALM_FIELD ) String realm, @Path( Names.USER_FIELD ) String username );
 
-    @PUT( PUBLIC_KEY )
+    @PUT( CONTROLLER + PUBLIC_KEY )
     BasicResponse<String> setPublicKey(@Body PublicKeyEnvelope publicKey );
 
-    @GET( PRIVATE_KEY )
+    @GET( CONTROLLER + PRIVATE_KEY )
     BlockCiphertext getPrivateKey();
 
-    @PUT( PRIVATE_KEY )
+    @PUT( CONTROLLER + PRIVATE_KEY )
     BasicResponse<String> setPrivateKey(@Body BlockCiphertext encryptedPrivateKey );
 
-    @GET( KODEX )
+    @GET( CONTROLLER + KODEX )
     Kodex<String> getKodex();
 
-    @PUT( KODEX )
+    @PUT( CONTROLLER + KODEX )
     BasicResponse<String> setKodex( @Body Kodex<String> kodex );
 
-    @GET( DOCUMENT_KEY + PARAM.ID )
+    @GET( CONTROLLER + DOCUMENT_KEY + PARAM.ID )
     BasicResponse<byte[]> getDocumentKey( @Path( Names.ID_FIELD ) String id );
 }
