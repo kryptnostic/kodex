@@ -22,6 +22,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
 import com.kryptnostic.crypto.v1.ciphers.AesCryptoService;
@@ -145,6 +146,30 @@ public class Kodex<K> implements Serializable {
         }
 
         return marshaller.fromBytes( rawBytes );
+    }
+
+    public <T> T getKeyWithJackson( K key, Class<T> clazz ) throws InvalidKeyException,
+            InvalidAlgorithmParameterException, NoSuchAlgorithmException, NoSuchPaddingException,
+            InvalidKeySpecException, IllegalBlockSizeException, BadPaddingException, SealedKodexException, IOException {
+        return getKey( key, new JacksonKodexMarshaller<T>( clazz ) );
+    }
+
+    public <T> T getKeyWithJackson( K key, TypeReference<T> reference ) throws InvalidKeyException,
+            InvalidAlgorithmParameterException, NoSuchAlgorithmException, NoSuchPaddingException,
+            InvalidKeySpecException, IllegalBlockSizeException, BadPaddingException, SealedKodexException, IOException {
+        return getKey( key, new JacksonTypeRefKodexMarshaller<T>( reference ) );
+    }
+
+    public <T> void setKeyWithJackson( K key, T object, Class<T> clazz ) throws InvalidKeyException,
+            InvalidKeySpecException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException,
+            BadPaddingException, InvalidParameterSpecException, SealedKodexException, IOException {
+        setKey( key, new JacksonKodexMarshaller<T>( clazz ), object );
+    }
+
+    public <T> void setKeyWithJackson( K key, T object, TypeReference<T> reference ) throws InvalidKeyException,
+            InvalidKeySpecException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException,
+            BadPaddingException, InvalidParameterSpecException, SealedKodexException, IOException {
+        setKey( key, new JacksonTypeRefKodexMarshaller<T>( reference ), object );
     }
 
     public boolean containsKey( K key ) throws SealedKodexException {
