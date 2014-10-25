@@ -24,7 +24,7 @@ public class JacksonKodexMarshaller<T> implements KodexMarshaller<T> {
     }
 
     @Override
-    public byte[] toBytes( T object ) throws IOException{
+    public byte[] toBytes( T object ) throws IOException {
         return mapper.writeValueAsBytes( object );
     }
 
