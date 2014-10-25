@@ -24,7 +24,7 @@ public final class KodexObjectMapperFactory {
     }
 
     public static ObjectMapper getObjectMapper() {
-        return getBaseMapper().registerModule( new KodexModule() );
+        return getObjectMapper( null );
     }
 
     private static ObjectMapper getBaseMapper() {
