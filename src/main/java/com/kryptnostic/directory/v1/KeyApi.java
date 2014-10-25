@@ -26,7 +26,7 @@ public interface KeyApi {
         public static final String ID    = "/{" + Names.ID_FIELD + "}";
     }
 
-    @GET( CONTROLLER+ PUBLIC_KEY + PARAM.REALM + PARAM.USER )
+    @GET( CONTROLLER + PUBLIC_KEY + PARAM.REALM + PARAM.USER )
     PublicKeyEnvelope getPublicKey( @Path( Names.REALM_FIELD ) String realm, @Path( Names.USER_FIELD ) String username );
 
     @PUT( CONTROLLER + PUBLIC_KEY )
