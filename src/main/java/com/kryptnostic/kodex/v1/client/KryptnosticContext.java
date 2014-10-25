@@ -5,7 +5,7 @@ import cern.colt.bitvector.BitVector;
 import com.kryptnostic.crypto.EncryptedSearchSharingKey;
 import com.kryptnostic.kodex.v1.exceptions.types.IrisException;
 import com.kryptnostic.kodex.v1.exceptions.types.ResourceNotFoundException;
-import com.kryptnostic.kodex.v1.security.CredentialService;
+import com.kryptnostic.kodex.v1.security.KryptnosticConnection;
 import com.kryptnostic.multivariate.gf2.SimplePolynomialFunction;
 import com.kryptnostic.sharing.v1.DocumentId;
 
@@ -20,7 +20,7 @@ public interface KryptnosticContext {
 
     BitVector generateSearchNonce();
 
-    CredentialService getSecurityService();
+    KryptnosticConnection getSecurityService();
 
     /**
      * Get the global hash function required for search. Only make a request if necessary
