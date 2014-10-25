@@ -11,6 +11,9 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.smile.SmileFactory;
+import com.fasterxml.jackson.datatype.guava.GuavaModule;
+import com.fasterxml.jackson.module.afterburner.AfterburnerModule;
 import com.kryptnostic.kodex.v1.constants.Names;
 import com.kryptnostic.kodex.v1.serialization.jackson.KodexObjectMapperFactory;
 import com.kryptnostic.users.v1.UserKey;
@@ -19,10 +22,16 @@ public class DocumentId implements Serializable {
     private static final long         serialVersionUID = 8301034434310597675L;
 
     private static final ObjectMapper mapper           = KodexObjectMapperFactory.getObjectMapper();
+    private static final ObjectMapper smile            = new ObjectMapper( new SmileFactory() );
     private static final Base64       codec            = new Base64();
 
     protected final String            documentId;
     protected final UserKey           user;
+
+    static {
+        smile.registerModule( new AfterburnerModule() );
+        smile.registerModule( new GuavaModule() );
+    }
 
     @JsonCreator
     public DocumentId( @JsonProperty( Names.ID_FIELD ) String documentId, @JsonProperty( Names.USER_FIELD ) UserKey user ) {
@@ -48,6 +57,10 @@ public class DocumentId implements Serializable {
             IOException {
         byte[] bytes = codec.decode( base64Hash );
         return mapper.readValue( bytes, DocumentId.class );
+    }
+
+    public byte[] asBytes() throws JsonProcessingException {
+        return smile.writeValueAsBytes( this );
     }
 
     @Override
