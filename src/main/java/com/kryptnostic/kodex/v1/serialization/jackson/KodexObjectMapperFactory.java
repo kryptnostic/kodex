@@ -2,6 +2,7 @@ package com.kryptnostic.kodex.v1.serialization.jackson;
 
 import com.fasterxml.jackson.databind.InjectableValues.Std;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.smile.SmileFactory;
 import com.fasterxml.jackson.datatype.guava.GuavaModule;
 import com.fasterxml.jackson.module.afterburner.AfterburnerModule;
 import com.kryptnostic.crypto.padding.ZeroPaddingStrategy;
@@ -16,10 +17,7 @@ public final class KodexObjectMapperFactory {
 
     public static ObjectMapper getObjectMapper( Kodex<String> kodex ) {
         ObjectMapper mapper = getBaseMapper();
-        Std injectableValues = new Std();
-        injectableValues.addValue( Kodex.class, kodex );
-        mapper.setInjectableValues( injectableValues );
-        mapper.registerModule( new KodexModule( kodex ) );
+        configureMapperInjectables( mapper, kodex );
         return mapper;
     }
 
@@ -27,8 +25,26 @@ public final class KodexObjectMapperFactory {
         return getObjectMapper( null );
     }
 
+    public static ObjectMapper getSmileMapper() { 
+        ObjectMapper mapper = new ObjectMapper( new SmileFactory() );
+        configureMapper( mapper );
+        configureMapperInjectables( mapper, null );
+        return mapper;
+    }
+    
     private static ObjectMapper getBaseMapper() {
         ObjectMapper mapper = new ObjectMapper();
+        configureMapper( mapper );
+        return mapper;
+    }
+    
+    private static void configureMapperInjectables( ObjectMapper mapper , Kodex<String> kodex ) {
+        Std injectableValues = new Std();
+        injectableValues.addValue( Kodex.class, kodex );
+        mapper.setInjectableValues( injectableValues );
+        mapper.registerModule( new KodexModule( kodex ) );
+    }
+    private static void configureMapper(ObjectMapper mapper ) {
         mapper.registerModule( new KodexModule() );
         mapper.registerModule( new GuavaModule() );
         mapper.registerModule( new AfterburnerModule() );
@@ -38,6 +54,5 @@ public final class KodexObjectMapperFactory {
                 BasePolynomialFunction.class,
                 ParameterizedPolynomialFunctionGF2.class,
                 ZeroPaddingStrategy.class );
-        return mapper;
     }
 }
