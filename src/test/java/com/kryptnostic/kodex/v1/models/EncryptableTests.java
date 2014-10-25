@@ -1,25 +1,64 @@
 package com.kryptnostic.kodex.v1.models;
 
 import java.io.IOException;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.KeyPair;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.InvalidParameterSpecException;
 import java.util.Arrays;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kryptnostic.crypto.PrivateKey;
 import com.kryptnostic.crypto.PublicKey;
+import com.kryptnostic.crypto.v1.ciphers.Cypher;
+import com.kryptnostic.crypto.v1.keys.JacksonKodexMarshaller;
+import com.kryptnostic.crypto.v1.keys.Keys;
+import com.kryptnostic.crypto.v1.keys.Kodex;
+import com.kryptnostic.crypto.v1.keys.Kodex.SealedKodexException;
 import com.kryptnostic.kodex.v1.exceptions.types.SecurityConfigurationException;
 import com.kryptnostic.kodex.v1.indexing.metadata.Metadatum;
-import com.kryptnostic.kodex.v1.security.SecurityConfigurationMapping;
+import com.kryptnostic.kodex.v1.serialization.jackson.KodexObjectMapperFactory;
 import com.kryptnostic.sharing.v1.DocumentId;
 import com.kryptnostic.users.v1.UserKey;
 
 public class EncryptableTests {
 
     private static final int PRIVATE_KEY_BLOCK_SIZE = 64;
-    private static final UserKey user = new UserKey("kryptnostic","tester");
+    private static final UserKey user = new UserKey("kryptnostic","tester");        
+    private Kodex<String> kodex;
+    private KeyPair pair;
+    
+    @Before
+    public void init() throws InvalidKeyException, InvalidKeySpecException, NoSuchAlgorithmException,
+            NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, InvalidParameterSpecException,
+            SealedKodexException, IOException, InvalidAlgorithmParameterException {
+        ObjectMapper mapper = (new KodexObjectMapperFactory()).getObjectMapper();
+        pair = Keys.generateRsaKeyPair( 1024 );
+        kodex = new Kodex<String>(
+                Cypher.RSA_OAEP_SHA1_1024,
+                Cypher.AES_CTR_PKCS5_128,
+                pair.getPublic() );
+        
+        PrivateKey privateKey = new PrivateKey(PRIVATE_KEY_BLOCK_SIZE * 2, PRIVATE_KEY_BLOCK_SIZE);
+        PublicKey publicKey = new PublicKey(privateKey);
+        
+        kodex.unseal( pair.getPrivate() );
+        kodex.setKey( PrivateKey.class.getCanonicalName(), new JacksonKodexMarshaller<PrivateKey>( PrivateKey.class, mapper ), privateKey );
+        kodex.setKey( PublicKey.class.getCanonicalName(), new JacksonKodexMarshaller<PublicKey>( PublicKey.class, mapper ), publicKey );
+    }
+    
     @Test
     public void encryptableStringConstructionTest() {
         String plain = "I am cool";
@@ -37,13 +76,11 @@ public class EncryptableTests {
         String plain = "I am cool";
         Encryptable<String> plainString = new FheEncryptable<String>(plain);
 
-        PrivateKey privateKey = new PrivateKey(PRIVATE_KEY_BLOCK_SIZE * 2, PRIVATE_KEY_BLOCK_SIZE);
-        PublicKey publicKey = new PublicKey(privateKey);
+        
 
-        SecurityConfigurationMapping config = new SecurityConfigurationMapping().add(FheEncryptable.class, publicKey)
-                .add(FheEncryptable.class, privateKey);
+        
 
-        Encryptable<String> cipherString = plainString.encrypt(config);
+        Encryptable<String> cipherString = plainString.encrypt(kodex);
 
         Assert.assertNull(plainString.getEncryptedData());
         Assert.assertNull(plainString.getEncryptedClassName());
@@ -55,7 +92,7 @@ public class EncryptableTests {
         Assert.assertTrue(cipherString.isEncrypted());
         Assert.assertNull(cipherString.getData());
 
-        Encryptable<String> decryptedString = cipherString.decrypt(config);
+        Encryptable<String> decryptedString = cipherString.decrypt(kodex);
         Assert.assertNull(decryptedString.getEncryptedData());
         Assert.assertNull(decryptedString.getEncryptedClassName());
         Assert.assertFalse(decryptedString.isEncrypted());
@@ -78,14 +115,7 @@ public class EncryptableTests {
             ClassNotFoundException, SecurityConfigurationException {
         Metadatum m = new Metadatum( new DocumentId( "ABC", user) , "ABC", Arrays.asList(1, 2, 3));
         Encryptable<Metadatum> plainString = new FheEncryptable<Metadatum>(m);
-
-        PrivateKey privateKey = new PrivateKey(PRIVATE_KEY_BLOCK_SIZE * 2, PRIVATE_KEY_BLOCK_SIZE);
-        PublicKey publicKey = new PublicKey(privateKey);
-
-        SecurityConfigurationMapping config = new SecurityConfigurationMapping().add(FheEncryptable.class, publicKey)
-                .add(FheEncryptable.class, privateKey);
-
-        Encryptable<Metadatum> cipherString = plainString.encrypt(config);
+        Encryptable<Metadatum> cipherString = plainString.encrypt(kodex);
 
         Assert.assertNull(plainString.getEncryptedData());
         Assert.assertNull(plainString.getEncryptedClassName());
@@ -97,7 +127,7 @@ public class EncryptableTests {
         Assert.assertTrue(cipherString.isEncrypted());
         Assert.assertNull(cipherString.getData());
 
-        Encryptable<Metadatum> decryptedString = cipherString.decrypt(config);
+        Encryptable<Metadatum> decryptedString = cipherString.decrypt(kodex);
         Assert.assertNull(decryptedString.getEncryptedData());
         Assert.assertNull(decryptedString.getEncryptedClassName());
         Assert.assertFalse(decryptedString.isEncrypted());

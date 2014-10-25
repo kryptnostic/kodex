@@ -18,22 +18,26 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.base.Charsets;
 import com.kryptnostic.crypto.Ciphertext;
 import com.kryptnostic.crypto.v1.ciphers.BlockCiphertext;
 import com.kryptnostic.crypto.v1.ciphers.CryptoService;
-import com.kryptnostic.crypto.v1.keys.JacksonKodexFactory;
+import com.kryptnostic.crypto.v1.keys.JacksonKodexMarshaller;
 import com.kryptnostic.crypto.v1.keys.Kodex;
 import com.kryptnostic.crypto.v1.keys.Kodex.SealedKodexException;
 import com.kryptnostic.kodex.v1.exceptions.types.SecurityConfigurationException;
 import com.kryptnostic.kodex.v1.serialization.jackson.KodexObjectMapperFactory;
 
+/**
+ * Note: Using {@link CryptoService} implementation, any String data to be encrypted MUST be in UTF_8
+ */
 public class AesEncryptable<T> extends Encryptable<T> {
-    private static final long                         serialVersionUID          = -5071733999235074270L;
-    private static ObjectMapper                       mapper                    = ( new KodexObjectMapperFactory() )
-                                                                                        .getObjectMapper();
-    private static JacksonKodexFactory<CryptoService> cryptoServiceKodexFactory = new JacksonKodexFactory<CryptoService>(
-                                                                                        mapper,
-                                                                                        CryptoService.class );
+    private static final long                            serialVersionUID          = -5071733999235074270L;
+    private static ObjectMapper                          mapper                    = ( new KodexObjectMapperFactory() )
+                                                                                           .getObjectMapper();
+    private static JacksonKodexMarshaller<CryptoService> cryptoServiceKodexFactory = new JacksonKodexMarshaller<CryptoService>(
+                                                                                           CryptoService.class,
+                                                                                           mapper );
 
     public AesEncryptable( T data ) {
         super( data );
@@ -64,8 +68,8 @@ public class AesEncryptable<T> extends Encryptable<T> {
         try {
             crypto = kodex.getKey( CryptoService.class.getCanonicalName(), cryptoServiceKodexFactory );
 
-            encryptedData = crypto.encrypt( mapper.writeValueAsString( getData() ) );
-            encryptedClassName = crypto.encrypt( getClassName() );
+            encryptedData = crypto.encrypt( mapper.writeValueAsString( getData() ), Charsets.UTF_8.toString() );
+            encryptedClassName = crypto.encrypt( getClassName(), Charsets.UTF_8.toString() );
         } catch ( InvalidKeyException e ) {
             wrapSecurityConfigurationException( e );
         } catch ( InvalidAlgorithmParameterException e ) {

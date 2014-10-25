@@ -5,7 +5,7 @@ import java.io.Serializable;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.kryptnostic.kodex.v1.security.SecurityConfigurationMapping;
+import com.kryptnostic.crypto.v1.keys.Kodex;
 
 public class Document implements Serializable {
     private static final long serialVersionUID = -8243618155514369238L;
@@ -36,7 +36,7 @@ public class Document implements Serializable {
      * @return The decrypted document text
      */
     @JsonIgnore
-    public String getBody(SecurityConfigurationMapping mapping) {
+    public String getBody(Kodex<String> kodex) {
         throw new UnsupportedOperationException("not yet implemented");
     }
 

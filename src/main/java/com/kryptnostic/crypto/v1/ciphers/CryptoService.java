@@ -37,7 +37,7 @@ public class CryptoService extends AbstractCryptoService {
             @JsonProperty( Names.PASSWORD_FIELD ) char[] password,
             @JsonProperty( FACTORY_TYPE_FIELD ) SecretKeyFactoryType secretKeyFactoryType,
             @JsonProperty( ITERATIONS_FIELD ) int iterations ) {
-        this( Cypher.createCipher( description ) , iterations , password, secretKeyFactoryType );
+        this( Cypher.createCipher( description ), iterations, password, secretKeyFactoryType );
     }
 
     public CryptoService( Cypher cypher, char[] password ) {
@@ -57,10 +57,10 @@ public class CryptoService extends AbstractCryptoService {
         return encrypt( plaintext, Cyphers.generateSalt() );
     }
 
-    public BlockCiphertext encrypt( String plaintext ) throws InvalidKeySpecException, NoSuchAlgorithmException,
-            NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException,
-            InvalidParameterSpecException {
-        return encrypt( StringUtils.getBytesUtf8( plaintext ), Cyphers.generateSalt() );
+    public BlockCiphertext encrypt( String plaintext, String charsetName ) throws InvalidKeySpecException,
+            NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException,
+            InvalidKeyException, InvalidParameterSpecException {
+        return encrypt( StringUtils.getBytesUnchecked( plaintext, charsetName ), Cyphers.generateSalt() );
     }
 
     public String decrypt( BlockCiphertext ciphertext ) throws InvalidKeyException, InvalidAlgorithmParameterException,
@@ -69,14 +69,19 @@ public class CryptoService extends AbstractCryptoService {
         return StringUtils.newStringUtf8( decryptBytes( ciphertext ) );
     }
 
-    @JsonProperty(ITERATIONS_FIELD)
+    @JsonProperty( ITERATIONS_FIELD )
     public int getIterations() {
         return iterations;
     }
-    
-    @JsonProperty(FACTORY_TYPE_FIELD)
+
+    @JsonProperty( FACTORY_TYPE_FIELD )
     public SecretKeyFactoryType getSecretKeyFactoryType() {
         return secretKeyFactoryType;
+    }
+
+    @JsonProperty( Names.PASSWORD_FIELD )
+    public char[] getPassword() {
+        return password;
     }
 
     @Override

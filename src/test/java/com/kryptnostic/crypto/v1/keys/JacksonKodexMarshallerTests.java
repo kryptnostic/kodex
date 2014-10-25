@@ -10,9 +10,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kryptnostic.crypto.PrivateKey;
 import com.kryptnostic.kodex.v1.serialization.jackson.KodexObjectMapperFactory;
 
-public class JacksonKodexFactoryTests {
+public class JacksonKodexMarshallerTests {
     ObjectMapper mapper = (new KodexObjectMapperFactory()).getObjectMapper();
-    KodexMarshaller<PrivateKey> marshaller = new JacksonKodexFactory<PrivateKey>( mapper, PrivateKey.class );
+    KodexMarshaller<PrivateKey> marshaller = new JacksonKodexMarshaller<PrivateKey>( PrivateKey.class, mapper );
     private static final int PRIVATE_KEY_BLOCK_SIZE = 64;
     PrivateKey object = new PrivateKey( PRIVATE_KEY_BLOCK_SIZE * 2, PRIVATE_KEY_BLOCK_SIZE);
 
