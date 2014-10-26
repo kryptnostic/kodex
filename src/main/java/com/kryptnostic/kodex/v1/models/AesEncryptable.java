@@ -147,9 +147,4 @@ public class AesEncryptable<T> extends Encryptable<T> {
         return false;
     }
 
-    // TODO: a little bit yucky. we should centralize this config
-    public static void setObjectMapper( ObjectMapper mapper ) {
-        AesEncryptable.mapper = mapper;
-    }
-
 }
