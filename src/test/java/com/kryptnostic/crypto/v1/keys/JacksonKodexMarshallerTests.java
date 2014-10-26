@@ -20,20 +20,22 @@ public class JacksonKodexMarshallerTests {
                                                                PRIVATE_KEY_BLOCK_SIZE * 2,
                                                                PRIVATE_KEY_BLOCK_SIZE );
 
-    @Test
-    public void testFromBytes() throws IOException {
-        byte[] bytes = mapper.writeValueAsBytes( object );
-        PrivateKey actual = marshaller.fromBytes( bytes );
-        Assert.assertEquals( object, actual );
-    }
-
-    @Test
-    public void testToBytes() throws IOException {
-
-        byte[] expected = mapper.writeValueAsBytes( object );
-        byte[] actual = marshaller.toBytes( object );
-        Assert.assertTrue( Arrays.equals( expected, actual ) );
-    }
+    //These tests don't make sense since marshaller now has built in compression.
+    
+//    @Test
+//    public void testFromBytes() throws IOException {
+//        byte[] bytes = mapper.writeValueAsBytes( object );
+//        PrivateKey actual = marshaller.fromBytes( bytes );
+//        Assert.assertEquals( object, actual );
+//    }
+//
+//    @Test
+//    public void testToBytes() throws IOException {
+//
+//        byte[] expected = mapper.writeValueAsBytes( object );
+//        byte[] actual = marshaller.toBytes( object );
+//        Assert.assertTrue( Arrays.equals( expected, actual ) );
+//    }
 
     @Test
     public void testFromToBytes() throws IOException {

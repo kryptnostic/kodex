@@ -5,6 +5,7 @@ import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.KeyPair;
 import java.security.NoSuchAlgorithmException;
+import java.security.SignatureException;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.InvalidParameterSpecException;
 import java.util.Arrays;
@@ -29,6 +30,7 @@ import com.kryptnostic.crypto.v1.ciphers.Cypher;
 import com.kryptnostic.crypto.v1.keys.JacksonKodexMarshaller;
 import com.kryptnostic.crypto.v1.keys.Keys;
 import com.kryptnostic.crypto.v1.keys.Kodex;
+import com.kryptnostic.crypto.v1.keys.Kodex.CorruptKodexException;
 import com.kryptnostic.crypto.v1.keys.Kodex.SealedKodexException;
 import com.kryptnostic.kodex.v1.exceptions.types.SecurityConfigurationException;
 import com.kryptnostic.kodex.v1.indexing.metadata.Metadata;
@@ -52,7 +54,7 @@ public class AesMetadataRequestTests extends AesEncryptableBase {
     public void testImplicitDeserialization() throws IOException, SecurityConfigurationException, InvalidKeyException,
             NoSuchAlgorithmException, InvalidAlgorithmParameterException, IllegalBlockSizeException,
             BadPaddingException, NoSuchPaddingException, InvalidKeySpecException, InvalidParameterSpecException,
-            SealedKodexException {
+            SealedKodexException, SignatureException, CorruptKodexException {
         initImplicitEncryption();
 
         BitVector key = BitVectors.randomVector( INDEX_LENGTH );
@@ -94,7 +96,7 @@ public class AesMetadataRequestTests extends AesEncryptableBase {
     public void testImplicitDeserializationKeyless() throws IOException, SecurityConfigurationException,
             InvalidKeyException, NoSuchAlgorithmException, InvalidAlgorithmParameterException,
             IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, InvalidKeySpecException,
-            InvalidParameterSpecException, SealedKodexException {
+            InvalidParameterSpecException, SealedKodexException, SignatureException, CorruptKodexException {
         initImplicitEncryption();
 
         BitVector key = BitVectors.randomVector( INDEX_LENGTH );
@@ -144,7 +146,7 @@ public class AesMetadataRequestTests extends AesEncryptableBase {
     public void testSerializationWithImplicitEncryption() throws JsonGenerationException, JsonMappingException,
             IOException, InvalidKeyException, NoSuchAlgorithmException, InvalidAlgorithmParameterException,
             IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, InvalidKeySpecException,
-            InvalidParameterSpecException, SealedKodexException {
+            InvalidParameterSpecException, SealedKodexException, SignatureException, CorruptKodexException {
         initImplicitEncryption();
 
         BitVector key = BitVectors.randomVector( INDEX_LENGTH );
@@ -184,12 +186,14 @@ public class AesMetadataRequestTests extends AesEncryptableBase {
      * @throws SealedKodexException
      * @throws InvalidParameterSpecException
      * @throws InvalidKeySpecException
+     * @throws SignatureException 
+     * @throws CorruptKodexException 
      */
     @Test
     public void testSerializationWithImplicitEncryptionKeyless() throws JsonGenerationException, JsonMappingException,
             IOException, InvalidKeyException, NoSuchAlgorithmException, InvalidAlgorithmParameterException,
             IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, InvalidKeySpecException,
-            InvalidParameterSpecException, SealedKodexException {
+            InvalidParameterSpecException, SealedKodexException, SignatureException, CorruptKodexException {
         resetSecurityConfiguration();
 
         BitVector key = BitVectors.randomVector( INDEX_LENGTH );
@@ -223,7 +227,7 @@ public class AesMetadataRequestTests extends AesEncryptableBase {
     public void testSerializationWithExplicitEncryption() throws JsonGenerationException, JsonMappingException,
             IOException, SecurityConfigurationException, NoSuchAlgorithmException, InvalidKeyException,
             InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException,
-            InvalidKeySpecException, InvalidParameterSpecException, SealedKodexException {
+            InvalidKeySpecException, InvalidParameterSpecException, SealedKodexException, SignatureException, CorruptKodexException {
         BitVector key = BitVectors.randomVector( INDEX_LENGTH );
         Metadata metadatum = new Metadata( new DocumentId( "TEST", user ), "test", Arrays.asList( 1, 2, 3 ) );
         Encryptable<Metadata> data = new AesEncryptable<Metadata>( metadatum );

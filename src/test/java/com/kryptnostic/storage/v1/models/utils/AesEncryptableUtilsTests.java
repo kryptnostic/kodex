@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.security.SignatureException;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.InvalidParameterSpecException;
 import java.util.List;
@@ -32,11 +33,11 @@ public class AesEncryptableUtilsTests extends AesEncryptableBase {
     public void platformAssumptionsTest() throws SecurityConfigurationException, InvalidKeyException,
             NoSuchAlgorithmException, InvalidAlgorithmParameterException, IllegalBlockSizeException,
             BadPaddingException, NoSuchPaddingException, InvalidKeySpecException, InvalidParameterSpecException,
-            SealedKodexException, IOException {
+            SealedKodexException, IOException, SignatureException, Exception {
         initImplicitEncryption();
 
         final int PADDING = 2;
-        
+
         AesEncryptable<String> enc = new AesEncryptable<String>( StringUtils.newStringUtf8( ""
                 .getBytes( Charsets.UTF_8 ) ) );
         Assert.assertEquals( 0 + PADDING, enc.encrypt( kodex ).getEncryptedData().getContents().length );
@@ -52,7 +53,7 @@ public class AesEncryptableUtilsTests extends AesEncryptableBase {
     public void shortStringChunkTest() throws SecurityConfigurationException, IOException, ClassNotFoundException,
             InvalidKeyException, NoSuchAlgorithmException, InvalidAlgorithmParameterException,
             IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, InvalidKeySpecException,
-            InvalidParameterSpecException, SealedKodexException {
+            InvalidParameterSpecException, SealedKodexException, SignatureException, Exception {
         initImplicitEncryption();
         List<AesEncryptable<String>> results = AesEncryptableUtils.chunkString( "cool", kodex );
 
@@ -66,7 +67,7 @@ public class AesEncryptableUtilsTests extends AesEncryptableBase {
     public void longStringChunkTest() throws SecurityConfigurationException, InvalidKeyException,
             NoSuchAlgorithmException, InvalidAlgorithmParameterException, IllegalBlockSizeException,
             BadPaddingException, NoSuchPaddingException, InvalidKeySpecException, InvalidParameterSpecException,
-            SealedKodexException, IOException {
+            SealedKodexException, IOException, SignatureException, Exception {
         initImplicitEncryption();
         String str = StringUtils.newStringUtf8( fillByteArray( 4096 ) );
         List<AesEncryptable<String>> results = AesEncryptableUtils.chunkString( str, kodex );

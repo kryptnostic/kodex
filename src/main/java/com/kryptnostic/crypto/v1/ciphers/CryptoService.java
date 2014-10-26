@@ -99,7 +99,6 @@ public class CryptoService extends AbstractCryptoService {
         return secretKeySpec;
     }
 
-    @Override
     @JsonIgnore
     protected SecretKeySpec getSecretKeySpec() throws NoSuchAlgorithmException, InvalidKeySpecException {
         return getSecretKeySpec( Cyphers.generateSalt() );

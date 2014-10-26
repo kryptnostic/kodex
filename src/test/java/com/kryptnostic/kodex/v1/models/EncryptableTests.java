@@ -5,6 +5,7 @@ import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.KeyPair;
 import java.security.NoSuchAlgorithmException;
+import java.security.SignatureException;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.InvalidParameterSpecException;
 import java.util.Arrays;
@@ -26,6 +27,7 @@ import com.kryptnostic.crypto.v1.ciphers.Cypher;
 import com.kryptnostic.crypto.v1.keys.JacksonKodexMarshaller;
 import com.kryptnostic.crypto.v1.keys.Keys;
 import com.kryptnostic.crypto.v1.keys.Kodex;
+import com.kryptnostic.crypto.v1.keys.Kodex.CorruptKodexException;
 import com.kryptnostic.crypto.v1.keys.Kodex.SealedKodexException;
 import com.kryptnostic.kodex.v1.exceptions.types.SecurityConfigurationException;
 import com.kryptnostic.kodex.v1.indexing.metadata.Metadata;
@@ -43,7 +45,7 @@ public class EncryptableTests {
     @Before
     public void init() throws InvalidKeyException, InvalidKeySpecException, NoSuchAlgorithmException,
             NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, InvalidParameterSpecException,
-            SealedKodexException, IOException, InvalidAlgorithmParameterException {
+            SealedKodexException, IOException, InvalidAlgorithmParameterException, SignatureException, CorruptKodexException {
         ObjectMapper mapper = KodexObjectMapperFactory.getObjectMapper();
         pair = Keys.generateRsaKeyPair( 1024 );
         kodex = new Kodex<String>( Cypher.RSA_OAEP_SHA1_1024, Cypher.AES_CTR_PKCS5_128, pair.getPublic() );

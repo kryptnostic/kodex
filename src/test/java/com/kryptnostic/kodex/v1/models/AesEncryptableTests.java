@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.security.SignatureException;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.InvalidParameterSpecException;
 
@@ -23,7 +24,7 @@ public class AesEncryptableTests extends AesEncryptableBase {
 
     @Before
     public void setup() throws InvalidKeyException, NoSuchAlgorithmException, InvalidAlgorithmParameterException,
-            IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, InvalidKeySpecException, InvalidParameterSpecException, SealedKodexException, IOException {
+            IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, InvalidKeySpecException, InvalidParameterSpecException, SealedKodexException, IOException, SignatureException,Exception {
         initImplicitEncryption();
     }
     

@@ -37,11 +37,6 @@ public class AesCryptoService extends AbstractCryptoService {
     
     @Override
     protected SecretKeySpec getSecretKeySpec(byte[] salt) throws NoSuchAlgorithmException, InvalidKeySpecException {
-        return getSecretKeySpec();
-    }
-
-    @Override
-    protected SecretKeySpec getSecretKeySpec() throws NoSuchAlgorithmException, InvalidKeySpecException {
         try{
             lock.readLock().lock();
             return new SecretKeySpec( key, cypher.getName() );
@@ -49,11 +44,12 @@ public class AesCryptoService extends AbstractCryptoService {
             lock.readLock().unlock();
         }
     }
-    
+
     public void destroy() {
         try{
             lock.writeLock().lock();
             Arrays.fill(key, (byte)0);
+            key = null;
         } finally {
             lock.writeLock().unlock();
         }

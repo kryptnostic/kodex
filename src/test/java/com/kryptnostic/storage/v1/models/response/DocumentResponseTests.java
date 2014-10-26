@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.security.SignatureException;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.InvalidParameterSpecException;
 
@@ -29,7 +30,7 @@ public class DocumentResponseTests extends AesEncryptableBase {
     public void testDeserialize() throws JsonGenerationException, JsonMappingException, IOException,
             SecurityConfigurationException, ClassNotFoundException, InvalidKeyException, NoSuchAlgorithmException,
             InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException,
-            InvalidKeySpecException, InvalidParameterSpecException, SealedKodexException {
+            InvalidKeySpecException, InvalidParameterSpecException, SealedKodexException, SignatureException,Exception {
         initImplicitEncryption();
         DocumentResponse resp = new DocumentResponse( AesEncryptableUtils.createEncryptedDocument(
                 "document1",

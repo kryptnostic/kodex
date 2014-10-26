@@ -32,8 +32,7 @@ public abstract class AbstractCryptoService {
     public BlockCiphertext encrypt( byte[] bytes, byte[] salt ) throws InvalidKeySpecException,
             NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException,
             InvalidKeyException, InvalidParameterSpecException {
-        SecretKeySpec secretKeySpec = salt.length > 0 ? getSecretKeySpec( salt ) : getSecretKeySpec();
-
+        SecretKeySpec secretKeySpec = getSecretKeySpec( salt ); 
         Cipher cipher = cypher.getInstance();
         cipher.init( Cipher.ENCRYPT_MODE, secretKeySpec );
         AlgorithmParameters params = cipher.getParameters();
@@ -52,7 +51,7 @@ public abstract class AbstractCryptoService {
     public byte[] decryptBytes( BlockCiphertext ciphertext ) throws InvalidKeyException,
             InvalidAlgorithmParameterException, NoSuchAlgorithmException, NoSuchPaddingException,
             IllegalBlockSizeException, BadPaddingException, InvalidKeySpecException {
-        SecretKeySpec spec = getSecretKeySpec( ciphertext.getSalt() );
+        SecretKeySpec spec =  getSecretKeySpec(  ciphertext.getSalt() );
         Cipher cipher = cypher.getInstance();
         cipher.init( Cipher.DECRYPT_MODE, spec, new IvParameterSpec( ciphertext.getIv() ) );
         int length = ByteBuffer.wrap( cipher.update( ciphertext.getEncryptedLength() ) ).getInt();
@@ -72,6 +71,4 @@ public abstract class AbstractCryptoService {
     protected abstract SecretKeySpec getSecretKeySpec( byte[] salt ) throws NoSuchAlgorithmException,
             InvalidKeySpecException;
 
-    @JsonIgnore
-    protected abstract SecretKeySpec getSecretKeySpec() throws NoSuchAlgorithmException, InvalidKeySpecException;
 }
