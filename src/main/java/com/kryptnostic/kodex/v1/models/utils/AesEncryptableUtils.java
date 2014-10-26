@@ -1,18 +1,15 @@
 package com.kryptnostic.kodex.v1.models.utils;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
-import org.apache.commons.codec.binary.StringUtils;
+import org.apache.commons.lang3.tuple.Pair;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import com.google.common.hash.HashFunction;
 import com.google.common.hash.Hashing;
 import com.kryptnostic.crypto.v1.keys.Kodex;
@@ -29,58 +26,73 @@ public class AesEncryptableUtils {
 
     public static final int           CHUNK_MAX    = 4096;
 
-    public static class VerifiedStringBlocks {
-        private final Map<String, AesEncryptable<String>> strings;
+    public static final class VerifiedString {
+        private final String                 verificationHash;
+        private final AesEncryptable<String> data;
 
-        public VerifiedStringBlocks( Map<String, AesEncryptable<String>> strings ) {
-            this.strings = strings;
+        public VerifiedString( String verificationHash, AesEncryptable<String> data ) {
+            super();
+            this.verificationHash = verificationHash;
+            this.data = data;
         }
 
-        public Collection<AesEncryptable<String>> getStrings() {
-            return strings.values();
+        public String getVerificationHash() {
+            return verificationHash;
         }
 
-        public Map<String, AesEncryptable<String>> getVerifiedStrings() {
-            return strings;
+        public AesEncryptable<String> getData() {
+            return data;
+        }
+
+        public static List<AesEncryptable<String>> getEncryptables( List<VerifiedString> verifiedStrings ) {
+            List<AesEncryptable<String>> encryptables = Lists.newArrayList();
+            for ( VerifiedString v : verifiedStrings ) {
+                encryptables.add( v.getData() );
+            }
+            return encryptables;
         }
     }
 
     /**
      * 
      * @param documentBody Original string, potentially &gt; 4KB
-     * @return Collection of AesEncryptable-wrapped 4KB strings that can be concatenated to form the entire original
-     *         string
+     * @return Collection of AesEncryptable-wrapped (max-length 4096 char) strings that can be concatenated to form the
+     *         entire original string
      * @throws SecurityConfigurationException
      * @throws JsonProcessingException
      */
     public static List<AesEncryptable<String>> chunkString( String documentBody, Kodex<String> kodex )
             throws JsonProcessingException, SecurityConfigurationException {
-
-        byte[] bytes = documentBody.getBytes();
-        int bytesLeft = bytes.length;
-        int counter = 0;
+        int charsLeft = documentBody.length();
+        int startIndex = 0;
 
         List<AesEncryptable<String>> encryptedChunks = Lists.newArrayList();
-        while ( bytesLeft > 0 ) {
-            int finish = bytesLeft + CHUNK_MAX;
-            if ( bytesLeft < CHUNK_MAX ) {
-                finish = bytesLeft;
-            }
-            final byte[] byteChunk = Arrays.copyOfRange( bytes, counter, finish );
+        while ( charsLeft > 0 ) {
+            int sizeOfChunk = CHUNK_MAX;
 
-            String strChunk = StringUtils.newStringUtf8( byteChunk );
+            // don't overrun for the last chunk
+            if ( charsLeft < CHUNK_MAX ) {
+                sizeOfChunk = charsLeft;
+            }
+
+            int endIndex = startIndex + sizeOfChunk;
+
+            final char[] charChunk = new char[ sizeOfChunk ];
+            documentBody.getChars( startIndex, endIndex, charChunk, 0 );
+
+            String strChunk = new String( charChunk );
 
             AesEncryptable<String> encryptedChunk = new AesEncryptable<String>( strChunk );
             encryptedChunks.add( (AesEncryptable<String>) encryptedChunk.encrypt( kodex ) );
 
-            bytesLeft -= CHUNK_MAX;
-            counter += CHUNK_MAX;
+            charsLeft -= CHUNK_MAX;
+            startIndex += CHUNK_MAX;
         }
 
         return encryptedChunks;
     }
 
-    public static VerifiedStringBlocks chunkStringWithVerification( String documentBody, Kodex<String> kodex )
+    public static List<VerifiedString> chunkStringWithVerification( String documentBody, Kodex<String> kodex )
             throws SecurityConfigurationException, IOException, ClassNotFoundException {
         List<AesEncryptable<String>> encryptableStrings = AesEncryptableUtils.chunkString( documentBody, kodex );
         return AesEncryptableUtils.generateVerificationHashFromEncryptables( encryptableStrings );
@@ -89,8 +101,8 @@ public class AesEncryptableUtils {
     public static Document createEncryptedDocument( String documentId, String body, Kodex<String> kodex )
             throws SecurityConfigurationException, IOException, ClassNotFoundException {
 
-        VerifiedStringBlocks verifiedStrings = chunkStringWithVerification( body, kodex );
-        return createEncryptedDocument( documentId, body, verifiedStrings.getStrings() );
+        List<VerifiedString> verifiedStrings = chunkStringWithVerification( body, kodex );
+        return createEncryptedDocument( documentId, body, VerifiedString.getEncryptables( verifiedStrings ) );
     }
 
     public static Document createEncryptedDocument(
@@ -103,7 +115,7 @@ public class AesEncryptableUtils {
         int index = 0;
         for ( AesEncryptable<String> encryptedString : encryptableStrings ) {
             DocumentBlock block = new DocumentBlock(
-                    (AesEncryptable<String>) encryptedString,
+                    encryptedString,
                     AesEncryptableUtils.generateVerificationHashForEncryptable( encryptedString ),
                     encryptableStrings.size(),
                     index );
@@ -115,7 +127,7 @@ public class AesEncryptableUtils {
                 new DocumentBlock[ 0 ] ) );
     }
 
-    public static VerifiedStringBlocks generateVerificationHashFromBlocks( Collection<DocumentBlock> blocks )
+    public static List<VerifiedString> generateVerificationHashFromBlocks( Collection<DocumentBlock> blocks )
             throws SecurityConfigurationException, IOException, ClassNotFoundException {
         List<AesEncryptable<String>> strs = Lists.newArrayList();
 
@@ -141,14 +153,16 @@ public class AesEncryptableUtils {
         return hashFunction.hashBytes( encryptableString.getEncryptedData().getContents() ).toString();
     }
 
-    public static VerifiedStringBlocks generateVerificationHashFromEncryptables(
+    public static List<VerifiedString> generateVerificationHashFromEncryptables(
             List<AesEncryptable<String>> encryptableStrings ) throws SecurityConfigurationException {
-        Map<String, AesEncryptable<String>> verificationMap = Maps.newHashMap();
+        List<VerifiedString> verifications = Lists.newArrayList();
         for ( AesEncryptable<String> encryptableString : encryptableStrings ) {
-            verificationMap.put( generateVerificationHashForEncryptable( encryptableString ), encryptableString );
+            verifications.add( new VerifiedString(
+                    generateVerificationHashForEncryptable( encryptableString ),
+                    encryptableString ) );
         }
 
-        return new VerifiedStringBlocks( verificationMap );
+        return verifications;
     }
 
     public static String hashEncryptableBytes( AesEncryptable<?> encryptable ) {
@@ -162,5 +176,39 @@ public class AesEncryptableUtils {
             res += block.getBlock().decrypt( kodex ).getData();
         }
         return res;
+    }
+
+    /**
+     * Returns a range of block indices inclusive
+     *
+     * Takes into account a characterWindow (radius) to find which blocks hold the data at the specified character
+     * offset +/- the characterWindow
+     * 
+     * Takes into account the size of chunks and the max blocks for a document
+     * 
+     * @param offset The character offset to start the search
+     * @param characterWindow The radius of characters desired
+     * @param maxBlocks Total blocks in the document, so this won't return any blocks past this
+     * @param chunkSize The max size of each string in each block
+     * @return
+     */
+    public static Pair<Integer, Integer> findBlockIndex(
+            Integer offset,
+            int characterWindow,
+            int maxBlocks,
+            int chunkSize ) {
+        int min = offset - characterWindow;
+        int max = offset + characterWindow;
+
+        int firstBlock = (int) Math.floor( (double) min / (double) chunkSize );
+        int lastBlock = (int) Math.floor( (double) max / (double) chunkSize );
+
+        if ( firstBlock < 0 ) {
+            firstBlock = 0;
+        }
+        if ( lastBlock > maxBlocks ) {
+            lastBlock = maxBlocks;
+        }
+        return Pair.<Integer, Integer> of( firstBlock, lastBlock );
     }
 }

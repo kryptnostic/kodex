@@ -5,6 +5,7 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 import com.kryptnostic.sharing.v1.DocumentId;
 
 public class Metadata {
@@ -23,7 +24,16 @@ public class Metadata {
             @JsonProperty( LOCATIONS ) Iterable<Integer> locations ) {
         this.documentId = documentId;
         this.token = token;
-        this.locations = ImmutableList.copyOf( locations );
+
+        // strip negative locations
+        List<Integer> validLocations = Lists.newArrayList();
+        for ( Integer i : locations ) {
+            if ( i > -1 ) {
+                validLocations.add( i );
+            }
+        }
+
+        this.locations = ImmutableList.copyOf( validLocations );
     }
 
     @JsonProperty( DOCUMENT_ID )
@@ -91,5 +101,4 @@ public class Metadata {
     public String toString() {
         return "Metadata [documentId=" + documentId + ", token=" + token + ", locations=" + locations + "]";
     }
-
 }

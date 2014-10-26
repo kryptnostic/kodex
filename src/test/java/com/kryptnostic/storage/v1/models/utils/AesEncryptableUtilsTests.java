@@ -8,48 +8,25 @@ import java.security.SignatureException;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.InvalidParameterSpecException;
 import java.util.List;
+import java.util.Random;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 
-import org.apache.commons.codec.binary.StringUtils;
+import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 
-import com.google.common.base.Charsets;
-import com.google.common.primitives.Chars;
 import com.kryptnostic.crypto.v1.keys.Kodex.SealedKodexException;
 import com.kryptnostic.kodex.v1.exceptions.types.SecurityConfigurationException;
 import com.kryptnostic.kodex.v1.models.AesEncryptable;
 import com.kryptnostic.kodex.v1.models.utils.AesEncryptableUtils;
+import com.kryptnostic.kodex.v1.models.utils.AesEncryptableUtils.VerifiedString;
 import com.kryptnostic.storage.v1.models.request.AesEncryptableBase;
 
-@Ignore
 public class AesEncryptableUtilsTests extends AesEncryptableBase {
 
-    @Test
-    public void platformAssumptionsTest() throws SecurityConfigurationException, InvalidKeyException,
-            NoSuchAlgorithmException, InvalidAlgorithmParameterException, IllegalBlockSizeException,
-            BadPaddingException, NoSuchPaddingException, InvalidKeySpecException, InvalidParameterSpecException,
-            SealedKodexException, IOException, SignatureException, Exception {
-        initImplicitEncryption();
-
-        final int PADDING = 2;
-
-        AesEncryptable<String> enc = new AesEncryptable<String>( StringUtils.newStringUtf8( ""
-                .getBytes( Charsets.UTF_8 ) ) );
-        Assert.assertEquals( 0 + PADDING, enc.encrypt( kodex ).getEncryptedData().getContents().length );
-
-        enc = new AesEncryptable<String>( StringUtils.newStringUtf8( "a".getBytes( Charsets.UTF_8 ) ) );
-        Assert.assertEquals( 2 + PADDING, enc.encrypt( kodex ).getEncryptedData().getContents().length );
-
-        enc = new AesEncryptable<String>( StringUtils.newStringUtf8( "ab".getBytes( Charsets.UTF_8 ) ) );
-        Assert.assertEquals( 4 + PADDING, enc.encrypt( kodex ).getEncryptedData().getContents().length );
-    }
-
-    @Test
     public void shortStringChunkTest() throws SecurityConfigurationException, IOException, ClassNotFoundException,
             InvalidKeyException, NoSuchAlgorithmException, InvalidAlgorithmParameterException,
             IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, InvalidKeySpecException,
@@ -59,8 +36,7 @@ public class AesEncryptableUtilsTests extends AesEncryptableBase {
 
         Assert.assertEquals( 1, results.size() );
         Assert.assertTrue( results.get( 0 ).isEncrypted() );
-        Assert.assertEquals( 4 * Chars.BYTES, results.get( 0 ).getEncryptedData().getContents().length );
-        Assert.assertEquals( 4 * Chars.BYTES, results.get( 0 ).decrypt( kodex ).getData().getBytes().length );
+        Assert.assertEquals( 4, results.get( 0 ).decrypt( kodex ).getData().length() );
     }
 
     @Test
@@ -69,26 +45,103 @@ public class AesEncryptableUtilsTests extends AesEncryptableBase {
             BadPaddingException, NoSuchPaddingException, InvalidKeySpecException, InvalidParameterSpecException,
             SealedKodexException, IOException, SignatureException, Exception {
         initImplicitEncryption();
-        String str = StringUtils.newStringUtf8( fillByteArray( 4096 ) );
+        String[] chunk = { fillCharArray( AesEncryptableUtils.CHUNK_MAX ),
+                fillCharArray( AesEncryptableUtils.CHUNK_MAX ), fillCharArray( AesEncryptableUtils.CHUNK_MAX ),
+                fillCharArray( AesEncryptableUtils.CHUNK_MAX ) };
+
+        String str = new String( chunk[ 0 ] );
         List<AesEncryptable<String>> results = AesEncryptableUtils.chunkString( str, kodex );
 
         Assert.assertEquals( 1, results.size() );
+        Assert.assertEquals( chunk[ 0 ], results.get( 0 ).decrypt( kodex ).getData() );
 
-        str = StringUtils.newStringUtf8( fillByteArray( 4096 + 1 ) );
+        str = chunk[ 0 ] + chunk[ 1 ] + chunk[ 2 ] + chunk[ 3 ];
 
         results = AesEncryptableUtils.chunkString( str, kodex );
 
-        Assert.assertEquals( 2, results.size() );
-    }
-
-    private byte[] fillByteArray( int sz ) {
-        byte[] str = new byte[ sz ];
-
-        for ( int i = 0; i < sz; i++ ) {
-            str[ i ] = 42;
+        Assert.assertEquals( chunk.length, results.size() );
+        for ( int i = 0; i < chunk.length; i++ ) {
+            Assert.assertEquals( chunk[ i ], results.get( i ).decrypt( kodex ).getData() );
         }
 
-        return str;
+        List<VerifiedString> verifiedResults = AesEncryptableUtils.chunkStringWithVerification( str, kodex );
+
+        Assert.assertEquals( chunk.length, verifiedResults.size() );
+        for ( int i = 0; i < chunk.length; i++ ) {
+            Assert.assertEquals( chunk[ i ], verifiedResults.get( i ).getData().decrypt( kodex ).getData() );
+        }
     }
 
+    @Test
+    public void blockIndexTest() {
+        int characterWindow = 3;
+        int maxBlocks = 10;
+        int chunkSize = 8;
+        Pair<Integer, Integer> zero = AesEncryptableUtils.findBlockIndex( 0, characterWindow, maxBlocks, chunkSize );
+        Assert.assertEquals( 0, zero.getLeft().intValue() );
+        Assert.assertEquals( 0, zero.getRight().intValue() );
+
+        Pair<Integer, Integer> midFirstChunk = AesEncryptableUtils.findBlockIndex(
+                chunkSize - characterWindow,
+                characterWindow,
+                maxBlocks,
+                chunkSize );
+        Assert.assertEquals( 0, midFirstChunk.getLeft().intValue() );
+        Assert.assertEquals( 1, midFirstChunk.getRight().intValue() );
+
+        Pair<Integer, Integer> endFirstChunk = AesEncryptableUtils.findBlockIndex(
+                chunkSize - 1,
+                characterWindow,
+                maxBlocks,
+                chunkSize );
+        Assert.assertEquals( 0, endFirstChunk.getLeft().intValue() );
+        Assert.assertEquals( 1, endFirstChunk.getRight().intValue() );
+
+        Pair<Integer, Integer> secondChunk = AesEncryptableUtils.findBlockIndex(
+                chunkSize + characterWindow,
+                characterWindow,
+                maxBlocks,
+                chunkSize );
+        Assert.assertEquals( 1, secondChunk.getLeft().intValue() );
+        Assert.assertEquals( 1, secondChunk.getRight().intValue() );
+
+        Pair<Integer, Integer> secondToLastChunk = AesEncryptableUtils.findBlockIndex( chunkSize * ( maxBlocks - 1 )
+                + characterWindow, characterWindow, maxBlocks, chunkSize );
+        Assert.assertEquals( maxBlocks - 1, secondToLastChunk.getLeft().intValue() );
+        Assert.assertEquals( maxBlocks - 1, secondToLastChunk.getRight().intValue() );
+
+        Pair<Integer, Integer> lastTwoChunks = AesEncryptableUtils.findBlockIndex( chunkSize * ( maxBlocks - 1 )
+                + ( characterWindow * 2 ), characterWindow, maxBlocks, chunkSize );
+        Assert.assertEquals( maxBlocks - 1, lastTwoChunks.getLeft().intValue() );
+        Assert.assertEquals( maxBlocks, lastTwoChunks.getRight().intValue() );
+
+        Pair<Integer, Integer> lastChunk = AesEncryptableUtils.findBlockIndex(
+                chunkSize * maxBlocks + characterWindow,
+                characterWindow,
+                maxBlocks,
+                chunkSize );
+        Assert.assertEquals( maxBlocks, lastChunk.getLeft().intValue() );
+        Assert.assertEquals( maxBlocks, lastChunk.getRight().intValue() );
+
+        Pair<Integer, Integer> lastChunkClamped = AesEncryptableUtils.findBlockIndex(
+                chunkSize * ( maxBlocks + 1 ),
+                characterWindow,
+                maxBlocks,
+                chunkSize );
+        Assert.assertEquals( maxBlocks, lastChunkClamped.getLeft().intValue() );
+        Assert.assertEquals( maxBlocks, lastChunkClamped.getRight().intValue() );
+    }
+
+    private String fillCharArray( int sz ) {
+        char[] str = new char[ sz ];
+
+        Random r = new Random();
+        char c = (char) ( r.nextInt( 26 ) + 'a' );
+
+        for ( int i = 0; i < sz; i++ ) {
+            str[ i ] = c;
+        }
+
+        return new String( str );
+    }
 }
