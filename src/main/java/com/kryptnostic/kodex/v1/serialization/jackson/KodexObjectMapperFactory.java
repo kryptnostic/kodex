@@ -13,7 +13,13 @@ import com.kryptnostic.multivariate.polynomial.OptimizedPolynomialFunctionGF2;
 import com.kryptnostic.multivariate.polynomial.ParameterizedPolynomialFunctionGF2;
 
 public final class KodexObjectMapperFactory {
+    private static ObjectMapper globalMapper = null;
+
     private KodexObjectMapperFactory() {};
+
+    public static void setGlobalObjectMapper( ObjectMapper mapper ) {
+        globalMapper = mapper;
+    }
 
     public static ObjectMapper getObjectMapper( Kodex<String> kodex ) {
         ObjectMapper mapper = getBaseMapper();
@@ -22,29 +28,33 @@ public final class KodexObjectMapperFactory {
     }
 
     public static ObjectMapper getObjectMapper() {
+        if ( globalMapper != null ) {
+            return globalMapper;
+        }
         return getObjectMapper( null );
     }
 
-    public static ObjectMapper getSmileMapper() { 
+    public static ObjectMapper getSmileMapper() {
         ObjectMapper mapper = new ObjectMapper( new SmileFactory() );
         configureMapper( mapper );
         configureMapperInjectables( mapper, null );
         return mapper;
     }
-    
+
     private static ObjectMapper getBaseMapper() {
         ObjectMapper mapper = new ObjectMapper();
         configureMapper( mapper );
         return mapper;
     }
-    
-    private static void configureMapperInjectables( ObjectMapper mapper , Kodex<String> kodex ) {
+
+    private static void configureMapperInjectables( ObjectMapper mapper, Kodex<String> kodex ) {
         Std injectableValues = new Std();
         injectableValues.addValue( Kodex.class, kodex );
         mapper.setInjectableValues( injectableValues );
         mapper.registerModule( new KodexModule( kodex ) );
     }
-    private static void configureMapper(ObjectMapper mapper ) {
+
+    private static void configureMapper( ObjectMapper mapper ) {
         mapper.registerModule( new KodexModule() );
         mapper.registerModule( new GuavaModule() );
         mapper.registerModule( new AfterburnerModule() );
