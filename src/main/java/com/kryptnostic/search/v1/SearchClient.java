@@ -12,5 +12,5 @@ public interface SearchClient {
      * @return Set &lt;Metadatum&gt; a collection of Metadatum associating the query with documents.
      * @throws IrisException
      */
-    public Collection<SearchResult> search( String query ) throws IrisException;
+    public Collection<SearchResult> search( String query );
 }
