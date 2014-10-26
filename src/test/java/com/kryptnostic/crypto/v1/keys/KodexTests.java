@@ -19,23 +19,27 @@ import org.junit.Test;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kryptnostic.crypto.EncryptedSearchPrivateKey;
 import com.kryptnostic.crypto.PrivateKey;
 import com.kryptnostic.crypto.PublicKey;
 import com.kryptnostic.crypto.v1.ciphers.Cypher;
 import com.kryptnostic.crypto.v1.keys.Kodex.CorruptKodexException;
 import com.kryptnostic.crypto.v1.keys.Kodex.SealedKodexException;
 import com.kryptnostic.kodex.v1.serialization.jackson.KodexObjectMapperFactory;
+import com.kryptnostic.linear.EnhancedBitMatrix.SingularMatrixException;
 import com.kryptnostic.users.v1.UserKey;
 
 public class KodexTests {
-    private static KeyPair                  pair;
-    private static KodexMarshaller<UserKey> marshaller;
-    private static PrivateKey               privateKey = new PrivateKey( 128, 64 );
-    private static PublicKey                publicKey  = new PublicKey( privateKey );
+    private static KeyPair                   pair;
+    private static KodexMarshaller<UserKey>  marshaller;
+    private static PrivateKey                privateKey = new PrivateKey( 128, 64 );
+    private static PublicKey                 publicKey  = new PublicKey( privateKey );
+    private static EncryptedSearchPrivateKey searchKey;
 
     @BeforeClass
-    public static void generateKeys() throws NoSuchAlgorithmException {
+    public static void generateKeys() throws NoSuchAlgorithmException, SingularMatrixException {
         pair = Keys.generateRsaKeyPair( 1024 );
+        searchKey = new EncryptedSearchPrivateKey( 8 );
         marshaller = new JacksonKodexMarshaller<UserKey>( UserKey.class );
     }
 
@@ -63,6 +67,10 @@ public class KodexTests {
 
         expected.setKeyWithJackson( PrivateKey.class.getCanonicalName(), privateKey, PrivateKey.class );
         expected.setKeyWithJackson( PublicKey.class.getCanonicalName(), publicKey, PublicKey.class );
+        expected.setKeyWithJackson(
+                EncryptedSearchPrivateKey.class.getCanonicalName(),
+                searchKey,
+                EncryptedSearchPrivateKey.class );
 
         ObjectMapper mapper = KodexObjectMapperFactory.getObjectMapper();
 
@@ -79,5 +87,12 @@ public class KodexTests {
         Assert.assertEquals(
                 publicKey,
                 expected.getKeyWithJackson( PublicKey.class.getCanonicalName(), PublicKey.class ) );
+
+        EncryptedSearchPrivateKey recoveredSearchKey = expected.getKeyWithJackson(
+                EncryptedSearchPrivateKey.class.getCanonicalName(),
+                EncryptedSearchPrivateKey.class );
+
+        Assert.assertEquals( searchKey.getLeftSquaringMatrix(), recoveredSearchKey.getLeftSquaringMatrix() );
+        Assert.assertEquals( searchKey.getRightSquaringMatrix(), recoveredSearchKey.getRightSquaringMatrix() );
     }
 }
