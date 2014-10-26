@@ -220,6 +220,13 @@ public class Kodex<K> implements Serializable {
         return getKey( key, new JacksonKodexMarshaller<T>( clazz ) );
     }
 
+    @SuppressWarnings( "unchecked" )
+    public <T> T getKeyWithJackson( Class<T> clazz ) throws InvalidKeyException, InvalidAlgorithmParameterException,
+            NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeySpecException, IllegalBlockSizeException,
+            BadPaddingException, SealedKodexException, IOException {
+        return getKey( (K)clazz.getCanonicalName(), new JacksonKodexMarshaller<T>( clazz ) );
+    }
+
     public <T> T getKeyWithJackson( K key, TypeReference<T> reference ) throws InvalidKeyException,
             InvalidAlgorithmParameterException, NoSuchAlgorithmException, NoSuchPaddingException,
             InvalidKeySpecException, IllegalBlockSizeException, BadPaddingException, SealedKodexException, IOException {
@@ -230,6 +237,13 @@ public class Kodex<K> implements Serializable {
             InvalidKeySpecException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException,
             BadPaddingException, InvalidParameterSpecException, SealedKodexException, IOException {
         setKey( key, new JacksonKodexMarshaller<T>( clazz ), object );
+    }
+
+    @SuppressWarnings( "unchecked" )
+    public <T> void setKeyWithClassAndJackson( Class<T> clazz, T object ) throws InvalidKeyException,
+            InvalidKeySpecException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException,
+            BadPaddingException, InvalidParameterSpecException, SealedKodexException, IOException {
+        setKey( (K)clazz.getCanonicalName() , new JacksonKodexMarshaller<T>( clazz ), object );
     }
 
     public <T> void setKeyWithJackson( K key, T object, TypeReference<T> reference ) throws InvalidKeyException,
@@ -277,6 +291,11 @@ public class Kodex<K> implements Serializable {
         return service == null;
     }
 
+    @JsonIgnore
+    public boolean isDirty() {
+        return dirty;
+    }
+
     public void checkAndThrowIfSealed() throws SealedKodexException {
         if ( isSealed() ) {
             throw new SealedKodexException( "Kodex is currently sealed!" );
@@ -298,4 +317,5 @@ public class Kodex<K> implements Serializable {
             super( message );
         }
     }
+
 }
