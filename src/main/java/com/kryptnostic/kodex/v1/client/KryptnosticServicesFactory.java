@@ -1,6 +1,7 @@
 package com.kryptnostic.kodex.v1.client;
 
 import com.kryptnostic.directory.v1.KeyApi;
+import com.kryptnostic.directory.v1.UsersApi;
 import com.kryptnostic.search.v1.client.SearchApi;
 import com.kryptnostic.sharing.v1.requests.SharingApi;
 import com.kryptnostic.storage.v1.client.DocumentApi;
@@ -24,4 +25,5 @@ public interface KryptnosticServicesFactory {
 
     KeyApi createKeyApi();
 
+    UsersApi createUsersApi();
 }
