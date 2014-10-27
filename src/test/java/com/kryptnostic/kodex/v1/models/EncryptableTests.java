@@ -29,6 +29,7 @@ import com.kryptnostic.crypto.v1.keys.Keys;
 import com.kryptnostic.crypto.v1.keys.Kodex;
 import com.kryptnostic.crypto.v1.keys.Kodex.CorruptKodexException;
 import com.kryptnostic.crypto.v1.keys.Kodex.SealedKodexException;
+import com.kryptnostic.kodex.v1.exceptions.types.KodexException;
 import com.kryptnostic.kodex.v1.exceptions.types.SecurityConfigurationException;
 import com.kryptnostic.kodex.v1.indexing.metadata.Metadata;
 import com.kryptnostic.kodex.v1.serialization.jackson.KodexObjectMapperFactory;
@@ -45,7 +46,8 @@ public class EncryptableTests {
     @Before
     public void init() throws InvalidKeyException, InvalidKeySpecException, NoSuchAlgorithmException,
             NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, InvalidParameterSpecException,
-            SealedKodexException, IOException, InvalidAlgorithmParameterException, SignatureException, CorruptKodexException {
+            SealedKodexException, IOException, InvalidAlgorithmParameterException, SignatureException,
+            CorruptKodexException, SecurityConfigurationException, KodexException {
         ObjectMapper mapper = KodexObjectMapperFactory.getObjectMapper();
         pair = Keys.generateRsaKeyPair( 1024 );
         kodex = new Kodex<String>( Cypher.RSA_OAEP_SHA1_1024, Cypher.AES_CTR_PKCS5_128, pair.getPublic() );
@@ -131,7 +133,7 @@ public class EncryptableTests {
         Assert.assertNull( decryptedString.getEncryptedData() );
         Assert.assertNull( decryptedString.getEncryptedClassName() );
         Assert.assertFalse( decryptedString.isEncrypted() );
-        Assert.assertEquals( m, (Metadata) decryptedString.getData() );
+        Assert.assertEquals( m, decryptedString.getData() );
     }
 
 }

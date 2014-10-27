@@ -13,6 +13,7 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -25,8 +26,12 @@ import com.kryptnostic.crypto.PublicKey;
 import com.kryptnostic.crypto.v1.ciphers.Cypher;
 import com.kryptnostic.crypto.v1.keys.Kodex.CorruptKodexException;
 import com.kryptnostic.crypto.v1.keys.Kodex.SealedKodexException;
+import com.kryptnostic.kodex.v1.exceptions.types.KodexException;
+import com.kryptnostic.kodex.v1.exceptions.types.SecurityConfigurationException;
 import com.kryptnostic.kodex.v1.serialization.jackson.KodexObjectMapperFactory;
 import com.kryptnostic.linear.EnhancedBitMatrix.SingularMatrixException;
+import com.kryptnostic.multivariate.gf2.SimplePolynomialFunction;
+import com.kryptnostic.multivariate.util.SimplePolynomialFunctions;
 import com.kryptnostic.users.v1.UserKey;
 
 public class KodexTests {
@@ -35,19 +40,22 @@ public class KodexTests {
     private static PrivateKey                privateKey = new PrivateKey( 128, 64 );
     private static PublicKey                 publicKey  = new PublicKey( privateKey );
     private static EncryptedSearchPrivateKey searchKey;
+    private static SimplePolynomialFunction  globalHash;
 
     @BeforeClass
     public static void generateKeys() throws NoSuchAlgorithmException, SingularMatrixException {
         pair = Keys.generateRsaKeyPair( 1024 );
         searchKey = new EncryptedSearchPrivateKey( 8 );
         marshaller = new JacksonKodexMarshaller<UserKey>( UserKey.class );
+        globalHash = SimplePolynomialFunctions.denseRandomMultivariateQuadratic( 128, 64 );
     }
 
     @Test
     public void testSerializeDeserialize() throws InvalidKeyException, InvalidKeySpecException,
             NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException,
             InvalidParameterSpecException, SealedKodexException, IOException, InvalidAlgorithmParameterException,
-            SignatureException, CorruptKodexException {
+            SignatureException, CorruptKodexException, SecurityConfigurationException, KodexException,
+            SingularMatrixException {
         Kodex<String> expected = new Kodex<String>(
                 Cypher.RSA_OAEP_SHA1_1024,
                 Cypher.AES_CTR_PKCS5_128,
@@ -61,6 +69,7 @@ public class KodexTests {
         expected.seal();
 
         Assert.assertTrue( expected.isSealed() );
+        expected.verify( pair.getPublic() );
 
         expected.unseal( pair.getPrivate() );
         Assert.assertTrue( !expected.isSealed() );
@@ -71,6 +80,19 @@ public class KodexTests {
                 EncryptedSearchPrivateKey.class.getCanonicalName(),
                 searchKey,
                 EncryptedSearchPrivateKey.class );
+        Pair<SimplePolynomialFunction, SimplePolynomialFunction> queryPair = searchKey.getQueryHasherPair(
+                globalHash,
+                privateKey );
+        SimplePolynomialFunction left = queryPair.getLeft();
+        SimplePolynomialFunction right = queryPair.getRight();
+        expected.setKeyWithJackson(
+                SimplePolynomialFunction.class.getCanonicalName() + "LEFT",
+                left,
+                SimplePolynomialFunction.class );
+        expected.setKeyWithJackson(
+                SimplePolynomialFunction.class.getCanonicalName() + "RIGHT",
+                right,
+                SimplePolynomialFunction.class );
 
         ObjectMapper mapper = KodexObjectMapperFactory.getObjectMapper();
 
@@ -78,7 +100,9 @@ public class KodexTests {
         Kodex<String> actual = mapper.readValue( k, new TypeReference<Kodex<String>>() {} );
 
         Assert.assertTrue( actual.isSealed() );
+        actual.verify( pair.getPublic() );
         actual.unseal( pair.getPrivate() );
+        actual.verify( pair.getPublic() );
 
         Assert.assertEquals( expected.getKey( "test", marshaller ), actual.getKey( "test", marshaller ) );
         Assert.assertEquals(

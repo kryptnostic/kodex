@@ -9,14 +9,9 @@ import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.SignatureException;
 import java.security.spec.InvalidKeySpecException;
-import java.security.spec.InvalidParameterSpecException;
 import java.util.Map;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
-
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -26,8 +21,6 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.smile.SmileFactory;
-import com.fasterxml.jackson.module.afterburner.AfterburnerModule;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
 import com.kryptnostic.crypto.v1.ciphers.AesCryptoService;
@@ -38,6 +31,9 @@ import com.kryptnostic.crypto.v1.ciphers.Cypher;
 import com.kryptnostic.crypto.v1.ciphers.Cyphers;
 import com.kryptnostic.crypto.v1.signatures.SignatureAlgorithm;
 import com.kryptnostic.kodex.v1.constants.Names;
+import com.kryptnostic.kodex.v1.exceptions.types.KodexException;
+import com.kryptnostic.kodex.v1.exceptions.types.SecurityConfigurationException;
+import com.kryptnostic.kodex.v1.serialization.jackson.KodexObjectMapperFactory;
 
 @JsonTypeInfo(
     use = JsonTypeInfo.Id.CLASS,
@@ -45,7 +41,7 @@ import com.kryptnostic.kodex.v1.constants.Names;
     property = Names.CLASS_FIELD )
 public class Kodex<K> implements Serializable {
     private static final long             serialVersionUID     = 5021271922876183846L;
-    private static final ObjectMapper     mapper               = new ObjectMapper( new SmileFactory() );
+    private static final ObjectMapper     mapper               = KodexObjectMapperFactory.getObjectMapper();
     private static final String           SEAL_FIELD           = "sealingAlgorithm";
     private static final String           KEY_PROTECTION_FIELD = "keyProtectionAlgorithm";
     private static final String           SEALED_KEY_FIELD     = "sealedKey";
@@ -53,10 +49,6 @@ public class Kodex<K> implements Serializable {
     private static final String           SEAL_SIGNATURE       = "sealSignature";
 
     private static final byte[]           empty                = new byte[ 0 ];
-
-    static {
-        mapper.registerModule( new AfterburnerModule() );
-    }
 
     private transient AesCryptoService    service              = null;
     private transient PrivateKey          privateKey;
@@ -71,21 +63,16 @@ public class Kodex<K> implements Serializable {
 
     public Kodex( Cypher seal, Cypher keyProtectionAlgorithm, PublicKey publicKey ) throws NoSuchAlgorithmException,
             InvalidAlgorithmParameterException,
+            SecurityConfigurationException,
             InvalidKeyException,
-            IllegalBlockSizeException,
-            BadPaddingException,
-            NoSuchPaddingException,
             SignatureException,
             JsonProcessingException {
         this( seal, keyProtectionAlgorithm, publicKey, keyProtectionAlgorithm.getKeyGenerator().generateKey()
                 .getEncoded() );
     }
 
-    public Kodex( Cypher seal, Cypher keyProtectionAlgorithm, PublicKey publicKey, byte[] secretKey ) throws InvalidKeyException,
-            IllegalBlockSizeException,
-            BadPaddingException,
-            NoSuchAlgorithmException,
-            NoSuchPaddingException,
+    public Kodex( Cypher seal, Cypher keyProtectionAlgorithm, PublicKey publicKey, byte[] secretKey ) throws SecurityConfigurationException,
+            InvalidKeyException,
             SignatureException,
             JsonProcessingException {
         this( seal, keyProtectionAlgorithm, Cyphers.encrypt( seal, publicKey, secretKey ) );
@@ -174,30 +161,43 @@ public class Kodex<K> implements Serializable {
                 mapper.writeValueAsBytes( this.keyring ) };
     }
 
-    public void unseal( PrivateKey privateKey ) throws InvalidKeyException, IllegalBlockSizeException,
-            BadPaddingException, NoSuchAlgorithmException, NoSuchPaddingException, SignatureException,
-            JsonProcessingException, InvalidKeySpecException, CorruptKodexException {
+    public void unseal( PrivateKey privateKey ) throws KodexException, SecurityConfigurationException,
+            CorruptKodexException {
         try {
-            verify( Keys.publicKeyFromPrivateKey( privateKey ) );
             lock.writeLock().lock();
+            verify( Keys.publicKeyFromPrivateKey( privateKey ) );
+
             service = new AesCryptoService( keyProtectionAlgorithm, Cyphers.decrypt( seal, privateKey, encryptedKey ) );
             this.privateKey = privateKey;
+        } catch ( InvalidKeyException e ) {
+            throw new SecurityConfigurationException( e );
+        } catch ( NoSuchAlgorithmException e ) {
+            throw new SecurityConfigurationException( e );
+        } catch ( JsonProcessingException e ) {
+            throw new KodexException( e );
+        } catch ( InvalidKeySpecException e ) {
+            throw new SecurityConfigurationException( e );
+        } catch ( SignatureException e ) {
+            throw new SecurityConfigurationException( e );
         } finally {
             lock.writeLock().unlock();
         }
     }
 
-    public <T> void setKey( K key, KodexMarshaller<T> marshaller, T object ) throws InvalidKeyException,
-            InvalidKeySpecException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException,
-            BadPaddingException, InvalidParameterSpecException, SealedKodexException, IOException {
+    public <T> void setKey( K key, KodexMarshaller<T> marshaller, T object ) throws SecurityConfigurationException,
+            SealedKodexException, KodexException {
         checkAndThrowIfSealed();
-        keyring.put( key, service.encrypt( marshaller.toBytes( object ), empty ) );
-        dirty = true;
+        try {
+            keyring.put( key, service.encrypt( marshaller.toBytes( object ), empty ) );
+            dirty = true;
+
+        } catch ( IOException e ) {
+            throw new KodexException( e );
+        }
     }
 
-    public <T> T getKey( K key, KodexMarshaller<T> marshaller ) throws InvalidKeyException,
-            InvalidAlgorithmParameterException, NoSuchAlgorithmException, NoSuchPaddingException,
-            InvalidKeySpecException, IllegalBlockSizeException, BadPaddingException, SealedKodexException, IOException {
+    public <T> T getKey( K key, KodexMarshaller<T> marshaller ) throws SealedKodexException,
+            SecurityConfigurationException, KodexException {
         checkAndThrowIfSealed();
         byte[] rawBytes = null;
         try {
@@ -207,48 +207,57 @@ public class Kodex<K> implements Serializable {
                 return null;
             }
             rawBytes = service.decryptBytes( value );
+
         } finally {
             lock.readLock().unlock();
         }
 
-        return marshaller.fromBytes( rawBytes );
+        try {
+            return marshaller.fromBytes( rawBytes );
+        } catch ( IOException e ) {
+            throw new KodexException( e );
+        }
     }
 
-    public <T> T getKeyWithJackson( K key, Class<T> clazz ) throws InvalidKeyException,
-            InvalidAlgorithmParameterException, NoSuchAlgorithmException, NoSuchPaddingException,
-            InvalidKeySpecException, IllegalBlockSizeException, BadPaddingException, SealedKodexException, IOException {
+    public <T> T getKeyWithJackson( K key, Class<T> clazz ) throws SealedKodexException,
+            SecurityConfigurationException, KodexException {
         return getKey( key, new JacksonKodexMarshaller<T>( clazz ) );
     }
 
     @SuppressWarnings( "unchecked" )
-    public <T> T getKeyWithJackson( Class<T> clazz ) throws InvalidKeyException, InvalidAlgorithmParameterException,
-            NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeySpecException, IllegalBlockSizeException,
-            BadPaddingException, SealedKodexException, IOException {
-        return getKey( (K)clazz.getCanonicalName(), new JacksonKodexMarshaller<T>( clazz ) );
+    public <T> T getKeyWithJackson( Class<T> clazz ) throws KodexException, SecurityConfigurationException {
+        try {
+            return getKey( (K) clazz.getCanonicalName(), new JacksonKodexMarshaller<T>( clazz ) );
+
+        } catch ( SealedKodexException e ) {
+            throw new KodexException( e );
+        }
     }
 
-    public <T> T getKeyWithJackson( K key, TypeReference<T> reference ) throws InvalidKeyException,
-            InvalidAlgorithmParameterException, NoSuchAlgorithmException, NoSuchPaddingException,
-            InvalidKeySpecException, IllegalBlockSizeException, BadPaddingException, SealedKodexException, IOException {
+    public <T> T getKeyWithJackson( K key, TypeReference<T> reference ) throws SealedKodexException,
+            SecurityConfigurationException, KodexException {
+
         return getKey( key, new JacksonTypeRefKodexMarshaller<T>( reference ) );
+
     }
 
-    public <T> void setKeyWithJackson( K key, T object, Class<T> clazz ) throws InvalidKeyException,
-            InvalidKeySpecException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException,
-            BadPaddingException, InvalidParameterSpecException, SealedKodexException, IOException {
-        setKey( key, new JacksonKodexMarshaller<T>( clazz ), object );
+    public <T> void setKeyWithJackson( K key, T object, Class<T> clazz ) throws KodexException,
+            SecurityConfigurationException {
+        try {
+            setKey( key, new JacksonKodexMarshaller<T>( clazz ), object );
+        } catch ( SealedKodexException e ) {
+            throw new KodexException( e );
+        }
     }
 
     @SuppressWarnings( "unchecked" )
-    public <T> void setKeyWithClassAndJackson( Class<T> clazz, T object ) throws InvalidKeyException,
-            InvalidKeySpecException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException,
-            BadPaddingException, InvalidParameterSpecException, SealedKodexException, IOException {
-        setKey( (K)clazz.getCanonicalName() , new JacksonKodexMarshaller<T>( clazz ), object );
+    public <T> void setKeyWithClassAndJackson( Class<T> clazz, T object ) throws SealedKodexException, KodexException,
+            SecurityConfigurationException {
+        setKey( (K) clazz.getCanonicalName(), new JacksonKodexMarshaller<T>( clazz ), object );
     }
 
-    public <T> void setKeyWithJackson( K key, T object, TypeReference<T> reference ) throws InvalidKeyException,
-            InvalidKeySpecException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException,
-            BadPaddingException, InvalidParameterSpecException, SealedKodexException, IOException {
+    public <T> void setKeyWithJackson( K key, T object, TypeReference<T> reference ) throws SealedKodexException,
+            KodexException, SecurityConfigurationException {
         setKey( key, new JacksonTypeRefKodexMarshaller<T>( reference ), object );
     }
 
@@ -263,9 +272,13 @@ public class Kodex<K> implements Serializable {
 
     public boolean containsKey( K key ) throws SealedKodexException {
         checkAndThrowIfSealed();
-        lock.readLock().lock();
-        boolean contained = keyring.containsKey( key );
-        lock.readLock().unlock();
+        boolean contained = false;
+        try {
+            lock.readLock().lock();
+            contained = keyring.containsKey( key );
+        } finally {
+            lock.readLock().unlock();
+        }
         return contained;
     }
 
@@ -277,6 +290,8 @@ public class Kodex<K> implements Serializable {
             lock.writeLock().lock();
             if ( privateKey != null ) {
                 signature = getSignature();
+            } else {
+                throw new SignatureException( "Kodex requires a private key to be sealed" );
             }
             service.destroy();
             service = null;
@@ -315,6 +330,10 @@ public class Kodex<K> implements Serializable {
 
         public CorruptKodexException( String message ) {
             super( message );
+        }
+
+        public CorruptKodexException( Throwable e ) {
+            super( e );
         }
     }
 

@@ -1,15 +1,9 @@
 package com.kryptnostic.crypto.v1.ciphers;
 
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
-import java.security.spec.InvalidParameterSpecException;
 import java.util.Arrays;
 
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
@@ -22,7 +16,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.kryptnostic.crypto.v1.keys.SecretKeyFactoryType;
 import com.kryptnostic.kodex.v1.constants.Names;
-
+import com.kryptnostic.kodex.v1.exceptions.types.SecurityConfigurationException;
 
 public class CryptoService extends AbstractCryptoService {
     private static final String        FACTORY_TYPE_FIELD          = "keyDerivationAlgorithm";
@@ -52,24 +46,18 @@ public class CryptoService extends AbstractCryptoService {
         this.secretKeyFactoryType = secretKeyFactoryType;
     }
 
-    public BlockCiphertext encrypt( byte[] plaintext ) throws InvalidKeyException, InvalidKeySpecException,
-            NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException,
-            InvalidParameterSpecException {
+    public BlockCiphertext encrypt( byte[] plaintext ) throws SecurityConfigurationException {
         return encrypt( plaintext, Cyphers.generateSalt() );
     }
 
     /**
      * Note: plaintext String MUST be UTF_8 encoded.
      */
-    public BlockCiphertext encrypt( String plaintext ) throws InvalidKeySpecException, NoSuchAlgorithmException,
-            NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException,
-            InvalidParameterSpecException {
+    public BlockCiphertext encrypt( String plaintext ) throws SecurityConfigurationException {
         return encrypt( StringUtils.getBytesUtf8( plaintext ), Cyphers.generateSalt() );
     }
 
-    public String decrypt( BlockCiphertext ciphertext ) throws InvalidKeyException, InvalidAlgorithmParameterException,
-            NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeySpecException, IllegalBlockSizeException,
-            BadPaddingException {
+    public String decrypt( BlockCiphertext ciphertext ) throws SecurityConfigurationException {
         return StringUtils.newStringUtf8( decryptBytes( ciphertext ) );
     }
 
