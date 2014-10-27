@@ -1,15 +1,6 @@
 package com.kryptnostic.kodex.v1.models;
 
 import java.io.IOException;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
-import java.security.spec.InvalidParameterSpecException;
-
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
 
 import com.fasterxml.jackson.annotation.JacksonInject;
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -24,6 +15,7 @@ import com.kryptnostic.crypto.v1.ciphers.CryptoService;
 import com.kryptnostic.crypto.v1.keys.JacksonKodexMarshaller;
 import com.kryptnostic.crypto.v1.keys.Kodex;
 import com.kryptnostic.crypto.v1.keys.Kodex.SealedKodexException;
+import com.kryptnostic.kodex.v1.exceptions.types.KodexException;
 import com.kryptnostic.kodex.v1.exceptions.types.SecurityConfigurationException;
 import com.kryptnostic.kodex.v1.serialization.jackson.KodexObjectMapperFactory;
 
@@ -69,25 +61,7 @@ public class AesEncryptable<T> extends Encryptable<T> {
 
             encryptedData = crypto.encrypt( mapper.writeValueAsString( getData() ) );
             encryptedClassName = crypto.encrypt( getClassName() );
-        } catch ( InvalidKeyException e ) {
-            wrapSecurityConfigurationException( e );
-        } catch ( InvalidAlgorithmParameterException e ) {
-            wrapSecurityConfigurationException( e );
-        } catch ( NoSuchAlgorithmException e ) {
-            wrapSecurityConfigurationException( e );
-        } catch ( NoSuchPaddingException e ) {
-            wrapSecurityConfigurationException( e );
-        } catch ( InvalidKeySpecException e ) {
-            wrapSecurityConfigurationException( e );
-        } catch ( IllegalBlockSizeException e ) {
-            wrapSecurityConfigurationException( e );
-        } catch ( BadPaddingException e ) {
-            wrapSecurityConfigurationException( e );
-        } catch ( SealedKodexException e ) {
-            wrapSecurityConfigurationException( e );
-        } catch ( IOException e ) {
-            wrapSecurityConfigurationException( e );
-        } catch ( InvalidParameterSpecException e ) {
+        } catch ( SealedKodexException | KodexException e ) {
             wrapSecurityConfigurationException( e );
         }
         return new AesEncryptable<T>( encryptedData, encryptedClassName );
@@ -107,21 +81,8 @@ public class AesEncryptable<T> extends Encryptable<T> {
             crypto = kodex.getKey( CryptoService.class.getCanonicalName(), cryptoServiceKodexFactory );
             className = crypto.decrypt( (BlockCiphertext) getEncryptedClassName() );
             objectString = crypto.decrypt( (BlockCiphertext) getEncryptedData() );
-        } catch ( InvalidKeyException e ) {
-            wrapSecurityConfigurationException( e );
-        } catch ( InvalidAlgorithmParameterException e ) {
-            wrapSecurityConfigurationException( e );
-        } catch ( NoSuchAlgorithmException e ) {
-            wrapSecurityConfigurationException( e );
-        } catch ( NoSuchPaddingException e ) {
-            wrapSecurityConfigurationException( e );
-        } catch ( InvalidKeySpecException e ) {
-            wrapSecurityConfigurationException( e );
-        } catch ( IllegalBlockSizeException e ) {
-            wrapSecurityConfigurationException( e );
-        } catch ( BadPaddingException e ) {
-            wrapSecurityConfigurationException( e );
-        } catch ( SealedKodexException e ) {
+
+        } catch ( SealedKodexException | KodexException e ) {
             wrapSecurityConfigurationException( e );
         }
 

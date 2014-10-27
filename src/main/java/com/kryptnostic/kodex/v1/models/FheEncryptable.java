@@ -1,14 +1,6 @@
 package com.kryptnostic.kodex.v1.models;
 
 import java.io.IOException;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
-
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
 
 import org.apache.commons.codec.binary.StringUtils;
 
@@ -25,6 +17,7 @@ import com.kryptnostic.crypto.PublicKey;
 import com.kryptnostic.crypto.v1.keys.JacksonKodexMarshaller;
 import com.kryptnostic.crypto.v1.keys.Kodex;
 import com.kryptnostic.crypto.v1.keys.Kodex.SealedKodexException;
+import com.kryptnostic.kodex.v1.exceptions.types.KodexException;
 import com.kryptnostic.kodex.v1.exceptions.types.SecurityConfigurationException;
 import com.kryptnostic.kodex.v1.serialization.jackson.KodexObjectMapperFactory;
 
@@ -60,7 +53,7 @@ public class FheEncryptable<T> extends Encryptable<T> {
     }
 
     @Override
-    protected Encryptable<T> encryptWith( Kodex<String> kodex ) throws JsonProcessingException {
+    protected Encryptable<T> encryptWith( Kodex<String> kodex ) throws SecurityConfigurationException {
         PublicKey key;
         Ciphertext encryptedData = null;
         Ciphertext encryptedClassName = null;
@@ -71,40 +64,14 @@ public class FheEncryptable<T> extends Encryptable<T> {
             }
             encryptedData = key.encryptIntoEnvelope( mapper.writeValueAsBytes( getData() ) );
             encryptedClassName = key.encryptIntoEnvelope( getClassName().getBytes() );
-        } catch ( InvalidKeyException e ) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch ( InvalidAlgorithmParameterException e ) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch ( NoSuchAlgorithmException e ) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch ( NoSuchPaddingException e ) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch ( InvalidKeySpecException e ) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch ( IllegalBlockSizeException e ) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch ( BadPaddingException e ) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch ( SealedKodexException e ) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch ( IOException e ) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            return new FheEncryptable<T>( encryptedData, encryptedClassName );
+        } catch ( SealedKodexException | SecurityConfigurationException | KodexException | JsonProcessingException e ) {
+            throw new SecurityConfigurationException( e );
         }
-        return new FheEncryptable<T>( encryptedData, encryptedClassName );
     }
 
     @Override
-    protected Encryptable<T> decryptWith( Kodex<String> kodex ) throws JsonParseException, JsonMappingException,
-            IOException, ClassNotFoundException {
+    protected Encryptable<T> decryptWith( Kodex<String> kodex ) throws SecurityConfigurationException {
         PrivateKey key;
         try {
             key = kodex.getKey( PrivateKey.class.getCanonicalName(), privateKeyKodexFactory );
@@ -113,33 +80,14 @@ public class FheEncryptable<T> extends Encryptable<T> {
             @SuppressWarnings( "unchecked" )
             T obj = mapper.<T> readValue( objectBytes, (Class<T>) Class.forName( className ) );
             return new FheEncryptable<T>( obj );
-        } catch ( InvalidKeyException e ) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch ( InvalidAlgorithmParameterException e ) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch ( NoSuchAlgorithmException e ) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch ( NoSuchPaddingException e ) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch ( InvalidKeySpecException e ) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch ( IllegalBlockSizeException e ) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch ( BadPaddingException e ) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch ( SealedKodexException e ) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+        } catch (
+                SealedKodexException
+                | SecurityConfigurationException
+                | KodexException
+                | ClassNotFoundException
+                | IOException e ) {
+            throw new SecurityConfigurationException( e );
         }
-
-        return new FheEncryptable<T>( null );
     }
 
     @Override

@@ -25,6 +25,8 @@ import com.kryptnostic.crypto.v1.keys.Keys;
 import com.kryptnostic.crypto.v1.keys.Kodex;
 import com.kryptnostic.crypto.v1.keys.Kodex.CorruptKodexException;
 import com.kryptnostic.crypto.v1.keys.Kodex.SealedKodexException;
+import com.kryptnostic.kodex.v1.exceptions.types.KodexException;
+import com.kryptnostic.kodex.v1.exceptions.types.SecurityConfigurationException;
 import com.kryptnostic.kodex.v1.serialization.jackson.KodexObjectMapperFactory;
 
 /**
@@ -40,7 +42,8 @@ public class AesEncryptableBase extends BaseSerializationTest {
 
     protected void initImplicitEncryption() throws NoSuchAlgorithmException, InvalidKeyException,
             InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException,
-            InvalidKeySpecException, InvalidParameterSpecException, SealedKodexException, IOException, SignatureException, CorruptKodexException {
+            InvalidKeySpecException, InvalidParameterSpecException, SealedKodexException, IOException,
+            SignatureException, CorruptKodexException, KodexException, SecurityConfigurationException {
         resetSecurityConfiguration();
         // register key with object mapper
         this.kodex.unseal( pair.getPrivate() );
@@ -50,7 +53,8 @@ public class AesEncryptableBase extends BaseSerializationTest {
 
     protected void initFheEncryption() throws InvalidKeyException, InvalidKeySpecException, NoSuchAlgorithmException,
             NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, InvalidParameterSpecException,
-            SealedKodexException, IOException, SignatureException, CorruptKodexException {
+            SealedKodexException, IOException, SignatureException, CorruptKodexException, KodexException,
+            SecurityConfigurationException {
         PrivateKey privateKey = new PrivateKey( 128, 64 );
         PublicKey publicKey = new PublicKey( privateKey );
 
@@ -65,7 +69,8 @@ public class AesEncryptableBase extends BaseSerializationTest {
 
     protected void resetSecurityConfiguration() throws InvalidKeyException, NoSuchAlgorithmException,
             InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException,
-            InvalidKeySpecException, InvalidParameterSpecException, SealedKodexException, IOException, SignatureException, CorruptKodexException {
+            InvalidKeySpecException, InvalidParameterSpecException, SealedKodexException, IOException,
+            SignatureException, CorruptKodexException, SecurityConfigurationException, KodexException {
         this.pair = Keys.generateRsaKeyPair( 1024 );
         this.kodex = new Kodex<String>( Cypher.RSA_OAEP_SHA1_1024, Cypher.AES_CTR_PKCS5_128, pair.getPublic() );
         this.kodex.unseal( pair.getPrivate() );

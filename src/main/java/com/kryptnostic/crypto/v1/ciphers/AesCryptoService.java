@@ -12,32 +12,33 @@ import javax.crypto.spec.SecretKeySpec;
 
 public class AesCryptoService extends AbstractCryptoService {
     private final ReadWriteLock lock = new ReentrantReadWriteLock();
-    private byte[] key;
-    public AesCryptoService(Cypher cypher) throws NoSuchAlgorithmException, InvalidAlgorithmParameterException {
-        this( cypher , Cyphers.generateSecretKey( cypher ) );
+    private byte[]              key;
+
+    public AesCryptoService( Cypher cypher ) throws NoSuchAlgorithmException, InvalidAlgorithmParameterException {
+        this( cypher, Cyphers.generateSecretKey( cypher ) );
     }
-    
+
     public AesCryptoService( Cypher cypher, SecretKey secretKey ) {
-        this( cypher , secretKey.getEncoded() );
+        this( cypher, secretKey.getEncoded() );
     }
-    
+
     public AesCryptoService( Cypher cypher, byte[] secretKey ) {
         super( cypher );
         this.key = secretKey;
     }
-    
+
     public byte[] getSecretKey() {
-        try{
+        try {
             lock.readLock().lock();
             return key;
         } finally {
             lock.readLock().unlock();
         }
     }
-    
+
     @Override
-    protected SecretKeySpec getSecretKeySpec(byte[] salt) throws NoSuchAlgorithmException, InvalidKeySpecException {
-        try{
+    protected SecretKeySpec getSecretKeySpec( byte[] salt ) throws NoSuchAlgorithmException, InvalidKeySpecException {
+        try {
             lock.readLock().lock();
             return new SecretKeySpec( key, cypher.getName() );
         } finally {
@@ -46,27 +47,27 @@ public class AesCryptoService extends AbstractCryptoService {
     }
 
     public void destroy() {
-        try{
+        try {
             lock.writeLock().lock();
-            Arrays.fill(key, (byte)0);
+            Arrays.fill( key, (byte) 0 );
             key = null;
         } finally {
             lock.writeLock().unlock();
         }
     }
-    
+
     public void reinit( byte[] newKey ) {
-        try{
+        try {
             lock.writeLock().lock();
-            this.key = Arrays.copyOf( newKey , newKey.length );
+            this.key = Arrays.copyOf( newKey, newKey.length );
         } finally {
             lock.writeLock().unlock();
         }
     }
-   
+
     @Override
     protected void finalize() throws Throwable {
-        Arrays.fill(key, (byte)0);
+        Arrays.fill( key, (byte) 0 );
         super.finalize();
     }
 }

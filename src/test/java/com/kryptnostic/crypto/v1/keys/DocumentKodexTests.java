@@ -19,46 +19,56 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kryptnostic.crypto.v1.ciphers.Cypher;
 import com.kryptnostic.crypto.v1.ciphers.Cyphers;
+import com.kryptnostic.kodex.v1.exceptions.types.SecurityConfigurationException;
 import com.kryptnostic.users.v1.UserKey;
 
 public class DocumentKodexTests {
     private static final Logger logger = LoggerFactory.getLogger( DocumentKodexTests.class );
-    private static KeyPair keyPair;
-    
+    private static KeyPair      keyPair;
+
     @BeforeClass
     public static void genKeys() throws NoSuchAlgorithmException {
         keyPair = Keys.generateRsaKeyPair( 4096 );
     }
-    
+
     @Test
-    public void testPutGet() throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException {
-        testPutGet(new DocumentKodex<String>(Cypher.RSA_OAEP_SHA256_4096), "test" );
+    public void testPutGet() throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException,
+            IllegalBlockSizeException, BadPaddingException, SecurityConfigurationException {
+        testPutGet( new DocumentKodex<String>( Cypher.RSA_OAEP_SHA256_4096 ), "test" );
     }
-    
+
     @Test
-    public void testJacksonSerialization() throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, IOException {
+    public void testJacksonSerialization() throws InvalidKeyException, NoSuchAlgorithmException,
+            NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, IOException,
+            SecurityConfigurationException {
         ObjectMapper mapper = new ObjectMapper();
-        DocumentKodex<UserKey> kodex = new DocumentKodex<UserKey>(Cypher.RSA_OAEP_SHA256_4096);
-        
+        DocumentKodex<UserKey> kodex = new DocumentKodex<UserKey>( Cypher.RSA_OAEP_SHA256_4096 );
+
         byte[] secretKey1 = Cyphers.generateSalt();
         byte[] secretKey2 = Cyphers.generateSalt();
-        kodex.put( new UserKey("kryptnostic" , "test1" ) , Cyphers.encrypt( kodex.getCypher() , keyPair.getPublic() , secretKey1 ) );
-        kodex.put( new UserKey("kryptnostic" , "test2" ) , Cyphers.encrypt( kodex.getCypher() , keyPair.getPublic() , secretKey2 ) );
-        
+        kodex.put(
+                new UserKey( "kryptnostic", "test1" ),
+                Cyphers.encrypt( kodex.getCypher(), keyPair.getPublic(), secretKey1 ) );
+        kodex.put(
+                new UserKey( "kryptnostic", "test2" ),
+                Cyphers.encrypt( kodex.getCypher(), keyPair.getPublic(), secretKey2 ) );
+
         String serialized = mapper.writeValueAsString( kodex );
-        logger.info("DocumentKodex<UserKey> JSON: {}", serialized );
-        DocumentKodex<UserKey> actual = mapper.readValue( serialized , new TypeReference<DocumentKodex<UserKey>>(){} ) ;
-        
-        Assert.assertEquals( kodex , actual );
+        logger.info( "DocumentKodex<UserKey> JSON: {}", serialized );
+        DocumentKodex<UserKey> actual = mapper.readValue( serialized, new TypeReference<DocumentKodex<UserKey>>() {} );
+
+        Assert.assertEquals( kodex, actual );
     }
-    
-    public static void testPutGet(DocumentKodex<String> kodex, String id ) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException {
+
+    public static void testPutGet( DocumentKodex<String> kodex, String id ) throws InvalidKeyException,
+            NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException,
+            SecurityConfigurationException {
         byte[] secretKey = Cyphers.generateSalt();
-        kodex.put( id , Cyphers.encrypt( kodex.getCypher() , keyPair.getPublic() , secretKey ) );
-        byte[] actual = kodex.get( keyPair.getPrivate() , id );
-        Assert.assertArrayEquals( secretKey , actual );
+        kodex.put( id, Cyphers.encrypt( kodex.getCypher(), keyPair.getPublic(), secretKey ) );
+        byte[] actual = kodex.get( keyPair.getPrivate(), id );
+        Assert.assertArrayEquals( secretKey, actual );
     }
-    
+
     public static class DocumentKodexWrapper {
         public DocumentKodex<UserKey> kodex;
 
@@ -71,26 +81,26 @@ public class DocumentKodexTests {
         }
 
         @Override
-        public boolean equals(Object obj) {
-            if (this == obj) {
+        public boolean equals( Object obj ) {
+            if ( this == obj ) {
                 return true;
             }
-            if (obj == null) {
+            if ( obj == null ) {
                 return false;
             }
-            if (!( obj instanceof DocumentKodexWrapper )) {
+            if ( !( obj instanceof DocumentKodexWrapper ) ) {
                 return false;
             }
             DocumentKodexWrapper other = (DocumentKodexWrapper) obj;
-            if (kodex == null) {
-                if (other.kodex != null) {
+            if ( kodex == null ) {
+                if ( other.kodex != null ) {
                     return false;
                 }
-            } else if (!kodex.equals( other.kodex )) {
+            } else if ( !kodex.equals( other.kodex ) ) {
                 return false;
             }
             return true;
         }
-        
+
     }
 }

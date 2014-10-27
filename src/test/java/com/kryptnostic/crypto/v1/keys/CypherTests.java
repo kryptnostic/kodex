@@ -21,6 +21,7 @@ import com.kryptnostic.crypto.v1.ciphers.AesCryptoService;
 import com.kryptnostic.crypto.v1.ciphers.BlockCiphertext;
 import com.kryptnostic.crypto.v1.ciphers.CryptoService;
 import com.kryptnostic.crypto.v1.ciphers.Cypher;
+import com.kryptnostic.kodex.v1.exceptions.types.SecurityConfigurationException;
 
 public class CypherTests {
     private static CryptoService    crypto;
@@ -35,7 +36,7 @@ public class CypherTests {
     @Test
     public void cryptoTest() throws InvalidKeyException, InvalidKeySpecException, NoSuchAlgorithmException,
             NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, InvalidParameterSpecException,
-            InvalidAlgorithmParameterException {
+            InvalidAlgorithmParameterException, SecurityConfigurationException {
         String expected = StringUtils.newStringUtf8( "hello world!".getBytes( Charsets.UTF_8 ) );
         BlockCiphertext bc = crypto.encrypt( expected );
         String actual = crypto.decrypt( bc );
@@ -45,7 +46,7 @@ public class CypherTests {
     @Test
     public void testRawAesCrypto() throws InvalidKeyException, InvalidAlgorithmParameterException,
             NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException,
-            InvalidKeySpecException, InvalidParameterSpecException {
+            InvalidKeySpecException, InvalidParameterSpecException, SecurityConfigurationException {
         byte[] randomBytes = new byte[ 191 ];
         new Random().nextBytes( randomBytes );
 
