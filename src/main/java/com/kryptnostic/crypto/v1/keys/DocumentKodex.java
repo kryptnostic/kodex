@@ -1,5 +1,6 @@
 package com.kryptnostic.crypto.v1.keys;
 
+import java.io.Serializable;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
@@ -24,7 +25,8 @@ import com.kryptnostic.crypto.v1.ciphers.Cyphers;
  * @author Matthew Tamayo-Rios &lt;matthew@kryptnostic.com&gt;
  *
  */
-public class DocumentKodex<T> {
+public class DocumentKodex<T> implements Serializable {
+    private static final long serialVersionUID = -6717541341623629426L;
     private static final String CYPHER_FIELD = "cipher";
     private static final String KEYS_FIELD = "keys";
     

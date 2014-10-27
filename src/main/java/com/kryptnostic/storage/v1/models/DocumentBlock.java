@@ -1,16 +1,10 @@
 package com.kryptnostic.storage.v1.models;
 
-import java.io.Serializable;
-
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.kryptnostic.kodex.v1.models.AesEncryptable;
 
-public class DocumentBlock implements Serializable {
-    /**
-     * 
-     */
-    private static final long serialVersionUID = -1897536031261346513L;
+public class DocumentBlock {
     public static final String FIELD_BLOCK = "block";
     public static final String FIELD_VERIFY = "verify";
     public static final String FIELD_TOTAL = "total";
