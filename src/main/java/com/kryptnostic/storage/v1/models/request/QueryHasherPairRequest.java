@@ -2,6 +2,8 @@ package com.kryptnostic.storage.v1.models.request;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -17,12 +19,18 @@ import com.kryptnostic.multivariate.gf2.SimplePolynomialFunction;
     include = JsonTypeInfo.As.PROPERTY,
     property = "@class" )
 public class QueryHasherPairRequest {
-    private static final JacksonKodexMarshaller<SimplePolynomialFunction> marshaller = new JacksonKodexMarshaller<SimplePolynomialFunction>( SimplePolynomialFunction.class );
-    public static final String FIELD_LEFT  = "left";
-    public static final String FIELD_RIGHT = "right";
+    private static final JacksonKodexMarshaller<SimplePolynomialFunction> marshaller  = new JacksonKodexMarshaller<SimplePolynomialFunction>(
+                                                                                              SimplePolynomialFunction.class );
+    private static final Lock                                             leftLock    = new ReentrantLock();
+    private static final Lock                                             rightLock   = new ReentrantLock();
+    public static final String                                            FIELD_LEFT  = "left";
+    public static final String                                            FIELD_RIGHT = "right";
 
-    private final byte[]       left;
-    private final byte[]       right;
+    private final byte[]                                                  left;
+    private final byte[]                                                  right;
+
+    private transient SimplePolynomialFunction                            lf          = null;
+    private transient SimplePolynomialFunction                            rf          = null;
 
     public QueryHasherPairRequest( SimplePolynomialFunction left, SimplePolynomialFunction right ) throws IOException {
         this.left = marshaller.toBytes( left );
@@ -47,22 +55,38 @@ public class QueryHasherPairRequest {
 
     @JsonIgnore
     public SimplePolynomialFunction getLeft() throws IOException {
-        return marshaller.fromBytes( left );
+        if ( lf == null ) {
+            try {
+                leftLock.lock();
+                lf = marshaller.fromBytes( left );
+            } finally {
+                leftLock.unlock();
+            }
+        }
+        return lf;
     }
-    
+
     @JsonIgnore
     public SimplePolynomialFunction getRight() throws IOException {
-        return marshaller.fromBytes( right );
+        if ( rf == null ) {
+            try {
+                rightLock.lock();
+                rf = marshaller.fromBytes( right );
+            } finally {
+                rightLock.unlock();
+            }
+        }
+        return rf;
     }
 
     public String computeChecksum() {
         return computeChecksum( Hashing.murmur3_128() );
     }
-    
+
     public String computeChecksum( HashFunction hf ) {
         return hf.hashBytes( left ).toString() + hf.hashBytes( right ).toString();
     }
-    
+
     @Override
     public int hashCode() {
         final int prime = 31;
