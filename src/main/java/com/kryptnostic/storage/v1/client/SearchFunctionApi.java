@@ -27,6 +27,6 @@ public interface SearchFunctionApi {
     @GET( CONTROLLER + CHECKSUM )
     BasicResponse<String> getGlobalHasherChecksum();
     
-    @GET( CONTROLLER +HASHER )
+    @GET( CONTROLLER + HASHER + CHECKSUM )
     BasicResponse<String> getQueryHasherChecksum();
 }
