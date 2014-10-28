@@ -8,7 +8,6 @@ import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.SignatureException;
-import java.security.spec.InvalidKeySpecException;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.concurrent.locks.ReadWriteLock;
@@ -162,22 +161,18 @@ public class Kodex<K extends Comparable<K>> implements Serializable {
                 mapper.writeValueAsBytes( this.keyring ) };
     }
 
-    public void unseal( PrivateKey privateKey ) throws KodexException, SecurityConfigurationException,
-            CorruptKodexException {
+    public void unseal( PublicKey publicKey, PrivateKey privateKey ) throws KodexException,
+            SecurityConfigurationException, CorruptKodexException {
         try {
             lock.writeLock().lock();
-            verify( Keys.publicKeyFromPrivateKey( privateKey ) );
+            verify( publicKey );
 
             service = new AesCryptoService( keyProtectionAlgorithm, Cyphers.decrypt( seal, privateKey, encryptedKey ) );
             this.privateKey = privateKey;
         } catch ( InvalidKeyException e ) {
             throw new SecurityConfigurationException( e );
-        } catch ( NoSuchAlgorithmException e ) {
-            throw new SecurityConfigurationException( e );
         } catch ( JsonProcessingException e ) {
             throw new KodexException( e );
-        } catch ( InvalidKeySpecException e ) {
-            throw new SecurityConfigurationException( e );
         } catch ( SignatureException e ) {
             throw new SecurityConfigurationException( e );
         } finally {

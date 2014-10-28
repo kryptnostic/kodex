@@ -1,6 +1,5 @@
 package com.kryptnostic.crypto.v1.keys;
 
-import java.io.File;
 import java.io.IOException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
@@ -70,7 +69,7 @@ public class KodexTests {
                 pair.getPublic() );
         Assert.assertTrue( expected.isSealed() );
 
-        expected.unseal( pair.getPrivate() );
+        expected.unseal( pair.getPublic(), pair.getPrivate() );
         Assert.assertTrue( !expected.isSealed() );
 
         expected.setKey( "test", marshaller, new UserKey( "kryptnostic", "tester" ) );
@@ -79,7 +78,7 @@ public class KodexTests {
         Assert.assertTrue( expected.isSealed() );
         expected.verify( pair.getPublic() );
 
-        expected.unseal( pair.getPrivate() );
+        expected.unseal( pair.getPublic(), pair.getPrivate() );
         Assert.assertTrue( !expected.isSealed() );
 
         expected.setKeyWithJackson( PrivateKey.class.getCanonicalName(), privateKey, PrivateKey.class );
@@ -133,7 +132,7 @@ public class KodexTests {
 
         Assert.assertTrue( actual.isSealed() );
 
-        actual.unseal( pair.getPrivate() );
+        actual.unseal( pair.getPublic(), pair.getPrivate() );
         actual.verify( pair.getPublic() );
 
         Assert.assertEquals( expected.getKey( "test", marshaller ), actual.getKey( "test", marshaller ) );

@@ -46,7 +46,7 @@ public class AesEncryptableBase extends BaseSerializationTest {
             SignatureException, CorruptKodexException, KodexException, SecurityConfigurationException {
         resetSecurityConfiguration();
         // register key with object mapper
-        this.kodex.unseal( pair.getPrivate() );
+        this.kodex.unseal( pair.getPublic(), pair.getPrivate() );
         this.kodex.setKey( CryptoService.class.getCanonicalName(), new JacksonKodexMarshaller<CryptoService>(
                 CryptoService.class ), crypto );
     }
@@ -58,7 +58,7 @@ public class AesEncryptableBase extends BaseSerializationTest {
         PrivateKey privateKey = new PrivateKey( 128, 64 );
         PublicKey publicKey = new PublicKey( privateKey );
 
-        kodex.unseal( pair.getPrivate() );
+        kodex.unseal( pair.getPublic(), pair.getPrivate() );
         kodex.setKey( PrivateKey.class.getCanonicalName(), new JacksonKodexMarshaller<PrivateKey>(
                 PrivateKey.class,
                 mapper ), privateKey );
@@ -73,7 +73,7 @@ public class AesEncryptableBase extends BaseSerializationTest {
             SignatureException, CorruptKodexException, SecurityConfigurationException, KodexException {
         this.pair = Keys.generateRsaKeyPair( 1024 );
         this.kodex = new Kodex<String>( Cypher.RSA_OAEP_SHA1_1024, Cypher.AES_CTR_PKCS5_128, pair.getPublic() );
-        this.kodex.unseal( pair.getPrivate() );
+        this.kodex.unseal( pair.getPublic(), pair.getPrivate() );
         this.mapper = KodexObjectMapperFactory.getObjectMapper( kodex );
         this.crypto = new CryptoService( Cypher.AES_CTR_PKCS5_128, new BigInteger( 130, new SecureRandom() ).toString(
                 32 ).toCharArray() );

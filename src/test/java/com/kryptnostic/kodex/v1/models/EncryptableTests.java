@@ -55,7 +55,7 @@ public class EncryptableTests {
         PrivateKey privateKey = new PrivateKey( PRIVATE_KEY_BLOCK_SIZE * 2, PRIVATE_KEY_BLOCK_SIZE );
         PublicKey publicKey = new PublicKey( privateKey );
 
-        kodex.unseal( pair.getPrivate() );
+        kodex.unseal( pair.getPublic(), pair.getPrivate() );
         kodex.setKey( PrivateKey.class.getCanonicalName(), new JacksonKodexMarshaller<PrivateKey>(
                 PrivateKey.class,
                 mapper ), privateKey );
