@@ -10,6 +10,7 @@ import java.security.PublicKey;
 import java.security.SignatureException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
@@ -39,27 +40,27 @@ import com.kryptnostic.kodex.v1.serialization.jackson.KodexObjectMapperFactory;
     use = JsonTypeInfo.Id.CLASS,
     include = As.PROPERTY,
     property = Names.CLASS_FIELD )
-public class Kodex<K> implements Serializable {
-    private static final long             serialVersionUID     = 5021271922876183846L;
-    private static final ObjectMapper     mapper               = KodexObjectMapperFactory.getObjectMapper();
-    private static final String           SEAL_FIELD           = "sealingAlgorithm";
-    private static final String           KEY_PROTECTION_FIELD = "keyProtectionAlgorithm";
-    private static final String           SEALED_KEY_FIELD     = "sealedKey";
-    private static final String           KEY_RING_FIELD       = "keyRing";
-    private static final String           SEAL_SIGNATURE       = "sealSignature";
+public class Kodex<K extends Comparable<K>> implements Serializable {
+    private static final long                 serialVersionUID     = 5021271922876183846L;
+    private static final ObjectMapper         mapper               = KodexObjectMapperFactory.getObjectMapper();
+    private static final String               SEAL_FIELD           = "sealingAlgorithm";
+    private static final String               KEY_PROTECTION_FIELD = "keyProtectionAlgorithm";
+    private static final String               SEALED_KEY_FIELD     = "sealedKey";
+    private static final String               KEY_RING_FIELD       = "keyRing";
+    private static final String               SEAL_SIGNATURE       = "sealSignature";
 
-    private static final byte[]           empty                = new byte[ 0 ];
+    private static final byte[]               empty                = new byte[ 0 ];
 
-    private transient AesCryptoService    service              = null;
-    private transient PrivateKey          privateKey;
-    private transient boolean             dirty                = false;
+    private transient AesCryptoService        service              = null;
+    private transient PrivateKey              privateKey;
+    private transient boolean                 dirty                = false;
 
-    private final ReadWriteLock           lock                 = new ReentrantReadWriteLock();
-    private final Cypher                  seal;
-    private final Cypher                  keyProtectionAlgorithm;
-    private final byte[]                  encryptedKey;
-    private final Map<K, BlockCiphertext> keyring;
-    private byte[]                        signature;
+    private final ReadWriteLock               lock                 = new ReentrantReadWriteLock();
+    private final Cypher                      seal;
+    private final Cypher                      keyProtectionAlgorithm;
+    private final byte[]                      encryptedKey;
+    private final TreeMap<K, BlockCiphertext> keyring;
+    private byte[]                            signature;
 
     public Kodex( Cypher seal, Cypher keyProtectionAlgorithm, PublicKey publicKey ) throws NoSuchAlgorithmException,
             InvalidAlgorithmParameterException,
@@ -116,7 +117,7 @@ public class Kodex<K> implements Serializable {
         this.seal = seal;
         this.keyProtectionAlgorithm = keyProtectionAlgorithm;
         this.encryptedKey = encryptedKey;
-        this.keyring = Maps.newConcurrentMap();
+        this.keyring = Maps.newTreeMap();
         this.keyring.putAll( keyring );
         this.signature = signature;
         seal();
@@ -188,9 +189,13 @@ public class Kodex<K> implements Serializable {
             SealedKodexException, KodexException {
         checkAndThrowIfSealed();
         try {
+            for ( K existing : keyring.keySet() ) {
+                if ( !existing.equals( key ) && existing.compareTo( key ) == 0 ) {
+                    throw new KodexException( "Keys cannot compare to zero, when they are not equal." );
+                }
+            }
             keyring.put( key, service.encrypt( marshaller.toBytes( object ), empty ) );
             dirty = true;
-
         } catch ( IOException e ) {
             throw new KodexException( e );
         }
@@ -263,6 +268,9 @@ public class Kodex<K> implements Serializable {
 
     public void verify( PublicKey publicKey ) throws InvalidKeyException, SignatureException, CorruptKodexException,
             JsonProcessingException {
+        if ( privateKey != null ) {
+            updateSignature();
+        }
         if ( signature.length != 0 ) {
             if ( !Keys.verify( publicKey, SignatureAlgorithm.SHA512withRSA, signature, signatureData() ) ) {
                 throw new CorruptKodexException( "Kodex signature validation failed" );

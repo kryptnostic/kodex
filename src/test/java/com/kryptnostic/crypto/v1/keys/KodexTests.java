@@ -1,5 +1,6 @@
 package com.kryptnostic.crypto.v1.keys;
 
+import java.io.File;
 import java.io.IOException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
@@ -118,15 +119,20 @@ public class KodexTests {
         BitVector actualKey = BitVectors.fromSquareMatrix( iL.multiply( bridgeKey.getBridge() ).multiply( iR ) );
 
         Assert.assertEquals( expectedKey, actualKey );
-        expected.setKeyWithJackson( QueryHasherPairRequest.class.getCanonicalName() , new QueryHasherPairRequest( left , right ) , QueryHasherPairRequest.class );
+        expected.setKeyWithJackson( QueryHasherPairRequest.class.getCanonicalName(), new QueryHasherPairRequest(
+                left,
+                right ), QueryHasherPairRequest.class );
 
         ObjectMapper mapper = KodexObjectMapperFactory.getObjectMapper();
-
-        byte[] k = mapper.writeValueAsBytes( expected );
+        expected.verify( pair.getPublic() );
+        String k = mapper.writeValueAsString( expected );
         Kodex<String> actual = mapper.readValue( k, new TypeReference<Kodex<String>>() {} );
+        String k2 = mapper.writeValueAsString( actual );
+
+        Assert.assertEquals( k, k2 );
 
         Assert.assertTrue( actual.isSealed() );
-        actual.verify( pair.getPublic() );
+
         actual.unseal( pair.getPrivate() );
         actual.verify( pair.getPublic() );
 
@@ -143,9 +149,9 @@ public class KodexTests {
                 EncryptedSearchPrivateKey.class );
 
         QueryHasherPairRequest reloaded = actual.getKeyWithJackson( QueryHasherPairRequest.class );
-        
-        bridgeKey = new EncryptedSearchBridgeKey( recoveredSearchKey, sharingKey );        
-        
+
+        bridgeKey = new EncryptedSearchBridgeKey( recoveredSearchKey, sharingKey );
+
         left = reloaded.getLeft();
         right = reloaded.getRight();
 
@@ -153,9 +159,9 @@ public class KodexTests {
         iR = EnhancedBitMatrix.squareMatrixfromBitVector( right.apply( BitVectors.concatenate( encT, encN ) ) );
 
         actualKey = BitVectors.fromSquareMatrix( iL.multiply( bridgeKey.getBridge() ).multiply( iR ) );
-        
+
         Assert.assertEquals( expectedKey, actualKey );
-        
+
         Assert.assertEquals( searchKey.getLeftSquaringMatrix(), recoveredSearchKey.getLeftSquaringMatrix() );
         Assert.assertEquals( searchKey.getRightSquaringMatrix(), recoveredSearchKey.getRightSquaringMatrix() );
     }
