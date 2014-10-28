@@ -96,7 +96,7 @@ public class KodexTests {
         EncryptedSearchSharingKey sharingKey = new EncryptedSearchSharingKey( searchKey.newDocumentKey() );
         EncryptedSearchBridgeKey bridgeKey = new EncryptedSearchBridgeKey( searchKey, sharingKey );
 
-        BitVector test = BitVectors.randomVector( 64 );
+        BitVector test = searchKey.hash( "serialization" );
         BitVector nonce = BitVectors.randomVector( 64 );
 
         BitVector encT = publicKey.getEncrypter().apply( test, BitVectors.randomVector( 64 ) );
@@ -122,7 +122,7 @@ public class KodexTests {
 
         ObjectMapper mapper = KodexObjectMapperFactory.getObjectMapper();
 
-        String k = mapper.writeValueAsString( expected );
+        byte[] k = mapper.writeValueAsBytes( expected );
         Kodex<String> actual = mapper.readValue( k, new TypeReference<Kodex<String>>() {} );
 
         Assert.assertTrue( actual.isSealed() );
@@ -143,6 +143,8 @@ public class KodexTests {
                 EncryptedSearchPrivateKey.class );
 
         QueryHasherPairRequest reloaded = actual.getKeyWithJackson( QueryHasherPairRequest.class );
+        
+        bridgeKey = new EncryptedSearchBridgeKey( recoveredSearchKey, sharingKey );        
         
         left = reloaded.getLeft();
         right = reloaded.getRight();

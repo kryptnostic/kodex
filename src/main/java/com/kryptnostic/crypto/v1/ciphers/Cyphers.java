@@ -22,6 +22,7 @@ import com.kryptnostic.kodex.v1.exceptions.types.SecurityConfigurationException;
 
 public final class Cyphers {
     private static final SecureRandom random;
+    @SuppressWarnings( "unused" )
     private static final Logger       logger = LoggerFactory.getLogger( Cyphers.class );
 
     private Cyphers() {}

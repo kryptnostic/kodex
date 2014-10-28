@@ -10,14 +10,23 @@ import com.kryptnostic.multivariate.gf2.SimplePolynomialFunction;
 import com.kryptnostic.storage.v1.models.request.QueryHasherPairRequest;
 
 public interface SearchFunctionApi {
-    String SEARCH_FUNCTION = "/searchFunction";
-
-    @POST( SEARCH_FUNCTION + "/hasher" )
+    String CONTROLLER = "/searchFunction";
+    
+    String HASHER = "/hasher";
+    String CHECKSUM = "/checksum";
+    
+    @POST( CONTROLLER + HASHER )
     BasicResponse<String> setQueryHasherPair( @Body QueryHasherPairRequest request );
 
-    @GET( SEARCH_FUNCTION + "/hasher" )
+    @GET( CONTROLLER + HASHER )
     BasicResponse<Boolean> hasQueryHasherPair();
 
-    @GET( SEARCH_FUNCTION )
+    @GET( CONTROLLER )
     SimplePolynomialFunction getFunction() throws ResourceNotFoundException;
+    
+    @GET( CONTROLLER + CHECKSUM )
+    BasicResponse<String> getGlobalHasherChecksum();
+    
+    @GET( CONTROLLER +HASHER )
+    BasicResponse<String> getQueryHasherChecksum();
 }

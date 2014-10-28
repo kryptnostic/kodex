@@ -3,6 +3,8 @@ package com.kryptnostic.kodex.v1.exceptions.types;
 import retrofit.RetrofitError;
 
 public class IrisException extends Exception {
+    private static final long serialVersionUID = -7047837475537390107L;
+
     public IrisException() {
 
     }

@@ -1,11 +1,14 @@
 package com.kryptnostic.storage.v1.models.request;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.google.common.hash.HashFunction;
+import com.google.common.hash.Hashing;
 import com.kryptnostic.crypto.v1.keys.JacksonKodexMarshaller;
 import com.kryptnostic.multivariate.gf2.SimplePolynomialFunction;
 
@@ -51,13 +54,21 @@ public class QueryHasherPairRequest {
     public SimplePolynomialFunction getRight() throws IOException {
         return marshaller.fromBytes( right );
     }
+
+    public String computeChecksum() {
+        return computeChecksum( Hashing.murmur3_128() );
+    }
+    
+    public String computeChecksum( HashFunction hf ) {
+        return hf.hashBytes( left ).toString() + hf.hashBytes( right ).toString();
+    }
     
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ( ( left == null ) ? 0 : left.hashCode() );
-        result = prime * result + ( ( right == null ) ? 0 : right.hashCode() );
+        result = prime * result + Arrays.hashCode( left );
+        result = prime * result + Arrays.hashCode( right );
         return result;
     }
 
@@ -73,18 +84,10 @@ public class QueryHasherPairRequest {
             return false;
         }
         QueryHasherPairRequest other = (QueryHasherPairRequest) obj;
-        if ( left == null ) {
-            if ( other.left != null ) {
-                return false;
-            }
-        } else if ( !left.equals( other.left ) ) {
+        if ( !Arrays.equals( left, other.left ) ) {
             return false;
         }
-        if ( right == null ) {
-            if ( other.right != null ) {
-                return false;
-            }
-        } else if ( !right.equals( other.right ) ) {
+        if ( !Arrays.equals( right, other.right ) ) {
             return false;
         }
         return true;

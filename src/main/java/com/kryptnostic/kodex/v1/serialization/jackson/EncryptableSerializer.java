@@ -49,6 +49,7 @@ public class EncryptableSerializer extends JsonSerializer<Encryptable> {
         jgen.writeEndObject();
     }
 
+    @SuppressWarnings( "unchecked" )
     private void writeFields( Encryptable value, JsonGenerator jgen, SerializerProvider provider ) throws IOException,
             SecurityConfigurationException {
         Encryptable<?> encryptedValue = value.encrypt( kodex );

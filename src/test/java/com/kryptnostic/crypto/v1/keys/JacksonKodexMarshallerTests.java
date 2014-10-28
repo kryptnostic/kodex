@@ -1,7 +1,6 @@
 package com.kryptnostic.crypto.v1.keys;
 
 import java.io.IOException;
-import java.util.Arrays;
 
 import org.junit.Assert;
 import org.junit.Test;
