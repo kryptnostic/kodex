@@ -2,6 +2,7 @@ package com.kryptnostic.kodex.v1.models.utils;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.Arrays;
 
 import cern.colt.bitvector.BitVector;
 
@@ -67,6 +68,36 @@ public class SimplePolynomialFunctionValidator implements Serializable {
         return marshaller.toBytes( this );
     }
     
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + Arrays.hashCode( inputs );
+        result = prime * result + Arrays.hashCode( outputs );
+        return result;
+    }
+
+    @Override
+    public boolean equals( Object obj ) {
+        if ( this == obj ) {
+            return true;
+        }
+        if ( obj == null ) {
+            return false;
+        }
+        if ( !( obj instanceof SimplePolynomialFunctionValidator ) ) {
+            return false;
+        }
+        SimplePolynomialFunctionValidator other = (SimplePolynomialFunctionValidator) obj;
+        if ( !Arrays.equals( inputs, other.inputs ) ) {
+            return false;
+        }
+        if ( !Arrays.equals( outputs, other.outputs ) ) {
+            return false;
+        }
+        return true;
+    }
+
     public static SimplePolynomialFunctionValidator fromBytes( byte[] b ) throws IOException {
         return marshaller.fromBytes( b );
     }
