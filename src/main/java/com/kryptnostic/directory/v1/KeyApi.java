@@ -33,7 +33,7 @@ public interface KeyApi {
 
     @Timed
     @PUT( CONTROLLER + PUBLIC_KEY )
-    BasicResponse<String> setPublicKey(@Body PublicKeyEnvelope publicKey );
+    BasicResponse<String> setPublicKey( @Body PublicKeyEnvelope publicKey );
 
     @Timed
     @GET( CONTROLLER + PRIVATE_KEY )
@@ -41,7 +41,7 @@ public interface KeyApi {
 
     @Timed
     @PUT( CONTROLLER + PRIVATE_KEY )
-    BasicResponse<String> setPrivateKey(@Body BlockCiphertext encryptedPrivateKey );
+    BasicResponse<String> setPrivateKey( @Body BlockCiphertext encryptedPrivateKey );
 
     @Timed
     @GET( CONTROLLER + KODEX )
@@ -52,6 +52,6 @@ public interface KeyApi {
     BasicResponse<String> setKodex( @Body Kodex<String> kodex );
 
     @Timed
-    @GET( CONTROLLER + DOCUMENT_KEY + PARAM.ID)
+    @GET( CONTROLLER + DOCUMENT_KEY + PARAM.ID )
     BasicResponse<byte[]> getDocumentId( @Path( Names.ID_FIELD ) String id );
 }

@@ -22,7 +22,7 @@ public interface SharingApi {
     String KEYS           = "/keys";
 
     @GET( CONTROLLER + SHARE_DOCUMENT )
-    IncomingShares getIncomingShares();
+    public IncomingShares getIncomingShares();
 
     @POST( CONTROLLER + SHARE_DOCUMENT )
     BasicResponse<String> shareDocument( @Body SharingRequest request );

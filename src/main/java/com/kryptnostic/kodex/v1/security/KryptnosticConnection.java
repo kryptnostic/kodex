@@ -16,6 +16,9 @@ public interface KryptnosticConnection {
 
     String getUserCredential();
 
+    java.security.PrivateKey getRsaPrivateKey();
+    java.security.PublicKey getRsaPublicKey();
+    
     UserKey getUserKey();
 
     String getUrl();
