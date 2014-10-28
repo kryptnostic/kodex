@@ -27,7 +27,7 @@ apply plugin: "idea"
 apply from: "publish.gradle"
 apply plugin: "jacoco"
 
-sourceCompatibility=JavaVersion.VERSION_1_6
+sourceCompatibility=JavaVersion.VERSION_1_7
 
 repositories {
   mavenCentral()  
@@ -120,17 +120,27 @@ task javadocJar(type: Jar) {
     from javadoc
 }
 
+task testJar(type: Jar, dependsOn: testClasses) {
+    baseName = "test-${project.archivesBaseName}"
+    from sourceSets.test.output
+}
+
+configurations {
+    tests
+}
+
 artifacts {
 	archives sourcesJar, javadocJar
+	tests testJar
 }
 
 eclipse {
     ext.downloadSources = true
     ext.downloadJavadoc = true
-    ext.sourceCompatibility=JavaVersion.VERSION_1_6
+    ext.sourceCompatibility=JavaVersion.VERSION_1_7
     classpath {
          containers.remove('org.eclipse.jdt.launching.JRE_CONTAINER')
-         containers 'org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6'
+         containers 'org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7'
     }
 }
 

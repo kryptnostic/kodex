@@ -14,60 +14,96 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kryptnostic.crypto.Ciphertext;
 import com.kryptnostic.crypto.PrivateKey;
 import com.kryptnostic.crypto.PublicKey;
+import com.kryptnostic.crypto.v1.keys.JacksonKodexMarshaller;
+import com.kryptnostic.crypto.v1.keys.Kodex;
+import com.kryptnostic.crypto.v1.keys.Kodex.SealedKodexException;
+import com.kryptnostic.kodex.v1.exceptions.types.KodexException;
 import com.kryptnostic.kodex.v1.exceptions.types.SecurityConfigurationException;
-import com.kryptnostic.kodex.v1.security.SecurityConfigurationMapping;
 import com.kryptnostic.kodex.v1.serialization.jackson.KodexObjectMapperFactory;
 
 public class FheEncryptable<T> extends Encryptable<T> {
+    private static final long                         serialVersionUID       = -4740442054069941609L;
+    private final static ObjectMapper                 mapper                 = KodexObjectMapperFactory
+                                                                                     .getObjectMapper();
+    private static JacksonKodexMarshaller<PublicKey>  publicKeyKodexFactory  = new JacksonKodexMarshaller<PublicKey>(
+                                                                                     PublicKey.class,
+                                                                                     mapper );
+    private static JacksonKodexMarshaller<PrivateKey> privateKeyKodexFactory = new JacksonKodexMarshaller<PrivateKey>(
 
-    private final static ObjectMapper mapper = ( new KodexObjectMapperFactory() ).getObjectMapper(null);
+                                                                             PrivateKey.class, mapper );
 
-    public FheEncryptable(T data) {
-        super(data);
+    public FheEncryptable( T data ) {
+        super( data );
     }
 
-    public FheEncryptable(Ciphertext ciphertext, Ciphertext className) {
-        super(ciphertext, className);
+    public FheEncryptable( Ciphertext ciphertext, Ciphertext className ) {
+        super( ciphertext, className );
     }
 
     @JsonCreator
-    public FheEncryptable(@JsonProperty(FIELD_ENCRYPTED_DATA) Ciphertext ciphertext,
-            @JsonProperty(FIELD_ENCRYPTED_CLASS_NAME) Ciphertext className,
-            @JacksonInject SecurityConfigurationMapping mapping) throws JsonParseException, JsonMappingException,
-            IOException, ClassNotFoundException, SecurityConfigurationException {
-        super(ciphertext, className, mapping);
+    public FheEncryptable(
+            @JsonProperty( FIELD_ENCRYPTED_DATA ) Ciphertext ciphertext,
+            @JsonProperty( FIELD_ENCRYPTED_CLASS_NAME ) Ciphertext className,
+            @JacksonInject Kodex<String> kodex ) throws JsonParseException,
+            JsonMappingException,
+            IOException,
+            ClassNotFoundException,
+            SecurityConfigurationException {
+        super( ciphertext, className, kodex );
     }
 
     @Override
-    protected Encryptable<T> encryptWith(SecurityConfigurationMapping service) throws JsonProcessingException {
-        PublicKey key = service.get(FheEncryptable.class, PublicKey.class);
-        if (key == null) {
-            throw new NullPointerException("No public key found");
+    protected Encryptable<T> encryptWith( Kodex<String> kodex ) throws SecurityConfigurationException {
+        PublicKey key;
+        Ciphertext encryptedData = null;
+        Ciphertext encryptedClassName = null;
+        try {
+            key = kodex.getKey( PublicKey.class.getCanonicalName(), publicKeyKodexFactory );
+            if ( key == null ) {
+                throw new NullPointerException( "No public key found" );
+            }
+            encryptedData = key.encryptIntoEnvelope( mapper.writeValueAsBytes( getData() ) );
+            encryptedClassName = key.encryptIntoEnvelope( getClassName().getBytes() );
+            return new FheEncryptable<T>( encryptedData, encryptedClassName );
+        } catch ( SealedKodexException | SecurityConfigurationException | KodexException | JsonProcessingException e ) {
+            throw new SecurityConfigurationException( e );
         }
-        Ciphertext encryptedData = key.encryptIntoEnvelope(mapper.writeValueAsBytes(getData()));
-        Ciphertext encryptedClassName = key.encryptIntoEnvelope(getClassName().getBytes());
-        return new FheEncryptable<T>(encryptedData, encryptedClassName);
     }
 
     @Override
-    protected Encryptable<T> decryptWith(SecurityConfigurationMapping service) throws JsonParseException,
-            JsonMappingException, IOException, ClassNotFoundException {
-        PrivateKey key = service.get(FheEncryptable.class, PrivateKey.class);
-        String className = StringUtils.newStringUtf8(key.decryptFromEnvelope(getEncryptedClassName()));
-        byte[] objectBytes = key.decryptFromEnvelope(getEncryptedData());
-        @SuppressWarnings("unchecked")
-        T obj = mapper.<T> readValue(objectBytes, (Class<T>) Class.forName(className));
-        return new FheEncryptable<T>(obj);
+    protected Encryptable<T> decryptWith( Kodex<String> kodex ) throws SecurityConfigurationException {
+        PrivateKey key;
+        try {
+            key = kodex.getKey( PrivateKey.class.getCanonicalName(), privateKeyKodexFactory );
+            String className = StringUtils.newStringUtf8( key.decryptFromEnvelope( getEncryptedClassName() ) );
+            byte[] objectBytes = key.decryptFromEnvelope( getEncryptedData() );
+            @SuppressWarnings( "unchecked" )
+            T obj = mapper.<T> readValue( objectBytes, (Class<T>) Class.forName( className ) );
+            return new FheEncryptable<T>( obj );
+        } catch (
+                SealedKodexException
+                | SecurityConfigurationException
+                | KodexException
+                | ClassNotFoundException
+                | IOException e ) {
+            throw new SecurityConfigurationException( e );
+        }
     }
 
     @Override
-    protected Encryptable<T> createEncrypted(Ciphertext ciphertext, Ciphertext className) {
-        return new FheEncryptable<T>(ciphertext, className);
+    protected Encryptable<T> createEncrypted( Ciphertext ciphertext, Ciphertext className ) {
+        return new FheEncryptable<T>( ciphertext, className );
     }
 
     @Override
-    protected boolean canDecryptWith(SecurityConfigurationMapping mapping) {
-        return mapping.contains(FheEncryptable.class, PrivateKey.class);
+    protected boolean canDecryptWith( Kodex<String> kodex ) {
+        try {
+            return kodex.containsKey( PrivateKey.class.getCanonicalName() );
+        } catch ( SealedKodexException e ) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return false;
     }
 
 }

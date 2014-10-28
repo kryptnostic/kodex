@@ -6,15 +6,32 @@ import retrofit.http.POST;
 
 import com.kryptnostic.kodex.v1.exceptions.types.ResourceNotFoundException;
 import com.kryptnostic.kodex.v1.models.response.BasicResponse;
+import com.kryptnostic.kodex.v1.models.utils.SimplePolynomialFunctionValidator;
 import com.kryptnostic.multivariate.gf2.SimplePolynomialFunction;
-import com.kryptnostic.search.v1.models.request.SearchFunctionUploadRequest;
+import com.kryptnostic.storage.v1.models.request.QueryHasherPairRequest;
 
 public interface SearchFunctionApi {
-    String SEARCH_FUNCTION = "/searchFunction";
+    String CONTROLLER = "/searchFunction";
     
-    @POST(SEARCH_FUNCTION)
-    BasicResponse<Boolean> setFunction(@Body SearchFunctionUploadRequest request);
+    String HASHER = "/hasher";
+    String CHECKSUM = "/checksum";
+    String VALIDATE = "/validate";
     
-    @GET(SEARCH_FUNCTION)
-    BasicResponse<SimplePolynomialFunction> getFunction() throws ResourceNotFoundException;
+    @POST( CONTROLLER + HASHER )
+    BasicResponse<String> setQueryHasherPair( @Body QueryHasherPairRequest request );
+    
+    @POST( CONTROLLER + HASHER + VALIDATE)
+    BasicResponse<Boolean> validateQueryHasherPair( @Body SimplePolynomialFunctionValidator[] validators );
+
+    @GET( CONTROLLER + HASHER )
+    BasicResponse<Boolean> hasQueryHasherPair();
+
+    @GET( CONTROLLER )
+    SimplePolynomialFunction getFunction() throws ResourceNotFoundException;
+    
+    @GET( CONTROLLER + CHECKSUM )
+    BasicResponse<String> getGlobalHasherChecksum();
+    
+    @GET( CONTROLLER + HASHER + CHECKSUM  )
+    BasicResponse<String> getQueryHasherChecksum();
 }

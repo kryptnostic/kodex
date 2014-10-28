@@ -6,45 +6,50 @@ import com.fasterxml.jackson.core.Version;
 import com.fasterxml.jackson.databind.module.SimpleDeserializers;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.module.SimpleSerializers;
+import com.kryptnostic.crypto.v1.keys.Kodex;
 import com.kryptnostic.kodex.v1.models.Encryptable;
-import com.kryptnostic.kodex.v1.security.SecurityConfigurationMapping;
 import com.kryptnostic.multivariate.gf2.Monomial;
 
-@SuppressWarnings("serial")
+@SuppressWarnings( "serial" )
 public class KodexModule extends SimpleModule {
     // TODO: I'd like to read this version info from one place or not have it here at all
-    public static final Version KODEX_JACKSON_MODULE_VERSION = new Version(0, 0, 1, "SNAPSHOT", "com.kryptnostic",
-            "kodex");
-    protected SecurityConfigurationMapping securityConfiguration;
+    public static final Version KODEX_JACKSON_MODULE_VERSION = new Version(
+                                                                     0,
+                                                                     0,
+                                                                     1,
+                                                                     "SNAPSHOT",
+                                                                     "com.kryptnostic",
+                                                                     "kodex" );
+    protected Kodex<String>             kodex;
 
     public KodexModule() {
-        super("KodexModule", KODEX_JACKSON_MODULE_VERSION);
-        this.securityConfiguration = null;
+        super( "KodexModule", KODEX_JACKSON_MODULE_VERSION );
+        this.kodex = null;
     }
 
-    public KodexModule(SecurityConfigurationMapping securityConfiguration) {
-        super("KodexModule", KODEX_JACKSON_MODULE_VERSION);
+    public KodexModule( Kodex<String> kodex ) {
+        super( "KodexModule", KODEX_JACKSON_MODULE_VERSION );
 
-        this.securityConfiguration = securityConfiguration;
+        this.kodex = kodex;
     }
 
     @Override
     /**
      * All new Jackson de/serializers need to be added here
      */
-    public void setupModule(SetupContext context) {
-        super.setupModule(context);
+    public void setupModule( SetupContext context ) {
+        super.setupModule( context );
 
         SimpleSerializers serializers = new SimpleSerializers();
-        serializers.addSerializer(BitVector.class, new BitVectorSerializer());
-        serializers.addSerializer(Monomial.class, new MonomialSerializer());
-        serializers.addSerializer(Encryptable.class, new EncryptableSerializer(securityConfiguration));
+        serializers.addSerializer( BitVector.class, new BitVectorSerializer() );
+        serializers.addSerializer( Monomial.class, new MonomialSerializer() );
+        serializers.addSerializer( Encryptable.class, new EncryptableSerializer( kodex ) );
 
         SimpleDeserializers deserializers = new SimpleDeserializers();
-        deserializers.addDeserializer(BitVector.class, new BitVectorDeserializer());
-        deserializers.addDeserializer(Monomial.class, new MonomialDeserializer());
+        deserializers.addDeserializer( BitVector.class, new BitVectorDeserializer() );
+        deserializers.addDeserializer( Monomial.class, new MonomialDeserializer() );
 
-        context.addSerializers(serializers);
-        context.addDeserializers(deserializers);
+        context.addSerializers( serializers );
+        context.addDeserializers( deserializers );
     }
 }

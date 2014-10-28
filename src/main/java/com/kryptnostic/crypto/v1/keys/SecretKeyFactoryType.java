@@ -20,7 +20,8 @@ public enum SecretKeyFactoryType {
     PBEWithHmacSHA512AndAES_128,
     PBEWithHmacSHA256AndAES_256,
     PBEWithHmacSHA384AndAES_256,
-    PBEWithHmacSHA512AndAES_256;
+    PBEWithHmacSHA512AndAES_256,
+    AES;
     
     private static final Map<String, SecretKeyFactoryType> mapper = Maps.newHashMap();
     static {

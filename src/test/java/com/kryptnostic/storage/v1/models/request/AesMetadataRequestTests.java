@@ -1,7 +1,18 @@
 package com.kryptnostic.storage.v1.models.request;
 
 import java.io.IOException;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.KeyPair;
+import java.security.NoSuchAlgorithmException;
+import java.security.SignatureException;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.InvalidParameterSpecException;
 import java.util.Arrays;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 
 import org.hamcrest.CoreMatchers;
 import org.junit.Assert;
@@ -16,55 +27,65 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.kryptnostic.bitwise.BitVectors;
 import com.kryptnostic.crypto.v1.ciphers.CryptoService;
 import com.kryptnostic.crypto.v1.ciphers.Cypher;
+import com.kryptnostic.crypto.v1.keys.JacksonKodexMarshaller;
+import com.kryptnostic.crypto.v1.keys.Keys;
+import com.kryptnostic.crypto.v1.keys.Kodex;
+import com.kryptnostic.crypto.v1.keys.Kodex.CorruptKodexException;
+import com.kryptnostic.crypto.v1.keys.Kodex.SealedKodexException;
+import com.kryptnostic.kodex.v1.exceptions.types.KodexException;
 import com.kryptnostic.kodex.v1.exceptions.types.SecurityConfigurationException;
-import com.kryptnostic.kodex.v1.indexing.metadata.Metadatum;
+import com.kryptnostic.kodex.v1.indexing.metadata.Metadata;
 import com.kryptnostic.kodex.v1.models.AesEncryptable;
 import com.kryptnostic.kodex.v1.models.Encryptable;
-import com.kryptnostic.kodex.v1.security.SecurityConfigurationMapping;
+import com.kryptnostic.sharing.v1.DocumentId;
+import com.kryptnostic.users.v1.UserKey;
 
 public class AesMetadataRequestTests extends AesEncryptableBase {
-
-    private static final int INDEX_LENGTH = 256;    
+    private static final UserKey user         = new UserKey( "kryptnostic", "tester" );
+    private static final int     INDEX_LENGTH = 256;
 
     @Rule
-    public ExpectedException exception = ExpectedException.none();
+    public ExpectedException     exception    = ExpectedException.none();
 
     @Test
     /**
      * Does implicit deserialization produce an Encryptable in a PLAIN state in the PRESENCE of a private key?
      * @throws IOException
      */
-    public void testImplicitDeserialization() throws IOException, SecurityConfigurationException {
+    public void testImplicitDeserialization() throws IOException, SecurityConfigurationException, InvalidKeyException,
+            NoSuchAlgorithmException, InvalidAlgorithmParameterException, IllegalBlockSizeException,
+            BadPaddingException, NoSuchPaddingException, InvalidKeySpecException, InvalidParameterSpecException,
+            SealedKodexException, SignatureException, CorruptKodexException, KodexException {
         initImplicitEncryption();
 
-        BitVector key = BitVectors.randomVector(INDEX_LENGTH);
-        Metadatum metadatum = new Metadatum("TEST", "test", Arrays.asList(1, 2, 3));
-        Encryptable<Metadatum> data = new AesEncryptable<Metadatum>(metadatum);
+        BitVector key = BitVectors.randomVector( INDEX_LENGTH );
+        Metadata metadatum = new Metadata( new DocumentId( "TEST", user ), "test", Arrays.asList( 1, 2, 3 ) );
+        Encryptable<Metadata> data = new AesEncryptable<Metadata>( metadatum );
 
         // explicit encryption to generate some json
-        data = (AesEncryptable<Metadatum>) data.encrypt(this.config);
+        data = data.encrypt( this.kodex );
 
-        String encryptedData = serialize(data.getEncryptedData());
-        String encryptedClassName = serialize(data.getEncryptedClassName());
+        String encryptedData = serialize( data.getEncryptedData() );
+        String encryptedClassName = serialize( data.getEncryptedClassName() );
 
-        System.out.println(encryptedData);
-        System.out.println(encryptedClassName);
+        System.out.println( encryptedData );
+        System.out.println( encryptedClassName );
 
-        String expected = "{\"metadata\":[{\"key\":" + wrapQuotes(BitVectors.marshalBitvector(key)) + ",\"data\":{\""
-                + Encryptable.FIELD_ENCRYPTED_DATA + "\":" + encryptedData + ",\""
+        String expected = "{\"metadata\":[{\"key\":" + wrapQuotes( BitVectors.marshalBitvector( key ) )
+                + ",\"data\":{\"" + Encryptable.FIELD_ENCRYPTED_DATA + "\":" + encryptedData + ",\""
                 + Encryptable.FIELD_ENCRYPTED_CLASS_NAME + "\":" + encryptedClassName + ",\"" + Encryptable.FIELD_CLASS
                 + "\":\"" + data.getClass().getCanonicalName() + "\"}}]}";
 
-        MetadataRequest deserialized = deserialize(expected, MetadataRequest.class);
+        MetadataRequest deserialized = deserialize( expected, MetadataRequest.class );
 
         IndexedMetadata meta = deserialized.getMetadata().iterator().next();
 
         // Ensure the key matches
-        Assert.assertEquals(key, meta.getKey());
+        Assert.assertEquals( key, meta.getKey() );
         // Ensure we decrypted the metadata successfully
-        Assert.assertNull(meta.getData().getEncryptedClassName());
-        Assert.assertEquals(metadatum.getClass().getName(), meta.getData().getClassName());
-        Assert.assertEquals(metadatum, meta.getData().getData());
+        Assert.assertNull( meta.getData().getEncryptedClassName() );
+        Assert.assertEquals( metadatum.getClass().getName(), meta.getData().getClassName() );
+        Assert.assertEquals( metadatum, meta.getData().getData() );
     }
 
     @Test
@@ -72,50 +93,48 @@ public class AesMetadataRequestTests extends AesEncryptableBase {
      * Does implicit deserialization produces an Encryptable in an ENCRYPTED state in the ABSENCE of a private key?
      * @throws IOException
      */
-    public void testImplicitDeserializationKeyless() throws IOException, SecurityConfigurationException {
+    public void testImplicitDeserializationKeyless() throws IOException, SecurityConfigurationException,
+            InvalidKeyException, NoSuchAlgorithmException, InvalidAlgorithmParameterException,
+            IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, InvalidKeySpecException,
+            InvalidParameterSpecException, SealedKodexException, SignatureException, CorruptKodexException,
+            KodexException {
         initImplicitEncryption();
 
-        BitVector key = BitVectors.randomVector(INDEX_LENGTH);
-        Metadatum metadatum = new Metadatum("TEST", "test", Arrays.asList(1, 2, 3));
-        Encryptable<Metadatum> data = new AesEncryptable<Metadatum>(metadatum);
+        BitVector key = BitVectors.randomVector( INDEX_LENGTH );
+        Metadata metadatum = new Metadata( new DocumentId( "TEST", user ), "test", Arrays.asList( 1, 2, 3 ) );
+        Encryptable<Metadata> data = new AesEncryptable<Metadata>( metadatum );
 
         // explicit encryption to generate some json
-        data = data.encrypt(config);
+        data = data.encrypt( kodex );
 
-        String encryptedData = serialize(data.getEncryptedData());
-        String encryptedClassName = serialize(data.getEncryptedClassName());
+        String encryptedData = serialize( data.getEncryptedData() );
+        String encryptedClassName = serialize( data.getEncryptedClassName() );
 
-        String expected = "{\"metadata\":[{\"key\":" + wrapQuotes(BitVectors.marshalBitvector(key)) + ",\"data\":{\""
-                + Encryptable.FIELD_CLASS + "\":\"" + data.getClass().getCanonicalName() + "\",\""
+        String expected = "{\"metadata\":[{\"key\":" + wrapQuotes( BitVectors.marshalBitvector( key ) )
+                + ",\"data\":{\"" + Encryptable.FIELD_CLASS + "\":\"" + data.getClass().getCanonicalName() + "\",\""
                 + Encryptable.FIELD_ENCRYPTED_DATA + "\":" + encryptedData + ",\""
                 + Encryptable.FIELD_ENCRYPTED_CLASS_NAME + "\":" + encryptedClassName + "}}]}";
 
         // kill private key!
-        this.crypto = null;
         resetSecurityConfiguration();
 
-        MetadataRequest deserialized = deserialize(expected, MetadataRequest.class);
+        MetadataRequest deserialized = deserialize( expected, MetadataRequest.class );
 
         IndexedMetadata meta = deserialized.getMetadata().iterator().next();
 
         // ensure nothing was decrypted
-        Assert.assertEquals(key, meta.getKey());
-        Assert.assertNull(meta.getData().getClassName());
-        Assert.assertNull(meta.getData().getData());
+        Assert.assertEquals( key, meta.getKey() );
+        Assert.assertNull( meta.getData().getClassName() );
+        Assert.assertNull( meta.getData().getData() );
 
         // and ensure nothing was screwed up in the ciphertext as a result of deserialization
-        Assert.assertArrayEquals(data.getEncryptedData().getContents(), meta.getData().getEncryptedData().getContents());
-        Assert.assertArrayEquals(data.getEncryptedData().getLength(), meta.getData().getEncryptedData().getLength());
-        Assert.assertArrayEquals(data.getEncryptedClassName().getContents(), meta.getData().getEncryptedClassName()
-                .getContents());
-        Assert.assertArrayEquals(data.getEncryptedClassName().getLength(), meta.getData().getEncryptedClassName()
-                .getLength());
-    }
-
-    private void initKeylessImplicitEncryption() {
-        this.crypto = null;
-
-        resetSecurityConfiguration();
+        Assert.assertArrayEquals( data.getEncryptedData().getContents(), meta.getData().getEncryptedData()
+                .getContents() );
+        Assert.assertArrayEquals( data.getEncryptedData().getLength(), meta.getData().getEncryptedData().getLength() );
+        Assert.assertArrayEquals( data.getEncryptedClassName().getContents(), meta.getData().getEncryptedClassName()
+                .getContents() );
+        Assert.assertArrayEquals( data.getEncryptedClassName().getLength(), meta.getData().getEncryptedClassName()
+                .getLength() );
     }
 
     @Test
@@ -126,27 +145,31 @@ public class AesMetadataRequestTests extends AesEncryptableBase {
      * @throws IOException
      */
     public void testSerializationWithImplicitEncryption() throws JsonGenerationException, JsonMappingException,
-            IOException {
+            IOException, InvalidKeyException, NoSuchAlgorithmException, InvalidAlgorithmParameterException,
+            IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, InvalidKeySpecException,
+            InvalidParameterSpecException, SealedKodexException, SignatureException, CorruptKodexException,
+            KodexException, SecurityConfigurationException {
         initImplicitEncryption();
-        BitVector key = BitVectors.randomVector(INDEX_LENGTH);
-        Metadatum metadatum = new Metadatum("TEST", "test", Arrays.asList(1, 2, 3));
-        Encryptable<Metadatum> data = new AesEncryptable<Metadatum>(metadatum);
+
+        BitVector key = BitVectors.randomVector( INDEX_LENGTH );
+        Metadata metadatum = new Metadata( new DocumentId( "TEST", user ), "test", Arrays.asList( 1, 2, 3 ) );
+        Encryptable<Metadata> data = new AesEncryptable<Metadata>( metadatum );
 
         // implicit encryption via objectmapper
 
         // Create our request with our (PLAIN) Encryptable. It will get encrypted upon serialization
-        MetadataRequest req = new MetadataRequest(Arrays.asList(new IndexedMetadata(key, data)));
+        MetadataRequest req = new MetadataRequest( Arrays.asList( new IndexedMetadata( key, data ) ) );
 
-        String actual = serialize(req);
+        String actual = serialize( req );
 
-        String expectedSubstring = "{\"metadata\":[{\"key\":" + wrapQuotes(BitVectors.marshalBitvector(key));
+        String expectedSubstring = "{\"metadata\":[{\"key\":" + wrapQuotes( BitVectors.marshalBitvector( key ) );
 
         String expectedTypeSubstring = "\"@class\":\"" + data.getClass().getCanonicalName() + "\"";
 
         // weak substring assertion that does not test ciphertext validity
         // ciphertext validity is covered in serializationDeserializationTest
-        Assert.assertThat(actual, CoreMatchers.containsString(expectedSubstring));
-        Assert.assertThat(actual, CoreMatchers.containsString(expectedTypeSubstring));
+        Assert.assertThat( actual, CoreMatchers.containsString( expectedSubstring ) );
+        Assert.assertThat( actual, CoreMatchers.containsString( expectedTypeSubstring ) );
     }
 
     /**
@@ -156,33 +179,47 @@ public class AesMetadataRequestTests extends AesEncryptableBase {
      * @throws JsonGenerationException
      * @throws JsonMappingException
      * @throws IOException
+     * @throws NoSuchPaddingException
+     * @throws BadPaddingException
+     * @throws IllegalBlockSizeException
+     * @throws InvalidAlgorithmParameterException
+     * @throws NoSuchAlgorithmException
+     * @throws InvalidKeyException
+     * @throws SealedKodexException
+     * @throws InvalidParameterSpecException
+     * @throws InvalidKeySpecException
+     * @throws SignatureException
+     * @throws CorruptKodexException
+     * @throws KodexException
+     * @throws SecurityConfigurationException
      */
     @Test
     public void testSerializationWithImplicitEncryptionKeyless() throws JsonGenerationException, JsonMappingException,
-            IOException {
-        initKeylessImplicitEncryption();
+            IOException, InvalidKeyException, NoSuchAlgorithmException, InvalidAlgorithmParameterException,
+            IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, InvalidKeySpecException,
+            InvalidParameterSpecException, SealedKodexException, SignatureException, CorruptKodexException,
+            SecurityConfigurationException, KodexException {
+        resetSecurityConfiguration();
 
-        BitVector key = BitVectors.randomVector(INDEX_LENGTH);
-        Metadatum metadatum = new Metadatum("TEST", "test", Arrays.asList(1, 2, 3));
-        Encryptable<Metadatum> data = new AesEncryptable<Metadatum>(metadatum);
+        BitVector key = BitVectors.randomVector( INDEX_LENGTH );
+        Metadata metadatum = new Metadata( new DocumentId( "TEST", user ), "test", Arrays.asList( 1, 2, 3 ) );
+        Encryptable<Metadata> data = new AesEncryptable<Metadata>( metadatum );
 
         // implicit encryption via objectmapper
 
         // Create our request with our (PLAIN) Encryptable. It will get encrypted upon serialization
-        MetadataRequest req = new MetadataRequest(Arrays.asList(new IndexedMetadata(key, data)));
+        MetadataRequest req = new MetadataRequest( Arrays.asList( new IndexedMetadata( key, data ) ) );
 
         boolean caught = false;
         try {
-            serialize(req);
-        } catch (JsonMappingException e) {
-            if (e.getCause() instanceof NullPointerException) {
+            serialize( req );
+        } catch ( JsonMappingException e ) {
+            if ( e.getCause() instanceof NullPointerException ) {
                 caught = true;
             }
         }
-        Assert.assertTrue(caught);
+        Assert.assertTrue( caught );
     }
-
-    
 
     @Test
     /**
@@ -193,28 +230,38 @@ public class AesMetadataRequestTests extends AesEncryptableBase {
      * @throws IOException
      */
     public void testSerializationWithExplicitEncryption() throws JsonGenerationException, JsonMappingException,
-            IOException, SecurityConfigurationException {
-        BitVector key = BitVectors.randomVector(INDEX_LENGTH);
-        Metadatum metadatum = new Metadatum("TEST", "test", Arrays.asList(1, 2, 3));
-        Encryptable<Metadatum> data = new AesEncryptable<Metadatum>(metadatum);
+            IOException, SecurityConfigurationException, NoSuchAlgorithmException, InvalidKeyException,
+            InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException,
+            InvalidKeySpecException, InvalidParameterSpecException, SealedKodexException, SignatureException,
+            CorruptKodexException, KodexException {
+        BitVector key = BitVectors.randomVector( INDEX_LENGTH );
+        Metadata metadatum = new Metadata( new DocumentId( "TEST", user ), "test", Arrays.asList( 1, 2, 3 ) );
+        Encryptable<Metadata> data = new AesEncryptable<Metadata>( metadatum );
 
         // explicit encryption
-        CryptoService crypto = new CryptoService(Cypher.AES_CTR_PKCS5_128, "crypto-test".toCharArray());
+        CryptoService crypto = new CryptoService( Cypher.AES_CTR_PKCS5_128, "crypto-test".toCharArray() );
 
-        SecurityConfigurationMapping tmpConfig = new SecurityConfigurationMapping().add(AesEncryptable.class, crypto);
+        KeyPair tmpPair = Keys.generateRsaKeyPair( 1024 );
+        Kodex<String> tmpKodex = new Kodex<String>(
+                Cypher.RSA_OAEP_SHA1_1024,
+                Cypher.AES_CTR_PKCS5_128,
+                tmpPair.getPublic() );
+        tmpKodex.unseal( tmpPair.getPrivate() );
+        tmpKodex.setKey( CryptoService.class.getCanonicalName(), new JacksonKodexMarshaller<CryptoService>(
+                CryptoService.class ), crypto );
 
-        data = (AesEncryptable<Metadatum>) data.encrypt(tmpConfig);
+        data = data.encrypt( tmpKodex );
 
         // create the metadataRequest with our (ENCRYPTED) Encryptable
-        MetadataRequest req = new MetadataRequest(Arrays.asList(new IndexedMetadata(key, data)));
+        MetadataRequest req = new MetadataRequest( Arrays.asList( new IndexedMetadata( key, data ) ) );
 
-        String expected = "{\"metadata\":[{\"key\":" + wrapQuotes(BitVectors.marshalBitvector(key)) + ",\"data\":{\""
-                + Encryptable.FIELD_CLASS + "\":\"" + data.getClass().getCanonicalName() + "\",\""
-                + Encryptable.FIELD_ENCRYPTED_DATA + "\":" + serialize(data.getEncryptedData()) + ",\""
-                + Encryptable.FIELD_ENCRYPTED_CLASS_NAME + "\":" + serialize(data.getEncryptedClassName()) + "}}]}";
+        String expected = "{\"metadata\":[{\"key\":" + wrapQuotes( BitVectors.marshalBitvector( key ) )
+                + ",\"data\":{\"" + Encryptable.FIELD_CLASS + "\":\"" + data.getClass().getCanonicalName() + "\",\""
+                + Encryptable.FIELD_ENCRYPTED_DATA + "\":" + serialize( data.getEncryptedData() ) + ",\""
+                + Encryptable.FIELD_ENCRYPTED_CLASS_NAME + "\":" + serialize( data.getEncryptedClassName() ) + "}}]}";
 
-        String actual = serialize(req);
+        String actual = serialize( req );
 
-        Assert.assertEquals(expected, actual);
+        Assert.assertEquals( expected, actual );
     }
 }

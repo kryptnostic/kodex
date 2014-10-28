@@ -5,3 +5,4 @@ jdk:
   - openjdk7
 git:
   depth: 500
+script: "./gradlew check --debug"
