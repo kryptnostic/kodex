@@ -79,5 +79,4 @@ public class AesEncryptableBase extends BaseSerializationTest {
                 32 ).toCharArray() );
 
     }
-
 }
