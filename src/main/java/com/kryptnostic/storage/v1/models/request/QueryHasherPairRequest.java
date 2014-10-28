@@ -1,8 +1,12 @@
 package com.kryptnostic.storage.v1.models.request;
 
+import java.io.IOException;
+
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.kryptnostic.crypto.v1.keys.JacksonKodexMarshaller;
 import com.kryptnostic.multivariate.gf2.SimplePolynomialFunction;
 
 @JsonTypeInfo(
@@ -10,31 +14,44 @@ import com.kryptnostic.multivariate.gf2.SimplePolynomialFunction;
     include = JsonTypeInfo.As.PROPERTY,
     property = "@class" )
 public class QueryHasherPairRequest {
+    private static final JacksonKodexMarshaller<SimplePolynomialFunction> marshaller = new JacksonKodexMarshaller<SimplePolynomialFunction>( SimplePolynomialFunction.class );
+    public static final String FIELD_LEFT  = "left";
+    public static final String FIELD_RIGHT = "right";
 
-    public static final String             FIELD_LEFT  = "left";
-    public static final String             FIELD_RIGHT = "right";
+    private final byte[]       left;
+    private final byte[]       right;
 
-    private final SimplePolynomialFunction left;
-    private final SimplePolynomialFunction right;
+    public QueryHasherPairRequest( SimplePolynomialFunction left, SimplePolynomialFunction right ) throws IOException {
+        this.left = marshaller.toBytes( left );
+        this.right = marshaller.toBytes( right );
+    }
 
     @JsonCreator
-    public QueryHasherPairRequest(
-            @JsonProperty( FIELD_LEFT ) SimplePolynomialFunction left,
-            @JsonProperty( FIELD_RIGHT ) SimplePolynomialFunction right ) {
+    public QueryHasherPairRequest( @JsonProperty( FIELD_LEFT ) byte[] left, @JsonProperty( FIELD_RIGHT ) byte[] right ) {
         this.left = left;
         this.right = right;
     }
 
     @JsonProperty( FIELD_LEFT )
-    public SimplePolynomialFunction getLeft() {
+    public byte[] getLH() {
         return left;
     }
 
     @JsonProperty( FIELD_RIGHT )
-    public SimplePolynomialFunction getRight() {
+    public byte[] getRH() {
         return right;
     }
 
+    @JsonIgnore
+    public SimplePolynomialFunction getLeft() throws IOException {
+        return marshaller.fromBytes( left );
+    }
+    
+    @JsonIgnore
+    public SimplePolynomialFunction getRight() throws IOException {
+        return marshaller.fromBytes( right );
+    }
+    
     @Override
     public int hashCode() {
         final int prime = 31;

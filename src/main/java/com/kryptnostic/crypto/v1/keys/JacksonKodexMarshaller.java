@@ -13,7 +13,7 @@ import com.kryptnostic.kodex.v1.serialization.jackson.KodexObjectMapperFactory;
 public class JacksonKodexMarshaller<T> implements KodexMarshaller<T> {
     private final Class<T>     clazz;
     private final ObjectMapper mapper;
-    protected static final int INTEGER_BYTES = Integer.SIZE / Byte.SIZE;
+//    protected static final int INTEGER_BYTES = Integer.SIZE / Byte.SIZE;
 
     public JacksonKodexMarshaller( Class<T> clazz ) {
         this( clazz, KodexObjectMapperFactory.getObjectMapper() );
@@ -30,7 +30,7 @@ public class JacksonKodexMarshaller<T> implements KodexMarshaller<T> {
         ByteBuffer in = ByteBuffer.wrap( bytes );
         int uncompressedLength = in.getInt();
 
-        byte[] compressedBytes = new byte[ bytes.length - INTEGER_BYTES ];
+        byte[] compressedBytes = new byte[ bytes.length - Integer.BYTES ];
         byte[] uncompressedBytes = new byte[ uncompressedLength ];
         in.get( compressedBytes );
 
@@ -55,7 +55,7 @@ public class JacksonKodexMarshaller<T> implements KodexMarshaller<T> {
         deflater.setInput( input );
         deflater.finish();
         int compressedBytes = deflater.deflate( output, 0, output.length, Deflater.FULL_FLUSH );
-        ByteBuffer o = ByteBuffer.allocate( INTEGER_BYTES + compressedBytes );
+        ByteBuffer o = ByteBuffer.allocate( Integer.BYTES + compressedBytes );
         o.putInt( input.length );
         o.put( output, 0, compressedBytes );
         return o.array();
