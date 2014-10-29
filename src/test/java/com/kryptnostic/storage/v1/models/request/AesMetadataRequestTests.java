@@ -246,7 +246,7 @@ public class AesMetadataRequestTests extends AesEncryptableBase {
                 Cypher.RSA_OAEP_SHA1_1024,
                 Cypher.AES_CTR_PKCS5_128,
                 tmpPair.getPublic() );
-        tmpKodex.unseal( pair.getPublic(), tmpPair.getPrivate() );
+        tmpKodex.unseal( tmpPair.getPublic(), tmpPair.getPrivate() );
         tmpKodex.setKey( CryptoService.class.getCanonicalName(), new JacksonKodexMarshaller<CryptoService>(
                 CryptoService.class ), crypto );
 
