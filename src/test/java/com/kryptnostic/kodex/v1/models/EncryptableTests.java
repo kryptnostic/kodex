@@ -15,13 +15,12 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
@@ -143,7 +142,11 @@ public class EncryptableTests extends AesEncryptableBase {
 
     @Test
     public void encryptableCollectionTest() throws JsonParseException, JsonMappingException, IOException,
-            ClassNotFoundException, SecurityConfigurationException {
+            ClassNotFoundException, SecurityConfigurationException, InvalidKeyException, InvalidKeySpecException,
+            NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException,
+            InvalidParameterSpecException, SignatureException, SealedKodexException, CorruptKodexException,
+            KodexException, InvalidAlgorithmParameterException {
+        
         Metadata m1 = new Metadata( new DocumentId( "ABC", user ), "ABC", Arrays.asList( 1, 2, 3 ) );
         Metadata m2 = new Metadata( new DocumentId( "ABC", user ), "ABC", Arrays.asList( 1, 2, 3 ) );
         Encryptable<Metadata> plainString1 = new FheEncryptable<Metadata>( m1 );
@@ -151,13 +154,16 @@ public class EncryptableTests extends AesEncryptableBase {
         Encryptable<Metadata> cipherString1 = plainString1.encrypt( kodex );
         Encryptable<Metadata> cipherString2 = plainString2.encrypt( kodex );
 
-        List<Encryptable<Metadata>> meta = Lists.newArrayList( cipherString1, cipherString2 );
+        List<Encryptable<?>> meta = Lists.newArrayList();
+        meta.add( cipherString1 );
+        meta.add( cipherString2 );
 
-        String out = serialize( meta );
+        String out = serialize( new Encryptables( meta ) );
+        LoggerFactory.getLogger( getClass() ).info( "Json string: {}", out );
 
-        List<Encryptable<?>> list = deserialize( out, new TypeReference<List<Encryptable<?>>>() {} );
+        Encryptables em = deserialize( out, Encryptables.class );
 
-        Assert.assertTrue( CollectionUtils.isEqualCollection( meta, list ) );
+        Assert.assertEquals(meta.size(), em.size());
     }
 
 }

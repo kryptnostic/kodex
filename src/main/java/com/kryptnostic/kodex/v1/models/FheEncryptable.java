@@ -97,11 +97,13 @@ public class FheEncryptable<T> extends Encryptable<T> {
 
     @Override
     protected boolean canDecryptWith( Kodex<String> kodex ) {
-        try {
-            return kodex.containsKey( PrivateKey.class.getCanonicalName() );
-        } catch ( SealedKodexException e ) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+        if ( kodex != null ) {
+            try {
+                return kodex.containsKey( PrivateKey.class.getCanonicalName() );
+            } catch ( SealedKodexException e ) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
         }
         return false;
     }
