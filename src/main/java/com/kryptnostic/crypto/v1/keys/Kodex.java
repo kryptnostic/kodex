@@ -33,6 +33,7 @@ import com.kryptnostic.crypto.v1.signatures.SignatureAlgorithm;
 import com.kryptnostic.kodex.v1.constants.Names;
 import com.kryptnostic.kodex.v1.exceptions.types.KodexException;
 import com.kryptnostic.kodex.v1.exceptions.types.SecurityConfigurationException;
+import com.kryptnostic.kodex.v1.marshalling.JacksonTypeRefKodexMarshaller;
 import com.kryptnostic.kodex.v1.serialization.jackson.KodexObjectMapperFactory;
 
 @JsonTypeInfo(

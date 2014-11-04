@@ -10,9 +10,13 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.kryptnostic.kodex.v1.constants.Names;
 import com.kryptnostic.kodex.v1.exceptions.types.SecurityConfigurationException;
 
 public class AesCryptoService extends AbstractCryptoService {
+
     private final ReadWriteLock lock = new ReentrantReadWriteLock();
     private byte[]              key;
 
@@ -29,6 +33,20 @@ public class AesCryptoService extends AbstractCryptoService {
         this.key = secretKey;
     }
 
+    @JsonCreator
+    public AesCryptoService(
+            @JsonProperty( Names.CYPHER_FIELD ) CipherDescription cipher,
+            @JsonProperty( Names.KEY_FIELD ) byte[] secretKey ) {
+        this( Cypher.createCipher( cipher ), secretKey );
+    }
+
+    @Override
+    @JsonProperty( Names.CYPHER_FIELD )
+    public Cypher getCypher() {
+        return super.getCypher();
+    }
+
+    @JsonProperty( Names.KEY_FIELD )
     public byte[] getSecretKey() {
         try {
             lock.readLock().lock();
@@ -39,9 +57,9 @@ public class AesCryptoService extends AbstractCryptoService {
     }
 
     public BlockCiphertext encrypt( byte[] plaintext ) throws SecurityConfigurationException {
-        return encrypt( plaintext, new byte[0] );
+        return encrypt( plaintext, new byte[ 0 ] );
     }
-    
+
     @Override
     protected SecretKeySpec getSecretKeySpec( byte[] salt ) throws NoSuchAlgorithmException, InvalidKeySpecException {
         try {

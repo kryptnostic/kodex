@@ -1,4 +1,4 @@
-package com.kryptnostic.crypto.v1.keys;
+package com.kryptnostic.kodex.v1.marshalling;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -14,7 +14,6 @@ import com.kryptnostic.kodex.v1.serialization.jackson.KodexObjectMapperFactory;
 public class DeflatingJacksonMarshaller  {
     private final ObjectMapper mapper = KodexObjectMapperFactory.getObjectMapper();
     protected static final int INTEGER_BYTES = Integer.SIZE / Byte.SIZE;
-
 
     public <T> T fromBytes( byte[] bytes , Class<T> reference) throws IOException {
         final Inflater inflater = new Inflater();

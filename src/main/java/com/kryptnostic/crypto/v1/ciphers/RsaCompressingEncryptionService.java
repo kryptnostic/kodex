@@ -3,8 +3,8 @@ package com.kryptnostic.crypto.v1.ciphers;
 import java.io.IOException;
 import java.security.PublicKey;
 
-import com.kryptnostic.crypto.v1.keys.DeflatingJacksonMarshaller;
 import com.kryptnostic.kodex.v1.exceptions.types.SecurityConfigurationException;
+import com.kryptnostic.kodex.v1.marshalling.DeflatingJacksonMarshaller;
 
 public class RsaCompressingEncryptionService {
     protected static final DeflatingJacksonMarshaller marshaller = new DeflatingJacksonMarshaller();
