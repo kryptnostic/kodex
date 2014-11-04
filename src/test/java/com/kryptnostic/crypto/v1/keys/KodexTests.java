@@ -120,7 +120,7 @@ public class KodexTests {
         Assert.assertEquals( expectedKey, actualKey );
         expected.setKeyWithJackson( QueryHasherPairRequest.class.getCanonicalName(), new QueryHasherPairRequest(
                 left,
-                right ), QueryHasherPairRequest.class );
+                right ).computeChecksum(), String.class );
 
         ObjectMapper mapper = KodexObjectMapperFactory.getObjectMapper();
         expected.verify( pair.getPublic() );

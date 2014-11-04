@@ -21,7 +21,7 @@ public class Metadata {
     public Metadata(
             @JsonProperty( DOCUMENT_ID ) DocumentId documentId,
             @JsonProperty( TOKEN ) String token,
-            @JsonProperty( LOCATIONS ) Iterable<Integer> locations ) {
+            @JsonProperty( LOCATIONS ) List<Integer> locations ) {
         this.documentId = documentId;
         this.token = token;
 

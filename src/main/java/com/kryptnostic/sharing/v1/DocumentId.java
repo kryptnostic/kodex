@@ -17,7 +17,6 @@ import com.kryptnostic.users.v1.UserKey;
 public class DocumentId {
     private static final ObjectMapper mapper = KodexObjectMapperFactory.getObjectMapper();
     private static final ObjectMapper smile  = KodexObjectMapperFactory.getSmileMapper();
-    private static final Base64       codec  = new Base64();
 
     protected final String            documentId;
     protected final UserKey           user;
@@ -44,7 +43,7 @@ public class DocumentId {
 
     public static DocumentId fromString( String base64Hash ) throws JsonParseException, JsonMappingException,
             IOException {
-        byte[] bytes = codec.decode( base64Hash );
+        byte[] bytes = Base64.decodeBase64( base64Hash );
         return mapper.readValue( bytes, DocumentId.class );
     }
 
@@ -93,7 +92,7 @@ public class DocumentId {
     @Override
     public String toString() {
         try {
-            return codec.encodeAsString( mapper.writeValueAsBytes( this ) );
+            return new String( Base64.encodeBase64( mapper.writeValueAsBytes( this ) ) );
         } catch ( JsonProcessingException e ) {
             // TODO Auto-generated catch block
             e.printStackTrace();

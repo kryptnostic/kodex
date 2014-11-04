@@ -9,18 +9,22 @@ import java.security.SignatureException;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.InvalidParameterSpecException;
 import java.util.Arrays;
+import java.util.List;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.Lists;
 import com.kryptnostic.crypto.PrivateKey;
 import com.kryptnostic.crypto.PublicKey;
 import com.kryptnostic.crypto.v1.ciphers.Cypher;
@@ -34,9 +38,10 @@ import com.kryptnostic.kodex.v1.exceptions.types.SecurityConfigurationException;
 import com.kryptnostic.kodex.v1.indexing.metadata.Metadata;
 import com.kryptnostic.kodex.v1.serialization.jackson.KodexObjectMapperFactory;
 import com.kryptnostic.sharing.v1.DocumentId;
+import com.kryptnostic.storage.v1.models.request.AesEncryptableBase;
 import com.kryptnostic.users.v1.UserKey;
 
-public class EncryptableTests {
+public class EncryptableTests extends AesEncryptableBase {
 
     private static final int     PRIVATE_KEY_BLOCK_SIZE = 64;
     private static final UserKey user                   = new UserKey( "kryptnostic", "tester" );
@@ -44,7 +49,7 @@ public class EncryptableTests {
     private KeyPair              pair;
 
     @Before
-    public void init() throws InvalidKeyException, InvalidKeySpecException, NoSuchAlgorithmException,
+    public void initAll() throws InvalidKeyException, InvalidKeySpecException, NoSuchAlgorithmException,
             NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, InvalidParameterSpecException,
             SealedKodexException, IOException, InvalidAlgorithmParameterException, SignatureException,
             CorruptKodexException, SecurityConfigurationException, KodexException {
@@ -134,6 +139,25 @@ public class EncryptableTests {
         Assert.assertNull( decryptedString.getEncryptedClassName() );
         Assert.assertFalse( decryptedString.isEncrypted() );
         Assert.assertEquals( m, decryptedString.getData() );
+    }
+
+    @Test
+    public void encryptableCollectionTest() throws JsonParseException, JsonMappingException, IOException,
+            ClassNotFoundException, SecurityConfigurationException {
+        Metadata m1 = new Metadata( new DocumentId( "ABC", user ), "ABC", Arrays.asList( 1, 2, 3 ) );
+        Metadata m2 = new Metadata( new DocumentId( "ABC", user ), "ABC", Arrays.asList( 1, 2, 3 ) );
+        Encryptable<Metadata> plainString1 = new FheEncryptable<Metadata>( m1 );
+        Encryptable<Metadata> plainString2 = new FheEncryptable<Metadata>( m2 );
+        Encryptable<Metadata> cipherString1 = plainString1.encrypt( kodex );
+        Encryptable<Metadata> cipherString2 = plainString2.encrypt( kodex );
+
+        List<Encryptable<Metadata>> meta = Lists.newArrayList( cipherString1, cipherString2 );
+
+        String out = serialize( meta );
+
+        List<Encryptable<?>> list = deserialize( out, new TypeReference<List<Encryptable<?>>>() {} );
+
+        Assert.assertTrue( CollectionUtils.isEqualCollection( meta, list ) );
     }
 
 }
