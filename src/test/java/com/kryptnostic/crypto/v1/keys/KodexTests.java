@@ -151,15 +151,6 @@ public class KodexTests {
 
         bridgeKey = new EncryptedSearchBridgeKey( recoveredSearchKey, sharingKey );
 
-        left = reloaded.getLeft();
-        right = reloaded.getRight();
-
-        iL = EnhancedBitMatrix.squareMatrixfromBitVector( left.apply( BitVectors.concatenate( encT, encN ) ) );
-        iR = EnhancedBitMatrix.squareMatrixfromBitVector( right.apply( BitVectors.concatenate( encT, encN ) ) );
-
-        actualKey = BitVectors.fromSquareMatrix( iL.multiply( bridgeKey.getBridge() ).multiply( iR ) );
-
-        Assert.assertEquals( expectedKey, actualKey );
 
         Assert.assertEquals( searchKey.getLeftSquaringMatrix(), recoveredSearchKey.getLeftSquaringMatrix() );
         Assert.assertEquals( searchKey.getRightSquaringMatrix(), recoveredSearchKey.getRightSquaringMatrix() );
