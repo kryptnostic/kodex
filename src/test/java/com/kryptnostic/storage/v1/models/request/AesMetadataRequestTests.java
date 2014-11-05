@@ -158,7 +158,9 @@ public class AesMetadataRequestTests extends AesEncryptableBase {
         // implicit encryption via objectmapper
 
         // Create our request with our (PLAIN) Encryptable. It will get encrypted upon serialization
-        MetadataRequest req = new MetadataRequest( Arrays.asList( new IndexedMetadata( key, data ) ) );
+        MetadataRequest req = new MetadataRequest( Arrays.asList( new IndexedMetadata( key, data, new DocumentId(
+                "test",
+                new UserKey( "test", "test" ) ) ) ) );
 
         String actual = serialize( req );
 
@@ -208,7 +210,9 @@ public class AesMetadataRequestTests extends AesEncryptableBase {
         // implicit encryption via objectmapper
 
         // Create our request with our (PLAIN) Encryptable. It will get encrypted upon serialization
-        MetadataRequest req = new MetadataRequest( Arrays.asList( new IndexedMetadata( key, data ) ) );
+        MetadataRequest req = new MetadataRequest( Arrays.asList( new IndexedMetadata( key, data, new DocumentId(
+                "test",
+                new UserKey( "test", "test" ) ) ) ) );
 
         boolean caught = false;
         try {
@@ -253,7 +257,9 @@ public class AesMetadataRequestTests extends AesEncryptableBase {
         data = data.encrypt( tmpKodex );
 
         // create the metadataRequest with our (ENCRYPTED) Encryptable
-        MetadataRequest req = new MetadataRequest( Arrays.asList( new IndexedMetadata( key, data ) ) );
+        MetadataRequest req = new MetadataRequest( Arrays.asList( new IndexedMetadata( key, data, new DocumentId(
+                "test",
+                new UserKey( "test", "test" ) ) ) ) );
 
         String expected = "{\"metadata\":[{\"key\":" + wrapQuotes( BitVectors.marshalBitvector( key ) )
                 + ",\"data\":{\"" + Encryptable.FIELD_CLASS + "\":\"" + data.getClass().getCanonicalName() + "\",\""
