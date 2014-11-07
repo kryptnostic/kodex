@@ -1,10 +1,12 @@
 package com.kryptnostic.storage.v1.client;
 
 import retrofit.http.Body;
+import retrofit.http.DELETE;
 import retrofit.http.POST;
 
 import com.kryptnostic.kodex.v1.exceptions.types.BadRequestException;
 import com.kryptnostic.kodex.v1.models.response.BasicResponse;
+import com.kryptnostic.storage.v1.models.request.MetadataDeleteRequest;
 import com.kryptnostic.storage.v1.models.request.MetadataRequest;
 
 public interface MetadataApi {
@@ -16,6 +18,9 @@ public interface MetadataApi {
      * @param metadata
      * @return BasicResponse with empty body
      */
-    @POST(METADATA)
-    BasicResponse<String> uploadMetadata(@Body MetadataRequest metadata) throws BadRequestException;
+    @POST( METADATA )
+    BasicResponse<String> uploadMetadata( @Body MetadataRequest metadata ) throws BadRequestException;
+
+    @DELETE( METADATA )
+    BasicResponse<String> deleteAll( @Body MetadataDeleteRequest request );
 }

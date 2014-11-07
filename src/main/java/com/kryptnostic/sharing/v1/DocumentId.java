@@ -1,6 +1,7 @@
 package com.kryptnostic.sharing.v1;
 
 import java.io.IOException;
+import java.io.Serializable;
 
 import org.apache.commons.codec.binary.Base64;
 
@@ -14,7 +15,7 @@ import com.kryptnostic.kodex.v1.constants.Names;
 import com.kryptnostic.kodex.v1.serialization.jackson.KodexObjectMapperFactory;
 import com.kryptnostic.users.v1.UserKey;
 
-public class DocumentId {
+public class DocumentId implements Serializable {
     private static final ObjectMapper mapper = KodexObjectMapperFactory.getObjectMapper();
     private static final ObjectMapper smile  = KodexObjectMapperFactory.getSmileMapper();
 
