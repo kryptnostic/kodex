@@ -95,6 +95,10 @@ public interface StorageClient {
      */
     String uploadMetadata( MetadataRequest metadata ) throws BadRequestException;
 
+    void deleteMetadata( DocumentId id );
+
+    void deleteDocument( DocumentId id );
+
     /**
      * Retrieve all the documentIds the current user has access to
      * 

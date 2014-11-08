@@ -45,5 +45,5 @@ public interface KeyApi {
     BasicResponse<String> setKodex( @Body Kodex<String> kodex );
 
     @GET( CONTROLLER + DOCUMENT_KEY + PARAM.ID)
-    BasicResponse<byte[]> getDocumentKey( @Path( Names.ID_FIELD ) String id );
+    BasicResponse<byte[]> getDocumentId( @Path( Names.ID_FIELD ) String id );
 }

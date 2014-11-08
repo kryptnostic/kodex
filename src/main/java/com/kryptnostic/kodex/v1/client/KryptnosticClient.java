@@ -8,5 +8,6 @@ import com.kryptnostic.users.v1.UserKey;
 
 public interface KryptnosticClient extends SearchClient, StorageClient {
     public KryptnosticContext getContext();
+
     public Set<UserKey> listUserInRealm( String realm );
 }
