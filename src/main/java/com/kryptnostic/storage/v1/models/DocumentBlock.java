@@ -5,49 +5,51 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.kryptnostic.kodex.v1.models.AesEncryptable;
 
 public class DocumentBlock {
-    public static final String FIELD_BLOCK = "block";
-    public static final String FIELD_VERIFY = "verify";
-    public static final String FIELD_TOTAL = "total";
-    public static final String FIELD_INDEX = "index";
+    public static final String     FIELD_BLOCK  = "block";
+    public static final String     FIELD_VERIFY = "verify";
+    public static final String     FIELD_TOTAL  = "total";
+    public static final String     FIELD_INDEX  = "index";
 
     private AesEncryptable<String> block;
-    private String verify;
-    private int total;
-    private int index;
+    private String                 verify;
+    private int                    total;
+    private int                    index;
 
     @JsonCreator
-    public DocumentBlock(@JsonProperty(FIELD_BLOCK) AesEncryptable<String> block,
-            @JsonProperty(FIELD_VERIFY) String verify, @JsonProperty(FIELD_TOTAL) int total,
-            @JsonProperty(FIELD_INDEX) int index) {
+    public DocumentBlock(
+            @JsonProperty( FIELD_BLOCK ) AesEncryptable<String> block,
+            @JsonProperty( FIELD_VERIFY ) String verify,
+            @JsonProperty( FIELD_TOTAL ) int total,
+            @JsonProperty( FIELD_INDEX ) int index ) {
         this.block = block;
         this.verify = verify;
         this.total = total;
         this.index = index;
     }
 
-    @JsonProperty(FIELD_BLOCK)
+    @JsonProperty( FIELD_BLOCK )
     public AesEncryptable<String> getBlock() {
         return block;
     }
 
-    @JsonProperty(FIELD_VERIFY)
+    @JsonProperty( FIELD_VERIFY )
     public String getVerify() {
         return verify;
     }
 
-    @JsonProperty(FIELD_TOTAL)
+    @JsonProperty( FIELD_TOTAL )
     public int getTotal() {
         return total;
     }
 
-    @JsonProperty(FIELD_INDEX)
+    @JsonProperty( FIELD_INDEX )
     public int getIndex() {
         return index;
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals( Object o ) {
         DocumentBlock d = (DocumentBlock) o;
-        return block.equals(d.block) && verify.equals(d.verify) && total == d.total && index == ( d.index );
+        return block.equals( d.block ) && verify.equals( d.verify ) && total == d.total && index == ( d.index );
     }
 }

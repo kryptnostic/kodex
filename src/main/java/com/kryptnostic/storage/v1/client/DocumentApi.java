@@ -3,6 +3,7 @@ package com.kryptnostic.storage.v1.client;
 import java.util.Collection;
 
 import retrofit.http.Body;
+import retrofit.http.DELETE;
 import retrofit.http.GET;
 import retrofit.http.POST;
 import retrofit.http.PUT;
@@ -21,8 +22,11 @@ import com.kryptnostic.storage.v1.models.response.DocumentFragmentResponse;
 import com.kryptnostic.storage.v1.models.response.DocumentResponse;
 
 public interface DocumentApi {
-    String DOCUMENT = "/document";
-    String ID       = "id";
+    String DOCUMENT         = "/document";
+    String ID               = "id";
+    String REALM            = "realm";
+    String USER             = "user";
+    String DOCUMENT_ID_PATH = "/{" + REALM + "}/{" + USER + "}/{" + ID + "}";
 
     /**
      * Request a new document be created in a pending state
@@ -42,9 +46,11 @@ public interface DocumentApi {
      * @throws ResourceLockedException if the document is currently pending
      * @throws ResourceNotFoundException the document doesnt exist
      */
-    @PUT( DOCUMENT + "/{" + ID + "}" )
+    @PUT( DOCUMENT + DOCUMENT_ID_PATH )
     BasicResponse<DocumentId> createPendingDocument(
-            @Path( ID ) String documentId,
+            @Path( REALM ) String realm,
+            @Path( USER ) String user,
+            @Path( ID ) String id,
             @Body DocumentCreationRequest request ) throws ResourceLockedException, ResourceNotFoundException;
 
     /**
@@ -62,9 +68,13 @@ public interface DocumentApi {
      * @throws ResourceNotLockedException if the specified document has not been locked for updating
      * @throws BadRequestException if the block is invalid
      */
-    @POST( DOCUMENT + "/{" + ID + "}" )
-    BasicResponse<DocumentId> updateDocument( @Path( ID ) String documentId, @Body DocumentBlock block )
-            throws ResourceNotFoundException, ResourceNotLockedException, BadRequestException;
+    @POST( DOCUMENT + DOCUMENT_ID_PATH )
+    BasicResponse<DocumentId> updateDocument(
+            @Path( REALM ) String realm,
+            @Path( USER ) String user,
+            @Path( ID ) String id,
+            @Body DocumentBlock block ) throws ResourceNotFoundException, ResourceNotLockedException,
+            BadRequestException;
 
     /**
      * Retrieve a document's text
@@ -72,8 +82,9 @@ public interface DocumentApi {
      * @param documentId
      * @return DocumentResponse containing document
      */
-    @GET( DOCUMENT + "/{" + ID + "}" )
-    DocumentResponse getDocument( @Path( ID ) String documentId ) throws ResourceNotFoundException;
+    @GET( DOCUMENT + DOCUMENT_ID_PATH )
+    DocumentResponse getDocument( @Path( REALM ) String realm, @Path( USER ) String user, @Path( ID ) String id )
+            throws ResourceNotFoundException;
 
     /**
      * 
@@ -88,7 +99,13 @@ public interface DocumentApi {
      * @return
      * @throws ResourceNotFoundException
      */
-    @POST( DOCUMENT + "/{" + ID + "}/fragments" )
-    DocumentFragmentResponse getDocumentFragments( @Path( ID ) String documentId, @Body DocumentFragmentRequest request )
-            throws ResourceNotFoundException;
+    @POST( DOCUMENT + DOCUMENT_ID_PATH + "/fragments" )
+    DocumentFragmentResponse getDocumentFragments(
+            @Path( REALM ) String realm,
+            @Path( USER ) String user,
+            @Path( ID ) String id,
+            @Body DocumentFragmentRequest request ) throws ResourceNotFoundException;
+
+    @DELETE( DOCUMENT + DOCUMENT_ID_PATH )
+    BasicResponse<String> delete( @Path( REALM ) String realm, @Path( USER ) String user, @Path( ID ) String id );
 }

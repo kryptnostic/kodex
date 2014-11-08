@@ -1,25 +1,36 @@
 package com.kryptnostic.sharing.v1;
 
-import java.io.IOException;
-
-import org.apache.commons.codec.binary.Base64;
+import java.io.Serializable;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.base.Function;
 import com.kryptnostic.kodex.v1.constants.Names;
 import com.kryptnostic.kodex.v1.serialization.jackson.KodexObjectMapperFactory;
 import com.kryptnostic.users.v1.UserKey;
 
-public class DocumentId {
-    private static final ObjectMapper mapper = KodexObjectMapperFactory.getObjectMapper();
-    private static final ObjectMapper smile  = KodexObjectMapperFactory.getSmileMapper();
+public class DocumentId implements Serializable {
+    private static final ObjectMapper               mapper             = KodexObjectMapperFactory.getObjectMapper();
+    private static final ObjectMapper               smile              = KodexObjectMapperFactory.getSmileMapper();
 
-    protected final String            documentId;
-    protected final UserKey           user;
+    protected final String                          documentId;
+    protected final UserKey                         user;
+
+    private static Function<DocumentId, String>     stringifier        = new Function<DocumentId, String>() {
+                                                                           @Override
+                                                                           public String apply( DocumentId input ) {
+                                                                               return input.getDocumentId();
+                                                                           }
+                                                                       };
+
+    private static Function<DocumentId, DocumentId> documentIdFunction = new Function<DocumentId, DocumentId>() {
+                                                                           @Override
+                                                                           public DocumentId apply( DocumentId input ) {
+                                                                               return input;
+                                                                           }
+                                                                       };
 
     @JsonCreator
     public DocumentId( @JsonProperty( Names.ID_FIELD ) String documentId, @JsonProperty( Names.USER_FIELD ) UserKey user ) {
@@ -37,14 +48,8 @@ public class DocumentId {
         return user;
     }
 
-    public static DocumentId fromUserAndId( String id, UserKey user ) {
+    public static DocumentId fromIdAndUser( String id, UserKey user ) {
         return new DocumentId( id, user );
-    }
-
-    public static DocumentId fromString( String base64Hash ) throws JsonParseException, JsonMappingException,
-            IOException {
-        byte[] bytes = Base64.decodeBase64( base64Hash );
-        return mapper.readValue( bytes, DocumentId.class );
     }
 
     public byte[] asBytes() throws JsonProcessingException {
@@ -89,14 +94,8 @@ public class DocumentId {
         return true;
     }
 
-    @Override
-    public String toString() {
-        try {
-            return new String( Base64.encodeBase64( mapper.writeValueAsBytes( this ) ) );
-        } catch ( JsonProcessingException e ) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-            return super.toString();
-        }
+    public static Function documentIdFunction() {
+        return documentIdFunction;
     }
+
 }
