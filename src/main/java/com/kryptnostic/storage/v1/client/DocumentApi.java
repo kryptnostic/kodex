@@ -1,6 +1,7 @@
 package com.kryptnostic.storage.v1.client;
 
 import java.util.Collection;
+import java.util.List;
 
 import retrofit.http.Body;
 import retrofit.http.DELETE;
@@ -15,6 +16,7 @@ import com.kryptnostic.kodex.v1.exceptions.types.ResourceNotFoundException;
 import com.kryptnostic.kodex.v1.exceptions.types.ResourceNotLockedException;
 import com.kryptnostic.kodex.v1.models.response.BasicResponse;
 import com.kryptnostic.sharing.v1.DocumentId;
+import com.kryptnostic.storage.v1.models.Document;
 import com.kryptnostic.storage.v1.models.DocumentBlock;
 import com.kryptnostic.storage.v1.models.request.DocumentCreationRequest;
 import com.kryptnostic.storage.v1.models.request.DocumentFragmentRequest;
@@ -85,6 +87,9 @@ public interface DocumentApi {
     @GET( DOCUMENT + DOCUMENT_ID_PATH )
     DocumentResponse getDocument( @Path( REALM ) String realm, @Path( USER ) String user, @Path( ID ) String id )
             throws ResourceNotFoundException;
+
+    @POST( DOCUMENT )
+    BasicResponse<List<Document>> getDocuments( @Body List<DocumentId> docIds ) throws ResourceNotFoundException;
 
     /**
      * 
