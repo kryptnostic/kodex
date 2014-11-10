@@ -9,5 +9,5 @@ import com.kryptnostic.users.v1.UserKey;
 public interface SharingClient {
     void unsharedDocumentWithUsers( DocumentId documentId, Set<UserKey> users );
     void shareDocumentWithUsers( DocumentId documentId, Set<UserKey> users );
-    void processIncomingShares() throws IOException, SecurityConfigurationException;
+    int processIncomingShares() throws IOException, SecurityConfigurationException;
 }

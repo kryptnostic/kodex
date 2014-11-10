@@ -20,11 +20,13 @@ public class RsaCompressingCryptoService extends RsaCompressingEncryptionService
         this.privateKey = privateKey;
     }
     
-    public <T> T decrypt( byte[] plaintext, Class<T> clazz ) throws IOException {
+    public <T> T decrypt( byte[] ciphertext, Class<T> clazz ) throws IOException, SecurityConfigurationException {
+        byte[] plaintext  = Cyphers.decrypt( cypher, privateKey, ciphertext );
         return marshaller.fromBytes( plaintext, clazz );
     }
 
     public <T> T decrypt( byte[] ciphertext, TypeReference<T> clazz ) throws IOException, SecurityConfigurationException {
-        return marshaller.fromBytes( Cyphers.decrypt( cypher, privateKey, ciphertext ) , clazz );
+        byte[] plaintext  = Cyphers.decrypt( cypher, privateKey, ciphertext );
+        return marshaller.fromBytes( plaintext  , clazz );
     }
 }
