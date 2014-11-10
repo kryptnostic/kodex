@@ -15,7 +15,7 @@ public class EncryptedSearchDocumentKey implements Serializable {
 
     private final BitVector searchNonce;
     private final EncryptedSearchBridgeKey bridgeKey;
-
+    
     @JsonCreator
     public EncryptedSearchDocumentKey(@JsonProperty(FIELD_SEARCH_NONCE) BitVector searchNonce,
             @JsonProperty(FIELD_BRIDGE_KEY) EncryptedSearchBridgeKey bridgeKey) {
