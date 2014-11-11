@@ -5,37 +5,15 @@ import java.io.Serializable;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.base.Function;
 import com.kryptnostic.kodex.v1.constants.Names;
-import com.kryptnostic.kodex.v1.serialization.jackson.KodexObjectMapperFactory;
-import com.kryptnostic.users.v1.UserKey;
 
 public class DocumentId implements Serializable {
-    private static final ObjectMapper               mapper             = KodexObjectMapperFactory.getObjectMapper();
-    private static final ObjectMapper               smile              = KodexObjectMapperFactory.getSmileMapper();
-
-    protected final String                          documentId;
-    protected final UserKey                         user;
-
-    private static Function<DocumentId, String>     stringifier        = new Function<DocumentId, String>() {
-                                                                           @Override
-                                                                           public String apply( DocumentId input ) {
-                                                                               return input.getDocumentId();
-                                                                           }
-                                                                       };
-
-    private static Function<DocumentId, DocumentId> documentIdFunction = new Function<DocumentId, DocumentId>() {
-                                                                           @Override
-                                                                           public DocumentId apply( DocumentId input ) {
-                                                                               return input;
-                                                                           }
-                                                                       };
+    private static final long serialVersionUID = -273580841535768172L;
+    private final String      documentId;
 
     @JsonCreator
-    public DocumentId( @JsonProperty( Names.ID_FIELD ) String documentId, @JsonProperty( Names.USER_FIELD ) UserKey user ) {
+    public DocumentId( @JsonProperty( Names.ID_FIELD ) String documentId ) {
         this.documentId = documentId;
-        this.user = user;
     }
 
     @JsonProperty( Names.ID_FIELD )
@@ -43,17 +21,12 @@ public class DocumentId implements Serializable {
         return documentId;
     }
 
-    @JsonProperty( Names.USER_FIELD )
-    public UserKey getUser() {
-        return user;
-    }
-
-    public static DocumentId fromIdAndUser( String id, UserKey user ) {
-        return new DocumentId( id, user );
+    public static DocumentId fromId( String id ) {
+        return new DocumentId( id );
     }
 
     public byte[] asBytes() throws JsonProcessingException {
-        return smile.writeValueAsBytes( this );
+        return documentId.getBytes();
     }
 
     @Override
@@ -61,7 +34,6 @@ public class DocumentId implements Serializable {
         final int prime = 31;
         int result = 1;
         result = prime * result + ( ( documentId == null ) ? 0 : documentId.hashCode() );
-        result = prime * result + ( ( user == null ) ? 0 : user.hashCode() );
         return result;
     }
 
@@ -84,18 +56,6 @@ public class DocumentId implements Serializable {
         } else if ( !documentId.equals( other.documentId ) ) {
             return false;
         }
-        if ( user == null ) {
-            if ( other.user != null ) {
-                return false;
-            }
-        } else if ( !user.equals( other.user ) ) {
-            return false;
-        }
         return true;
     }
-
-    public static Function documentIdFunction() {
-        return documentIdFunction;
-    }
-
 }

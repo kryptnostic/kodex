@@ -38,14 +38,12 @@ import com.kryptnostic.kodex.v1.indexing.metadata.Metadata;
 import com.kryptnostic.kodex.v1.models.AesEncryptable;
 import com.kryptnostic.kodex.v1.models.Encryptable;
 import com.kryptnostic.sharing.v1.DocumentId;
-import com.kryptnostic.users.v1.UserKey;
 
 public class AesMetadataRequestTests extends AesEncryptableBase {
-    private static final UserKey user         = new UserKey( "kryptnostic", "tester" );
-    private static final int     INDEX_LENGTH = 256;
+    private static final int INDEX_LENGTH = 256;
 
     @Rule
-    public ExpectedException     exception    = ExpectedException.none();
+    public ExpectedException exception    = ExpectedException.none();
 
     @Test
     /**
@@ -59,7 +57,7 @@ public class AesMetadataRequestTests extends AesEncryptableBase {
         initImplicitEncryption();
 
         BitVector key = BitVectors.randomVector( INDEX_LENGTH );
-        Metadata metadatum = new Metadata( new DocumentId( "TEST", user ), "test", Arrays.asList( 1, 2, 3 ) );
+        Metadata metadatum = new Metadata( new DocumentId( "TEST" ), "test", Arrays.asList( 1, 2, 3 ) );
         Encryptable<Metadata> data = new AesEncryptable<Metadata>( metadatum );
 
         // explicit encryption to generate some json
@@ -101,7 +99,7 @@ public class AesMetadataRequestTests extends AesEncryptableBase {
         initImplicitEncryption();
 
         BitVector key = BitVectors.randomVector( INDEX_LENGTH );
-        Metadata metadatum = new Metadata( new DocumentId( "TEST", user ), "test", Arrays.asList( 1, 2, 3 ) );
+        Metadata metadatum = new Metadata( new DocumentId( "TEST" ), "test", Arrays.asList( 1, 2, 3 ) );
         Encryptable<Metadata> data = new AesEncryptable<Metadata>( metadatum );
 
         // explicit encryption to generate some json
@@ -152,15 +150,14 @@ public class AesMetadataRequestTests extends AesEncryptableBase {
         initImplicitEncryption();
 
         BitVector key = BitVectors.randomVector( INDEX_LENGTH );
-        Metadata metadatum = new Metadata( new DocumentId( "TEST", user ), "test", Arrays.asList( 1, 2, 3 ) );
+        Metadata metadatum = new Metadata( new DocumentId( "TEST" ), "test", Arrays.asList( 1, 2, 3 ) );
         Encryptable<Metadata> data = new AesEncryptable<Metadata>( metadatum );
 
         // implicit encryption via objectmapper
 
         // Create our request with our (PLAIN) Encryptable. It will get encrypted upon serialization
         MetadataRequest req = new MetadataRequest( Arrays.asList( new IndexedMetadata( key, data, new DocumentId(
-                "test",
-                new UserKey( "test", "test" ) ) ) ) );
+                "test" ) ) ) );
 
         String actual = serialize( req );
 
@@ -204,15 +201,14 @@ public class AesMetadataRequestTests extends AesEncryptableBase {
         resetSecurityConfiguration();
 
         BitVector key = BitVectors.randomVector( INDEX_LENGTH );
-        Metadata metadatum = new Metadata( new DocumentId( "TEST", user ), "test", Arrays.asList( 1, 2, 3 ) );
+        Metadata metadatum = new Metadata( new DocumentId( "TEST" ), "test", Arrays.asList( 1, 2, 3 ) );
         Encryptable<Metadata> data = new AesEncryptable<Metadata>( metadatum );
 
         // implicit encryption via objectmapper
 
         // Create our request with our (PLAIN) Encryptable. It will get encrypted upon serialization
         MetadataRequest req = new MetadataRequest( Arrays.asList( new IndexedMetadata( key, data, new DocumentId(
-                "test",
-                new UserKey( "test", "test" ) ) ) ) );
+                "test" ) ) ) );
 
         boolean caught = false;
         try {
@@ -239,7 +235,7 @@ public class AesMetadataRequestTests extends AesEncryptableBase {
             InvalidKeySpecException, InvalidParameterSpecException, SealedKodexException, SignatureException,
             CorruptKodexException, KodexException {
         BitVector key = BitVectors.randomVector( INDEX_LENGTH );
-        Metadata metadatum = new Metadata( new DocumentId( "TEST", user ), "test", Arrays.asList( 1, 2, 3 ) );
+        Metadata metadatum = new Metadata( new DocumentId( "TEST" ), "test", Arrays.asList( 1, 2, 3 ) );
         Encryptable<Metadata> data = new AesEncryptable<Metadata>( metadatum );
 
         // explicit encryption
@@ -257,7 +253,7 @@ public class AesMetadataRequestTests extends AesEncryptableBase {
         data = data.encrypt( tmpKodex );
 
         // create the metadataRequest with our (ENCRYPTED) Encryptable
-        DocumentId docId = new DocumentId( "test", new UserKey( "test", "test" ) );
+        DocumentId docId = new DocumentId( "test" );
         MetadataRequest req = new MetadataRequest( Arrays.asList( new IndexedMetadata( key, data, docId ) ) );
 
         String expected = "{\"metadata\":[{\"key\":" + wrapQuotes( BitVectors.marshalBitvector( key ) )

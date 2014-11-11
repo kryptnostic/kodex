@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.kryptnostic.crypto.EncryptedSearchBridgeKey;
 import com.kryptnostic.kodex.v1.constants.Names;
-import com.kryptnostic.users.v1.UserKey;
+import com.kryptnostic.sharing.v1.DocumentId;
 
 public class EncryptedSearchDocumentKey implements Serializable {
     private static final long              serialVersionUID   = -1727973926753941167L;
@@ -17,21 +17,21 @@ public class EncryptedSearchDocumentKey implements Serializable {
 
     private final BitVector                searchNonce;
     private final EncryptedSearchBridgeKey bridgeKey;
-    private final UserKey                  user;
+    private final DocumentId documentId;
 
     @JsonCreator
     public EncryptedSearchDocumentKey(
             @JsonProperty( FIELD_SEARCH_NONCE ) BitVector searchNonce,
             @JsonProperty( FIELD_BRIDGE_KEY ) EncryptedSearchBridgeKey bridgeKey,
-            @JsonProperty( Names.USER_FIELD ) UserKey user ) {
+            @JsonProperty( Names.ID_FIELD ) DocumentId documentId ) {
         this.searchNonce = searchNonce;
         this.bridgeKey = bridgeKey;
-        this.user = user;
+        this.documentId = documentId;
     }
 
-    @JsonProperty( Names.USER_FIELD ) 
-    public UserKey getUser() {
-        return user;
+    @JsonProperty( Names.ID_FIELD ) 
+    public DocumentId getDocumentId() {
+        return documentId;
     }
 
     @JsonProperty( FIELD_SEARCH_NONCE )
