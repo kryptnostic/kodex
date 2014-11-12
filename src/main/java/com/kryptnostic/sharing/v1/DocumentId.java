@@ -98,4 +98,9 @@ public class DocumentId implements Serializable {
         return documentIdFunction;
     }
 
+    
+    @Override
+    public String toString() {
+    		return "DocumentId [user={" + user.getRealm() + "," + user.getName() + "},id=" + documentId +"]";
+    }
 }

@@ -39,4 +39,9 @@ public class SearchResult {
     public String getDate() {
         return date;
     }
+    
+    @Override
+    public String toString() {
+    		return "SearchResult[ metadata=" + metadata + ", score=" + score + ", date=" + date + "]";
+    }
 }
