@@ -30,6 +30,10 @@ public abstract class AbstractCryptoService {
         this.cypher = cypher;
     }
 
+    public BlockCiphertext encrypt( byte[] bytes ) throws SecurityConfigurationException {
+        return encrypt( bytes, new byte[ 0 ] );
+    }
+
     public BlockCiphertext encrypt( byte[] bytes, byte[] salt ) throws SecurityConfigurationException {
         try {
             SecretKeySpec secretKeySpec = getSecretKeySpec( salt );

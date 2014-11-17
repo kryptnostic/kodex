@@ -28,7 +28,7 @@ public interface DocumentApi {
     String ID               = "id";
     String REALM            = "realm";
     String USER             = "user";
-    String DOCUMENT_ID_PATH = "/{" + REALM + "}/{" + USER + "}/{" + ID + "}";
+    String DOCUMENT_ID_PATH = "/{" + ID + "}";
 
     /**
      * Request a new document be created in a pending state
@@ -49,11 +49,8 @@ public interface DocumentApi {
      * @throws ResourceNotFoundException the document doesnt exist
      */
     @PUT( DOCUMENT + DOCUMENT_ID_PATH )
-    BasicResponse<DocumentId> createPendingDocument(
-            @Path( REALM ) String realm,
-            @Path( USER ) String user,
-            @Path( ID ) String id,
-            @Body DocumentCreationRequest request ) throws ResourceLockedException, ResourceNotFoundException;
+    BasicResponse<DocumentId> createPendingDocument( @Path( ID ) String id, @Body DocumentCreationRequest request )
+            throws ResourceLockedException, ResourceNotFoundException;
 
     /**
      * Update a document using a DocumentBlock
@@ -71,12 +68,8 @@ public interface DocumentApi {
      * @throws BadRequestException if the block is invalid
      */
     @POST( DOCUMENT + DOCUMENT_ID_PATH )
-    BasicResponse<DocumentId> updateDocument(
-            @Path( REALM ) String realm,
-            @Path( USER ) String user,
-            @Path( ID ) String id,
-            @Body DocumentBlock block ) throws ResourceNotFoundException, ResourceNotLockedException,
-            BadRequestException;
+    BasicResponse<DocumentId> updateDocument( @Path( ID ) String id, @Body DocumentBlock block )
+            throws ResourceNotFoundException, ResourceNotLockedException, BadRequestException;
 
     /**
      * Retrieve a document's text
@@ -85,8 +78,7 @@ public interface DocumentApi {
      * @return DocumentResponse containing document
      */
     @GET( DOCUMENT + DOCUMENT_ID_PATH )
-    DocumentResponse getDocument( @Path( REALM ) String realm, @Path( USER ) String user, @Path( ID ) String id )
-            throws ResourceNotFoundException;
+    DocumentResponse getDocument( @Path( ID ) String id ) throws ResourceNotFoundException;
 
     @POST( DOCUMENT )
     BasicResponse<List<Document>> getDocuments( @Body List<DocumentId> docIds ) throws ResourceNotFoundException;
@@ -105,12 +97,9 @@ public interface DocumentApi {
      * @throws ResourceNotFoundException
      */
     @POST( DOCUMENT + DOCUMENT_ID_PATH + "/fragments" )
-    DocumentFragmentResponse getDocumentFragments(
-            @Path( REALM ) String realm,
-            @Path( USER ) String user,
-            @Path( ID ) String id,
-            @Body DocumentFragmentRequest request ) throws ResourceNotFoundException;
+    DocumentFragmentResponse getDocumentFragments( @Path( ID ) String id, @Body DocumentFragmentRequest request )
+            throws ResourceNotFoundException;
 
     @DELETE( DOCUMENT + DOCUMENT_ID_PATH )
-    BasicResponse<String> delete( @Path( REALM ) String realm, @Path( USER ) String user, @Path( ID ) String id );
+    BasicResponse<String> delete( @Path( ID ) String id );
 }

@@ -1,13 +1,21 @@
 package com.kryptnostic.kodex.v1.client;
 
+import java.util.Map;
+import java.util.Set;
+
 import cern.colt.bitvector.BitVector;
 
+import com.kryptnostic.crypto.EncryptedSearchBridgeKey;
 import com.kryptnostic.crypto.EncryptedSearchSharingKey;
+import com.kryptnostic.crypto.v1.ciphers.RsaCompressingCryptoService;
+import com.kryptnostic.crypto.v1.ciphers.RsaCompressingEncryptionService;
 import com.kryptnostic.kodex.v1.exceptions.types.IrisException;
 import com.kryptnostic.kodex.v1.exceptions.types.ResourceNotFoundException;
+import com.kryptnostic.kodex.v1.exceptions.types.SecurityConfigurationException;
 import com.kryptnostic.kodex.v1.security.KryptnosticConnection;
 import com.kryptnostic.multivariate.gf2.SimplePolynomialFunction;
 import com.kryptnostic.sharing.v1.DocumentId;
+import com.kryptnostic.users.v1.UserKey;
 
 /**
  * KryptnosticContext is responsible for maintaining shared state between the KryptnosticClient and Kryptnostic
@@ -33,6 +41,9 @@ public interface KryptnosticContext {
     EncryptedSearchSharingKey generateSharingKey();
 
     BitVector encryptNonce( BitVector nonce );
+    
+    byte[] rsaDecrypt( byte[] ciphertext ) throws SecurityConfigurationException;
+    byte[] rsaEncrypt( byte[] plaintext ) throws SecurityConfigurationException;
 
     void submitBridgeKeyWithSearchNonce(
             DocumentId documentId,
@@ -43,4 +54,10 @@ public interface KryptnosticContext {
             throws ResourceNotFoundException;
 
     BitVector prepareSearchToken( String token );
+
+    Map<UserKey, RsaCompressingEncryptionService> getEncryptionServiceForUsers( Set<UserKey> users );
+
+    RsaCompressingCryptoService getRsaCryptoService() throws SecurityConfigurationException;
+
+    EncryptedSearchBridgeKey fromSharingKey( EncryptedSearchSharingKey sharingKey ) throws IrisException;
 }

@@ -15,13 +15,7 @@ public class DocumentIdKeySerializer extends JsonSerializer<DocumentId> {
     @Override
     public void serialize( DocumentId value, JsonGenerator jgen, SerializerProvider provider ) throws IOException,
             JsonProcessingException {
-        String docId = value.getDocumentId();
-        String realm = value.getUser().getRealm();
-        String name = value.getUser().getName();
-
-        String text = docId + VALUE_SEPARATOR + realm + VALUE_SEPARATOR + name;
-
-        jgen.writeFieldName( text );
+        jgen.writeFieldName( value.getDocumentId() );
     }
 
 }

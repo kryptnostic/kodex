@@ -147,10 +147,8 @@ public class KodexTests {
                 EncryptedSearchPrivateKey.class.getCanonicalName(),
                 EncryptedSearchPrivateKey.class );
 
-//        QueryHasherPairRequest reloaded = actual.getKeyWithJackson( QueryHasherPairRequest.class );
 
         bridgeKey = new EncryptedSearchBridgeKey( recoveredSearchKey, sharingKey );
-
 
         Assert.assertEquals( searchKey.getLeftSquaringMatrix(), recoveredSearchKey.getLeftSquaringMatrix() );
         Assert.assertEquals( searchKey.getRightSquaringMatrix(), recoveredSearchKey.getRightSquaringMatrix() );

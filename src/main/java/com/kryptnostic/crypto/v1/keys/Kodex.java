@@ -33,6 +33,7 @@ import com.kryptnostic.crypto.v1.signatures.SignatureAlgorithm;
 import com.kryptnostic.kodex.v1.constants.Names;
 import com.kryptnostic.kodex.v1.exceptions.types.KodexException;
 import com.kryptnostic.kodex.v1.exceptions.types.SecurityConfigurationException;
+import com.kryptnostic.kodex.v1.marshalling.JacksonTypeRefKodexMarshaller;
 import com.kryptnostic.kodex.v1.serialization.jackson.KodexObjectMapperFactory;
 
 @JsonTypeInfo(
@@ -166,7 +167,6 @@ public class Kodex<K extends Comparable<K>> implements Serializable {
         try {
             lock.writeLock().lock();
             verify( publicKey );
-
             service = new AesCryptoService( keyProtectionAlgorithm, Cyphers.decrypt( seal, privateKey, encryptedKey ) );
             this.privateKey = privateKey;
         } catch ( InvalidKeyException e ) {

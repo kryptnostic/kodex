@@ -38,14 +38,12 @@ import com.kryptnostic.kodex.v1.indexing.metadata.Metadata;
 import com.kryptnostic.kodex.v1.serialization.jackson.KodexObjectMapperFactory;
 import com.kryptnostic.sharing.v1.DocumentId;
 import com.kryptnostic.storage.v1.models.request.AesEncryptableBase;
-import com.kryptnostic.users.v1.UserKey;
 
 public class EncryptableTests extends AesEncryptableBase {
 
-    private static final int     PRIVATE_KEY_BLOCK_SIZE = 64;
-    private static final UserKey user                   = new UserKey( "kryptnostic", "tester" );
-    private Kodex<String>        kodex;
-    private KeyPair              pair;
+    private static final int PRIVATE_KEY_BLOCK_SIZE = 64;
+    private Kodex<String>    kodex;
+    private KeyPair          pair;
 
     @Before
     public void initAll() throws InvalidKeyException, InvalidKeySpecException, NoSuchAlgorithmException,
@@ -106,7 +104,7 @@ public class EncryptableTests extends AesEncryptableBase {
 
     @Test
     public void encryptableMetadataConstructionTest() {
-        Metadata m = new Metadata( new DocumentId( "ABC", user ), "ABC", Arrays.asList( 1, 2, 3 ) );
+        Metadata m = new Metadata( new DocumentId( "ABC" ), "ABC", Arrays.asList( 1, 2, 3 ) );
         Encryptable<Metadata> plainString = new FheEncryptable<Metadata>( m );
 
         Assert.assertNull( plainString.getEncryptedData() );
@@ -118,7 +116,7 @@ public class EncryptableTests extends AesEncryptableBase {
     @Test
     public void encryptableMetadataEncryptionTest() throws JsonParseException, JsonMappingException, IOException,
             ClassNotFoundException, SecurityConfigurationException {
-        Metadata m = new Metadata( new DocumentId( "ABC", user ), "ABC", Arrays.asList( 1, 2, 3 ) );
+        Metadata m = new Metadata( new DocumentId( "ABC" ), "ABC", Arrays.asList( 1, 2, 3 ) );
         Encryptable<Metadata> plainString = new FheEncryptable<Metadata>( m );
         Encryptable<Metadata> cipherString = plainString.encrypt( kodex );
 
@@ -146,9 +144,9 @@ public class EncryptableTests extends AesEncryptableBase {
             NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException,
             InvalidParameterSpecException, SignatureException, SealedKodexException, CorruptKodexException,
             KodexException, InvalidAlgorithmParameterException {
-        
-        Metadata m1 = new Metadata( new DocumentId( "ABC", user ), "ABC", Arrays.asList( 1, 2, 3 ) );
-        Metadata m2 = new Metadata( new DocumentId( "ABC", user ), "ABC", Arrays.asList( 1, 2, 3 ) );
+
+        Metadata m1 = new Metadata( new DocumentId( "ABC" ), "ABC", Arrays.asList( 1, 2, 3 ) );
+        Metadata m2 = new Metadata( new DocumentId( "ABC" ), "ABC", Arrays.asList( 1, 2, 3 ) );
         Encryptable<Metadata> plainString1 = new FheEncryptable<Metadata>( m1 );
         Encryptable<Metadata> plainString2 = new FheEncryptable<Metadata>( m2 );
         Encryptable<Metadata> cipherString1 = plainString1.encrypt( kodex );
@@ -163,7 +161,7 @@ public class EncryptableTests extends AesEncryptableBase {
 
         Encryptables em = deserialize( out, Encryptables.class );
 
-        Assert.assertEquals(meta.size(), em.size());
+        Assert.assertEquals( meta.size(), em.size() );
     }
 
 }
