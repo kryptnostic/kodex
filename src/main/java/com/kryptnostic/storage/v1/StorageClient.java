@@ -86,6 +86,8 @@ public interface StorageClient {
      */
     Document getDocument( DocumentId id ) throws ResourceNotFoundException;
 
+    List<Document> getDocuments( List<DocumentId> ids ) throws ResourceNotFoundException;
+
     /**
      * Push metadata to the service
      * 

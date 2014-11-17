@@ -58,4 +58,9 @@ public class DocumentId implements Serializable {
         }
         return true;
     }
+
+    @Override
+    public String toString() {
+        return documentId;
+    }
 }

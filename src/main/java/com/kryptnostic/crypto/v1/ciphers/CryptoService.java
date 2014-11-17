@@ -22,7 +22,7 @@ public class CryptoService extends AbstractCryptoService {
     private static final String        FACTORY_TYPE_FIELD          = "keyDerivationAlgorithm";
     private static final String        ITERATIONS_FIELD            = "iterations";
     private static final int           DEFAULT_PASSWORD_ITERATIONS = 128;
-    
+
     private final char[]               password;
     private final int                  iterations;
     private final SecretKeyFactoryType secretKeyFactoryType;
