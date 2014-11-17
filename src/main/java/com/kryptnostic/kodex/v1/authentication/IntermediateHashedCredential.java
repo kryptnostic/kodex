@@ -26,7 +26,7 @@ public final class IntermediateHashedCredential {
 
     public IntermediateHashedCredential( String credential, byte[] localSalt, byte[] remoteSalt ) throws InvalidKeySpecException,
             NoSuchAlgorithmException {
-        SecretKeyFactory skf = SecretKeyFactoryType.PBKDF2WithHmacSHA256.getInstance();
+        SecretKeyFactory skf = SecretKeyFactoryType.PBKDF2WithHmacSHA1.getInstance();
         PBEKeySpec spec = new PBEKeySpec( credential.toCharArray(), localSalt, ITERATIONS, KEY_SIZE );
         SecretKey key = skf.generateSecret( spec );
         this.credential = key.getEncoded();
