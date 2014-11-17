@@ -46,6 +46,9 @@ public class EncryptedSearchDocumentKey implements Serializable {
 
     @Override
     public boolean equals( Object o ) {
+        if( o == null ) { 
+            return false;
+        }
         EncryptedSearchDocumentKey other = (EncryptedSearchDocumentKey) o;
         return searchNonce.equals( other.searchNonce ) && bridgeKey.equals( other.bridgeKey );
     }

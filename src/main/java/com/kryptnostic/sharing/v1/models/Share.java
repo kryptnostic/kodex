@@ -59,4 +59,34 @@ public class Share implements Serializable {
                 request.getEncryptedDocumentKey(),
                 request.getUserKeys().get( user ) );
     }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ( ( documentId == null ) ? 0 : documentId.hashCode() );
+        return result;
+    }
+
+    @Override
+    public boolean equals( Object obj ) {
+        if ( this == obj ) {
+            return true;
+        }
+        if ( obj == null ) {
+            return false;
+        }
+        if ( !( obj instanceof Share ) ) {
+            return false;
+        }
+        Share other = (Share) obj;
+        if ( documentId == null ) {
+            if ( other.documentId != null ) {
+                return false;
+            }
+        } else if ( !documentId.equals( other.documentId ) ) {
+            return false;
+        }
+        return true;
+    }
 }

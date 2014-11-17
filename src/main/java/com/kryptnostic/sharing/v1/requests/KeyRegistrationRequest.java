@@ -1,22 +1,21 @@
 package com.kryptnostic.sharing.v1.requests;
 
-import java.util.Map;
-import java.util.UUID;
+import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.kryptnostic.kodex.v1.constants.Names;
-import com.kryptnostic.sharing.v1.models.PairedEncryptedSearchDocumentKey;
+import com.kryptnostic.storage.v1.models.EncryptedSearchDocumentKey;
 
 public final class KeyRegistrationRequest {
-    private final Map<UUID, PairedEncryptedSearchDocumentKey> searchDocumentKeys;
+    private final Set<EncryptedSearchDocumentKey> searchDocumentKeys;
 
     public KeyRegistrationRequest(
-            @JsonProperty( Names.DOCUMENT_SHARING_KEY_FIELD + "s" ) final Map<UUID, PairedEncryptedSearchDocumentKey> searchDocumentKeys ) {
+            @JsonProperty( Names.DOCUMENT_SHARING_KEY_FIELD + "s" ) final Set<EncryptedSearchDocumentKey> searchDocumentKeys ) {
         this.searchDocumentKeys = searchDocumentKeys;
     }
 
     @JsonProperty( Names.DOCUMENT_SHARING_KEY_FIELD + "s" )
-    public Map<UUID, PairedEncryptedSearchDocumentKey> getSearchDocumentKeys() {
+    public Set<EncryptedSearchDocumentKey> getSearchDocumentKeys() {
         return searchDocumentKeys;
     }
 }
