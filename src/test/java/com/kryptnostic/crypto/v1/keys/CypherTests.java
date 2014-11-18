@@ -17,10 +17,10 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.google.common.base.Charsets;
-import com.kryptnostic.crypto.v1.ciphers.AesCryptoService;
-import com.kryptnostic.crypto.v1.ciphers.BlockCiphertext;
-import com.kryptnostic.crypto.v1.ciphers.CryptoService;
-import com.kryptnostic.crypto.v1.ciphers.Cypher;
+import com.kryptnostic.kodex.v1.crypto.ciphers.AesCryptoService;
+import com.kryptnostic.kodex.v1.crypto.ciphers.BlockCiphertext;
+import com.kryptnostic.kodex.v1.crypto.ciphers.CryptoService;
+import com.kryptnostic.kodex.v1.crypto.ciphers.Cypher;
 import com.kryptnostic.kodex.v1.exceptions.types.SecurityConfigurationException;
 
 public class CypherTests {

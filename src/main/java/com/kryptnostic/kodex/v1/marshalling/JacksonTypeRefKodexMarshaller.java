@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.kryptnostic.crypto.v1.keys.KodexMarshaller;
+import com.kryptnostic.kodex.v1.crypto.keys.KodexMarshaller;
 import com.kryptnostic.kodex.v1.serialization.jackson.KodexObjectMapperFactory;
 
 public class JacksonTypeRefKodexMarshaller<T> implements KodexMarshaller<T> {

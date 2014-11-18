@@ -17,7 +17,7 @@ import org.junit.Test;
 
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonMappingException;
-import com.kryptnostic.crypto.v1.keys.Kodex.SealedKodexException;
+import com.kryptnostic.kodex.v1.crypto.keys.Kodex.SealedKodexException;
 import com.kryptnostic.kodex.v1.exceptions.types.SecurityConfigurationException;
 import com.kryptnostic.kodex.v1.models.utils.AesEncryptableUtils;
 import com.kryptnostic.storage.v1.models.request.AesEncryptableBase;

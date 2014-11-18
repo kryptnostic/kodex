@@ -3,10 +3,9 @@ package com.kryptnostic.sharing.v1.models;
 import java.io.Serializable;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.kryptnostic.directory.v1.models.UserKey;
 import com.kryptnostic.kodex.v1.constants.Names;
-import com.kryptnostic.sharing.v1.DocumentId;
-import com.kryptnostic.sharing.v1.SharingRequest;
-import com.kryptnostic.users.v1.UserKey;
+import com.kryptnostic.sharing.v1.models.request.SharingRequest;
 
 /**
  * Represents the information involved in securely sharing a document from on user

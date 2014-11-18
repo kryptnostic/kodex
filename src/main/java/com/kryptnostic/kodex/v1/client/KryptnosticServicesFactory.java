@@ -1,12 +1,11 @@
 package com.kryptnostic.kodex.v1.client;
 
-import com.kryptnostic.directory.v1.KeyApi;
-import com.kryptnostic.directory.v1.UsersApi;
-import com.kryptnostic.search.v1.client.SearchApi;
-import com.kryptnostic.sharing.v1.requests.SharingApi;
-import com.kryptnostic.storage.v1.client.DocumentApi;
-import com.kryptnostic.storage.v1.client.MetadataApi;
-import com.kryptnostic.storage.v1.client.SearchFunctionApi;
+import com.kryptnostic.directory.v1.http.DirectoryApi;
+import com.kryptnostic.search.v1.http.SearchApi;
+import com.kryptnostic.sharing.v1.http.SharingApi;
+import com.kryptnostic.storage.v1.http.DocumentApi;
+import com.kryptnostic.storage.v1.http.MetadataApi;
+import com.kryptnostic.storage.v1.http.SearchFunctionApi;
 
 /**
  * This provides interfaces to Kryptnostic server-side services
@@ -23,7 +22,6 @@ public interface KryptnosticServicesFactory {
 
     SharingApi createSharingApi();
 
-    KeyApi createKeyApi();
+    DirectoryApi createDirectoryApi();
 
-    UsersApi createUsersApi();
 }

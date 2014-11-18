@@ -5,7 +5,7 @@ import java.io.Serializable;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.kryptnostic.crypto.v1.keys.Kodex;
+import com.kryptnostic.kodex.v1.crypto.keys.Kodex;
 
 public class Document implements Serializable {
     private static final long serialVersionUID = -8243618155514369238L;

@@ -6,7 +6,7 @@ import com.fasterxml.jackson.dataformat.smile.SmileFactory;
 import com.fasterxml.jackson.datatype.guava.GuavaModule;
 import com.fasterxml.jackson.module.afterburner.AfterburnerModule;
 import com.kryptnostic.crypto.padding.ZeroPaddingStrategy;
-import com.kryptnostic.crypto.v1.keys.Kodex;
+import com.kryptnostic.kodex.v1.crypto.keys.Kodex;
 import com.kryptnostic.kodex.v1.models.AesEncryptable;
 import com.kryptnostic.kodex.v1.models.FheEncryptable;
 import com.kryptnostic.multivariate.polynomial.BasePolynomialFunction;

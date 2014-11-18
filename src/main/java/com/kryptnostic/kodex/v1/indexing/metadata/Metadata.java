@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
-import com.kryptnostic.sharing.v1.DocumentId;
+import com.kryptnostic.sharing.v1.models.DocumentId;
 
 public class Metadata {
     public static final String  DOCUMENT_ID = "documentId";

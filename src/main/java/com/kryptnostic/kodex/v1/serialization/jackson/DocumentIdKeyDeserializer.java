@@ -5,7 +5,7 @@ import java.io.IOException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.KeyDeserializer;
-import com.kryptnostic.sharing.v1.DocumentId;
+import com.kryptnostic.sharing.v1.models.DocumentId;
 
 public class DocumentIdKeyDeserializer extends KeyDeserializer {
 

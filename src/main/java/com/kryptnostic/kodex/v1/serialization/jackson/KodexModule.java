@@ -7,10 +7,10 @@ import com.fasterxml.jackson.databind.module.SimpleDeserializers;
 import com.fasterxml.jackson.databind.module.SimpleKeyDeserializers;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.module.SimpleSerializers;
-import com.kryptnostic.crypto.v1.keys.Kodex;
+import com.kryptnostic.kodex.v1.crypto.keys.Kodex;
 import com.kryptnostic.kodex.v1.models.Encryptable;
 import com.kryptnostic.multivariate.gf2.Monomial;
-import com.kryptnostic.sharing.v1.DocumentId;
+import com.kryptnostic.sharing.v1.models.DocumentId;
 
 @SuppressWarnings( "serial" )
 public class KodexModule extends SimpleModule {

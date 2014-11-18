@@ -9,7 +9,7 @@ import javax.crypto.spec.PBEKeySpec;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.kryptnostic.crypto.v1.keys.SecretKeyFactoryType;
+import com.kryptnostic.kodex.v1.crypto.keys.SecretKeyFactoryType;
 
 public final class IntermediateHashedCredential {
     private static final String CREDENTIAL_FIELD = "credential";

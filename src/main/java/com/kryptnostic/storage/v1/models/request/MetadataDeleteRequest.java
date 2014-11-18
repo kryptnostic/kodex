@@ -3,7 +3,7 @@ package com.kryptnostic.storage.v1.models.request;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.kryptnostic.sharing.v1.DocumentId;
+import com.kryptnostic.sharing.v1.models.DocumentId;
 
 public class MetadataDeleteRequest {
     public final static String FIELD_METADATA = "metadata";

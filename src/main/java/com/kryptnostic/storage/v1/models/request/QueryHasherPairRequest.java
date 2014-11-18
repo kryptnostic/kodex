@@ -11,7 +11,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.google.common.hash.HashFunction;
 import com.google.common.hash.Hashing;
-import com.kryptnostic.crypto.v1.keys.JacksonKodexMarshaller;
+import com.kryptnostic.kodex.v1.crypto.keys.JacksonKodexMarshaller;
 import com.kryptnostic.multivariate.gf2.SimplePolynomialFunction;
 
 @JsonTypeInfo(

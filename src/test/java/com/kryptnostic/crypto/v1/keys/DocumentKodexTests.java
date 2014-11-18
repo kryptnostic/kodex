@@ -17,10 +17,12 @@ import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.kryptnostic.crypto.v1.ciphers.Cypher;
-import com.kryptnostic.crypto.v1.ciphers.Cyphers;
+import com.kryptnostic.directory.v1.models.UserKey;
+import com.kryptnostic.kodex.v1.crypto.ciphers.Cypher;
+import com.kryptnostic.kodex.v1.crypto.ciphers.Cyphers;
+import com.kryptnostic.kodex.v1.crypto.keys.DocumentKodex;
+import com.kryptnostic.kodex.v1.crypto.keys.Keys;
 import com.kryptnostic.kodex.v1.exceptions.types.SecurityConfigurationException;
-import com.kryptnostic.users.v1.UserKey;
 
 public class DocumentKodexTests {
     private static final Logger logger = LoggerFactory.getLogger( DocumentKodexTests.class );

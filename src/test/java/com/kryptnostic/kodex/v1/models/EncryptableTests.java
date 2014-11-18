@@ -26,17 +26,17 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
 import com.kryptnostic.crypto.PrivateKey;
 import com.kryptnostic.crypto.PublicKey;
-import com.kryptnostic.crypto.v1.ciphers.Cypher;
-import com.kryptnostic.crypto.v1.keys.JacksonKodexMarshaller;
-import com.kryptnostic.crypto.v1.keys.Keys;
-import com.kryptnostic.crypto.v1.keys.Kodex;
-import com.kryptnostic.crypto.v1.keys.Kodex.CorruptKodexException;
-import com.kryptnostic.crypto.v1.keys.Kodex.SealedKodexException;
+import com.kryptnostic.kodex.v1.crypto.ciphers.Cypher;
+import com.kryptnostic.kodex.v1.crypto.keys.JacksonKodexMarshaller;
+import com.kryptnostic.kodex.v1.crypto.keys.Keys;
+import com.kryptnostic.kodex.v1.crypto.keys.Kodex;
+import com.kryptnostic.kodex.v1.crypto.keys.Kodex.CorruptKodexException;
+import com.kryptnostic.kodex.v1.crypto.keys.Kodex.SealedKodexException;
 import com.kryptnostic.kodex.v1.exceptions.types.KodexException;
 import com.kryptnostic.kodex.v1.exceptions.types.SecurityConfigurationException;
 import com.kryptnostic.kodex.v1.indexing.metadata.Metadata;
 import com.kryptnostic.kodex.v1.serialization.jackson.KodexObjectMapperFactory;
-import com.kryptnostic.sharing.v1.DocumentId;
+import com.kryptnostic.sharing.v1.models.DocumentId;
 import com.kryptnostic.storage.v1.models.request.AesEncryptableBase;
 
 public class EncryptableTests extends AesEncryptableBase {

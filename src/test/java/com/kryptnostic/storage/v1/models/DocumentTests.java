@@ -17,7 +17,7 @@ import org.junit.Test;
 
 import com.google.common.hash.HashFunction;
 import com.google.common.hash.Hashing;
-import com.kryptnostic.crypto.v1.keys.Kodex.SealedKodexException;
+import com.kryptnostic.kodex.v1.crypto.keys.Kodex.SealedKodexException;
 import com.kryptnostic.kodex.v1.exceptions.types.SecurityConfigurationException;
 import com.kryptnostic.kodex.v1.models.Encryptable;
 import com.kryptnostic.kodex.v1.models.utils.AesEncryptableUtils;

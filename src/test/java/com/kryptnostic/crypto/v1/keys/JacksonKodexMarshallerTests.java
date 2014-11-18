@@ -7,6 +7,8 @@ import org.junit.Test;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kryptnostic.crypto.PrivateKey;
+import com.kryptnostic.kodex.v1.crypto.keys.JacksonKodexMarshaller;
+import com.kryptnostic.kodex.v1.crypto.keys.KodexMarshaller;
 import com.kryptnostic.kodex.v1.serialization.jackson.KodexObjectMapperFactory;
 
 public class JacksonKodexMarshallerTests {

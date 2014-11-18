@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.kryptnostic.crypto.EncryptedSearchBridgeKey;
 import com.kryptnostic.kodex.v1.constants.Names;
-import com.kryptnostic.sharing.v1.DocumentId;
+import com.kryptnostic.sharing.v1.models.DocumentId;
 
 public class EncryptedSearchDocumentKey implements Serializable {
     private static final long              serialVersionUID   = -1727973926753941167L;

@@ -28,9 +28,14 @@ import com.kryptnostic.crypto.EncryptedSearchPrivateKey;
 import com.kryptnostic.crypto.EncryptedSearchSharingKey;
 import com.kryptnostic.crypto.PrivateKey;
 import com.kryptnostic.crypto.PublicKey;
-import com.kryptnostic.crypto.v1.ciphers.Cypher;
-import com.kryptnostic.crypto.v1.keys.Kodex.CorruptKodexException;
-import com.kryptnostic.crypto.v1.keys.Kodex.SealedKodexException;
+import com.kryptnostic.directory.v1.models.UserKey;
+import com.kryptnostic.kodex.v1.crypto.ciphers.Cypher;
+import com.kryptnostic.kodex.v1.crypto.keys.JacksonKodexMarshaller;
+import com.kryptnostic.kodex.v1.crypto.keys.Keys;
+import com.kryptnostic.kodex.v1.crypto.keys.Kodex;
+import com.kryptnostic.kodex.v1.crypto.keys.KodexMarshaller;
+import com.kryptnostic.kodex.v1.crypto.keys.Kodex.CorruptKodexException;
+import com.kryptnostic.kodex.v1.crypto.keys.Kodex.SealedKodexException;
 import com.kryptnostic.kodex.v1.exceptions.types.KodexException;
 import com.kryptnostic.kodex.v1.exceptions.types.SecurityConfigurationException;
 import com.kryptnostic.kodex.v1.serialization.jackson.KodexObjectMapperFactory;
@@ -39,7 +44,6 @@ import com.kryptnostic.linear.EnhancedBitMatrix.SingularMatrixException;
 import com.kryptnostic.multivariate.gf2.SimplePolynomialFunction;
 import com.kryptnostic.multivariate.util.SimplePolynomialFunctions;
 import com.kryptnostic.storage.v1.models.request.QueryHasherPairRequest;
-import com.kryptnostic.users.v1.UserKey;
 
 public class KodexTests {
     private static KeyPair                   pair;

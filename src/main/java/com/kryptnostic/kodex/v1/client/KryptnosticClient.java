@@ -1,14 +1,21 @@
 package com.kryptnostic.kodex.v1.client;
 
-import java.util.Set;
-
+import com.kryptnostic.directory.v1.DirectoryClient;
+import com.kryptnostic.kodex.v1.security.KryptnosticConnection;
 import com.kryptnostic.search.v1.SearchClient;
 import com.kryptnostic.sharing.v1.SharingClient;
 import com.kryptnostic.storage.v1.StorageClient;
-import com.kryptnostic.users.v1.UserKey;
 
-public interface KryptnosticClient extends SearchClient, StorageClient {
+public interface KryptnosticClient {
     KryptnosticContext getContext();
-    Set<UserKey> listUserInRealm( String realm );
+
+    KryptnosticConnection getConnection();
+
+    DirectoryClient getDirectoryClient();
+
     SharingClient getSharingClient();
+
+    SearchClient getSearchClient();
+
+    StorageClient getStorageClient();
 }

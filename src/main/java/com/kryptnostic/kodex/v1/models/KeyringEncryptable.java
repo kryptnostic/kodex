@@ -6,7 +6,7 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.kryptnostic.crypto.Ciphertext;
-import com.kryptnostic.crypto.v1.keys.Kodex;
+import com.kryptnostic.kodex.v1.crypto.keys.Kodex;
 import com.kryptnostic.kodex.v1.exceptions.types.SecurityConfigurationException;
 
 public class KeyringEncryptable<T> extends Encryptable<T> {

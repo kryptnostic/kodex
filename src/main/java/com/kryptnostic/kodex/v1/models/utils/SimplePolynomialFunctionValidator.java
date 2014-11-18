@@ -10,7 +10,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.kryptnostic.bitwise.BitVectors;
-import com.kryptnostic.crypto.v1.keys.JacksonKodexMarshaller;
+import com.kryptnostic.kodex.v1.crypto.keys.JacksonKodexMarshaller;
 import com.kryptnostic.multivariate.gf2.SimplePolynomialFunction;
 
 public class SimplePolynomialFunctionValidator implements Serializable {

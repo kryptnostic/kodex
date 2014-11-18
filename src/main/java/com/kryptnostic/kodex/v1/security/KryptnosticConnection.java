@@ -3,10 +3,10 @@ package com.kryptnostic.kodex.v1.security;
 import com.kryptnostic.crypto.EncryptedSearchPrivateKey;
 import com.kryptnostic.crypto.PrivateKey;
 import com.kryptnostic.crypto.PublicKey;
-import com.kryptnostic.crypto.v1.ciphers.ICryptoService;
-import com.kryptnostic.crypto.v1.keys.Kodex;
+import com.kryptnostic.directory.v1.models.UserKey;
+import com.kryptnostic.kodex.v1.crypto.ciphers.ICryptoService;
+import com.kryptnostic.kodex.v1.crypto.keys.Kodex;
 import com.kryptnostic.kodex.v1.storage.DataStore;
-import com.kryptnostic.users.v1.UserKey;
 
 /**
  * The KryptnosticConnection abstracts out persistence, key generation, and server connection information for down stream consumers.

@@ -3,6 +3,8 @@ package com.kryptnostic.crypto.v1.ciphers;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.kryptnostic.kodex.v1.crypto.ciphers.BlockCiphertext;
+
 public class BlockCiphertextTests {
 
     @Test

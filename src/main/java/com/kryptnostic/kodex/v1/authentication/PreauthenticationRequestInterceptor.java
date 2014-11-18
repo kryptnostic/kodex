@@ -2,7 +2,7 @@ package com.kryptnostic.kodex.v1.authentication;
 
 import retrofit.RequestInterceptor;
 
-import com.kryptnostic.users.v1.UserKey;
+import com.kryptnostic.directory.v1.models.UserKey;
 
 public class PreauthenticationRequestInterceptor implements RequestInterceptor {
     private UserKey user;

@@ -7,15 +7,15 @@ import cern.colt.bitvector.BitVector;
 
 import com.kryptnostic.crypto.EncryptedSearchBridgeKey;
 import com.kryptnostic.crypto.EncryptedSearchSharingKey;
-import com.kryptnostic.crypto.v1.ciphers.RsaCompressingCryptoService;
-import com.kryptnostic.crypto.v1.ciphers.RsaCompressingEncryptionService;
+import com.kryptnostic.directory.v1.models.UserKey;
+import com.kryptnostic.kodex.v1.crypto.ciphers.RsaCompressingCryptoService;
+import com.kryptnostic.kodex.v1.crypto.ciphers.RsaCompressingEncryptionService;
 import com.kryptnostic.kodex.v1.exceptions.types.IrisException;
 import com.kryptnostic.kodex.v1.exceptions.types.ResourceNotFoundException;
 import com.kryptnostic.kodex.v1.exceptions.types.SecurityConfigurationException;
 import com.kryptnostic.kodex.v1.security.KryptnosticConnection;
 import com.kryptnostic.multivariate.gf2.SimplePolynomialFunction;
-import com.kryptnostic.sharing.v1.DocumentId;
-import com.kryptnostic.users.v1.UserKey;
+import com.kryptnostic.sharing.v1.models.DocumentId;
 
 /**
  * KryptnosticContext is responsible for maintaining shared state between the KryptnosticClient and Kryptnostic
@@ -28,7 +28,7 @@ public interface KryptnosticContext {
 
     BitVector generateSearchNonce();
 
-    KryptnosticConnection getSecurityService();
+    KryptnosticConnection getConnection();
 
     /**
      * Get the global hash function required for search. Only make a request if necessary

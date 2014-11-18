@@ -4,7 +4,6 @@ import java.io.Serializable;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.kryptnostic.kodex.v1.constants.Names;
-import com.kryptnostic.sharing.v1.DocumentId;
 import com.kryptnostic.storage.v1.models.EncryptedSearchDocumentKey;
 
 public class PairedEncryptedSearchDocumentKey implements Serializable {

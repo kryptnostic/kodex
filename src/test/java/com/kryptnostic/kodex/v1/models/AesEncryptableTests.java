@@ -17,7 +17,7 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import com.kryptnostic.crypto.v1.keys.Kodex.SealedKodexException;
+import com.kryptnostic.kodex.v1.crypto.keys.Kodex.SealedKodexException;
 import com.kryptnostic.storage.v1.models.request.AesEncryptableBase;
 
 public class AesEncryptableTests extends AesEncryptableBase {

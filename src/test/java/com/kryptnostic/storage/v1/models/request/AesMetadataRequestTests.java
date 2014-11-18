@@ -25,19 +25,20 @@ import cern.colt.bitvector.BitVector;
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.kryptnostic.bitwise.BitVectors;
-import com.kryptnostic.crypto.v1.ciphers.CryptoService;
-import com.kryptnostic.crypto.v1.ciphers.Cypher;
-import com.kryptnostic.crypto.v1.keys.JacksonKodexMarshaller;
-import com.kryptnostic.crypto.v1.keys.Keys;
-import com.kryptnostic.crypto.v1.keys.Kodex;
-import com.kryptnostic.crypto.v1.keys.Kodex.CorruptKodexException;
-import com.kryptnostic.crypto.v1.keys.Kodex.SealedKodexException;
+import com.kryptnostic.kodex.v1.crypto.ciphers.CryptoService;
+import com.kryptnostic.kodex.v1.crypto.ciphers.Cypher;
+import com.kryptnostic.kodex.v1.crypto.keys.JacksonKodexMarshaller;
+import com.kryptnostic.kodex.v1.crypto.keys.Keys;
+import com.kryptnostic.kodex.v1.crypto.keys.Kodex;
+import com.kryptnostic.kodex.v1.crypto.keys.Kodex.CorruptKodexException;
+import com.kryptnostic.kodex.v1.crypto.keys.Kodex.SealedKodexException;
 import com.kryptnostic.kodex.v1.exceptions.types.KodexException;
 import com.kryptnostic.kodex.v1.exceptions.types.SecurityConfigurationException;
 import com.kryptnostic.kodex.v1.indexing.metadata.Metadata;
 import com.kryptnostic.kodex.v1.models.AesEncryptable;
 import com.kryptnostic.kodex.v1.models.Encryptable;
-import com.kryptnostic.sharing.v1.DocumentId;
+import com.kryptnostic.sharing.v1.models.DocumentId;
+import com.kryptnostic.storage.v1.models.IndexedMetadata;
 
 public class AesMetadataRequestTests extends AesEncryptableBase {
     private static final int INDEX_LENGTH = 256;
