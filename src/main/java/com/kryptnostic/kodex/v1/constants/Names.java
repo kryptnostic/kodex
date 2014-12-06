@@ -6,6 +6,7 @@ public final class Names {
     public static final String ADDRESS_FIELD                 = "address";
     public static final String ATTRIBUTES_FIELD              = "properties";
     public static final String APPROVAL_FIELD                = "approval";
+    public static final String BLOCKS_FIELD                  = "blocks";
     public static final String REVIEWER_FIELD                = "approver";
     public static final String BUSINESS_TYPE_FIELD           = "businessType";
     public static final String CLASS_FIELD                   = "@class";
