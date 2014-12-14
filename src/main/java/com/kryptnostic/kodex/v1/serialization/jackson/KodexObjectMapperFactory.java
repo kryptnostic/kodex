@@ -7,8 +7,6 @@ import com.fasterxml.jackson.datatype.guava.GuavaModule;
 import com.fasterxml.jackson.module.afterburner.AfterburnerModule;
 import com.kryptnostic.crypto.padding.ZeroPaddingStrategy;
 import com.kryptnostic.kodex.v1.crypto.keys.Kodex;
-import com.kryptnostic.kodex.v1.models.AesEncryptable;
-import com.kryptnostic.kodex.v1.models.FheEncryptable;
 import com.kryptnostic.multivariate.polynomial.BasePolynomialFunction;
 import com.kryptnostic.multivariate.polynomial.CompoundPolynomialFunctionGF2;
 import com.kryptnostic.multivariate.polynomial.OptimizedPolynomialFunctionGF2;

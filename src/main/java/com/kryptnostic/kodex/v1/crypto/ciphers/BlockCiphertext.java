@@ -9,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.kryptnostic.crypto.Ciphertext;
 
 /**
- * Holds the output of performing an AES encryption with {@link CryptoService}
+ * Holds the output of performing an AES encryption with {@link PasswordCryptoService}
  * 
  * @author Matthew Tamayo-Rios &lt;matthew@kryptnostic.com&gt;
  */

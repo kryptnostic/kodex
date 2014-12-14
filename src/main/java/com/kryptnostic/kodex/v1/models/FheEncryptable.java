@@ -14,6 +14,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kryptnostic.crypto.Ciphertext;
 import com.kryptnostic.crypto.PrivateKey;
 import com.kryptnostic.crypto.PublicKey;
+import com.kryptnostic.kodex.v1.constants.Names;
+import com.kryptnostic.kodex.v1.crypto.keys.CryptoServiceLoader;
 import com.kryptnostic.kodex.v1.crypto.keys.JacksonKodexMarshaller;
 import com.kryptnostic.kodex.v1.crypto.keys.Kodex;
 import com.kryptnostic.kodex.v1.crypto.keys.Kodex.SealedKodexException;
@@ -44,16 +46,17 @@ public class FheEncryptable<T> extends Encryptable<T> {
     public FheEncryptable(
             @JsonProperty( FIELD_ENCRYPTED_DATA ) Ciphertext ciphertext,
             @JsonProperty( FIELD_ENCRYPTED_CLASS_NAME ) Ciphertext className,
-            @JacksonInject Kodex<String> kodex ) throws JsonParseException,
+            @JsonProperty( Names.KEY_FIELD ) String keyId,
+            @JacksonInject CryptoServiceLoader loader ) throws JsonParseException,
             JsonMappingException,
             IOException,
             ClassNotFoundException,
             SecurityConfigurationException {
-        super( ciphertext, className, kodex );
+        super( ciphertext, className, keyId, loader);
     }
 
     @Override
-    protected Encryptable<T> encryptWith( Kodex<String> kodex ) throws SecurityConfigurationException {
+    protected Encryptable<T> encryptWith( CryptoServiceLoader loader ) throws SecurityConfigurationException {
         PublicKey key;
         Ciphertext encryptedData = null;
         Ciphertext encryptedClassName = null;

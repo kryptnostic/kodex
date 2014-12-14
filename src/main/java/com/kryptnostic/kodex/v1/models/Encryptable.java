@@ -12,7 +12,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.google.common.base.Preconditions;
 import com.kryptnostic.crypto.Ciphertext;
-import com.kryptnostic.kodex.v1.crypto.keys.Kodex;
+import com.kryptnostic.kodex.v1.constants.Names;
+import com.kryptnostic.kodex.v1.crypto.ciphers.PasswordCryptoService;
+import com.kryptnostic.kodex.v1.crypto.keys.CryptoServiceLoader;
 import com.kryptnostic.kodex.v1.exceptions.types.SecurityConfigurationException;
 
 /**
@@ -31,7 +33,7 @@ public abstract class Encryptable<T> implements Serializable {
     public static final String FIELD_CLASS                = "@class";
     public static final String FIELD_ENCRYPTED_CLASS_NAME = "name";
     public static final String FIELD_ENCRYPTED_DATA       = "data";
-
+    
     @JsonIgnore
     private final boolean      encrypted;
     @JsonIgnore
@@ -42,13 +44,16 @@ public abstract class Encryptable<T> implements Serializable {
     protected final Ciphertext encryptedData;
     @JsonProperty( FIELD_ENCRYPTED_CLASS_NAME )
     protected final Ciphertext encryptedClassName;
-
+    @JsonProperty( Names.KEY_FIELD )
+    protected final String keyId;
+    
     public Encryptable( T data ) {
         this.encrypted = false;
         this.data = data;
         this.className = data.getClass().getName();
         this.encryptedData = null;
         this.encryptedClassName = null;
+        this.keyId = PasswordCryptoService.class.getCanonicalName();
     }
 
     public Encryptable( Ciphertext ciphertext, Ciphertext className ) {
@@ -57,35 +62,38 @@ public abstract class Encryptable<T> implements Serializable {
         this.className = null;
         this.encryptedData = ciphertext;
         this.encryptedClassName = className;
+        this.keyId = PasswordCryptoService.class.getCanonicalName();
     }
 
-    public Encryptable( Ciphertext ciphertext, Ciphertext className, Kodex<String> kodex ) throws JsonParseException,
+    public Encryptable( Ciphertext ciphertext, Ciphertext className, String keyId, CryptoServiceLoader loader ) throws JsonParseException,
             JsonMappingException,
             IOException,
             ClassNotFoundException,
             SecurityConfigurationException {
-        if ( canDecryptWith( kodex ) ) {
+        if ( canDecryptWith( loader ) ) {
             Encryptable<T> encrypted = createEncrypted( ciphertext, className );
-            Encryptable<T> decrypted = encrypted.decryptWith( kodex );
+            Encryptable<T> decrypted = encrypted.decryptWith( loader );
             this.encrypted = false;
             this.data = decrypted.getData();
             this.className = decrypted.getClassName();
             this.encryptedData = null;
             this.encryptedClassName = null;
+            this.keyId = keyId;
         } else {
             this.encrypted = true;
             this.data = null;
             this.className = null;
             this.encryptedData = ciphertext;
             this.encryptedClassName = className;
+            this.keyId = keyId;
         }
     }
 
     protected abstract Encryptable<T> createEncrypted( Ciphertext ciphertext, Ciphertext className );
 
-    protected abstract boolean canDecryptWith( Kodex<String> kodex ) throws SecurityConfigurationException;
+    protected abstract boolean canDecryptWith( CryptoServiceLoader kodex ) throws SecurityConfigurationException;
 
-    public final Encryptable<T> encrypt( Kodex<String> kodex ) throws JsonProcessingException, SecurityConfigurationException {
+    public final Encryptable<T> encrypt( CryptoServiceLoader loader ) throws JsonProcessingException, SecurityConfigurationException {
         if ( this.encrypted ) {
             return this;
         }
@@ -94,13 +102,13 @@ public abstract class Encryptable<T> implements Serializable {
         Preconditions.checkState( this.encryptedData == null );
         Preconditions.checkState( this.encryptedClassName == null );
 
-        return encryptWith( kodex );
+        return encryptWith( loader );
     }
 
-    protected abstract Encryptable<T> encryptWith( Kodex<String> kodex ) throws JsonProcessingException,
+    protected abstract Encryptable<T> encryptWith( CryptoServiceLoader loader ) throws JsonProcessingException,
             SecurityConfigurationException;
 
-    public final Encryptable<T> decrypt( Kodex<String> kodex ) throws JsonParseException,
+    public final Encryptable<T> decrypt( CryptoServiceLoader loader ) throws JsonParseException,
             JsonMappingException, IOException, ClassNotFoundException, SecurityConfigurationException {
         if ( !this.encrypted ) {
             return this;
@@ -110,10 +118,10 @@ public abstract class Encryptable<T> implements Serializable {
         Preconditions.checkNotNull( this.encryptedData );
         Preconditions.checkNotNull( this.encryptedClassName );
 
-        return decryptWith( kodex );
+        return decryptWith( loader );
     }
 
-    protected abstract Encryptable<T> decryptWith( Kodex<String> kodex ) throws JsonParseException,
+    protected abstract Encryptable<T> decryptWith( CryptoServiceLoader loader ) throws JsonParseException,
             JsonMappingException, IOException, ClassNotFoundException, SecurityConfigurationException;
 
     @JsonIgnore

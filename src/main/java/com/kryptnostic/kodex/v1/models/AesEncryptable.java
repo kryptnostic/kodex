@@ -1,6 +1,9 @@
 package com.kryptnostic.kodex.v1.models;
 
 import java.io.IOException;
+import java.util.concurrent.ExecutionException;
+
+import org.apache.commons.codec.binary.StringUtils;
 
 import com.fasterxml.jackson.annotation.JacksonInject;
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -10,25 +13,25 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kryptnostic.crypto.Ciphertext;
+import com.kryptnostic.kodex.v1.constants.Names;
 import com.kryptnostic.kodex.v1.crypto.ciphers.BlockCiphertext;
 import com.kryptnostic.kodex.v1.crypto.ciphers.CryptoService;
+import com.kryptnostic.kodex.v1.crypto.ciphers.PasswordCryptoService;
+import com.kryptnostic.kodex.v1.crypto.keys.CryptoServiceLoader;
 import com.kryptnostic.kodex.v1.crypto.keys.JacksonKodexMarshaller;
-import com.kryptnostic.kodex.v1.crypto.keys.Kodex;
-import com.kryptnostic.kodex.v1.crypto.keys.Kodex.SealedKodexException;
-import com.kryptnostic.kodex.v1.exceptions.types.KodexException;
 import com.kryptnostic.kodex.v1.exceptions.types.SecurityConfigurationException;
 import com.kryptnostic.kodex.v1.serialization.jackson.KodexObjectMapperFactory;
 
 /**
- * Note: Using {@link CryptoService} implementation, any String data to be encrypted MUST be in UTF_8
+ * Note: Using {@link PasswordCryptoService} implementation, any String data to be encrypted MUST be in UTF_8
  */
 public class AesEncryptable<T> extends Encryptable<T> {
-    private static final long                            serialVersionUID          = -5071733999235074270L;
-    private static ObjectMapper                          mapper                    = KodexObjectMapperFactory
-                                                                                           .getObjectMapper();
-    private static JacksonKodexMarshaller<CryptoService> cryptoServiceKodexFactory = new JacksonKodexMarshaller<CryptoService>(
-                                                                                           CryptoService.class,
-                                                                                           mapper );
+    private static final long                                    serialVersionUID          = -5071733999235074270L;
+    private static ObjectMapper                                  mapper                    = KodexObjectMapperFactory
+                                                                                                   .getObjectMapper();
+    private static JacksonKodexMarshaller<PasswordCryptoService> cryptoServiceKodexFactory = new JacksonKodexMarshaller<PasswordCryptoService>(
+                                                                                                   PasswordCryptoService.class,
+                                                                                                   mapper );
 
     public AesEncryptable( T data ) {
         super( data );
@@ -42,28 +45,29 @@ public class AesEncryptable<T> extends Encryptable<T> {
     public AesEncryptable(
             @JsonProperty( FIELD_ENCRYPTED_DATA ) BlockCiphertext ciphertext,
             @JsonProperty( FIELD_ENCRYPTED_CLASS_NAME ) BlockCiphertext className,
-            @JacksonInject Kodex<String> kodex ) throws JsonParseException,
+            @JsonProperty( Names.KEY_FIELD ) String keyId,
+            @JacksonInject CryptoServiceLoader loader ) throws JsonParseException,
             JsonMappingException,
             IOException,
             ClassNotFoundException,
             SecurityConfigurationException {
-        super( ciphertext, className, kodex );
+        super( ciphertext, className, keyId, loader );
     }
 
     @Override
-    protected Encryptable<T> encryptWith( Kodex<String> kodex ) throws JsonProcessingException,
+    protected Encryptable<T> encryptWith( CryptoServiceLoader loader ) throws JsonProcessingException,
             SecurityConfigurationException {
-        CryptoService crypto;
+        CryptoService crypto = null;
         BlockCiphertext encryptedData = null;
         BlockCiphertext encryptedClassName = null;
         try {
-            crypto = kodex.getKey( CryptoService.class.getCanonicalName(), cryptoServiceKodexFactory );
-
-            encryptedData = crypto.encrypt( mapper.writeValueAsString( getData() ) );
-            encryptedClassName = crypto.encrypt( getClassName() );
-        } catch ( SealedKodexException | KodexException e ) {
+            crypto = loader.get( PasswordCryptoService.class.getCanonicalName() );
+        } catch ( ExecutionException e ) {
             wrapSecurityConfigurationException( e );
         }
+
+        encryptedData = crypto.encrypt( mapper.writeValueAsBytes( getData() ) );
+        encryptedClassName = crypto.encrypt( StringUtils.getBytesUtf8( getClassName() ) );
         return new AesEncryptable<T>( encryptedData, encryptedClassName );
     }
 
@@ -72,22 +76,21 @@ public class AesEncryptable<T> extends Encryptable<T> {
     }
 
     @Override
-    protected Encryptable<T> decryptWith( Kodex<String> kodex ) throws JsonParseException, JsonMappingException,
+    protected Encryptable<T> decryptWith( CryptoServiceLoader loader ) throws JsonParseException, JsonMappingException,
             IOException, ClassNotFoundException, SecurityConfigurationException {
-        CryptoService crypto;
+        CryptoService crypto = null;
         String className = null;
-        String objectString = null;
+        byte[] objectBytes = null;
         try {
-            crypto = kodex.getKey( CryptoService.class.getCanonicalName(), cryptoServiceKodexFactory );
-            className = crypto.decrypt( (BlockCiphertext) getEncryptedClassName() );
-            objectString = crypto.decrypt( (BlockCiphertext) getEncryptedData() );
-
-        } catch ( SealedKodexException | KodexException e ) {
+            crypto = loader.get( PasswordCryptoService.class.getCanonicalName() );
+        } catch ( ExecutionException e ) {
             wrapSecurityConfigurationException( e );
         }
+        className = StringUtils.newStringUtf8( crypto.decryptBytes( (BlockCiphertext) getEncryptedClassName() ) );
+        objectBytes = crypto.decryptBytes( (BlockCiphertext) getEncryptedData() );
 
         @SuppressWarnings( "unchecked" )
-        T obj = mapper.<T> readValue( objectString, (Class<T>) Class.forName( className ) );
+        T obj = mapper.<T> readValue( objectBytes, (Class<T>) Class.forName( className ) );
         return new AesEncryptable<T>( obj );
     }
 
@@ -97,11 +100,11 @@ public class AesEncryptable<T> extends Encryptable<T> {
     }
 
     @Override
-    protected boolean canDecryptWith( Kodex<String> kodex ) throws SecurityConfigurationException {
-        if ( kodex != null ) {
+    protected boolean canDecryptWith( CryptoServiceLoader loader ) throws SecurityConfigurationException {
+        if ( loader != null ) {
             try {
-                return kodex.containsKey( CryptoService.class.getCanonicalName() );
-            } catch ( SealedKodexException e ) {
+                return loader.get( keyId )!= null;
+            } catch ( ExecutionException e ) {
                 wrapSecurityConfigurationException( e );
             }
         }

@@ -19,17 +19,17 @@ import org.junit.Test;
 import com.google.common.base.Charsets;
 import com.kryptnostic.kodex.v1.crypto.ciphers.AesCryptoService;
 import com.kryptnostic.kodex.v1.crypto.ciphers.BlockCiphertext;
-import com.kryptnostic.kodex.v1.crypto.ciphers.CryptoService;
+import com.kryptnostic.kodex.v1.crypto.ciphers.PasswordCryptoService;
 import com.kryptnostic.kodex.v1.crypto.ciphers.Cypher;
 import com.kryptnostic.kodex.v1.exceptions.types.SecurityConfigurationException;
 
 public class CypherTests {
-    private static CryptoService    crypto;
+    private static PasswordCryptoService    crypto;
     private static AesCryptoService aesCrypto;
 
     @BeforeClass
     public static void createCryptoService() throws NoSuchAlgorithmException, InvalidAlgorithmParameterException {
-        crypto = new CryptoService( Cypher.AES_CTR_128, "crypto-test".toCharArray() );
+        crypto = new PasswordCryptoService( Cypher.AES_CTR_128, "crypto-test".toCharArray() );
         aesCrypto = new AesCryptoService( Cypher.AES_CTR_128 );
     }
 

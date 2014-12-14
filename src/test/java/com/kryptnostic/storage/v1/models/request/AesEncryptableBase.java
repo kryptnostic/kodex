@@ -18,7 +18,7 @@ import javax.crypto.NoSuchPaddingException;
 import com.kryptnostic.BaseSerializationTest;
 import com.kryptnostic.crypto.PrivateKey;
 import com.kryptnostic.crypto.PublicKey;
-import com.kryptnostic.kodex.v1.crypto.ciphers.CryptoService;
+import com.kryptnostic.kodex.v1.crypto.ciphers.PasswordCryptoService;
 import com.kryptnostic.kodex.v1.crypto.ciphers.Cypher;
 import com.kryptnostic.kodex.v1.crypto.keys.JacksonKodexMarshaller;
 import com.kryptnostic.kodex.v1.crypto.keys.Keys;
@@ -36,7 +36,7 @@ import com.kryptnostic.kodex.v1.serialization.jackson.KodexObjectMapperFactory;
  *
  */
 public class AesEncryptableBase extends BaseSerializationTest {
-    protected CryptoService crypto;
+    protected PasswordCryptoService crypto;
     protected KeyPair       pair;
     protected Kodex<String> kodex;
 
@@ -47,8 +47,8 @@ public class AesEncryptableBase extends BaseSerializationTest {
         resetSecurityConfiguration();
         // register key with object mapper
         this.kodex.unseal( pair.getPublic(), pair.getPrivate() );
-        this.kodex.setKey( CryptoService.class.getCanonicalName(), new JacksonKodexMarshaller<CryptoService>(
-                CryptoService.class ), crypto );
+        this.kodex.setKey( PasswordCryptoService.class.getCanonicalName(), new JacksonKodexMarshaller<PasswordCryptoService>(
+                PasswordCryptoService.class ), crypto );
     }
 
     protected void initFheEncryption() throws InvalidKeyException, InvalidKeySpecException, NoSuchAlgorithmException,
@@ -75,7 +75,7 @@ public class AesEncryptableBase extends BaseSerializationTest {
         this.kodex = new Kodex<String>( Cypher.RSA_OAEP_SHA1_1024, Cypher.AES_CTR_128, pair.getPublic() );
         this.kodex.unseal( pair.getPublic(), pair.getPrivate() );
         this.mapper = KodexObjectMapperFactory.getObjectMapper( kodex );
-        this.crypto = new CryptoService( Cypher.AES_CTR_128, new BigInteger( 130, new SecureRandom() ).toString(
+        this.crypto = new PasswordCryptoService( Cypher.AES_CTR_128, new BigInteger( 130, new SecureRandom() ).toString(
                 32 ).toCharArray() );
 
     }
