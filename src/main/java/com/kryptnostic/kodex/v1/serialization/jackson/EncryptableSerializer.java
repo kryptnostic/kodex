@@ -8,7 +8,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.jsontype.TypeSerializer;
-import com.kryptnostic.kodex.v1.crypto.keys.Kodex;
+import com.kryptnostic.kodex.v1.crypto.keys.CryptoServiceLoader;
 import com.kryptnostic.kodex.v1.exceptions.types.SecurityConfigurationException;
 import com.kryptnostic.kodex.v1.models.Encryptable;
 
@@ -16,10 +16,10 @@ import com.kryptnostic.kodex.v1.models.Encryptable;
 public class EncryptableSerializer extends JsonSerializer<Encryptable> {
 
     private static final String SECURITY_ERROR_MSG = "Security configuration error";
-    private final Kodex         kodex;
+    private final CryptoServiceLoader loader;
 
-    public EncryptableSerializer( Kodex kodex ) {
-        this.kodex = kodex;
+    public EncryptableSerializer( CryptoServiceLoader loader ) {
+        this.loader = loader;
     }
 
     @Override
@@ -49,10 +49,9 @@ public class EncryptableSerializer extends JsonSerializer<Encryptable> {
         jgen.writeEndObject();
     }
 
-    @SuppressWarnings( "unchecked" )
     private void writeFields( Encryptable value, JsonGenerator jgen, SerializerProvider provider ) throws IOException,
             SecurityConfigurationException {
-        Encryptable<?> encryptedValue = value.encrypt( kodex );
+        Encryptable<?> encryptedValue = value.encrypt( loader );
         jgen.writeObjectField( Encryptable.FIELD_ENCRYPTED_DATA, encryptedValue.getEncryptedData() );
         jgen.writeObjectField( Encryptable.FIELD_ENCRYPTED_CLASS_NAME, encryptedValue.getEncryptedClassName() );
     }
