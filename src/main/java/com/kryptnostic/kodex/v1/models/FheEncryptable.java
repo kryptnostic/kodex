@@ -2,42 +2,26 @@ package com.kryptnostic.kodex.v1.models;
 
 import java.io.IOException;
 
-import org.apache.commons.codec.binary.StringUtils;
-
-import com.fasterxml.jackson.annotation.JacksonInject;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kryptnostic.crypto.Ciphertext;
-import com.kryptnostic.crypto.PrivateKey;
-import com.kryptnostic.crypto.PublicKey;
-import com.kryptnostic.kodex.v1.constants.Names;
 import com.kryptnostic.kodex.v1.crypto.keys.CryptoServiceLoader;
-import com.kryptnostic.kodex.v1.crypto.keys.JacksonKodexMarshaller;
-import com.kryptnostic.kodex.v1.crypto.keys.Kodex;
-import com.kryptnostic.kodex.v1.crypto.keys.Kodex.SealedKodexException;
-import com.kryptnostic.kodex.v1.exceptions.types.KodexException;
 import com.kryptnostic.kodex.v1.exceptions.types.SecurityConfigurationException;
 import com.kryptnostic.kodex.v1.serialization.jackson.KodexObjectMapperFactory;
+import com.kryptnostic.storage.v1.models.DocumentBlock;
 
 public class FheEncryptable<T> extends Encryptable<T> {
     private static final long                         serialVersionUID       = -4740442054069941609L;
     private final static ObjectMapper                 mapper                 = KodexObjectMapperFactory
                                                                                      .getObjectMapper();
-    private static JacksonKodexMarshaller<PublicKey>  publicKeyKodexFactory  = new JacksonKodexMarshaller<PublicKey>(
-                                                                                     PublicKey.class,
-                                                                                     mapper );
-    private static JacksonKodexMarshaller<PrivateKey> privateKeyKodexFactory = new JacksonKodexMarshaller<PrivateKey>(
 
-                                                                             PrivateKey.class, mapper );
-
+    //TODO: Re-implement FheEncryptable via an FheCryptoService.
     public FheEncryptable( T data ) {
         super( data );
     }
-
+/*
     public FheEncryptable( Ciphertext ciphertext, Ciphertext className ) {
         super( ciphertext, className );
     }
@@ -61,7 +45,7 @@ public class FheEncryptable<T> extends Encryptable<T> {
         Ciphertext encryptedData = null;
         Ciphertext encryptedClassName = null;
         try {
-            key = kodex.getKey( PublicKey.class.getCanonicalName(), publicKeyKodexFactory );
+            key = loader.get( PublicKey.class.getCanonicalName() );
             if ( key == null ) {
                 throw new NullPointerException( "No public key found" );
             }
@@ -110,5 +94,50 @@ public class FheEncryptable<T> extends Encryptable<T> {
         }
         return false;
     }
+*/
 
+
+    @Override
+    protected Encryptable<T> createEncrypted( DocumentBlock[] ciphertext, Ciphertext className ) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+
+    @Override
+    protected boolean canDecryptWith( CryptoServiceLoader kodex ) throws SecurityConfigurationException {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+
+    @Override
+    protected Encryptable<T> encryptWith( CryptoServiceLoader loader ) throws JsonProcessingException,
+            SecurityConfigurationException {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+
+    @Override
+    protected Encryptable<T> decryptWith( CryptoServiceLoader loader ) throws JsonParseException, JsonMappingException,
+            IOException, ClassNotFoundException, SecurityConfigurationException {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+
+    @Override
+    protected Iterable<byte[]> toUnencryptedBlocks() throws JsonProcessingException {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+
+    @Override
+    protected T fromBlocks( Iterable<byte[]> unencryptedBlocks, String className ) throws IOException,
+            ClassNotFoundException {
+        // TODO Auto-generated method stub
+        return null;
+    }
 }

@@ -1,5 +1,7 @@
 package com.kryptnostic.storage.v1.models;
 
+import java.util.Arrays;
+
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.kryptnostic.kodex.v1.crypto.ciphers.BlockCiphertext;
@@ -11,14 +13,14 @@ public class DocumentBlock {
     public static final String FIELD_INDEX  = "index";
 
     private BlockCiphertext    block;
-    private String             verify;
+    private byte[]             verify;
     private int                total;
     private int                index;
 
     @JsonCreator
     public DocumentBlock(
             @JsonProperty( FIELD_BLOCK ) BlockCiphertext block,
-            @JsonProperty( FIELD_VERIFY ) String verify,
+            @JsonProperty( FIELD_VERIFY ) byte[] verify,
             @JsonProperty( FIELD_TOTAL ) int total,
             @JsonProperty( FIELD_INDEX ) int index ) {
         this.block = block;
@@ -33,7 +35,7 @@ public class DocumentBlock {
     }
 
     @JsonProperty( FIELD_VERIFY )
-    public String getVerify() {
+    public byte[] getVerify() {
         return verify;
     }
 
@@ -50,6 +52,6 @@ public class DocumentBlock {
     @Override
     public boolean equals( Object o ) {
         DocumentBlock d = (DocumentBlock) o;
-        return block.equals( d.block ) && verify.equals( d.verify ) && total == d.total && index == ( d.index );
+        return block.equals( d.block ) && Arrays.equals( verify , d.verify ) && total == d.total && index == ( d.index );
     }
 }

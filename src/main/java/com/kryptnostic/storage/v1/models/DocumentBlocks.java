@@ -1,17 +1,18 @@
 package com.kryptnostic.storage.v1.models;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.collect.Lists;
-import com.kryptnostic.kodex.v1.models.utils.AesEncryptableUtils;
+import com.kryptnostic.kodex.v1.models.AesEncryptable;
 
 public class DocumentBlocks implements Serializable {
-    private static final long serialVersionUID = -7306228218357504656L;
+    private static final long   serialVersionUID = -7306228218357504656L;
 
-    private static final String FIELD_BLOCKS = "blocks";
+    private static final String FIELD_BLOCKS     = "blocks";
 
     private List<DocumentBlock> blocks;
 
@@ -20,7 +21,7 @@ public class DocumentBlocks implements Serializable {
     }
 
     @JsonCreator
-    public DocumentBlocks(@JsonProperty(FIELD_BLOCKS) List<DocumentBlock> blocks) {
+    public DocumentBlocks( @JsonProperty( FIELD_BLOCKS ) List<DocumentBlock> blocks ) {
         this.blocks = blocks;
     }
 
@@ -37,12 +38,14 @@ public class DocumentBlocks implements Serializable {
      * which is not guaranteed to be consistent with the document blocks
      */
     @Override
-    public boolean equals(Object o) {
+    public boolean equals( Object o ) {
         DocumentBlocks other = (DocumentBlocks) o;
         return size() == other.size();
     }
 
-    public static boolean isValid(DocumentBlock block) {
-        return AesEncryptableUtils.hashEncryptableBytes(block.getBlock()).equals(block.getVerify());
+    public static boolean isValid( DocumentBlock block ) {
+        return Arrays.equals(
+                AesEncryptable.hashFunction.hashBytes( block.getBlock().getContents() ).asBytes(),
+                block.getVerify() );
     }
 }

@@ -1,23 +1,19 @@
 package com.kryptnostic.kodex.v1.models.utils;
 
 import java.io.IOException;
-import java.util.Collection;
 import java.util.List;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.google.common.collect.Lists;
 import com.google.common.hash.HashFunction;
 import com.google.common.hash.Hashing;
-import com.kryptnostic.kodex.v1.crypto.keys.Kodex;
+import com.kryptnostic.kodex.v1.crypto.keys.CryptoServiceLoader;
 import com.kryptnostic.kodex.v1.exceptions.types.SecurityConfigurationException;
 import com.kryptnostic.kodex.v1.models.AesEncryptable;
 import com.kryptnostic.storage.v1.models.Document;
 import com.kryptnostic.storage.v1.models.DocumentBlock;
-import com.kryptnostic.storage.v1.models.DocumentBlocks;
 import com.kryptnostic.storage.v1.models.DocumentMetadata;
 
 public class AesEncryptableUtils {
@@ -61,7 +57,7 @@ public class AesEncryptableUtils {
      * @throws SecurityConfigurationException
      * @throws JsonProcessingException
      */
-    public static List<AesEncryptable<String>> chunkString( String documentBody, Kodex<String> kodex )
+    public static List<AesEncryptable<String>> chunkString( String documentBody, CryptoServiceLoader loader )
             throws JsonProcessingException, SecurityConfigurationException {
         int charsLeft = documentBody.length();
         int startIndex = 0;
@@ -83,7 +79,7 @@ public class AesEncryptableUtils {
             String strChunk = new String( charChunk );
 
             AesEncryptable<String> encryptedChunk = new AesEncryptable<String>( strChunk );
-            encryptedChunks.add( (AesEncryptable<String>) encryptedChunk.encrypt( kodex ) );
+            encryptedChunks.add( (AesEncryptable<String>) encryptedChunk.encrypt( loader ) );
 
             charsLeft -= CHUNK_MAX;
             startIndex += CHUNK_MAX;
@@ -92,90 +88,14 @@ public class AesEncryptableUtils {
         return encryptedChunks;
     }
 
-    public static List<VerifiedString> chunkStringWithVerification( String documentBody, Kodex<String> kodex )
-            throws SecurityConfigurationException, IOException, ClassNotFoundException {
-        List<AesEncryptable<String>> encryptableStrings = AesEncryptableUtils.chunkString( documentBody, kodex );
-        return AesEncryptableUtils.generateVerificationHashFromEncryptables( encryptableStrings );
-    }
-
-    public static Document createEncryptedDocument( String documentId, String body, Kodex<String> kodex )
-            throws SecurityConfigurationException, IOException, ClassNotFoundException {
-
-        List<VerifiedString> verifiedStrings = chunkStringWithVerification( body, kodex );
-        return createEncryptedDocument( documentId, body, VerifiedString.getEncryptables( verifiedStrings ) );
-    }
-
     public static Document createEncryptedDocument(
             String documentId,
             String body,
-            Collection<AesEncryptable<String>> encryptableStrings ) throws SecurityConfigurationException, IOException,
+            AesEncryptable<String> encryptableString ) throws SecurityConfigurationException, IOException,
             ClassNotFoundException {
-        DocumentBlocks blocks = new DocumentBlocks();
 
-        int index = 0;
-        for ( AesEncryptable<String> encryptedString : encryptableStrings ) {
-            DocumentBlock block = new DocumentBlock(
-                    encryptedString,
-                    AesEncryptableUtils.generateVerificationHashForEncryptable( encryptedString ),
-                    encryptableStrings.size(),
-                    index );
-            blocks.getBlocks().add( block );
-            index++;
-        }
-
-        return new Document( new DocumentMetadata( documentId, index ), blocks.getBlocks().toArray(
-                new DocumentBlock[ 0 ] ) );
-    }
-
-    public static List<VerifiedString> generateVerificationHashFromBlocks( Collection<DocumentBlock> blocks )
-            throws SecurityConfigurationException, IOException, ClassNotFoundException {
-        List<AesEncryptable<String>> strs = Lists.newArrayList();
-
-        for ( DocumentBlock b : blocks ) {
-            strs.add( b.getBlock() );
-        }
-
-        return AesEncryptableUtils.generateVerificationHashFromEncryptables( strs );
-    }
-
-    /**
-     * 
-     * @param encryptableString
-     * @return Verification hash for the encryptable
-     * @throws SecurityConfigurationException
-     */
-    public static String generateVerificationHashForEncryptable( AesEncryptable<String> encryptableString )
-            throws SecurityConfigurationException {
-        if ( !encryptableString.isEncrypted() ) {
-            throw new SecurityConfigurationException(
-                    "Encryptable string must be encrypted, but was found in a decrypted state. Please apply encryption before generating a verification hash." );
-        }
-        return hashFunction.hashBytes( encryptableString.getEncryptedData().getContents() ).toString();
-    }
-
-    public static List<VerifiedString> generateVerificationHashFromEncryptables(
-            List<AesEncryptable<String>> encryptableStrings ) throws SecurityConfigurationException {
-        List<VerifiedString> verifications = Lists.newArrayList();
-        for ( AesEncryptable<String> encryptableString : encryptableStrings ) {
-            verifications.add( new VerifiedString(
-                    generateVerificationHashForEncryptable( encryptableString ),
-                    encryptableString ) );
-        }
-
-        return verifications;
-    }
-
-    public static String hashEncryptableBytes( AesEncryptable<?> encryptable ) {
-        return hashFunction.hashBytes( encryptable.getEncryptedData().getContents() ).toString();
-    }
-
-    public static String readBlocks( DocumentBlock[] blocks, Kodex<String> kodex ) throws JsonParseException,
-            JsonMappingException, IOException, ClassNotFoundException, SecurityConfigurationException {
-        String res = "";
-        for ( DocumentBlock block : blocks ) {
-            res += block.getBlock().decrypt( kodex ).getData();
-        }
-        return res;
+        DocumentBlock[] blocks = encryptableString.getEncryptedData();
+        return new Document( new DocumentMetadata( documentId, blocks.length ), blocks );
     }
 
     /**
