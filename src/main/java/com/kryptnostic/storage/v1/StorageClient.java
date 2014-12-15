@@ -4,11 +4,13 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.kryptnostic.kodex.v1.exceptions.types.BadRequestException;
 import com.kryptnostic.kodex.v1.exceptions.types.IrisException;
 import com.kryptnostic.kodex.v1.exceptions.types.ResourceLockedException;
 import com.kryptnostic.kodex.v1.exceptions.types.ResourceNotFoundException;
 import com.kryptnostic.kodex.v1.exceptions.types.SecurityConfigurationException;
+import com.kryptnostic.kodex.v1.models.Encryptable;
 import com.kryptnostic.sharing.v1.models.DocumentId;
 import com.kryptnostic.storage.v1.models.Document;
 import com.kryptnostic.storage.v1.models.request.MetadataRequest;
@@ -28,9 +30,10 @@ public interface StorageClient {
      * @throws BadRequestException The document was rejected by the server
      * @throws IrisException An error occurred in the Kryptnostic Client
      * @throws SecurityConfigurationException The information required to encrypt the document was invalid
+     * @throws JsonProcessingException 
      */
     String uploadDocumentWithMetadata( String document ) throws BadRequestException, IrisException,
-            SecurityConfigurationException;
+            SecurityConfigurationException, JsonProcessingException;
 
     /**
      * Upload a document body without performing an index or uploading search metadata to the server.
@@ -40,9 +43,10 @@ public interface StorageClient {
      * @throws BadRequestException The document was rejected by the server
      * @throws IrisException An error occurred in the Kryptnostic Client
      * @throws SecurityConfigurationException The information required to encrypt the document was invalid
+     * @throws JsonProcessingException 
      */
     String uploadDocumentWithoutMetadata( String document ) throws BadRequestException, IrisException,
-            SecurityConfigurationException;
+            SecurityConfigurationException, JsonProcessingException;
 
     /**
      * Update the document
@@ -57,7 +61,7 @@ public interface StorageClient {
      *             The particular document is currently pending an update
      * @throws SecurityConfigurationException The information required to encrypt the document was invalid
      */
-    String updateDocumentWithMetadata( String id, String documentBody ) throws BadRequestException,
+    String updateDocumentWithMetadata( String id, String documentBody, Encryptable<String> body ) throws BadRequestException,
             ResourceNotFoundException, ResourceLockedException, SecurityConfigurationException, IrisException;
 
     /**
@@ -74,7 +78,7 @@ public interface StorageClient {
      * @throws SecurityConfigurationException The information required to encrypt the document was invalid
      */
 
-    String updateDocumentWithoutMetadata( String id, String documentBody ) throws BadRequestException,
+    String updateDocumentWithoutMetadata( String id, Encryptable<String> documentBody ) throws BadRequestException,
             ResourceNotFoundException, ResourceLockedException, SecurityConfigurationException, IrisException;
 
     /**

@@ -19,8 +19,10 @@ import com.google.common.hash.HashFunction;
 import com.google.common.hash.Hashing;
 import com.kryptnostic.kodex.v1.crypto.keys.Kodex.SealedKodexException;
 import com.kryptnostic.kodex.v1.exceptions.types.SecurityConfigurationException;
+import com.kryptnostic.kodex.v1.models.AesEncryptable;
 import com.kryptnostic.kodex.v1.models.Encryptable;
 import com.kryptnostic.kodex.v1.models.utils.AesEncryptableUtils;
+import com.kryptnostic.sharing.v1.models.DocumentId;
 import com.kryptnostic.storage.v1.models.request.AesEncryptableBase;
 
 public class DocumentTests extends AesEncryptableBase {
@@ -31,17 +33,18 @@ public class DocumentTests extends AesEncryptableBase {
             IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, InvalidKeySpecException,
             InvalidParameterSpecException, SealedKodexException, SignatureException,Exception {
         initImplicitEncryption();
-
-        Document d1 = AesEncryptableUtils.createEncryptedDocument( "document1", "cool document", kodex );
-        Document d2 = AesEncryptableUtils.createEncryptedDocument( "document1", "cool document", kodex );
+        Encryptable<String> b1 = new AesEncryptable<String>("cool document").encrypt( kodex );
+        
+        Document d1 = new Document( new DocumentId( "document1" ) , new AesEncryptable<String>("cool document").encrypt( kodex ).getEncryptedData()  );
+        Document d2 = new Document( new DocumentId( "document1" ) , new AesEncryptable<String>("cool document").encrypt( kodex ).getEncryptedData()  );
 
         Assert.assertEquals( d1, d1 );
         Assert.assertEquals( d1, d2 );
 
-        Document d3 = AesEncryptableUtils.createEncryptedDocument( "document2", "cool document", kodex );
+        Document d3 = new Document( new DocumentId( "document2" ) , new AesEncryptable<String>("cool document").encrypt( kodex ).getEncryptedData()  );
         Assert.assertNotEquals( d1, d3 );
 
-        Document d4 = AesEncryptableUtils.createEncryptedDocument( "document1", "cool document cool", kodex );
+        Document d4 = new Document( new DocumentId( "document1" ) , new AesEncryptable<String>("cool document cool").encrypt( kodex ).getEncryptedData()  );
         Assert.assertEquals( d1, d4 );
         Assert.assertNotEquals( d1, d3 );
     }

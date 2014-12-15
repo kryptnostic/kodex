@@ -1,5 +1,6 @@
 package com.kryptnostic.kodex.v1.models;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
 import java.nio.ByteBuffer;
@@ -49,7 +50,7 @@ import com.kryptnostic.storage.v1.models.DocumentBlock;
 public abstract class Encryptable<T> implements Serializable {
     private static final long        serialVersionUID           = 5128167833341065251L;
     protected static ObjectMapper    mapper                     = KodexObjectMapperFactory.getObjectMapper();
-    protected static final int         BLOCK_LENGTH_IN_BYTES = 4096;
+    protected static final int       BLOCK_LENGTH_IN_BYTES      = 4096;
     public static final HashFunction hashFunction               = Hashing.sha256();
     public static final String       FIELD_CLASS                = "@class";
     public static final String       FIELD_ENCRYPTED_CLASS_NAME = "name";
@@ -68,7 +69,7 @@ public abstract class Encryptable<T> implements Serializable {
     @JsonProperty( Names.KEY_FIELD )
     protected final String           keyId;
     @JsonIgnore
-    protected transient ByteBuffer   dataBuffer;
+    protected transient ByteBuffer   plaintext;
 
     public Encryptable( T data ) {
         this.encrypted = false;
@@ -111,10 +112,6 @@ public abstract class Encryptable<T> implements Serializable {
             this.keyId = keyId;
         }
     }
-
-    protected abstract Encryptable<T> createEncrypted( DocumentBlock[] ciphertext, Ciphertext className );
-
-    protected abstract boolean canDecryptWith( CryptoServiceLoader kodex ) throws SecurityConfigurationException;
 
     public final Encryptable<T> encrypt( CryptoServiceLoader loader ) throws JsonProcessingException,
             SecurityConfigurationException {
@@ -196,8 +193,7 @@ public abstract class Encryptable<T> implements Serializable {
 
         int remaining = plaintext.remaining();
 
-        List<byte[]> byteBlocks = Lists.newArrayListWithCapacity( ( remaining / BLOCK_LENGTH_IN_BYTES )
-                + ( ( remaining % BLOCK_LENGTH_IN_BYTES ) == 0 ? 0 : 1 ) );
+        List<byte[]> byteBlocks = Lists.newArrayListWithCapacity( getBlockCount() );
         while ( remaining > 0 ) {
             byte[] block;
             // Re-allocate byte block each time as it will be handed off to list.
@@ -214,11 +210,13 @@ public abstract class Encryptable<T> implements Serializable {
         return byteBlocks;
     }
 
-
-    protected abstract T fromBlocks( Iterable<byte[]> unencryptedBlocks, String className ) throws IOException,
-            ClassNotFoundException;
-
-    protected abstract int getBlockCount();
+    public int getBlockCount() throws JsonProcessingException {
+        if ( plaintext == null ) {
+            plaintext = ByteBuffer.wrap( mapper.writeValueAsBytes( getData() ) );
+        }
+        int remaining = plaintext.remaining();
+        return ( remaining / BLOCK_LENGTH_IN_BYTES ) + ( ( remaining % BLOCK_LENGTH_IN_BYTES ) == 0 ? 0 : 1 );
+    }
 
     @JsonIgnore
     public T getData() {
@@ -253,6 +251,17 @@ public abstract class Encryptable<T> implements Serializable {
         throw new SecurityConfigurationException( "Error occurred while trying to encrypt or decrypt data.", e );
     }
 
+    protected boolean canDecryptWith( CryptoServiceLoader loader ) throws SecurityConfigurationException {
+        if ( loader != null ) {
+            try {
+                return loader.get( keyId ) != null;
+            } catch ( ExecutionException e ) {
+                wrapSecurityConfigurationException( e );
+            }
+        }
+        return false;
+    }
+
     protected static class BlockDecrypter implements Function<DocumentBlock, byte[]> {
         private static final Logger logger = LoggerFactory.getLogger( BlockDecrypter.class );
         private final CryptoService service;
@@ -272,4 +281,16 @@ public abstract class Encryptable<T> implements Serializable {
         }
 
     }
+
+    @SuppressWarnings( "unchecked" )
+    protected T fromBlocks( Iterable<byte[]> unencryptedBlocks, String className ) throws IOException,
+            ClassNotFoundException {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        for ( byte[] b : unencryptedBlocks ) {
+            baos.write( b );
+        }
+        return mapper.<T> readValue( baos.toByteArray(), (Class<T>) Class.forName( className ) );
+    }
+
+    protected abstract Encryptable<T> createEncrypted( DocumentBlock[] ciphertext, Ciphertext className );
 }
