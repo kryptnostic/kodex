@@ -42,7 +42,7 @@ public interface DocumentApi {
     /**
      * Request an existing document be put into a pending state
      * 
-     * @param documentId
+     * @param id
      * @param request
      * @return
      * @throws ResourceLockedException if the document is currently pending
@@ -60,7 +60,7 @@ public interface DocumentApi {
      * Postcondition: If this is the last block required to make the document valid, the document will be put into a
      * non-pending state and be available for reading
      * 
-     * @param documentId Id of document to update
+     * @param id Id of document to update
      * @param block A single block for the document
      * @return The progress and verification data for the updated document
      * @throws ResourceNotFoundException if specified documentId was not found
@@ -74,7 +74,7 @@ public interface DocumentApi {
     /**
      * Retrieve a document's text
      * 
-     * @param documentId
+     * @param id
      * @return DocumentResponse containing document
      */
     @GET( DOCUMENT + DOCUMENT_ID_PATH )
@@ -91,7 +91,7 @@ public interface DocumentApi {
     BasicResponse<Collection<DocumentId>> getDocumentIds();
 
     /**
-     * @param documentId
+     * @param id
      * @param request
      * @return
      * @throws ResourceNotFoundException

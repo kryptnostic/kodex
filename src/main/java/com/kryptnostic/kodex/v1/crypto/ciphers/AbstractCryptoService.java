@@ -38,9 +38,19 @@ public abstract class AbstractCryptoService {
         try {
             SecretKeySpec secretKeySpec = getSecretKeySpec( salt );
             Cipher cipher = cypher.getInstance();
+            byte[] iv;
             cipher.init( Cipher.ENCRYPT_MODE, secretKeySpec );
             AlgorithmParameters params = cipher.getParameters();
-            byte[] iv = params.getParameterSpec( IvParameterSpec.class ).getIV();
+            if( params == null ) {
+                iv = Cyphers.generateSalt( cypher.getKeySize() >>> 3 );
+                try {
+                    cipher.init( Cipher.ENCRYPT_MODE, secretKeySpec, new IvParameterSpec( iv ) );
+                } catch ( InvalidAlgorithmParameterException e ) {
+                    throw new SecurityConfigurationException( e );
+                }
+            } else {
+                iv = params.getParameterSpec( IvParameterSpec.class ).getIV();
+            }
             byte[] lenBytes = new byte[ INTEGER_BYTES ];
 
             ByteBuffer lenBuf = ByteBuffer.wrap( lenBytes );
