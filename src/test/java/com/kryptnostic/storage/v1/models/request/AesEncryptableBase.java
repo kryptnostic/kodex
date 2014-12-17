@@ -43,9 +43,9 @@ import com.kryptnostic.sharing.v1.models.DocumentId;
  */
 public class AesEncryptableBase extends BaseSerializationTest {
     protected PasswordCryptoService crypto;
-    protected KeyPair       pair;
-    protected TestKeyLoader loader = new TestKeyLoader();
-    protected Kodex<String> kodex;
+    protected KeyPair               pair;
+    protected TestKeyLoader         loader = new TestKeyLoader();
+    protected Kodex<String>         kodex;
 
     protected void initImplicitEncryption() throws NoSuchAlgorithmException, InvalidKeyException,
             InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException,
@@ -54,8 +54,10 @@ public class AesEncryptableBase extends BaseSerializationTest {
         resetSecurityConfiguration();
         // register key with object mapper
         this.kodex.unseal( pair.getPublic(), pair.getPrivate() );
-        this.kodex.setKey( PasswordCryptoService.class.getCanonicalName(), new JacksonKodexMarshaller<PasswordCryptoService>(
-                PasswordCryptoService.class ), crypto );
+        this.kodex.setKey(
+                PasswordCryptoService.class.getCanonicalName(),
+                new JacksonKodexMarshaller<PasswordCryptoService>( PasswordCryptoService.class ),
+                crypto );
     }
 
     protected void initFheEncryption() throws InvalidKeyException, InvalidKeySpecException, NoSuchAlgorithmException,
@@ -64,7 +66,7 @@ public class AesEncryptableBase extends BaseSerializationTest {
             SecurityConfigurationException {
         PrivateKey privateKey = new PrivateKey( 128, 64 );
         PublicKey publicKey = new PublicKey( privateKey );
-//        
+        //
         kodex.unseal( pair.getPublic(), pair.getPrivate() );
         kodex.setKey( PrivateKey.class.getCanonicalName(), new JacksonKodexMarshaller<PrivateKey>(
                 PrivateKey.class,
@@ -78,7 +80,7 @@ public class AesEncryptableBase extends BaseSerializationTest {
             InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException,
             InvalidKeySpecException, InvalidParameterSpecException, SealedKodexException, IOException,
             SignatureException, CorruptKodexException, SecurityConfigurationException, KodexException {
-        
+
         this.pair = Keys.generateRsaKeyPair( 1024 );
 //        this.kodex = new Kodex<String>( Cypher.RSA_OAEP_SHA1_1024, Cypher.AES_CTR_128, pair.getPublic() );
 //        this.kodex.unseal( pair.getPublic(), pair.getPrivate() );
@@ -86,16 +88,15 @@ public class AesEncryptableBase extends BaseSerializationTest {
         this.crypto = new PasswordCryptoService( Cypher.AES_CTR_128, new BigInteger( 130, new SecureRandom() ).toString(
                 32 ).toCharArray() );
         loader.register( PasswordCryptoService.class.getCanonicalName() , crypto );
-
     }
-    
+
     public static class TestKeyLoader implements CryptoServiceLoader {
         private Map<String, CryptoService> services = Maps.newHashMap();
-        
+
         public void register( String id, CryptoService service ) {
             services.put( id, service );
         }
-        
+
         @Override
         public CryptoService get( DocumentId id ) throws ExecutionException {
             return services.get( id.getDocumentId() );
@@ -105,6 +106,6 @@ public class AesEncryptableBase extends BaseSerializationTest {
         public CryptoService get( String id ) throws ExecutionException {
             return services.get( id );
         }
-        
+
     }
 }
