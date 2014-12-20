@@ -41,7 +41,7 @@ public abstract class AbstractCryptoService {
             byte[] iv;
             cipher.init( Cipher.ENCRYPT_MODE, secretKeySpec );
             AlgorithmParameters params = cipher.getParameters();
-            if( params == null ) {
+            if ( params == null ) {
                 iv = Cyphers.generateSalt( cypher.getKeySize() >>> 3 );
                 try {
                     cipher.init( Cipher.ENCRYPT_MODE, secretKeySpec, new IvParameterSpec( iv ) );
@@ -51,12 +51,19 @@ public abstract class AbstractCryptoService {
             } else {
                 iv = params.getParameterSpec( IvParameterSpec.class ).getIV();
             }
-            byte[] lenBytes = new byte[ INTEGER_BYTES ];
 
-            ByteBuffer lenBuf = ByteBuffer.wrap( lenBytes );
-            lenBuf.putInt( bytes.length );
+            byte[] encryptedLength = null;
 
-            byte[] encryptedLength = cipher.update( lenBytes );
+            // Add the encrypted length if padding mode is PKCS5
+            if ( cypher.getCipherDescription().getPadding().equals( Padding.PKCS5 ) ) {
+                byte[] lenBytes = new byte[ INTEGER_BYTES ];
+
+                ByteBuffer lenBuf = ByteBuffer.wrap( lenBytes );
+                lenBuf.putInt( bytes.length );
+
+                encryptedLength = cipher.update( lenBytes );
+            }
+
             byte[] encryptedBytes = cipher.doFinal( bytes );
 
             return new BlockCiphertext( iv, salt, encryptedBytes, encryptedLength );
@@ -81,12 +88,36 @@ public abstract class AbstractCryptoService {
         try {
             SecretKeySpec spec = getSecretKeySpec( ciphertext.getSalt() );
             Cipher cipher = cypher.getInstance();
+            int length = 0;
+            byte[] decryptedLength = null;
+            byte[] plaintext;
+            ByteBuffer buf;
+
             cipher.init( Cipher.DECRYPT_MODE, spec, new IvParameterSpec( ciphertext.getIv() ) );
-            int length = ByteBuffer.wrap( cipher.update( ciphertext.getEncryptedLength() ) ).getInt();
-            byte[] plaintext = cipher.doFinal( ciphertext.getContents() );
+
+            // Encrypted length is only null for modes that don't require padding.
+            if ( ciphertext.getEncryptedLength() != null ) {
+                decryptedLength = cipher.update( ciphertext.getEncryptedLength() );
+            }
+
+            byte[] rawBytes = cipher.doFinal( ciphertext.getContents() );
+
+            if ( ciphertext.getEncryptedLength() == null ) {
+                return rawBytes;
+            } else if ( ( ciphertext.getEncryptedLength() != null ) && ( decryptedLength == null ) ) {
+                buf = ByteBuffer.wrap( rawBytes );
+                length = buf.getInt();
+                plaintext = new byte[ length ];
+                buf.get( plaintext );
+            } else {
+                length = ByteBuffer.wrap( decryptedLength ).getInt();
+                plaintext = rawBytes;
+            }
+
             if ( plaintext.length != length ) {
                 return Arrays.copyOf( plaintext, length );
             }
+
             return plaintext;
         } catch ( NoSuchAlgorithmException e ) {
             throw new SecurityConfigurationException( e );
