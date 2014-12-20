@@ -8,4 +8,5 @@ class CipherConstants {
     static final String OAEPWithSHA256AndMGF1Padding = "OAEPWithSHA-256AndMGF1Padding";
     static final String CTR_MODE = "CTR";
     static final String ECB_MODE = "ECB";
+    static final String CBC_MODE = "CBC";
 }

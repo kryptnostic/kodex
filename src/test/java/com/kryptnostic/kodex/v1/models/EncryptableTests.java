@@ -52,7 +52,7 @@ public class EncryptableTests extends AesEncryptableBase {
             CorruptKodexException, SecurityConfigurationException, KodexException {
         ObjectMapper mapper = KodexObjectMapperFactory.getObjectMapper();
         pair = Keys.generateRsaKeyPair( 1024 );
-        kodex = new Kodex<String>( Cypher.RSA_OAEP_SHA1_1024, Cypher.AES_CTR_PKCS5_128, pair.getPublic() );
+        kodex = new Kodex<String>( Cypher.RSA_OAEP_SHA1_1024, Cypher.AES_CTR_128, pair.getPublic() );
 
         PrivateKey privateKey = new PrivateKey( PRIVATE_KEY_BLOCK_SIZE * 2, PRIVATE_KEY_BLOCK_SIZE );
         PublicKey publicKey = new PublicKey( privateKey );

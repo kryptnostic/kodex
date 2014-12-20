@@ -69,7 +69,7 @@ public class KodexTests {
             SingularMatrixException {
         Kodex<String> expected = new Kodex<String>(
                 Cypher.RSA_OAEP_SHA1_1024,
-                Cypher.AES_CTR_PKCS5_128,
+                Cypher.AES_CTR_128,
                 pair.getPublic() );
         Assert.assertTrue( expected.isSealed() );
 

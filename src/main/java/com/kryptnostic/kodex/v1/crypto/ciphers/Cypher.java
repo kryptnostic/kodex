@@ -21,8 +21,8 @@ import com.google.common.collect.ImmutableSet;
 public enum Cypher {
     AES_CTR_128( CryptoAlgorithm.AES , Mode.CTR , Padding.NONE, 128 ),
     AES_CTR_256( CryptoAlgorithm.AES , Mode.CTR , Padding.NONE, 256 ),
-    AES_CTR_PKCS5_128( CryptoAlgorithm.AES , Mode.CTR , Padding.PKCS5, 128 ),
-    AES_CTR_PKCS5_256( CryptoAlgorithm.AES , Mode.CTR , Padding.PKCS5, 256 ),
+    AES_CBC_PKCS5_128( CryptoAlgorithm.AES , Mode.CBC , Padding.PKCS5, 128 ),
+    AES_CBC_PKCS5_256( CryptoAlgorithm.AES , Mode.CBC , Padding.PKCS5, 256 ),
     RSA_OAEP_SHA1_1024( CryptoAlgorithm.RSA, Mode.ECB, Padding.OAEPWithSHA1AndMGF1Padding, 1024 ),
     RSA_OAEP_SHA1_2048( CryptoAlgorithm.RSA, Mode.ECB, Padding.OAEPWithSHA1AndMGF1Padding, 2048 ),
     RSA_OAEP_SHA1_4096( CryptoAlgorithm.RSA, Mode.ECB, Padding.OAEPWithSHA1AndMGF1Padding, 4098 ),
@@ -87,9 +87,9 @@ public enum Cypher {
                     } 
                 } else if( description.getPadding().equals( Padding.PKCS5 ) ) {
                     if( description.getKeySize() == 128 ) {
-                        return AES_CTR_PKCS5_128;
+                        return AES_CBC_PKCS5_128;
                     } else if ( description.getKeySize() == 256 ) {
-                        return AES_CTR_PKCS5_256; 
+                        return AES_CBC_PKCS5_256; 
                     } else {
                         return unrecognizedCipher("An unsupported key size was specified.");
                     }

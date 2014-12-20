@@ -72,10 +72,10 @@ public class AesEncryptableBase extends BaseSerializationTest {
             InvalidKeySpecException, InvalidParameterSpecException, SealedKodexException, IOException,
             SignatureException, CorruptKodexException, SecurityConfigurationException, KodexException {
         this.pair = Keys.generateRsaKeyPair( 1024 );
-        this.kodex = new Kodex<String>( Cypher.RSA_OAEP_SHA1_1024, Cypher.AES_CTR_PKCS5_128, pair.getPublic() );
+        this.kodex = new Kodex<String>( Cypher.RSA_OAEP_SHA1_1024, Cypher.AES_CTR_128, pair.getPublic() );
         this.kodex.unseal( pair.getPublic(), pair.getPrivate() );
         this.mapper = KodexObjectMapperFactory.getObjectMapper( kodex );
-        this.crypto = new CryptoService( Cypher.AES_CTR_PKCS5_128, new BigInteger( 130, new SecureRandom() ).toString(
+        this.crypto = new CryptoService( Cypher.AES_CTR_128, new BigInteger( 130, new SecureRandom() ).toString(
                 32 ).toCharArray() );
 
     }

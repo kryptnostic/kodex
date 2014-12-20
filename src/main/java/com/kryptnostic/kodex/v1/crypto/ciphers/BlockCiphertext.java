@@ -3,6 +3,8 @@ package com.kryptnostic.kodex.v1.crypto.ciphers;
 import java.util.Arrays;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.kryptnostic.crypto.Ciphertext;
 
@@ -11,6 +13,7 @@ import com.kryptnostic.crypto.Ciphertext;
  * 
  * @author Matthew Tamayo-Rios &lt;matthew@kryptnostic.com&gt;
  */
+@JsonInclude(Include.NON_NULL)
 public class BlockCiphertext extends Ciphertext {
     private static final long serialVersionUID = 5566319942401654333L;
     private static final String FIELD_IV = "iv";

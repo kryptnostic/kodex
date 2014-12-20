@@ -240,12 +240,12 @@ public class AesMetadataRequestTests extends AesEncryptableBase {
         Encryptable<Metadata> data = new AesEncryptable<Metadata>( metadatum );
 
         // explicit encryption
-        CryptoService crypto = new CryptoService( Cypher.AES_CTR_PKCS5_128, "crypto-test".toCharArray() );
+        CryptoService crypto = new CryptoService( Cypher.AES_CTR_128, "crypto-test".toCharArray() );
 
         KeyPair tmpPair = Keys.generateRsaKeyPair( 1024 );
         Kodex<String> tmpKodex = new Kodex<String>(
                 Cypher.RSA_OAEP_SHA1_1024,
-                Cypher.AES_CTR_PKCS5_128,
+                Cypher.AES_CTR_128,
                 tmpPair.getPublic() );
         tmpKodex.unseal( tmpPair.getPublic(), tmpPair.getPrivate() );
         tmpKodex.setKey( CryptoService.class.getCanonicalName(), new JacksonKodexMarshaller<CryptoService>(

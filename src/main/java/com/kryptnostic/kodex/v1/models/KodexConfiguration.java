@@ -22,7 +22,7 @@ public class KodexConfiguration {
             @JsonProperty( DATA_CIPHER_FIELD ) Optional<CipherDescription> dataCipher,
             @JsonProperty( PUBLIC_KEY_ALGORITHM_FIELD ) Optional<PublicKeyAlgorithm> publicKeyAlgorithm,
             @JsonProperty( PUBLIC_KEY_SIZE ) Optional<Integer> publicKeySize ) {
-        this.keyCipher = Cypher.createCipher( keyCipher.or( Cypher.AES_CTR_PKCS5_128.getCipherDescription() ) );
+        this.keyCipher = Cypher.createCipher( keyCipher.or( Cypher.AES_CTR_128.getCipherDescription() ) );
         this.dataCipher = Cypher.createCipher( dataCipher.or( Cypher.RSA_OAEP_SHA256_2048.getCipherDescription() ) );
         this.publicKeyAlgorithm = publicKeyAlgorithm.or( PublicKeyAlgorithm.RSA );
         this.publicKeySize = publicKeySize.or( 2048 );

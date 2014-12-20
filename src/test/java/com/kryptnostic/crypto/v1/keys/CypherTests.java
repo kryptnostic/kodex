@@ -29,8 +29,8 @@ public class CypherTests {
 
     @BeforeClass
     public static void createCryptoService() throws NoSuchAlgorithmException, InvalidAlgorithmParameterException {
-        crypto = new CryptoService( Cypher.AES_CTR_PKCS5_128, "crypto-test".toCharArray() );
-        aesCrypto = new AesCryptoService( Cypher.AES_CTR_PKCS5_128 );
+        crypto = new CryptoService( Cypher.AES_CTR_128, "crypto-test".toCharArray() );
+        aesCrypto = new AesCryptoService( Cypher.AES_CTR_128 );
     }
 
     @Test
