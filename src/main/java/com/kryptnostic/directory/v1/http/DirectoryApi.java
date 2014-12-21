@@ -66,6 +66,7 @@ public interface DirectoryApi {
     @PUT( CONTROLLER + NOTIFICATION_KEY )
     BasicResponse<String> setNotificationPreferences( @Body NotificationPreference preferences );
 
+    @Timed
     @GET( CONTROLLER + PARAM.REALM )
     Set<UserKey> listUserInRealm( @Path( Names.REALM_FIELD ) String realm );
 }
