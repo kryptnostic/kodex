@@ -1,13 +1,11 @@
 package com.kryptnostic.kodex.v1.crypto.ciphers;
 
-import java.nio.ByteBuffer;
 import java.security.AlgorithmParameters;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.InvalidParameterSpecException;
-import java.util.Arrays;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -52,21 +50,8 @@ public abstract class AbstractCryptoService {
                 iv = params.getParameterSpec( IvParameterSpec.class ).getIV();
             }
 
-            byte[] encryptedLength = null;
-
-            // Add the encrypted length if padding mode is PKCS5
-            if ( cypher.getCipherDescription().getPadding().equals( Padding.PKCS5 ) ) {
-                byte[] lenBytes = new byte[ INTEGER_BYTES ];
-
-                ByteBuffer lenBuf = ByteBuffer.wrap( lenBytes );
-                lenBuf.putInt( bytes.length );
-
-                encryptedLength = cipher.update( lenBytes );
-            }
-
             byte[] encryptedBytes = cipher.doFinal( bytes );
-
-            return new BlockCiphertext( iv, salt, encryptedBytes, encryptedLength );
+            return new BlockCiphertext( iv, salt, encryptedBytes, null );
         } catch ( NoSuchAlgorithmException e ) {
             throw new SecurityConfigurationException( e );
         } catch ( InvalidKeySpecException e ) {
@@ -88,37 +73,9 @@ public abstract class AbstractCryptoService {
         try {
             SecretKeySpec spec = getSecretKeySpec( ciphertext.getSalt() );
             Cipher cipher = cypher.getInstance();
-            int length = 0;
-            byte[] decryptedLength = null;
-            byte[] plaintext;
-            ByteBuffer buf;
 
             cipher.init( Cipher.DECRYPT_MODE, spec, new IvParameterSpec( ciphertext.getIv() ) );
-
-            // Encrypted length is only null for modes that don't require padding.
-            if ( ciphertext.getEncryptedLength() != null ) {
-                decryptedLength = cipher.update( ciphertext.getEncryptedLength() );
-            }
-
-            byte[] rawBytes = cipher.doFinal( ciphertext.getContents() );
-
-            if ( ciphertext.getEncryptedLength() == null ) {
-                return rawBytes;
-            } else if ( ( ciphertext.getEncryptedLength() != null ) && ( decryptedLength == null ) ) {
-                buf = ByteBuffer.wrap( rawBytes );
-                length = buf.getInt();
-                plaintext = new byte[ length ];
-                buf.get( plaintext );
-            } else {
-                length = ByteBuffer.wrap( decryptedLength ).getInt();
-                plaintext = rawBytes;
-            }
-
-            if ( plaintext.length != length ) {
-                return Arrays.copyOf( plaintext, length );
-            }
-
-            return plaintext;
+            return cipher.doFinal( ciphertext.getContents() );
         } catch ( NoSuchAlgorithmException e ) {
             throw new SecurityConfigurationException( e );
         } catch ( InvalidKeySpecException e ) {
