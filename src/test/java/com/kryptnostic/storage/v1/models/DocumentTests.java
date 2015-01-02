@@ -31,20 +31,24 @@ public class DocumentTests extends AesEncryptableBase {
     public void testEquals() throws SecurityConfigurationException, IOException, ClassNotFoundException,
             InvalidKeyException, NoSuchAlgorithmException, InvalidAlgorithmParameterException,
             IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, InvalidKeySpecException,
-            InvalidParameterSpecException, SealedKodexException, SignatureException,Exception {
+            InvalidParameterSpecException, SealedKodexException, SignatureException, Exception {
         initImplicitEncryption();
-        Encryptable<String> b1 = new AesEncryptable<String>("cool document").encrypt( kodex );
-        
-        Document d1 = new Document( new DocumentId( "document1" ) , new AesEncryptable<String>("cool document").encrypt( kodex ).getEncryptedData()  );
-        Document d2 = new Document( new DocumentId( "document1" ) , new AesEncryptable<String>("cool document").encrypt( kodex ).getEncryptedData()  );
+        Encryptable<String> b1 = new AesEncryptable<String>( "cool document" ).encrypt( loader );
+
+        Document d1 = new Document( new DocumentId( "document1" ), new AesEncryptable<String>( "cool document" )
+                .encrypt( loader ).getEncryptedData() );
+        Document d2 = new Document( new DocumentId( "document1" ), new AesEncryptable<String>( "cool document" )
+                .encrypt( loader ).getEncryptedData() );
 
         Assert.assertEquals( d1, d1 );
         Assert.assertEquals( d1, d2 );
 
-        Document d3 = new Document( new DocumentId( "document2" ) , new AesEncryptable<String>("cool document").encrypt( kodex ).getEncryptedData()  );
+        Document d3 = new Document( new DocumentId( "document2" ), new AesEncryptable<String>( "cool document" )
+                .encrypt( loader ).getEncryptedData() );
         Assert.assertNotEquals( d1, d3 );
 
-        Document d4 = new Document( new DocumentId( "document1" ) , new AesEncryptable<String>("cool document cool").encrypt( kodex ).getEncryptedData()  );
+        Document d4 = new Document( new DocumentId( "document1" ), new AesEncryptable<String>( "cool document cool" )
+                .encrypt( loader ).getEncryptedData() );
         Assert.assertEquals( d1, d4 );
         Assert.assertNotEquals( d1, d3 );
     }
@@ -53,7 +57,7 @@ public class DocumentTests extends AesEncryptableBase {
     public void testDocumentSerialization() throws SecurityConfigurationException, IOException, ClassNotFoundException,
             InvalidKeyException, NoSuchAlgorithmException, InvalidAlgorithmParameterException,
             IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, InvalidKeySpecException,
-            InvalidParameterSpecException, SealedKodexException, SignatureException,Exception {
+            InvalidParameterSpecException, SealedKodexException, SignatureException, Exception {
         initImplicitEncryption();
 
         Document doc = AesEncryptableUtils.createEncryptedDocument( "test", "this is a test", kodex );
@@ -67,7 +71,7 @@ public class DocumentTests extends AesEncryptableBase {
     public void testDocumentBlockSerialization() throws SecurityConfigurationException, IOException,
             ClassNotFoundException, InvalidKeyException, NoSuchAlgorithmException, InvalidAlgorithmParameterException,
             IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, InvalidKeySpecException,
-            InvalidParameterSpecException, SealedKodexException, SignatureException,Exception {
+            InvalidParameterSpecException, SealedKodexException, SignatureException, Exception {
         initImplicitEncryption();
 
         Document doc = AesEncryptableUtils.createEncryptedDocument( "test", "this is a test", kodex );
@@ -82,7 +86,7 @@ public class DocumentTests extends AesEncryptableBase {
     public void testDocumentVerification() throws SecurityConfigurationException, IOException, ClassNotFoundException,
             InvalidKeyException, NoSuchAlgorithmException, InvalidAlgorithmParameterException,
             IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, InvalidKeySpecException,
-            InvalidParameterSpecException, SealedKodexException, SignatureException,Exception {
+            InvalidParameterSpecException, SealedKodexException, SignatureException, Exception {
         initImplicitEncryption();
 
         HashFunction hashFunction = Hashing.sha256();

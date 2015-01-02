@@ -85,7 +85,7 @@ public class EncryptableTests extends AesEncryptableBase {
         String plain = "I am cool";
         Encryptable<String> plainString = new FheEncryptable<String>( plain );
 
-        Encryptable<String> cipherString = plainString.encrypt( kodex );
+        Encryptable<String> cipherString = plainString.encrypt( loader );
 
         Assert.assertNull( plainString.getEncryptedData() );
         Assert.assertNull( plainString.getEncryptedClassName() );
@@ -97,7 +97,7 @@ public class EncryptableTests extends AesEncryptableBase {
         Assert.assertTrue( cipherString.isEncrypted() );
         Assert.assertNull( cipherString.getData() );
 
-        Encryptable<String> decryptedString = cipherString.decrypt( kodex );
+        Encryptable<String> decryptedString = cipherString.decrypt( loader );
         Assert.assertNull( decryptedString.getEncryptedData() );
         Assert.assertNull( decryptedString.getEncryptedClassName() );
         Assert.assertFalse( decryptedString.isEncrypted() );
@@ -120,7 +120,7 @@ public class EncryptableTests extends AesEncryptableBase {
             ClassNotFoundException, SecurityConfigurationException {
         Metadata m = new Metadata( new DocumentId( "ABC" ), "ABC", Arrays.asList( 1, 2, 3 ) );
         Encryptable<Metadata> plainString = new FheEncryptable<Metadata>( m );
-        Encryptable<Metadata> cipherString = plainString.encrypt( kodex );
+        Encryptable<Metadata> cipherString = plainString.encrypt( loader );
 
         Assert.assertNull( plainString.getEncryptedData() );
         Assert.assertNull( plainString.getEncryptedClassName() );
@@ -132,7 +132,7 @@ public class EncryptableTests extends AesEncryptableBase {
         Assert.assertTrue( cipherString.isEncrypted() );
         Assert.assertNull( cipherString.getData() );
 
-        Encryptable<Metadata> decryptedString = cipherString.decrypt( kodex );
+        Encryptable<Metadata> decryptedString = cipherString.decrypt( loader );
 
         Assert.assertNull( decryptedString.getEncryptedData() );
         Assert.assertNull( decryptedString.getEncryptedClassName() );
@@ -151,8 +151,8 @@ public class EncryptableTests extends AesEncryptableBase {
         Metadata m2 = new Metadata( new DocumentId( "ABC" ), "ABC", Arrays.asList( 1, 2, 3 ) );
         Encryptable<Metadata> plainString1 = new FheEncryptable<Metadata>( m1 );
         Encryptable<Metadata> plainString2 = new FheEncryptable<Metadata>( m2 );
-        Encryptable<Metadata> cipherString1 = plainString1.encrypt( kodex );
-        Encryptable<Metadata> cipherString2 = plainString2.encrypt( kodex );
+        Encryptable<Metadata> cipherString1 = plainString1.encrypt( loader );
+        Encryptable<Metadata> cipherString2 = plainString2.encrypt( loader );
 
         List<Encryptable<?>> meta = Lists.newArrayList();
         meta.add( cipherString1 );
