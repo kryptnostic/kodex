@@ -5,7 +5,7 @@ import cern.colt.bitvector.BitVector;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.kryptnostic.kodex.v1.indexing.metadata.Metadata;
-import com.kryptnostic.kodex.v1.models.Encryptable;
+import com.kryptnostic.kodex.v1.serialization.crypto.Encryptable;
 import com.kryptnostic.sharing.v1.models.DocumentId;
 
 public class IndexedMetadata {

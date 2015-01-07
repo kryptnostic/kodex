@@ -8,10 +8,10 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.kryptnostic.directory.v1.http.DirectoryApi;
+import com.kryptnostic.kodex.v1.client.KryptnosticConnection;
 import com.kryptnostic.kodex.v1.crypto.ciphers.AesCryptoService;
 import com.kryptnostic.kodex.v1.crypto.ciphers.CryptoService;
 import com.kryptnostic.kodex.v1.exceptions.types.SecurityConfigurationException;
-import com.kryptnostic.kodex.v1.security.KryptnosticConnection;
 import com.kryptnostic.sharing.v1.models.DocumentId;
 
 public class DefaultCryptoServiceLoader implements CryptoServiceLoader {

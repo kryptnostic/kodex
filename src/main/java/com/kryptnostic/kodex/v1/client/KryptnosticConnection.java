@@ -1,4 +1,4 @@
-package com.kryptnostic.kodex.v1.security;
+package com.kryptnostic.kodex.v1.client;
 
 import com.kryptnostic.crypto.EncryptedSearchPrivateKey;
 import com.kryptnostic.crypto.PrivateKey;

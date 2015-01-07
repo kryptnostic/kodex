@@ -8,7 +8,7 @@ import com.fasterxml.jackson.databind.module.SimpleKeyDeserializers;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.module.SimpleSerializers;
 import com.kryptnostic.kodex.v1.crypto.keys.CryptoServiceLoader;
-import com.kryptnostic.kodex.v1.models.Encryptable;
+import com.kryptnostic.kodex.v1.serialization.crypto.Encryptable;
 import com.kryptnostic.multivariate.gf2.Monomial;
 import com.kryptnostic.sharing.v1.models.DocumentId;
 

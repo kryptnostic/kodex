@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.kryptnostic.kodex.v1.crypto.ciphers.BlockCiphertext;
 
-public class DocumentBlock {
+public class EncryptableBlock {
     public static final String FIELD_BLOCK  = "block";
     public static final String FIELD_VERIFY = "verify";
     public static final String FIELD_TOTAL  = "total";
@@ -18,7 +18,7 @@ public class DocumentBlock {
     private int                index;
 
     @JsonCreator
-    public DocumentBlock(
+    public EncryptableBlock(
             @JsonProperty( FIELD_BLOCK ) BlockCiphertext block,
             @JsonProperty( FIELD_VERIFY ) byte[] verify,
             @JsonProperty( FIELD_TOTAL ) int total,
@@ -51,7 +51,7 @@ public class DocumentBlock {
 
     @Override
     public boolean equals( Object o ) {
-        DocumentBlock d = (DocumentBlock) o;
+        EncryptableBlock d = (EncryptableBlock) o;
         return block.equals( d.block ) && Arrays.equals( verify , d.verify ) && total == d.total && index == ( d.index );
     }
 }

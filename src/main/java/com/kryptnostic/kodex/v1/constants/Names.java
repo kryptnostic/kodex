@@ -42,4 +42,6 @@ public final class Names {
     public static final String SUCCESS_FIELD                 = "success";
     public static final String DOCUMENT_SHARING_KEY_FIELD    = "sharingKey";
     public static final String SHARES_FIELD                  = "shares";
+    public static final String DATA_FIELD                    = "data";
+    public static final String STRATEGY_FIELD                = "strategy";
 }

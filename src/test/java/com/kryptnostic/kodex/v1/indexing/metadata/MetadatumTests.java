@@ -5,11 +5,11 @@ import java.util.Arrays;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.kryptnostic.BaseSerializationTest;
+import com.kryptnostic.SerializationTestUtils;
 import com.kryptnostic.directory.v1.models.UserKey;
 import com.kryptnostic.sharing.v1.models.DocumentId;
 
-public class MetadatumTests extends BaseSerializationTest {
+public class MetadatumTests extends SerializationTestUtils {
 
     @Test
     public void equalsTest() {

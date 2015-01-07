@@ -17,7 +17,7 @@ import com.kryptnostic.kodex.v1.exceptions.types.ResourceNotLockedException;
 import com.kryptnostic.kodex.v1.models.response.BasicResponse;
 import com.kryptnostic.sharing.v1.models.DocumentId;
 import com.kryptnostic.storage.v1.models.Document;
-import com.kryptnostic.storage.v1.models.DocumentBlock;
+import com.kryptnostic.storage.v1.models.EncryptableBlock;
 import com.kryptnostic.storage.v1.models.request.DocumentCreationRequest;
 import com.kryptnostic.storage.v1.models.request.DocumentFragmentRequest;
 import com.kryptnostic.storage.v1.models.response.DocumentFragmentResponse;
@@ -68,7 +68,7 @@ public interface DocumentApi {
      * @throws BadRequestException if the block is invalid
      */
     @POST( DOCUMENT + DOCUMENT_ID_PATH )
-    BasicResponse<DocumentId> updateDocument( @Path( ID ) String id, @Body DocumentBlock block )
+    BasicResponse<DocumentId> updateDocument( @Path( ID ) String id, @Body EncryptableBlock block )
             throws ResourceNotFoundException, ResourceNotLockedException, BadRequestException;
 
     /**

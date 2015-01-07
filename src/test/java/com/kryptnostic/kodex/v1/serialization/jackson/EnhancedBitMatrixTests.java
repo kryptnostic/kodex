@@ -5,10 +5,10 @@ import java.io.IOException;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.kryptnostic.BaseSerializationTest;
+import com.kryptnostic.SerializationTestUtils;
 import com.kryptnostic.linear.EnhancedBitMatrix;
 
-public class EnhancedBitMatrixTests extends BaseSerializationTest {
+public class EnhancedBitMatrixTests extends SerializationTestUtils {
     @Test
     public void serializeEbmTest() throws IOException {
         EnhancedBitMatrix matrix = EnhancedBitMatrix.randomMatrix(10, 10);

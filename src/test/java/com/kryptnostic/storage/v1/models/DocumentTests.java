@@ -17,38 +17,36 @@ import org.junit.Test;
 
 import com.google.common.hash.HashFunction;
 import com.google.common.hash.Hashing;
+import com.kryptnostic.SecurityConfigurationTestUtils;
+import com.kryptnostic.kodex.v1.crypto.ciphers.BlockCiphertext;
 import com.kryptnostic.kodex.v1.crypto.keys.Kodex.SealedKodexException;
 import com.kryptnostic.kodex.v1.exceptions.types.SecurityConfigurationException;
-import com.kryptnostic.kodex.v1.models.AesEncryptable;
-import com.kryptnostic.kodex.v1.models.Encryptable;
 import com.kryptnostic.kodex.v1.models.utils.AesEncryptableUtils;
-import com.kryptnostic.sharing.v1.models.DocumentId;
-import com.kryptnostic.storage.v1.models.request.AesEncryptableBase;
 
-public class DocumentTests extends AesEncryptableBase {
+public class DocumentTests extends SecurityConfigurationTestUtils {
 
     @Test
     public void testEquals() throws SecurityConfigurationException, IOException, ClassNotFoundException,
             InvalidKeyException, NoSuchAlgorithmException, InvalidAlgorithmParameterException,
             IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, InvalidKeySpecException,
             InvalidParameterSpecException, SealedKodexException, SignatureException, Exception {
-        initImplicitEncryption();
-        Encryptable<String> b1 = new AesEncryptable<String>( "cool document" ).encrypt( loader );
 
-        Document d1 = new Document( new DocumentId( "document1" ), new AesEncryptable<String>( "cool document" )
-                .encrypt( loader ).getEncryptedData() );
-        Document d2 = new Document( new DocumentId( "document1" ), new AesEncryptable<String>( "cool document" )
-                .encrypt( loader ).getEncryptedData() );
+        initializeCryptoService();
+
+        Document d1 = new Document( "cool document" );
+        d1 = (Document) d1.encrypt( loader );
+        Document d2 = new Document( "cool document" );
+        d2 = (Document) d2.encrypt( loader );
 
         Assert.assertEquals( d1, d1 );
         Assert.assertEquals( d1, d2 );
 
-        Document d3 = new Document( new DocumentId( "document2" ), new AesEncryptable<String>( "cool document" )
-                .encrypt( loader ).getEncryptedData() );
+        Document d3 = new Document( "cool document" );
+        d3 = (Document) d3.encrypt( loader );
         Assert.assertNotEquals( d1, d3 );
 
-        Document d4 = new Document( new DocumentId( "document1" ), new AesEncryptable<String>( "cool document cool" )
-                .encrypt( loader ).getEncryptedData() );
+        Document d4 = new Document( "cool document cool" );
+        d4 = (Document) d4.encrypt( loader );
         Assert.assertEquals( d1, d4 );
         Assert.assertNotEquals( d1, d3 );
     }
@@ -58,7 +56,7 @@ public class DocumentTests extends AesEncryptableBase {
             InvalidKeyException, NoSuchAlgorithmException, InvalidAlgorithmParameterException,
             IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, InvalidKeySpecException,
             InvalidParameterSpecException, SealedKodexException, SignatureException, Exception {
-        initImplicitEncryption();
+        resetSecurity();
 
         Document doc = AesEncryptableUtils.createEncryptedDocument( "test", "this is a test", kodex );
         String out = serialize( doc );
@@ -72,11 +70,11 @@ public class DocumentTests extends AesEncryptableBase {
             ClassNotFoundException, InvalidKeyException, NoSuchAlgorithmException, InvalidAlgorithmParameterException,
             IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, InvalidKeySpecException,
             InvalidParameterSpecException, SealedKodexException, SignatureException, Exception {
-        initImplicitEncryption();
+        resetSecurity();
 
         Document doc = AesEncryptableUtils.createEncryptedDocument( "test", "this is a test", kodex );
         String out = serialize( doc.getBlocks() );
-        DocumentBlock[] result = deserialize( out, DocumentBlock[].class );
+        EncryptableBlock[] result = deserialize( out, EncryptableBlock[].class );
 
         Assert.assertEquals( doc.getBlocks()[ 0 ].getBlock().decrypt( kodex ).getData(), result[ 0 ].getBlock()
                 .decrypt( kodex ).getData() );
@@ -87,17 +85,20 @@ public class DocumentTests extends AesEncryptableBase {
             InvalidKeyException, NoSuchAlgorithmException, InvalidAlgorithmParameterException,
             IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, InvalidKeySpecException,
             InvalidParameterSpecException, SealedKodexException, SignatureException, Exception {
-        initImplicitEncryption();
+        resetSecurity();
 
         HashFunction hashFunction = Hashing.sha256();
 
-        Document doc = AesEncryptableUtils.createEncryptedDocument( "test", "this is a test", kodex );
+        String body = "this is a test";
+        AesEncryptable<String> encryptable = (AesEncryptable<String>) new AesEncryptable<String>( body )
+                .encrypt( loader );
+        Document doc = AesEncryptableUtils.createEncryptedDocument( "test", body, encryptable );
 
-        DocumentBlock[] blocks = doc.getBlocks();
-        for ( DocumentBlock block : blocks ) {
-            Encryptable<String> encryptableString = block.getBlock();
-            Assert.assertEquals( hashFunction.hashBytes( encryptableString.getEncryptedData().getContents() )
-                    .toString(), block.getVerify() );
+        EncryptableBlock[] blocks = doc.getBlocks();
+        for ( EncryptableBlock block : blocks ) {
+            BlockCiphertext encryptableString = block.getBlock();
+            Assert.assertEquals( hashFunction.hashBytes( encryptableString.getContents() ).toString(), hashFunction
+                    .hashBytes( block.getVerify() ).toString() );
         }
 
     }

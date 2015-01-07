@@ -7,25 +7,25 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.collect.Lists;
-import com.kryptnostic.kodex.v1.models.AesEncryptable;
+import com.kryptnostic.kodex.v1.serialization.crypto.Encryptable;
 
-public class DocumentBlocks implements Serializable {
+public class EncryptableBlocks implements Serializable {
     private static final long   serialVersionUID = -7306228218357504656L;
 
     private static final String FIELD_BLOCKS     = "blocks";
 
-    private List<DocumentBlock> blocks;
+    private List<EncryptableBlock> blocks;
 
-    public DocumentBlocks() {
+    public EncryptableBlocks() {
         this.blocks = Lists.newArrayList();
     }
 
     @JsonCreator
-    public DocumentBlocks( @JsonProperty( FIELD_BLOCKS ) List<DocumentBlock> blocks ) {
+    public EncryptableBlocks( @JsonProperty( FIELD_BLOCKS ) List<EncryptableBlock> blocks ) {
         this.blocks = blocks;
     }
 
-    public List<DocumentBlock> getBlocks() {
+    public List<EncryptableBlock> getBlocks() {
         return blocks;
     }
 
@@ -39,13 +39,13 @@ public class DocumentBlocks implements Serializable {
      */
     @Override
     public boolean equals( Object o ) {
-        DocumentBlocks other = (DocumentBlocks) o;
+        EncryptableBlocks other = (EncryptableBlocks) o;
         return size() == other.size();
     }
 
-    public static boolean isValid( DocumentBlock block ) {
+    public static boolean isValid( EncryptableBlock block ) {
         return Arrays.equals(
-                AesEncryptable.hashFunction.hashBytes( block.getBlock().getContents() ).asBytes(),
+                Encryptable.hashFunction.hashBytes( block.getBlock().getContents() ).asBytes(),
                 block.getVerify() );
     }
 }

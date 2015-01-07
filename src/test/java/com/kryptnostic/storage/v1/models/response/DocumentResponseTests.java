@@ -17,12 +17,12 @@ import org.junit.Test;
 
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonMappingException;
+import com.kryptnostic.SecurityConfigurationTestUtils;
 import com.kryptnostic.kodex.v1.crypto.keys.Kodex.SealedKodexException;
 import com.kryptnostic.kodex.v1.exceptions.types.SecurityConfigurationException;
 import com.kryptnostic.kodex.v1.models.utils.AesEncryptableUtils;
-import com.kryptnostic.storage.v1.models.request.AesEncryptableBase;
 
-public class DocumentResponseTests extends AesEncryptableBase {
+public class DocumentResponseTests extends SecurityConfigurationTestUtils {
 
     // TODO add jackson annotation checker
 
@@ -30,8 +30,8 @@ public class DocumentResponseTests extends AesEncryptableBase {
     public void testDeserialize() throws JsonGenerationException, JsonMappingException, IOException,
             SecurityConfigurationException, ClassNotFoundException, InvalidKeyException, NoSuchAlgorithmException,
             InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException,
-            InvalidKeySpecException, InvalidParameterSpecException, SealedKodexException, SignatureException,Exception {
-        initImplicitEncryption();
+            InvalidKeySpecException, InvalidParameterSpecException, SealedKodexException, SignatureException, Exception {
+        resetSecurity();
         DocumentResponse resp = new DocumentResponse( AesEncryptableUtils.createEncryptedDocument(
                 "document1",
                 "test cool thing",

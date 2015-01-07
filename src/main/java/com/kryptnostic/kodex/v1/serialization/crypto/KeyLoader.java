@@ -1,4 +1,4 @@
-package com.kryptnostic.kodex.v1.models;
+package com.kryptnostic.kodex.v1.serialization.crypto;
 
 import java.security.PrivateKey;
 
