@@ -33,8 +33,8 @@ public class DocumentTests extends SecurityConfigurationTestUtils {
             InvalidParameterSpecException, SealedKodexException, SignatureException, Exception {
         initializeCryptoService();
 
-        loader.register( "test", crypto );
-        loader.register( "test2", crypto );
+        loader.put( "test", crypto );
+        loader.put( "test2", crypto );
 
         Document d1 = new Document( new DocumentMetadata( "test" ), "cool document" ).encrypt( loader );
         Document d2 = new Document( new DocumentMetadata( "test" ), "cool document" ).encrypt( loader );
@@ -57,7 +57,7 @@ public class DocumentTests extends SecurityConfigurationTestUtils {
             InvalidParameterSpecException, SealedKodexException, SignatureException, Exception {
         initializeCryptoService();
 
-        loader.register( "test", crypto );
+        loader.put( "test", crypto );
 
         Document doc = new Document( new DocumentMetadata( "test" ), "this is a test" );
         String out = serialize( doc );
@@ -73,7 +73,7 @@ public class DocumentTests extends SecurityConfigurationTestUtils {
             InvalidParameterSpecException, SealedKodexException, SignatureException, Exception {
         initializeCryptoService();
 
-        loader.register( "test", crypto );
+        loader.put( "test", crypto );
 
         Document doc = new Document( new DocumentMetadata( "test" ), "this is a test" ).encrypt( loader );
         String out = serialize( doc.getBody().getEncryptedData() );
@@ -91,7 +91,7 @@ public class DocumentTests extends SecurityConfigurationTestUtils {
 
         HashFunction hashFunction = Encryptable.hashFunction;
 
-        loader.register( "test", crypto );
+        loader.put( "test", crypto );
 
         Document doc = new Document( new DocumentMetadata( "test" ), "this is a test" ).encrypt( loader );
 

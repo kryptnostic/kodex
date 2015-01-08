@@ -1,17 +1,7 @@
 package com.kryptnostic.storage.v1.models.request;
 
 import java.io.IOException;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.KeyPair;
-import java.security.NoSuchAlgorithmException;
-import java.security.SignatureException;
-import java.security.spec.InvalidKeySpecException;
-import java.security.spec.InvalidParameterSpecException;
 import java.util.Arrays;
-
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
 
 import org.hamcrest.CoreMatchers;
 import org.junit.Assert;
@@ -29,18 +19,14 @@ import com.kryptnostic.bitwise.BitVectors;
 import com.kryptnostic.kodex.v1.crypto.ciphers.CryptoService;
 import com.kryptnostic.kodex.v1.crypto.ciphers.Cypher;
 import com.kryptnostic.kodex.v1.crypto.ciphers.PasswordCryptoService;
-import com.kryptnostic.kodex.v1.crypto.keys.JacksonKodexMarshaller;
-import com.kryptnostic.kodex.v1.crypto.keys.Keys;
-import com.kryptnostic.kodex.v1.crypto.keys.Kodex;
-import com.kryptnostic.kodex.v1.crypto.keys.Kodex.CorruptKodexException;
-import com.kryptnostic.kodex.v1.crypto.keys.Kodex.SealedKodexException;
-import com.kryptnostic.kodex.v1.exceptions.types.KodexException;
+import com.kryptnostic.kodex.v1.crypto.keys.CryptoServiceLoader;
 import com.kryptnostic.kodex.v1.exceptions.types.SecurityConfigurationException;
 import com.kryptnostic.kodex.v1.indexing.metadata.Metadata;
 import com.kryptnostic.kodex.v1.serialization.crypto.Encryptable;
 import com.kryptnostic.sharing.v1.models.DocumentId;
 import com.kryptnostic.storage.v1.models.IndexedMetadata;
 
+@SuppressWarnings( "javadoc" )
 public class AesMetadataRequestTests extends SecurityConfigurationTestUtils {
     private static final int INDEX_LENGTH = 256;
 
@@ -52,7 +38,8 @@ public class AesMetadataRequestTests extends SecurityConfigurationTestUtils {
      * Does implicit deserialization produce an Encryptable in a PLAIN state in the PRESENCE of a private key?
      * @throws IOException
      */
-    public void testImplicitDeserialization() throws SecurityConfigurationException, IOException {
+    public void testImplicitDeserialization() throws SecurityConfigurationException, IOException,
+            ClassNotFoundException {
         initializeCryptoService();
 
         BitVector key = BitVectors.randomVector( INDEX_LENGTH );
@@ -88,7 +75,8 @@ public class AesMetadataRequestTests extends SecurityConfigurationTestUtils {
     @Ignore
     // TODO: make decryption in cryptoService using wrong key fail fast by storing a hash of the blockCiphertext length
     // for comparison by cryptoService
-    public void testImplicitDeserializationKeyless() throws SecurityConfigurationException, IOException {
+    public void testImplicitDeserializationKeyless() throws SecurityConfigurationException, IOException,
+            ClassNotFoundException {
         initializeCryptoService();
 
         BitVector key = BitVectors.randomVector( INDEX_LENGTH );
@@ -190,41 +178,28 @@ public class AesMetadataRequestTests extends SecurityConfigurationTestUtils {
      * @throws JsonMappingException
      * @throws IOException
      */
-    public void testSerializationWithExplicitEncryption() throws JsonGenerationException, JsonMappingException,
-            IOException, SecurityConfigurationException, NoSuchAlgorithmException, InvalidKeyException,
-            InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException,
-            InvalidKeySpecException, InvalidParameterSpecException, SealedKodexException, SignatureException,
-            CorruptKodexException, KodexException {
+    public void testSerializationWithExplicitEncryption() throws ClassNotFoundException,
+            SecurityConfigurationException, IOException {
         BitVector key = BitVectors.randomVector( INDEX_LENGTH );
         Metadata metadatum = new Metadata( new DocumentId( "TEST" ), "test", Arrays.asList( 1, 2, 3 ) );
-        Encryptable<Metadata> data = new AesEncryptable<Metadata>( metadatum );
+        Encryptable<Metadata> data = new Encryptable<Metadata>( metadatum );
 
         // explicit encryption
         CryptoService crypto = new PasswordCryptoService( Cypher.AES_CTR_128, "crypto-test".toCharArray() );
 
-        KeyPair tmpPair = Keys.generateRsaKeyPair( 1024 );
-        Kodex<String> tmpKodex = new Kodex<String>( Cypher.RSA_OAEP_SHA1_1024, Cypher.AES_CTR_128, tmpPair.getPublic() );
-        tmpKodex.unseal( tmpPair.getPublic(), tmpPair.getPrivate() );
-        tmpKodex.setKey(
-                PasswordCryptoService.class.getCanonicalName(),
-                new JacksonKodexMarshaller<PasswordCryptoService>( PasswordCryptoService.class ),
-                crypto );
+        CryptoServiceLoader loader = new TestKeyLoader();
 
-        data = data.encrypt( tmpKodex );
+        loader.put( PasswordCryptoService.class.getCanonicalName(), crypto );
+
+        data = data.encrypt( loader );
 
         // create the metadataRequest with our (ENCRYPTED) Encryptable
         DocumentId docId = new DocumentId( "test" );
         MetadataRequest req = new MetadataRequest( Arrays.asList( new IndexedMetadata( key, data, docId ) ) );
 
-        String expected = "{\"metadata\":[{\"key\":" + wrapQuotes( BitVectors.marshalBitvector( key ) )
-                + ",\"data\":{\"" + Encryptable.FIELD_CLASS + "\":\"" + data.getClass().getCanonicalName() + "\",\""
-                + Encryptable.FIELD_ENCRYPTED_DATA + "\":" + serialize( data.getEncryptedData() ) + ",\""
-                + Encryptable.FIELD_ENCRYPTED_CLASS_NAME + "\":" + serialize( data.getEncryptedClassName() )
-                + "},\"id\":" + serialize( docId ) + "}]}";
+        String out = serialize( req );
+        MetadataRequest outReq = deserialize( out, MetadataRequest.class );
 
-        String actual = serialize( req );
-
-        Assert.assertEquals( expected, actual );
+        Assert.assertEquals( serialize( req ), serialize( outReq ) );
     }
-
 }

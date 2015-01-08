@@ -31,7 +31,7 @@ public class SecurityConfigurationTestUtils extends SerializationTestUtils {
         resetSecurity();
         crypto = new PasswordCryptoService( Cypher.AES_CTR_128, new BigInteger( 130, new SecureRandom() ).toString( 32 )
                 .toCharArray() );
-        loader.register( PasswordCryptoService.class.getCanonicalName(), crypto );
+        loader.put( PasswordCryptoService.class.getCanonicalName(), crypto );
     }
 
     protected void resetSecurity() {
@@ -42,7 +42,8 @@ public class SecurityConfigurationTestUtils extends SerializationTestUtils {
     public static class TestKeyLoader implements CryptoServiceLoader {
         private Map<String, CryptoService> services = Maps.newHashMap();
 
-        public void register( String id, CryptoService service ) {
+        @Override
+        public void put( String id, CryptoService service ) {
             services.put( id, service );
         }
 
