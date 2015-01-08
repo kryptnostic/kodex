@@ -3,46 +3,49 @@ package com.kryptnostic.storage.v1.models;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.kryptnostic.kodex.v1.constants.Names;
 
+/**
+ * Stores document identifier and document version
+ * 
+ * @author sinaiman
+ */
 public class DocumentMetadata {
-    public static final String FIELD_ID         = "id";
-    public static final String FIELD_VERSION    = "version";
-    public static final String FIELD_NUM_BLOCKS = "numBlocks";
+    private final String id;
+    private final int    version;
 
-    private final String       id;
-    private final int          version;
-    private final int          numBlocks;
-
+    /**
+     * @param id Document identifier
+     */
     @JsonIgnore
-    public DocumentMetadata( String id, int numBlocks ) {
-        this.id = id;
-        this.version = 0;
-        this.numBlocks = numBlocks;
+    public DocumentMetadata( String id ) {
+        this( id, 0 );
     }
 
+    /**
+     * @param id Document identifier
+     * @param version 0-based version index
+     */
     @JsonCreator
-    public DocumentMetadata(
-            @JsonProperty( FIELD_ID ) String id,
-            @JsonProperty( FIELD_NUM_BLOCKS ) int numBlocks,
-            @JsonProperty( FIELD_VERSION ) int version ) {
+    public DocumentMetadata( @JsonProperty( Names.ID_FIELD ) String id, @JsonProperty( Names.VERSION_FIELD ) int version ) {
         this.id = id;
         this.version = version;
-        this.numBlocks = numBlocks;
     }
 
-    @JsonProperty( FIELD_ID )
+    /**
+     * @return Document identifier
+     */
+    @JsonProperty( Names.ID_FIELD )
     public String getId() {
         return id;
     }
 
-    @JsonProperty( FIELD_VERSION )
+    /**
+     * @return Version of document
+     */
+    @JsonProperty( Names.VERSION_FIELD )
     public int getVersion() {
         return version;
-    }
-
-    @JsonProperty( FIELD_NUM_BLOCKS )
-    public int getNumBlocks() {
-        return numBlocks;
     }
 
     @Override

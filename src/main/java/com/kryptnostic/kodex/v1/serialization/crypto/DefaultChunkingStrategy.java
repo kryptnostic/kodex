@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.List;
 
+import org.apache.commons.codec.binary.StringUtils;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
@@ -27,7 +29,13 @@ public class DefaultChunkingStrategy implements ChunkingStrategy {
         ByteBuffer plaintext = null;
 
         try {
-            plaintext = ByteBuffer.wrap( mapper.writeValueAsBytes( object ) );
+            byte[] bytes = null;
+            if ( object instanceof String ) {
+                bytes = StringUtils.getBytesUtf8( (String) object );
+            } else {
+                bytes = mapper.writeValueAsBytes( object );
+            }
+            plaintext = ByteBuffer.wrap( bytes );
         } catch ( JsonProcessingException e ) {
             throw new IOException( e );
         }
@@ -63,7 +71,12 @@ public class DefaultChunkingStrategy implements ChunkingStrategy {
         }
 
         ObjectMapper mapper = Encryptable.getMapper();
-        T plainData = mapper.<T> readValue( baos.toByteArray(), klass );
+        T plainData = null;
+        if ( klass.isAssignableFrom( String.class ) ) {
+            plainData = (T) StringUtils.newStringUtf8( baos.toByteArray() );
+        } else {
+            plainData = mapper.<T> readValue( baos.toByteArray(), klass );
+        }
 
         return plainData;
     }

@@ -15,14 +15,15 @@ import javax.crypto.NoSuchPaddingException;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.google.common.hash.HashCode;
 import com.google.common.hash.HashFunction;
-import com.google.common.hash.Hashing;
 import com.kryptnostic.SecurityConfigurationTestUtils;
 import com.kryptnostic.kodex.v1.crypto.ciphers.BlockCiphertext;
 import com.kryptnostic.kodex.v1.crypto.keys.Kodex.SealedKodexException;
 import com.kryptnostic.kodex.v1.exceptions.types.SecurityConfigurationException;
-import com.kryptnostic.kodex.v1.models.utils.AesEncryptableUtils;
+import com.kryptnostic.kodex.v1.serialization.crypto.Encryptable;
 
+@SuppressWarnings( "javadoc" )
 public class DocumentTests extends SecurityConfigurationTestUtils {
 
     @Test
@@ -30,23 +31,21 @@ public class DocumentTests extends SecurityConfigurationTestUtils {
             InvalidKeyException, NoSuchAlgorithmException, InvalidAlgorithmParameterException,
             IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, InvalidKeySpecException,
             InvalidParameterSpecException, SealedKodexException, SignatureException, Exception {
-
         initializeCryptoService();
 
-        Document d1 = new Document( "cool document" );
-        d1 = (Document) d1.encrypt( loader );
-        Document d2 = new Document( "cool document" );
-        d2 = (Document) d2.encrypt( loader );
+        loader.register( "test", crypto );
+        loader.register( "test2", crypto );
+
+        Document d1 = new Document( new DocumentMetadata( "test" ), "cool document" ).encrypt( loader );
+        Document d2 = new Document( new DocumentMetadata( "test" ), "cool document" ).encrypt( loader );
 
         Assert.assertEquals( d1, d1 );
         Assert.assertEquals( d1, d2 );
 
-        Document d3 = new Document( "cool document" );
-        d3 = (Document) d3.encrypt( loader );
+        Document d3 = new Document( new DocumentMetadata( "test2" ), "cool document" ).encrypt( loader );
         Assert.assertNotEquals( d1, d3 );
 
-        Document d4 = new Document( "cool document cool" );
-        d4 = (Document) d4.encrypt( loader );
+        Document d4 = new Document( new DocumentMetadata( "test" ), "cool document cool" ).encrypt( loader );
         Assert.assertEquals( d1, d4 );
         Assert.assertNotEquals( d1, d3 );
     }
@@ -56,9 +55,11 @@ public class DocumentTests extends SecurityConfigurationTestUtils {
             InvalidKeyException, NoSuchAlgorithmException, InvalidAlgorithmParameterException,
             IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, InvalidKeySpecException,
             InvalidParameterSpecException, SealedKodexException, SignatureException, Exception {
-        resetSecurity();
+        initializeCryptoService();
 
-        Document doc = AesEncryptableUtils.createEncryptedDocument( "test", "this is a test", kodex );
+        loader.register( "test", crypto );
+
+        Document doc = new Document( new DocumentMetadata( "test" ), "this is a test" );
         String out = serialize( doc );
         Document result = deserialize( out, Document.class );
 
@@ -70,14 +71,15 @@ public class DocumentTests extends SecurityConfigurationTestUtils {
             ClassNotFoundException, InvalidKeyException, NoSuchAlgorithmException, InvalidAlgorithmParameterException,
             IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, InvalidKeySpecException,
             InvalidParameterSpecException, SealedKodexException, SignatureException, Exception {
-        resetSecurity();
+        initializeCryptoService();
 
-        Document doc = AesEncryptableUtils.createEncryptedDocument( "test", "this is a test", kodex );
-        String out = serialize( doc.getBlocks() );
+        loader.register( "test", crypto );
+
+        Document doc = new Document( new DocumentMetadata( "test" ), "this is a test" ).encrypt( loader );
+        String out = serialize( doc.getBody().getEncryptedData() );
         EncryptableBlock[] result = deserialize( out, EncryptableBlock[].class );
 
-        Assert.assertEquals( doc.getBlocks()[ 0 ].getBlock().decrypt( kodex ).getData(), result[ 0 ].getBlock()
-                .decrypt( kodex ).getData() );
+        Assert.assertEquals( doc.getBody().decrypt( loader ).getData(), crypto.decrypt( result[ 0 ].getBlock() ) );
     }
 
     @Test
@@ -85,20 +87,20 @@ public class DocumentTests extends SecurityConfigurationTestUtils {
             InvalidKeyException, NoSuchAlgorithmException, InvalidAlgorithmParameterException,
             IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, InvalidKeySpecException,
             InvalidParameterSpecException, SealedKodexException, SignatureException, Exception {
-        resetSecurity();
+        initializeCryptoService();
 
-        HashFunction hashFunction = Hashing.sha256();
+        HashFunction hashFunction = Encryptable.hashFunction;
 
-        String body = "this is a test";
-        AesEncryptable<String> encryptable = (AesEncryptable<String>) new AesEncryptable<String>( body )
-                .encrypt( loader );
-        Document doc = AesEncryptableUtils.createEncryptedDocument( "test", body, encryptable );
+        loader.register( "test", crypto );
 
-        EncryptableBlock[] blocks = doc.getBlocks();
+        Document doc = new Document( new DocumentMetadata( "test" ), "this is a test" ).encrypt( loader );
+
+        EncryptableBlock[] blocks = doc.getBody().getEncryptedData();
         for ( EncryptableBlock block : blocks ) {
             BlockCiphertext encryptableString = block.getBlock();
-            Assert.assertEquals( hashFunction.hashBytes( encryptableString.getContents() ).toString(), hashFunction
-                    .hashBytes( block.getVerify() ).toString() );
+            Assert.assertEquals(
+                    HashCode.fromBytes( block.getVerify() ).toString(),
+                    hashFunction.hashBytes( encryptableString.getContents() ).toString() );
         }
 
     }

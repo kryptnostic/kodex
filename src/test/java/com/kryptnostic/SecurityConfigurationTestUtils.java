@@ -29,8 +29,8 @@ public class SecurityConfigurationTestUtils extends SerializationTestUtils {
 
     protected void initializeCryptoService() {
         resetSecurity();
-        crypto = new PasswordCryptoService( Cypher.AES_CTR_PKCS5_128, new BigInteger( 130, new SecureRandom() )
-                .toString( 32 ).toCharArray() );
+        crypto = new PasswordCryptoService( Cypher.AES_CTR_128, new BigInteger( 130, new SecureRandom() ).toString( 32 )
+                .toCharArray() );
         loader.register( PasswordCryptoService.class.getCanonicalName(), crypto );
     }
 

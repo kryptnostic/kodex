@@ -75,29 +75,29 @@ import com.kryptnostic.storage.v1.models.EncryptableBlock;
  * @param <T> The type of the wrapped data you want to encrypt
  */
 public class Encryptable<T> implements Serializable {
-    private static final long        serialVersionUID = 5128167833341065251L;
+    private static final long          serialVersionUID = 5128167833341065251L;
     /**
      * This hash function is used to validate block integrity
      */
-    public static final HashFunction hashFunction     = Hashing.sha256();
-    protected static ObjectMapper    mapper           = KodexObjectMapperFactory.getObjectMapper();
+    public static final HashFunction   hashFunction     = Hashing.sha256();
+    protected static ObjectMapper      mapper           = KodexObjectMapperFactory.getObjectMapper();
 
     @JsonIgnore
-    private final boolean            encrypted;
+    private final boolean              encrypted;
     @JsonIgnore
-    private transient final T        data;
+    private transient final T          data;
     @JsonIgnore
-    private transient final String   className;
+    private transient final String     className;
     @JsonProperty( Names.DATA_FIELD )
-    protected final EncryptableBlock[]  encryptedData;
+    protected final EncryptableBlock[] encryptedData;
     @JsonProperty( Names.NAME_FIELD )
-    protected final BlockCiphertext  encryptedClassName;
+    protected final BlockCiphertext    encryptedClassName;
     @JsonProperty( Names.KEY_FIELD )
-    protected final String           cryptoServiceId;
+    protected final String             cryptoServiceId;
     @JsonIgnore
-    protected transient ByteBuffer   plaintext;
+    protected transient ByteBuffer     plaintext;
     @JsonProperty( Names.STRATEGY_FIELD )
-    protected ChunkingStrategy       chunkingStrategy;
+    protected ChunkingStrategy         chunkingStrategy;
 
     /**
      * @param data A plaintext java object representation of data that will later be encrypted if serialized
@@ -134,8 +134,9 @@ public class Encryptable<T> implements Serializable {
     /**
      * @param ciphertext An array of encrypted byte[] representations of data
      * @param className An encrypted string representation of the data's target java class
-     * @throws SecurityConfigurationException
-     * @throws ClassNotFoundException
+     * @throws SecurityConfigurationException If any crypto operations fail
+     * @throws IOException If block split fails
+     * @throws ClassNotFoundException If target class doesn't exist on local JVM
      */
     public Encryptable( EncryptableBlock[] ciphertext, BlockCiphertext className ) throws IOException,
             ClassNotFoundException,
@@ -158,9 +159,9 @@ public class Encryptable<T> implements Serializable {
      * @param className An encrypted string representation of the data's target java class
      * @param cryptoServiceId A string key that maps this object to its appropriate CryptoService for
      *            decryption/encryption operations
-     * @throws IOException
-     * @throws SecurityConfigurationException
-     * @throws ClassNotFoundException
+     * @throws SecurityConfigurationException If any crypto operations fail
+     * @throws IOException If block split fails
+     * @throws ClassNotFoundException If target class doesn't exist on local JVM
      */
     public Encryptable( EncryptableBlock[] ciphertext, BlockCiphertext className, String cryptoServiceId ) throws ClassNotFoundException,
             SecurityConfigurationException,
@@ -168,7 +169,18 @@ public class Encryptable<T> implements Serializable {
         this( ciphertext, className, cryptoServiceId, null, new DefaultChunkingStrategy() );
     }
 
-    protected Encryptable(
+    /**
+     * @param ciphertext An array of encrypted byte[] representations of data
+     * @param className An encrypted string representation of the data's target java class
+     * @param cryptoServiceId A string key that maps this object to its appropriate CryptoService for
+     *            decryption/encryption operations
+     * @param loader A CryptoServiceLaoder is a key/value store for String->CryptoService
+     * @param chunkingStrategy Strategy for splitting and joining blocks
+     * @throws SecurityConfigurationException If any crypto operations fail
+     * @throws IOException If block split fails
+     * @throws ClassNotFoundException If target class doesn't exist on local JVM
+     */
+    public Encryptable(
             EncryptableBlock[] ciphertext,
             BlockCiphertext className,
             String cryptoServiceId,
@@ -265,11 +277,8 @@ public class Encryptable<T> implements Serializable {
         EncryptableBlock[] blocks = new EncryptableBlock[ total ];
         for ( int i = 0; i < total; ++i ) {
             BlockCiphertext ciphertext = ciphertextBlocks.get( i );
-            blocks[ i ] = new EncryptableBlock(
-                    ciphertext,
-                    hashFunction.hashBytes( ciphertext.getContents() ).asBytes(),
-                    total,
-                    i );
+            blocks[ i ] = new EncryptableBlock( ciphertext, hashFunction.hashBytes( ciphertext.getContents() )
+                    .asBytes(), total, i );
         }
 
         encryptedClassName = crypto.encrypt( StringUtils.getBytesUtf8( getClassName() ) );
@@ -303,7 +312,8 @@ public class Encryptable<T> implements Serializable {
     @SuppressWarnings( "unchecked" )
     protected Encryptable<T> decryptWith( CryptoService crypto ) throws SecurityConfigurationException, IOException,
             ClassNotFoundException {
-        String className = StringUtils.newStringUtf8( crypto.decryptBytes( getEncryptedClassName() ) );
+        byte[] bytes = crypto.decryptBytes( getEncryptedClassName() );
+        String className = StringUtils.newStringUtf8( bytes );
         Class<T> klass = (Class<T>) Class.forName( className );
         // Lazy evaluated transformation to re-construct object.
         T joinedData = getChunkingStrategy().join(
