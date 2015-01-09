@@ -1,4 +1,4 @@
-package com.kryptnostic;
+package com.kryptnostic.utils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

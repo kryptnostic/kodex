@@ -10,9 +10,9 @@ import cern.colt.bitvector.BitVector;
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
-import com.kryptnostic.SerializationTestUtils;
 import com.kryptnostic.bitwise.BitVectors;
 import com.kryptnostic.search.v1.models.request.SearchRequest;
+import com.kryptnostic.utils.SerializationTestUtils;
 
 public class SearchRequestTests extends SerializationTestUtils {
 

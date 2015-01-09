@@ -14,7 +14,6 @@ import cern.colt.bitvector.BitVector;
 
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonMappingException;
-import com.kryptnostic.SecurityConfigurationTestUtils;
 import com.kryptnostic.bitwise.BitVectors;
 import com.kryptnostic.kodex.v1.crypto.ciphers.CryptoService;
 import com.kryptnostic.kodex.v1.crypto.ciphers.Cypher;
@@ -25,6 +24,8 @@ import com.kryptnostic.kodex.v1.indexing.metadata.Metadata;
 import com.kryptnostic.kodex.v1.serialization.crypto.Encryptable;
 import com.kryptnostic.sharing.v1.models.DocumentId;
 import com.kryptnostic.storage.v1.models.IndexedMetadata;
+import com.kryptnostic.utils.SecurityConfigurationTestUtils;
+import com.kryptnostic.utils.TestKeyLoader;
 
 @SuppressWarnings( "javadoc" )
 public class AesMetadataRequestTests extends SecurityConfigurationTestUtils {
@@ -149,7 +150,9 @@ public class AesMetadataRequestTests extends SecurityConfigurationTestUtils {
      */
     @Test
     public void testSerializationWithImplicitEncryptionKeyless() throws JsonGenerationException, IOException {
-        resetSecurity();
+        initializeCryptoService();
+
+        loader.put( PasswordCryptoService.class.getCanonicalName(), null );
 
         BitVector key = BitVectors.randomVector( INDEX_LENGTH );
         Metadata metadatum = new Metadata( new DocumentId( "TEST" ), "test", Arrays.asList( 1, 2, 3 ) );
@@ -162,7 +165,8 @@ public class AesMetadataRequestTests extends SecurityConfigurationTestUtils {
         boolean caught = false;
         try {
             serialize( req );
-        } catch ( JsonMappingException e ) {
+        } catch ( Exception e ) {
+            e.printStackTrace();
             if ( e.getCause() instanceof NullPointerException ) {
                 caught = true;
             }

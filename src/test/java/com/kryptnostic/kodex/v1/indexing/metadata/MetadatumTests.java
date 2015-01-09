@@ -5,9 +5,9 @@ import java.util.Arrays;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.kryptnostic.SerializationTestUtils;
 import com.kryptnostic.directory.v1.models.UserKey;
 import com.kryptnostic.sharing.v1.models.DocumentId;
+import com.kryptnostic.utils.SerializationTestUtils;
 
 public class MetadatumTests extends SerializationTestUtils {
 

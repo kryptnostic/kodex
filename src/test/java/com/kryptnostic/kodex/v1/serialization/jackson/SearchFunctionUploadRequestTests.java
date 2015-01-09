@@ -8,10 +8,10 @@ import org.junit.Test;
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
-import com.kryptnostic.SerializationTestUtils;
 import com.kryptnostic.multivariate.gf2.SimplePolynomialFunction;
 import com.kryptnostic.multivariate.util.SimplePolynomialFunctions;
 import com.kryptnostic.search.v1.models.request.SearchFunctionUploadRequest;
+import com.kryptnostic.utils.SerializationTestUtils;
 
 public class SearchFunctionUploadRequestTests extends SerializationTestUtils {
     private static final int LEN = 256;

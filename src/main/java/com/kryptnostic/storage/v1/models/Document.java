@@ -72,6 +72,13 @@ public class Document {
         return d;
     }
 
+    public Document decrypt( CryptoServiceLoader loader ) throws ClassNotFoundException,
+            SecurityConfigurationException, IOException {
+        Encryptable<String> decryptedBody = body.decrypt( loader );
+        Document d = new Document( metadata, decryptedBody );
+        return d;
+    }
+
     @Override
     public boolean equals( Object o ) {
         Document other = (Document) o;

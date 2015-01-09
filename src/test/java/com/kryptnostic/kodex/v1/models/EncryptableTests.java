@@ -23,7 +23,6 @@ import org.slf4j.LoggerFactory;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.google.common.collect.Lists;
-import com.kryptnostic.SecurityConfigurationTestUtils;
 import com.kryptnostic.kodex.v1.crypto.ciphers.PasswordCryptoService;
 import com.kryptnostic.kodex.v1.crypto.keys.Kodex.CorruptKodexException;
 import com.kryptnostic.kodex.v1.crypto.keys.Kodex.SealedKodexException;
@@ -33,6 +32,7 @@ import com.kryptnostic.kodex.v1.indexing.metadata.Metadata;
 import com.kryptnostic.kodex.v1.serialization.crypto.Encryptable;
 import com.kryptnostic.kodex.v1.serialization.crypto.Encryptables;
 import com.kryptnostic.sharing.v1.models.DocumentId;
+import com.kryptnostic.utils.SecurityConfigurationTestUtils;
 
 @SuppressWarnings( "javadoc" )
 public class EncryptableTests extends SecurityConfigurationTestUtils {

@@ -1,6 +1,6 @@
 package com.kryptnostic.storage.v1.models.utils;
 
-import com.kryptnostic.SecurityConfigurationTestUtils;
+import com.kryptnostic.utils.SecurityConfigurationTestUtils;
 
 public class AesEncryptableUtilsTests extends SecurityConfigurationTestUtils {
     //

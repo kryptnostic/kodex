@@ -17,11 +17,11 @@ import org.junit.Test;
 
 import com.google.common.hash.HashCode;
 import com.google.common.hash.HashFunction;
-import com.kryptnostic.SecurityConfigurationTestUtils;
 import com.kryptnostic.kodex.v1.crypto.ciphers.BlockCiphertext;
 import com.kryptnostic.kodex.v1.crypto.keys.Kodex.SealedKodexException;
 import com.kryptnostic.kodex.v1.exceptions.types.SecurityConfigurationException;
 import com.kryptnostic.kodex.v1.serialization.crypto.Encryptable;
+import com.kryptnostic.utils.SecurityConfigurationTestUtils;
 
 @SuppressWarnings( "javadoc" )
 public class DocumentTests extends SecurityConfigurationTestUtils {

@@ -7,9 +7,9 @@ import org.junit.Test;
 
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonMappingException;
-import com.kryptnostic.SecurityConfigurationTestUtils;
 import com.kryptnostic.storage.v1.models.Document;
 import com.kryptnostic.storage.v1.models.DocumentMetadata;
+import com.kryptnostic.utils.SecurityConfigurationTestUtils;
 
 @SuppressWarnings( "javadoc" )
 public class DocumentResponseTests extends SecurityConfigurationTestUtils {

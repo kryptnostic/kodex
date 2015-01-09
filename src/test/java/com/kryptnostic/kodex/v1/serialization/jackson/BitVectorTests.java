@@ -13,8 +13,8 @@ import cern.colt.bitvector.BitVector;
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.google.common.collect.Lists;
-import com.kryptnostic.SerializationTestUtils;
 import com.kryptnostic.bitwise.BitVectors;
+import com.kryptnostic.utils.SerializationTestUtils;
 
 public class BitVectorTests extends SerializationTestUtils {
 

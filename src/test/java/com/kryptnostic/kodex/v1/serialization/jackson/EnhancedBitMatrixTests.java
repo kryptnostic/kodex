@@ -5,8 +5,8 @@ import java.io.IOException;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.kryptnostic.SerializationTestUtils;
 import com.kryptnostic.linear.EnhancedBitMatrix;
+import com.kryptnostic.utils.SerializationTestUtils;
 
 public class EnhancedBitMatrixTests extends SerializationTestUtils {
     @Test
