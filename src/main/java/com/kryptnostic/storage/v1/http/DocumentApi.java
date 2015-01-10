@@ -18,7 +18,6 @@ import com.kryptnostic.kodex.v1.models.response.BasicResponse;
 import com.kryptnostic.sharing.v1.models.DocumentId;
 import com.kryptnostic.storage.v1.models.Document;
 import com.kryptnostic.storage.v1.models.EncryptableBlock;
-import com.kryptnostic.storage.v1.models.request.DocumentCreationRequest;
 import com.kryptnostic.storage.v1.models.request.DocumentFragmentRequest;
 import com.kryptnostic.storage.v1.models.response.DocumentFragmentResponse;
 import com.kryptnostic.storage.v1.models.response.DocumentResponse;
@@ -37,7 +36,7 @@ public interface DocumentApi {
      * @throws BadRequestException Request was invalid
      */
     @PUT( DOCUMENT )
-    BasicResponse<DocumentId> createPendingDocument( @Body DocumentCreationRequest request ) throws BadRequestException;
+    BasicResponse<DocumentId> createPendingDocument() throws BadRequestException;
 
     /**
      * Request an existing document be put into a pending state
@@ -49,8 +48,8 @@ public interface DocumentApi {
      * @throws ResourceNotFoundException the document doesnt exist
      */
     @PUT( DOCUMENT + DOCUMENT_ID_PATH )
-    BasicResponse<DocumentId> createPendingDocument( @Path( ID ) String id, @Body DocumentCreationRequest request )
-            throws ResourceLockedException, ResourceNotFoundException;
+    BasicResponse<DocumentId> createPendingDocument( @Path( ID ) String id ) throws ResourceLockedException,
+            ResourceNotFoundException;
 
     /**
      * Update a document using a DocumentBlock

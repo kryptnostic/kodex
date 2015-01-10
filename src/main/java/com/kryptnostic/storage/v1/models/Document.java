@@ -31,6 +31,15 @@ public class Document {
     }
 
     /**
+     * @param id Document identifier
+     * @param body Plaintext body
+     * @return A new document with the specified id and body
+     */
+    public static Document fromIdAndBody( String id, String body ) {
+        return new Document( new DocumentMetadata( id ), body );
+    }
+
+    /**
      * @param metadata Document id + version
      * @param body Encryptable representing document body
      */
