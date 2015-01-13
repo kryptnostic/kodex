@@ -1,6 +1,11 @@
 package com.kryptnostic.kodex.v1.models.blocks;
 
 import java.io.IOException;
+import java.io.Serializable;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.kryptnostic.kodex.v1.constants.Names;
 
 /**
  * Interface for various approaches to turning objects into multiple blocks. Designed to allow for lazy evaluated
@@ -8,7 +13,11 @@ import java.io.IOException;
  * 
  * @author Matthew Tamayo-Rios &lt;matthew@kryptnostic.com&gt;
  */
-public interface ChunkingStrategy {
+@JsonTypeInfo(
+    use = JsonTypeInfo.Id.CLASS,
+    include = JsonTypeInfo.As.PROPERTY,
+    property = Names.CLASS_FIELD )
+public interface ChunkingStrategy extends Serializable {
     /**
      * 
      * @param object A java object representation of data
@@ -28,5 +37,6 @@ public interface ChunkingStrategy {
     /**
      * @return Max length of each block
      */
+    @JsonIgnore
     int getLength();
 }

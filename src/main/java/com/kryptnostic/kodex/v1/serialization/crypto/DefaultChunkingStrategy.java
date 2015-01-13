@@ -7,6 +7,8 @@ import java.util.List;
 
 import org.apache.commons.codec.binary.StringUtils;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
@@ -18,12 +20,18 @@ import com.kryptnostic.kodex.v1.models.blocks.ChunkingStrategy;
  */
 public class DefaultChunkingStrategy implements ChunkingStrategy {
 
+    @JsonCreator
+    public DefaultChunkingStrategy() {
+
+    }
+
     /**
      * This strategy will subdivide byte data into blocks of this length
      */
     public static final int BLOCK_LENGTH_IN_BYTES = 4096;
 
     @Override
+    @JsonIgnore
     public <T> Iterable<byte[]> split( T object ) throws IOException {
         ObjectMapper mapper = Encryptable.getMapper();
         ByteBuffer plaintext = null;
@@ -63,6 +71,7 @@ public class DefaultChunkingStrategy implements ChunkingStrategy {
     }
 
     @Override
+    @JsonIgnore
     public <T> T join( Iterable<byte[]> blocks, Class<T> klass ) throws IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
@@ -82,6 +91,7 @@ public class DefaultChunkingStrategy implements ChunkingStrategy {
     }
 
     @Override
+    @JsonIgnore
     public int getLength() {
         return BLOCK_LENGTH_IN_BYTES;
     }

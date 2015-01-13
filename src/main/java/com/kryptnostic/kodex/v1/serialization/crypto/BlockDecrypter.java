@@ -21,7 +21,7 @@ public final class BlockDecrypter implements Function<EncryptableBlock, byte[]> 
         try {
             return service.decryptBytes( input.getBlock() );
         } catch ( SecurityConfigurationException e ) {
-            logger.error( "Unable to decrypt block {} of {}.", input.getIndex(), input.getTotal() );
+            logger.error( "Unable to decrypt block {}.", input.getIndex() );
             return null;
         }
     }

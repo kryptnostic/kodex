@@ -37,11 +37,16 @@ import com.kryptnostic.storage.v1.models.EncryptableBlock;
  * <p>
  * <h2>Two States</h2>
  * <p>
- * An Encryptable is immutable and can only be one of two states: encrypted or decrypted
+ * An Encryptable is immutable and can only be instantiated in one of two states: encrypted or decrypted
  * <p>
- * When an Encryptable is encrypted from a decrypted state, a new Encryptable (in the encrypted state) is generated Vice
- * versa, when an Encryptable is decrypted from an encrypted state, a new Encryptable (in the decrypted state) is
- * generated
+ * Encryption and decryption are not destructive operations and do not change the state of the Encryptable the operation
+ * is called on. Encryption/decryption will simply generate and return new Encryptables without modifying and state
+ * within the original Encryptable. Specifically, when an Encryptable is encrypted from a decrypted state, a new
+ * Encryptable (in the encrypted state) is generated and returned. Similarly, when an Encryptable is decrypted from an
+ * encrypted state, a new Encryptable (in the decrypted state) is generated and returned. The exception to this is if
+ * one tries to encrypt an Encryptable that is already in an Encrypted state, the original Encryptable will be returned
+ * (no-op). Similarly, if one tries to decrypt an Encryptable that is already in a decrypted state, the original
+ * Encryptable will be returned (no-op).
  * <p>
  * This is useful for deferring potentially expensive encryption and serialization operations while still being able to
  * pass data around in memory
@@ -261,7 +266,7 @@ public class Encryptable<T> implements Serializable {
 
     protected Encryptable<T> encryptWith( CryptoService crypto ) throws SecurityConfigurationException, IOException,
             ClassNotFoundException {
-        BlockCiphertext encryptedClassName = null;
+        Preconditions.checkNotNull( crypto );
 
         int total = getBlockCount();
         List<BlockCiphertext> ciphertextBlocks = Lists.newArrayListWithCapacity( total );
@@ -272,16 +277,19 @@ public class Encryptable<T> implements Serializable {
             ciphertextBlocks.add( crypto.encrypt( block ) );
         }
 
-        Preconditions.checkState( ciphertextBlocks.size() == total, "Block count doesn't match iterable length!." );
+        Preconditions.checkState( ciphertextBlocks.size() == total, "Block count doesn't match iterable length" );
 
         EncryptableBlock[] blocks = new EncryptableBlock[ total ];
+
+        BlockCiphertext encryptedClassName = crypto.encrypt( StringUtils.getBytesUtf8( getClassName() ) );
+
         for ( int i = 0; i < total; ++i ) {
             BlockCiphertext ciphertext = ciphertextBlocks.get( i );
+            boolean isLast = i == total - 1;
             blocks[ i ] = new EncryptableBlock( ciphertext, hashFunction.hashBytes( ciphertext.getContents() )
-                    .asBytes(), total, i );
+                    .asBytes(), i, isLast, encryptedClassName, getChunkingStrategy() );
         }
 
-        encryptedClassName = crypto.encrypt( StringUtils.getBytesUtf8( getClassName() ) );
         return new Encryptable<T>( blocks, encryptedClassName, cryptoServiceId );
     }
 
@@ -411,7 +419,7 @@ public class Encryptable<T> implements Serializable {
     }
 
     @JsonProperty( Names.STRATEGY_FIELD )
-    protected ChunkingStrategy getChunkingStrategy() {
+    public ChunkingStrategy getChunkingStrategy() {
         return chunkingStrategy;
     }
 

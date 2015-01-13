@@ -60,6 +60,10 @@ public interface DirectoryApi {
     @GET( CONTROLLER + DOCUMENT_KEY + PARAM.ID )
     BasicResponse<byte[]> getDocumentId( @Path( Names.ID_FIELD ) String id );
 
+    @Timed
+    @PUT( CONTROLLER + DOCUMENT_KEY + PARAM.ID )
+    BasicResponse<String> setDocumentId( @Path( Names.ID_FIELD ) String id, @Body byte[] cryptoService );
+
     @GET( CONTROLLER + NOTIFICATION_KEY )
     BasicResponse<NotificationPreference> getNotificationPreferences();
 

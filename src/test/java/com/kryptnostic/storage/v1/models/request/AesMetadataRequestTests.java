@@ -2,6 +2,7 @@ package com.kryptnostic.storage.v1.models.request;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.concurrent.ExecutionException;
 
 import org.hamcrest.CoreMatchers;
 import org.junit.Assert;
@@ -183,7 +184,7 @@ public class AesMetadataRequestTests extends SecurityConfigurationTestUtils {
      * @throws IOException
      */
     public void testSerializationWithExplicitEncryption() throws ClassNotFoundException,
-            SecurityConfigurationException, IOException {
+            SecurityConfigurationException, IOException, ExecutionException {
         BitVector key = BitVectors.randomVector( INDEX_LENGTH );
         Metadata metadatum = new Metadata( new DocumentId( "TEST" ), "test", Arrays.asList( 1, 2, 3 ) );
         Encryptable<Metadata> data = new Encryptable<Metadata>( metadatum );

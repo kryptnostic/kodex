@@ -46,4 +46,9 @@ public final class Names {
     public static final String STRATEGY_FIELD                = "strategy";
     public static final String VERSION_FIELD                 = "version";
     public static final String BODY_FIELD                    = "body";
+    public static final String LAST_FIELD                    = "last";
+    public static final String INDEX_FIELD                   = "index";
+    public static final String VERIFY_FIELD                  = "verify";
+    public static final String BLOCK_FIELD                   = "block";
+    public static final String TOTAL_FIELD                   = "total";
 }
