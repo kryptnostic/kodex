@@ -340,11 +340,17 @@ public class Encryptable<T> implements Serializable {
             return encryptedData.length;
         } else {
             if ( plaintext == null ) {
-                plaintext = ByteBuffer.wrap( mapper.writeValueAsBytes( getData() ) );
+                byte[] bytes = null;
+                if ( getData() instanceof String ) {
+                    bytes = StringUtils.getBytesUtf8( (String) getData() );
+                } else {
+                    bytes = mapper.writeValueAsBytes( getData() );
+                }
+                plaintext = ByteBuffer.wrap( bytes );
             }
-            int remaining = plaintext.remaining();
-            int blockLen = getChunkingStrategy().getLength();
-            return ( remaining / blockLen ) + ( ( remaining % blockLen ) == 0 ? 0 : 1 );
+            double remaining = plaintext.remaining();
+            double blockLen = getChunkingStrategy().getLength();
+            return (int) Math.ceil( remaining / blockLen );
         }
     }
 

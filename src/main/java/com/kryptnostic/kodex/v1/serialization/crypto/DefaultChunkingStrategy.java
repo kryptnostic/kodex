@@ -49,7 +49,7 @@ public class DefaultChunkingStrategy implements ChunkingStrategy {
         }
 
         int remaining = plaintext.remaining();
-        int remainingBlocks = (int) Math.ceil( (double) remaining / getLength() );
+        int remainingBlocks = (int) Math.ceil( (double) remaining / (double) getLength() );
         List<byte[]> byteBlocks = Lists.newArrayListWithCapacity( remainingBlocks );
 
         // divide plain bytes into chunks of BLOCK_LENGTH_IN_BYTES, add these blocks to byteBlocks

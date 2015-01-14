@@ -7,6 +7,7 @@ import retrofit.http.DELETE;
 import retrofit.http.GET;
 import retrofit.http.POST;
 import retrofit.http.PUT;
+import retrofit.http.Path;
 
 import com.kryptnostic.kodex.v1.models.response.BasicResponse;
 import com.kryptnostic.sharing.v1.models.DocumentId;
@@ -24,6 +25,9 @@ public interface SharingApi {
 
     @GET( SHARE + DOCUMENT )
     IncomingShares getIncomingShares();
+
+    @POST( SHARE + DOCUMENT + "/{id}" )
+    BasicResponse<String> removeIncomingShares( @Path( "id" ) String id );
 
     @POST( SHARE + DOCUMENT )
     BasicResponse<String> shareDocument( @Body SharingRequest request );

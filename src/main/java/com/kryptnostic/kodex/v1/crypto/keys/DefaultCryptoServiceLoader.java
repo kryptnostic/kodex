@@ -6,6 +6,10 @@ import java.security.NoSuchAlgorithmException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.commons.codec.binary.Base64;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
@@ -14,9 +18,12 @@ import com.kryptnostic.kodex.v1.client.KryptnosticConnection;
 import com.kryptnostic.kodex.v1.crypto.ciphers.AesCryptoService;
 import com.kryptnostic.kodex.v1.crypto.ciphers.CryptoService;
 import com.kryptnostic.kodex.v1.crypto.ciphers.Cypher;
+import com.kryptnostic.kodex.v1.exceptions.types.ResourceNotFoundException;
 import com.kryptnostic.kodex.v1.exceptions.types.SecurityConfigurationException;
 
 public class DefaultCryptoServiceLoader implements CryptoServiceLoader {
+    private static final Logger                       logger = LoggerFactory
+                                                                     .getLogger( DefaultCryptoServiceLoader.class );
     /*
      * private static JacksonKodexMarshaller<PublicKey> publicKeyKodexFactory = new JacksonKodexMarshaller<PublicKey>(
      * PublicKey.class, mapper ); private static JacksonKodexMarshaller<PrivateKey> privateKeyKodexFactory = new
@@ -39,32 +46,38 @@ public class DefaultCryptoServiceLoader implements CryptoServiceLoader {
                 .build( new CacheLoader<String, CryptoService>() {
                     @Override
                     public CryptoService load( String key ) throws IOException, SecurityConfigurationException {
-                        return connection.getRsaCryptoService().decrypt(
-                                directoryApi.getDocumentId( key ).getData(),
-                                AesCryptoService.class );
+                        byte[] crypto = null;
+                        try {
+                            crypto = Base64.decodeBase64( directoryApi.getDocumentId( key ).getData() );
+                        } catch ( ResourceNotFoundException e ) {}
+                        if ( crypto == null ) {
+                            try {
+                                CryptoService cs = new AesCryptoService( DefaultCryptoServiceLoader.this.cypher );
+                                put( key, cs );
+                                return cs;
+                            } catch (
+                                    NoSuchAlgorithmException
+                                    | InvalidAlgorithmParameterException
+                                    | ExecutionException e ) {
+
+                            }
+                        }
+                        return connection.getRsaCryptoService().decrypt( crypto, AesCryptoService.class );
                     }
                 } );
     }
 
     @Override
     public CryptoService get( String id ) throws ExecutionException {
-        CryptoService cs = keyCache.get( id );
-        if ( cs == null ) {
-            try {
-                put( id, new AesCryptoService( this.cypher ) );
-                cs = keyCache.get( id );
-            } catch ( NoSuchAlgorithmException | InvalidAlgorithmParameterException e ) {
-                throw new ExecutionException( e );
-            }
-        }
-        return cs;
+        return keyCache.get( id );
     }
 
     @Override
     public void put( String id, CryptoService service ) throws ExecutionException {
         keyCache.put( id, service );
         try {
-            directoryApi.setDocumentId( id, connection.getRsaCryptoService().encrypt( service ) );
+            byte[] cs = connection.getRsaCryptoService().encrypt( service );
+            directoryApi.setDocumentId( id, cs );
         } catch ( SecurityConfigurationException | IOException e ) {
             throw new ExecutionException( e );
         }
