@@ -40,7 +40,6 @@ public interface DocumentApi {
      * Request an existing document be put into a pending state
      * 
      * @param id
-     * @param request
      * @return
      * @throws ResourceLockedException if the document is currently pending
      * @throws ResourceNotFoundException the document doesnt exist

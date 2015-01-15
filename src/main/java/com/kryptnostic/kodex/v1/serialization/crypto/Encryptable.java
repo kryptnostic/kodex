@@ -179,7 +179,7 @@ public class Encryptable<T> implements Serializable {
      * @param className An encrypted string representation of the data's target java class
      * @param cryptoServiceId A string key that maps this object to its appropriate CryptoService for
      *            decryption/encryption operations
-     * @param loader A CryptoServiceLaoder is a key/value store for String->CryptoService
+     * @param loader A CryptoServiceLaoder is a key/value store for String=CryptoService
      * @param chunkingStrategy Strategy for splitting and joining blocks
      * @throws SecurityConfigurationException If any crypto operations fail
      * @throws IOException If block split fails
@@ -225,7 +225,7 @@ public class Encryptable<T> implements Serializable {
      * @param className An encrypted string representation of the data's target java class
      * @param cryptoServiceId A string key that maps this object to its appropriate CryptoService for
      *            decryption/encryption operations
-     * @param loader A CryptoServiceLaoder is a key/value store for String->CryptoService
+     * @param loader A CryptoServiceLaoder is a key/value store for String=CryptoService
      * @throws SecurityConfigurationException If any crypto operations fail
      * @throws IOException If block split fails
      * @throws ClassNotFoundException If target class doesn't exist on local JVM
@@ -373,7 +373,7 @@ public class Encryptable<T> implements Serializable {
     }
 
     /**
-     * @return Plaintext data representation of object type T
+     * @return Plaintext data representation of object type T
      */
     @JsonIgnore
     public T getData() {
