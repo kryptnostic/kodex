@@ -9,6 +9,7 @@ import retrofit.http.PUT;
 import retrofit.http.Path;
 
 import com.codahale.metrics.annotation.Timed;
+import com.kryptnostic.directory.v1.models.ByteArrayEnvelope;
 import com.kryptnostic.directory.v1.models.UserKey;
 import com.kryptnostic.directory.v1.models.response.PublicKeyEnvelope;
 import com.kryptnostic.kodex.v1.constants.Names;
@@ -64,7 +65,7 @@ public interface DirectoryApi {
 
     @Timed
     @POST( CONTROLLER + DOCUMENT_KEY + PARAM.ID )
-    BasicResponse<String> setDocumentId( @Path( Names.ID_FIELD ) String id, @Body byte[] cryptoService );
+    BasicResponse<String> setDocumentId( @Path( Names.ID_FIELD ) String id, @Body ByteArrayEnvelope cryptoService );
 
     @GET( CONTROLLER + NOTIFICATION_KEY )
     BasicResponse<NotificationPreference> getNotificationPreferences();

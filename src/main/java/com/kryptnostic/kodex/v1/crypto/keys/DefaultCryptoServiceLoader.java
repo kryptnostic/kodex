@@ -6,7 +6,6 @@ import java.security.NoSuchAlgorithmException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,6 +13,7 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.kryptnostic.directory.v1.http.DirectoryApi;
+import com.kryptnostic.directory.v1.models.ByteArrayEnvelope;
 import com.kryptnostic.kodex.v1.client.KryptnosticConnection;
 import com.kryptnostic.kodex.v1.crypto.ciphers.AesCryptoService;
 import com.kryptnostic.kodex.v1.crypto.ciphers.CryptoService;
@@ -48,7 +48,7 @@ public class DefaultCryptoServiceLoader implements CryptoServiceLoader {
                     public CryptoService load( String key ) throws IOException, SecurityConfigurationException {
                         byte[] crypto = null;
                         try {
-                            crypto = Base64.decodeBase64( directoryApi.getDocumentId( key ).getData() );
+                            crypto = directoryApi.getDocumentId( key ).getData();
                         } catch ( ResourceNotFoundException e ) {}
                         if ( crypto == null ) {
                             try {
@@ -77,7 +77,7 @@ public class DefaultCryptoServiceLoader implements CryptoServiceLoader {
         keyCache.put( id, service );
         try {
             byte[] cs = connection.getRsaCryptoService().encrypt( service );
-            directoryApi.setDocumentId( id, cs );
+            directoryApi.setDocumentId( id, new ByteArrayEnvelope( cs ) );
         } catch ( SecurityConfigurationException | IOException e ) {
             throw new ExecutionException( e );
         }
