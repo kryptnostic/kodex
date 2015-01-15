@@ -10,8 +10,12 @@ import java.security.PublicKey;
 import java.security.SignatureException;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -22,6 +26,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Preconditions;
+import com.google.common.base.Stopwatch;
 import com.google.common.collect.Maps;
 import com.kryptnostic.kodex.v1.constants.Names;
 import com.kryptnostic.kodex.v1.crypto.ciphers.AesCryptoService;
@@ -54,6 +59,8 @@ public class Kodex<K extends Comparable<K>> implements Serializable {
     private transient AesCryptoService        service              = null;
     private transient PrivateKey              privateKey;
     private transient boolean                 dirty                = false;
+
+    private static final Logger               logger               = LoggerFactory.getLogger( Kodex.class );
 
     private final ReadWriteLock               lock                 = new ReentrantReadWriteLock();
     private final Cypher                      seal;
@@ -183,6 +190,7 @@ public class Kodex<K extends Comparable<K>> implements Serializable {
     public <T> void setKey( K key, KodexMarshaller<T> marshaller, T object ) throws SecurityConfigurationException,
             SealedKodexException, KodexException {
         checkAndThrowIfSealed();
+        cache.remove( key );
         try {
             for ( K existing : keyring.keySet() ) {
                 if ( !existing.equals( key ) && existing.compareTo( key ) == 0 ) {
@@ -196,9 +204,19 @@ public class Kodex<K extends Comparable<K>> implements Serializable {
         }
     }
 
+    Map<K, Object> cache = Maps.newHashMap();
+
     public <T> T getKey( K key, KodexMarshaller<T> marshaller ) throws SealedKodexException,
             SecurityConfigurationException, KodexException {
         checkAndThrowIfSealed();
+
+        Object raw = cache.get( key );
+        if ( raw != null ) {
+            return (T) raw;
+        }
+
+        Stopwatch watch = Stopwatch.createStarted();
+
         byte[] rawBytes = null;
         try {
             lock.readLock().lock();
@@ -206,14 +224,22 @@ public class Kodex<K extends Comparable<K>> implements Serializable {
             if ( value == null ) {
                 return null;
             }
+            logger.debug( "[PROFILE] keyring get for {} key {} ms", key, watch.elapsed( TimeUnit.MILLISECONDS ) );
+
+            watch.reset().start();
             rawBytes = service.decryptBytes( value );
+            logger.debug( "[PROFILE] decrypt for {} key {} ms", key, watch.elapsed( TimeUnit.MILLISECONDS ) );
 
         } finally {
             lock.readLock().unlock();
         }
 
         try {
-            return marshaller.fromBytes( rawBytes );
+            watch.reset().start();
+            T obj = marshaller.fromBytes( rawBytes );
+            logger.debug( "[PROFILE] unmarshal for {} key {} ms", key, watch.elapsed( TimeUnit.MILLISECONDS ) );
+            cache.put( key, obj );
+            return obj;
         } catch ( IOException e ) {
             throw new KodexException( e );
         }

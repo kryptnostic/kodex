@@ -2,18 +2,24 @@ package com.kryptnostic.kodex.v1.crypto.keys;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.util.concurrent.TimeUnit;
 import java.util.zip.DataFormatException;
 import java.util.zip.Deflater;
 import java.util.zip.Inflater;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Preconditions;
+import com.google.common.base.Stopwatch;
 import com.kryptnostic.kodex.v1.serialization.jackson.KodexObjectMapperFactory;
 
 public class JacksonKodexMarshaller<T> implements KodexMarshaller<T> {
-    private final Class<T>     clazz;
-    private final ObjectMapper mapper;
-    protected static final int INTEGER_BYTES = Integer.SIZE / Byte.SIZE;
+    private final Class<T>      clazz;
+    private final ObjectMapper  mapper;
+    protected static final int  INTEGER_BYTES = Integer.SIZE / Byte.SIZE;
+    private static final Logger logger        = LoggerFactory.getLogger( JacksonKodexMarshaller.class );
 
     public JacksonKodexMarshaller( Class<T> clazz ) {
         this( clazz, KodexObjectMapperFactory.getObjectMapper() );
@@ -26,6 +32,8 @@ public class JacksonKodexMarshaller<T> implements KodexMarshaller<T> {
 
     @Override
     public T fromBytes( byte[] bytes ) throws IOException {
+        Stopwatch watch = Stopwatch.createStarted();
+
         final Inflater inflater = new Inflater();
         ByteBuffer in = ByteBuffer.wrap( bytes );
         int uncompressedLength = in.getInt();
@@ -44,7 +52,20 @@ public class JacksonKodexMarshaller<T> implements KodexMarshaller<T> {
         Preconditions.checkState(
                 resultingLength == uncompressedLength,
                 "Expected length and decompressed length do not match." );
-        return mapper.readValue( uncompressedBytes, clazz );
+
+        logger.debug(
+                "[PROFILE] Inflating {} bytes to {} bytes took {} ms",
+                compressedBytes.length,
+                uncompressedLength,
+                watch.elapsed( TimeUnit.MILLISECONDS ) );
+
+        watch.reset().start();
+
+        T obj = mapper.readValue( uncompressedBytes, clazz );
+
+        logger.debug( "[PROFILE] Unmarshalling took {} ms", watch.elapsed( TimeUnit.MILLISECONDS ) );
+
+        return obj;
     }
 
     @Override
