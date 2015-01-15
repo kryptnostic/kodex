@@ -2,6 +2,8 @@ package com.kryptnostic.storage.v1;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 import com.kryptnostic.kodex.v1.exceptions.types.BadRequestException;
 import com.kryptnostic.kodex.v1.exceptions.types.IrisException;
@@ -10,6 +12,7 @@ import com.kryptnostic.kodex.v1.exceptions.types.ResourceNotFoundException;
 import com.kryptnostic.kodex.v1.exceptions.types.SecurityConfigurationException;
 import com.kryptnostic.sharing.v1.models.DocumentId;
 import com.kryptnostic.storage.v1.models.Document;
+import com.kryptnostic.storage.v1.models.EncryptableBlock;
 import com.kryptnostic.storage.v1.models.request.MetadataRequest;
 import com.kryptnostic.storage.v1.models.request.StorageRequest;
 
@@ -55,17 +58,8 @@ public interface StorageClient {
     String uploadDocument( StorageRequest req ) throws BadRequestException, SecurityConfigurationException,
             IrisException, ResourceLockedException, ResourceNotFoundException;
 
-    /**
-     * Retrieve fragments of a document as specified by a list of character offsets
-     * 
-     * @param id Id of the document, scoped to the owner of the document
-     * @param offsets List of character-count offsets that correspond to a token in a document
-     * @param characterWindow The radius of text to return for each offset
-     * @return
-     * @throws IrisException An error occurred in the Kryptnostic Client
-     * @throws ResourceNotFoundException The document with the specified ID was not found on the server
-     * @throws SecurityConfigurationException The information required to encrypt the document was invalid
-     */
-    // Map<Integer, String> getDocumentFragments( DocumentId id, List<Integer> offsets, int characterWindow )
-    // throws ResourceNotFoundException, SecurityConfigurationException, IrisException;
+    List<EncryptableBlock> getDocumentBlocks( String id, List<Integer> indices ) throws ResourceNotFoundException;
+
+    Map<Integer, String> getDocumentPreview( String documentId, List<Integer> locations, int wordRadius )
+            throws SecurityConfigurationException, ExecutionException, ResourceNotFoundException;
 }

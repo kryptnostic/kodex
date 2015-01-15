@@ -4,6 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.codec.binary.StringUtils;
 
@@ -12,6 +13,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.kryptnostic.kodex.v1.models.blocks.ChunkingStrategy;
 
 /**
@@ -94,5 +96,13 @@ public class DefaultChunkingStrategy implements ChunkingStrategy {
     @JsonIgnore
     public int getLength() {
         return BLOCK_LENGTH_IN_BYTES;
+    }
+
+    public static Map<Integer, Integer> getBlockIndexForByteOffset( List<Integer> offsets ) {
+        Map<Integer, Integer> blockIndices = Maps.newHashMap();
+        for ( Integer offset : offsets ) {
+            blockIndices.put( offset, (int) Math.floor( offset / (double) BLOCK_LENGTH_IN_BYTES ) );
+        }
+        return blockIndices;
     }
 }

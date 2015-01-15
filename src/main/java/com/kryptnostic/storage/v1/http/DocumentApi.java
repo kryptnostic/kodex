@@ -87,15 +87,9 @@ public interface DocumentApi {
     @GET( DOCUMENT )
     BasicResponse<Collection<DocumentId>> getDocumentIds();
 
-    // /**
-    // * @param id
-    // * @param request
-    // * @return
-    // * @throws ResourceNotFoundException
-    // */
-    // @POST( DOCUMENT + DOCUMENT_ID_PATH + "/fragments" )
-    // DocumentFragmentResponse getDocumentFragments( @Path( ID ) String id, @Body DocumentFragmentRequest request )
-    // throws ResourceNotFoundException;
+    @POST( DOCUMENT + DOCUMENT_ID_PATH + "/blocks" )
+    BasicResponse<List<EncryptableBlock>> getDocumentBlocks( @Path( ID ) String id, @Body List<Integer> indices )
+            throws ResourceNotFoundException;
 
     @DELETE( DOCUMENT + DOCUMENT_ID_PATH )
     BasicResponse<String> delete( @Path( ID ) String id );
