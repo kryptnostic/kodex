@@ -13,10 +13,10 @@ import cern.colt.bitvector.BitVector;
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.google.common.collect.Lists;
-import com.kryptnostic.BaseSerializationTest;
 import com.kryptnostic.bitwise.BitVectors;
+import com.kryptnostic.utils.SerializationTestUtils;
 
-public class BitVectorTests extends BaseSerializationTest {
+public class BitVectorTests extends SerializationTestUtils {
 
     private static final int LEN = 256;
     private final String LIST_SEPARATOR = ",";

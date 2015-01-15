@@ -10,9 +10,9 @@ import com.kryptnostic.kodex.v1.constants.Names;
 import com.kryptnostic.sharing.v1.models.DocumentId;
 
 public final class SharingRequest implements Serializable {
-    private static final long serialVersionUID = 8493560981719181963L;
+    private static final long          serialVersionUID = 8493560981719181963L;
     private final Map<UserKey, byte[]> userKeys;
-    private final DocumentId               documentId;
+    private final DocumentId           documentId;
     private final byte[]               encryptedSharingKey;
     private final byte[]               encryptedDocumentKey;
 

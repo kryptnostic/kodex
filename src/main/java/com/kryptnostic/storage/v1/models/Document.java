@@ -1,52 +1,97 @@
 package com.kryptnostic.storage.v1.models;
 
-import java.io.Serializable;
+import java.io.IOException;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.kryptnostic.kodex.v1.crypto.keys.Kodex;
+import com.google.common.base.Preconditions;
+import com.kryptnostic.kodex.v1.constants.Names;
+import com.kryptnostic.kodex.v1.crypto.keys.CryptoServiceLoader;
+import com.kryptnostic.kodex.v1.exceptions.types.SecurityConfigurationException;
+import com.kryptnostic.kodex.v1.serialization.crypto.Encryptable;
 
-public class Document implements Serializable {
-    private static final long serialVersionUID = -8243618155514369238L;
-    public static final String FIELD_METADATA = "metadata";
-    public static final String FIELD_BLOCKS = "blocks";
+/**
+ * A chunked encrypted string that can be used to store notes, messages, and documents
+ * 
+ * @author sinaiman
+ */
+public class Document {
+    private static final long         serialVersionUID = -6861113361696076897L;
 
-    private final DocumentMetadata metadata;
-    private final DocumentBlock[] blocks;
+    private final DocumentMetadata    metadata;
+    private final Encryptable<String> body;
 
-    @JsonCreator
-    public Document(@JsonProperty(FIELD_METADATA) DocumentMetadata metadata,
-            @JsonProperty(FIELD_BLOCKS) DocumentBlock[] blocks) {
+    /**
+     * @param data Plaintext string
+     * @param metadata Document id + version
+     */
+    public Document( DocumentMetadata metadata, String data ) {
+        this.body = new Encryptable<String>( data, metadata.getId() );
         this.metadata = metadata;
-        this.blocks = blocks;
     }
 
-    @JsonProperty(FIELD_BLOCKS)
-    public DocumentBlock[] getBlocks() {
-        return blocks;
+    /**
+     * @param id Document identifier
+     * @param body Plaintext body
+     * @return A new document with the specified id and body
+     */
+    public static Document fromIdAndBody( String id, String body ) {
+        return new Document( new DocumentMetadata( id ), body );
     }
 
-    @JsonProperty(FIELD_METADATA)
+    /**
+     * @param metadata Document id + version
+     * @param body Encryptable representing document body
+     */
+    @JsonCreator
+    public Document(
+            @JsonProperty( Names.METADATA_FIELD ) DocumentMetadata metadata,
+            @JsonProperty( Names.BODY_FIELD ) Encryptable<String> body ) {
+        Preconditions.checkArgument( metadata.getId().equals( body.getCryptoServiceId() ) );
+        this.body = body;
+        this.metadata = metadata;
+    }
+
+    /**
+     * @return Document id + version
+     */
+    @JsonProperty( Names.METADATA_FIELD )
     public DocumentMetadata getMetadata() {
         return metadata;
     }
 
     /**
-     * @return The decrypted document text
+     * @return Encryptable representing document body
      */
-    @JsonIgnore
-    public String getBody(Kodex<String> kodex) {
-        throw new UnsupportedOperationException("not yet implemented");
+    public Encryptable<String> getBody() {
+        return body;
     }
 
     /**
-     * This does not check for block content equality because blocks are encrypted This uses the verification hash,
-     * which is not guaranteed to be consistent with the document blocks
+     * @param loader
+     * @return
+     * @throws ClassNotFoundException
+     * @throws SecurityConfigurationException
+     * @throws IOException
      */
-    @Override
-    public boolean equals(Object o) {
-        Document d = (Document) o;
-        return ( blocks.length == d.blocks.length ) && metadata.equals(d.metadata);
+    public Document encrypt( CryptoServiceLoader loader ) throws ClassNotFoundException,
+            SecurityConfigurationException, IOException {
+        Encryptable<String> encryptedBody = body.encrypt( loader );
+        Document d = new Document( metadata, encryptedBody );
+        return d;
     }
+
+    public Document decrypt( CryptoServiceLoader loader ) throws ClassNotFoundException,
+            SecurityConfigurationException, IOException {
+        Encryptable<String> decryptedBody = body.decrypt( loader );
+        Document d = new Document( metadata, decryptedBody );
+        return d;
+    }
+
+    @Override
+    public boolean equals( Object o ) {
+        Document other = (Document) o;
+        return other.metadata.equals( metadata );
+    }
+
 }

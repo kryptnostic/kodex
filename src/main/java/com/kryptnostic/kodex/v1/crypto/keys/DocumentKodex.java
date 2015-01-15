@@ -13,7 +13,6 @@ import javax.crypto.NoSuchPaddingException;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
 import com.kryptnostic.kodex.v1.crypto.ciphers.CipherDescription;
 import com.kryptnostic.kodex.v1.crypto.ciphers.Cypher;
@@ -27,11 +26,11 @@ import com.kryptnostic.kodex.v1.exceptions.types.SecurityConfigurationException;
  *
  */
 public class DocumentKodex<T> implements Serializable {
-    private static final long serialVersionUID = -6717541341623629426L;
-    private static final String CYPHER_FIELD = "cipher";
-    private static final String KEYS_FIELD = "keys";
-    
-    private final Cypher cypher;
+    private static final long    serialVersionUID = -6717541341623629426L;
+    private static final String  CYPHER_FIELD     = "cipher";
+    private static final String  KEYS_FIELD       = "keys";
+
+    private final Cypher         cypher;
     private final Map<T, byte[]> keys;
 
     public DocumentKodex( Cypher cypher ) {
@@ -58,15 +57,12 @@ public class DocumentKodex<T> implements Serializable {
     }
 
     public byte[] get( T id ) {
-        return Preconditions.checkNotNull( keys.get( id ), "Unable to find key with id = " + id );
+        return keys.get( id );
     }
 
     public byte[] get( PrivateKey key, T id ) throws InvalidKeyException, NoSuchAlgorithmException,
             NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, SecurityConfigurationException {
-        return Cyphers.decrypt(
-                cypher,
-                key,
-                Preconditions.checkNotNull( keys.get( id ), "Unable to find key with id = " + id ) );
+        return Cyphers.decrypt( cypher, key, keys.get( id ) );
     }
 
     public void put( T id, byte[] secretKey ) throws NoSuchAlgorithmException, NoSuchPaddingException,

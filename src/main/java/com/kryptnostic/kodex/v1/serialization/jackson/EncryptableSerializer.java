@@ -8,18 +8,26 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.jsontype.TypeSerializer;
-import com.kryptnostic.kodex.v1.crypto.keys.Kodex;
+import com.kryptnostic.kodex.v1.constants.Names;
+import com.kryptnostic.kodex.v1.crypto.keys.CryptoServiceLoader;
 import com.kryptnostic.kodex.v1.exceptions.types.SecurityConfigurationException;
-import com.kryptnostic.kodex.v1.models.Encryptable;
+import com.kryptnostic.kodex.v1.serialization.crypto.Encryptable;
 
+/**
+ * @author sinaiman
+ *
+ */
 @SuppressWarnings( "rawtypes" )
 public class EncryptableSerializer extends JsonSerializer<Encryptable> {
 
-    private static final String SECURITY_ERROR_MSG = "Security configuration error";
-    private final Kodex         kodex;
+    private static final String       SECURITY_ERROR_MSG = "Security configuration error";
+    private final CryptoServiceLoader loader;
 
-    public EncryptableSerializer( Kodex kodex ) {
-        this.kodex = kodex;
+    /**
+     * @param loader
+     */
+    public EncryptableSerializer( CryptoServiceLoader loader ) {
+        this.loader = loader;
     }
 
     @Override
@@ -31,7 +39,7 @@ public class EncryptableSerializer extends JsonSerializer<Encryptable> {
         typeSer.writeTypePrefixForObject( value, jgen );
         try {
             writeFields( value, jgen, provider );
-        } catch ( SecurityConfigurationException e ) {
+        } catch ( SecurityConfigurationException | ClassNotFoundException e ) {
             throw new IOException( SECURITY_ERROR_MSG, e );
         }
         typeSer.writeTypeSuffixForObject( value, jgen );
@@ -43,17 +51,17 @@ public class EncryptableSerializer extends JsonSerializer<Encryptable> {
         jgen.writeStartObject();
         try {
             writeFields( value, jgen, provider );
-        } catch ( SecurityConfigurationException e ) {
+        } catch ( SecurityConfigurationException | ClassNotFoundException e ) {
             throw new IOException( SECURITY_ERROR_MSG, e );
         }
         jgen.writeEndObject();
     }
 
-    @SuppressWarnings( "unchecked" )
     private void writeFields( Encryptable value, JsonGenerator jgen, SerializerProvider provider ) throws IOException,
-            SecurityConfigurationException {
-        Encryptable<?> encryptedValue = value.encrypt( kodex );
-        jgen.writeObjectField( Encryptable.FIELD_ENCRYPTED_DATA, encryptedValue.getEncryptedData() );
-        jgen.writeObjectField( Encryptable.FIELD_ENCRYPTED_CLASS_NAME, encryptedValue.getEncryptedClassName() );
+            SecurityConfigurationException, ClassNotFoundException {
+        Encryptable<?> encryptedValue = value.encrypt( loader );
+        jgen.writeObjectField( Names.DATA_FIELD, encryptedValue.getEncryptedData() );
+        jgen.writeObjectField( Names.NAME_FIELD, encryptedValue.getEncryptedClassName() );
+        jgen.writeObjectField( Names.KEY_FIELD, encryptedValue.getCryptoServiceId() );
     }
 }

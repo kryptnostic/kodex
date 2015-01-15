@@ -4,7 +4,7 @@ import java.util.Collection;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.kryptnostic.kodex.v1.models.Encryptable;
+import com.kryptnostic.kodex.v1.serialization.crypto.Encryptable;
 
 public class SearchResult {
     private static final String METADATA = "metadata";

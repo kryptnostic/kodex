@@ -6,9 +6,7 @@ import com.fasterxml.jackson.dataformat.smile.SmileFactory;
 import com.fasterxml.jackson.datatype.guava.GuavaModule;
 import com.fasterxml.jackson.module.afterburner.AfterburnerModule;
 import com.kryptnostic.crypto.padding.ZeroPaddingStrategy;
-import com.kryptnostic.kodex.v1.crypto.keys.Kodex;
-import com.kryptnostic.kodex.v1.models.AesEncryptable;
-import com.kryptnostic.kodex.v1.models.FheEncryptable;
+import com.kryptnostic.kodex.v1.crypto.keys.CryptoServiceLoader;
 import com.kryptnostic.multivariate.polynomial.BasePolynomialFunction;
 import com.kryptnostic.multivariate.polynomial.CompoundPolynomialFunctionGF2;
 import com.kryptnostic.multivariate.polynomial.OptimizedPolynomialFunctionGF2;
@@ -23,9 +21,9 @@ public final class KodexObjectMapperFactory {
         globalMapper = mapper;
     }
 
-    public static ObjectMapper getObjectMapper( Kodex<String> kodex ) {
+    public static ObjectMapper getObjectMapper( CryptoServiceLoader loader ) {
         ObjectMapper mapper = getBaseMapper();
-        configureMapperInjectables( mapper, kodex );
+        configureMapperInjectables( mapper, loader );
         return mapper;
     }
 
@@ -49,11 +47,11 @@ public final class KodexObjectMapperFactory {
         return mapper;
     }
 
-    private static void configureMapperInjectables( ObjectMapper mapper, Kodex<String> kodex ) {
+    private static void configureMapperInjectables( ObjectMapper mapper, CryptoServiceLoader loader ) {
         Std injectableValues = new Std();
-        injectableValues.addValue( Kodex.class, kodex );
+        injectableValues.addValue( CryptoServiceLoader.class, loader );
         mapper.setInjectableValues( injectableValues );
-        mapper.registerModule( new KodexModule( kodex ) );
+        mapper.registerModule( new KodexModule( loader ) );
     }
 
     private static void configureMapper( ObjectMapper mapper ) {
@@ -65,6 +63,6 @@ public final class KodexObjectMapperFactory {
                 OptimizedPolynomialFunctionGF2.class,
                 BasePolynomialFunction.class,
                 ParameterizedPolynomialFunctionGF2.class,
-                ZeroPaddingStrategy.class);
+                ZeroPaddingStrategy.class );
     }
 }

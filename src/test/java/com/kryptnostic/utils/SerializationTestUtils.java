@@ -1,4 +1,4 @@
-package com.kryptnostic;
+package com.kryptnostic.utils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -13,7 +13,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kryptnostic.kodex.v1.serialization.jackson.KodexObjectMapperFactory;
 
-public class BaseSerializationTest {
+public class SerializationTestUtils {
 
     protected ObjectMapper mapper;
 

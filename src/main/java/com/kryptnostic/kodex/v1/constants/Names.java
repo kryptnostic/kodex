@@ -6,6 +6,7 @@ public final class Names {
     public static final String ADDRESS_FIELD                 = "address";
     public static final String ATTRIBUTES_FIELD              = "properties";
     public static final String APPROVAL_FIELD                = "approval";
+    public static final String BLOCKS_FIELD                  = "blocks";
     public static final String REVIEWER_FIELD                = "approver";
     public static final String BUSINESS_TYPE_FIELD           = "businessType";
     public static final String CLASS_FIELD                   = "@class";
@@ -41,4 +42,13 @@ public final class Names {
     public static final String SUCCESS_FIELD                 = "success";
     public static final String DOCUMENT_SHARING_KEY_FIELD    = "sharingKey";
     public static final String SHARES_FIELD                  = "shares";
+    public static final String DATA_FIELD                    = "data";
+    public static final String STRATEGY_FIELD                = "strategy";
+    public static final String VERSION_FIELD                 = "version";
+    public static final String BODY_FIELD                    = "body";
+    public static final String LAST_FIELD                    = "last";
+    public static final String INDEX_FIELD                   = "index";
+    public static final String VERIFY_FIELD                  = "verify";
+    public static final String BLOCK_FIELD                   = "block";
+    public static final String TOTAL_FIELD                   = "total";
 }

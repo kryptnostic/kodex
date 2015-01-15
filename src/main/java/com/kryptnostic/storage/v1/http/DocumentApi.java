@@ -17,10 +17,7 @@ import com.kryptnostic.kodex.v1.exceptions.types.ResourceNotLockedException;
 import com.kryptnostic.kodex.v1.models.response.BasicResponse;
 import com.kryptnostic.sharing.v1.models.DocumentId;
 import com.kryptnostic.storage.v1.models.Document;
-import com.kryptnostic.storage.v1.models.DocumentBlock;
-import com.kryptnostic.storage.v1.models.request.DocumentCreationRequest;
-import com.kryptnostic.storage.v1.models.request.DocumentFragmentRequest;
-import com.kryptnostic.storage.v1.models.response.DocumentFragmentResponse;
+import com.kryptnostic.storage.v1.models.EncryptableBlock;
 import com.kryptnostic.storage.v1.models.response.DocumentResponse;
 
 public interface DocumentApi {
@@ -37,7 +34,7 @@ public interface DocumentApi {
      * @throws BadRequestException Request was invalid
      */
     @PUT( DOCUMENT )
-    BasicResponse<DocumentId> createPendingDocument( @Body DocumentCreationRequest request ) throws BadRequestException;
+    BasicResponse<DocumentId> createPendingDocument() throws BadRequestException;
 
     /**
      * Request an existing document be put into a pending state
@@ -49,8 +46,8 @@ public interface DocumentApi {
      * @throws ResourceNotFoundException the document doesnt exist
      */
     @PUT( DOCUMENT + DOCUMENT_ID_PATH )
-    BasicResponse<DocumentId> createPendingDocument( @Path( ID ) String id, @Body DocumentCreationRequest request )
-            throws ResourceLockedException, ResourceNotFoundException;
+    BasicResponse<DocumentId> createPendingDocument( @Path( ID ) String id ) throws ResourceLockedException,
+            ResourceNotFoundException;
 
     /**
      * Update a document using a DocumentBlock
@@ -68,7 +65,7 @@ public interface DocumentApi {
      * @throws BadRequestException if the block is invalid
      */
     @POST( DOCUMENT + DOCUMENT_ID_PATH )
-    BasicResponse<DocumentId> updateDocument( @Path( ID ) String id, @Body DocumentBlock block )
+    BasicResponse<DocumentId> updateDocument( @Path( ID ) String id, @Body EncryptableBlock block )
             throws ResourceNotFoundException, ResourceNotLockedException, BadRequestException;
 
     /**
@@ -90,14 +87,8 @@ public interface DocumentApi {
     @GET( DOCUMENT )
     BasicResponse<Collection<DocumentId>> getDocumentIds();
 
-    /**
-     * @param id
-     * @param request
-     * @return
-     * @throws ResourceNotFoundException
-     */
-    @POST( DOCUMENT + DOCUMENT_ID_PATH + "/fragments" )
-    DocumentFragmentResponse getDocumentFragments( @Path( ID ) String id, @Body DocumentFragmentRequest request )
+    @POST( DOCUMENT + DOCUMENT_ID_PATH + "/blocks" )
+    BasicResponse<List<EncryptableBlock>> getDocumentBlocks( @Path( ID ) String id, @Body List<Integer> indices )
             throws ResourceNotFoundException;
 
     @DELETE( DOCUMENT + DOCUMENT_ID_PATH )

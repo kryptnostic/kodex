@@ -4,15 +4,18 @@ import java.util.Set;
 
 import retrofit.http.Body;
 import retrofit.http.GET;
+import retrofit.http.POST;
 import retrofit.http.PUT;
 import retrofit.http.Path;
 
 import com.codahale.metrics.annotation.Timed;
+import com.kryptnostic.directory.v1.models.ByteArrayEnvelope;
 import com.kryptnostic.directory.v1.models.UserKey;
 import com.kryptnostic.directory.v1.models.response.PublicKeyEnvelope;
 import com.kryptnostic.kodex.v1.constants.Names;
 import com.kryptnostic.kodex.v1.crypto.ciphers.BlockCiphertext;
 import com.kryptnostic.kodex.v1.crypto.keys.Kodex;
+import com.kryptnostic.kodex.v1.exceptions.types.ResourceNotFoundException;
 import com.kryptnostic.kodex.v1.models.response.BasicResponse;
 import com.kryptnostic.sharing.v1.models.NotificationPreference;
 
@@ -58,7 +61,11 @@ public interface DirectoryApi {
 
     @Timed
     @GET( CONTROLLER + DOCUMENT_KEY + PARAM.ID )
-    BasicResponse<byte[]> getDocumentId( @Path( Names.ID_FIELD ) String id );
+    BasicResponse<byte[]> getDocumentId( @Path( Names.ID_FIELD ) String id ) throws ResourceNotFoundException;
+
+    @Timed
+    @POST( CONTROLLER + DOCUMENT_KEY + PARAM.ID )
+    BasicResponse<String> setDocumentId( @Path( Names.ID_FIELD ) String id, @Body ByteArrayEnvelope cryptoService );
 
     @GET( CONTROLLER + NOTIFICATION_KEY )
     BasicResponse<NotificationPreference> getNotificationPreferences();

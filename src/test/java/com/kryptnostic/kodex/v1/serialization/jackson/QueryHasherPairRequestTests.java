@@ -6,15 +6,15 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.kryptnostic.BaseSerializationTest;
 import com.kryptnostic.crypto.EncryptedSearchPrivateKey;
 import com.kryptnostic.crypto.PrivateKey;
 import com.kryptnostic.linear.EnhancedBitMatrix.SingularMatrixException;
 import com.kryptnostic.multivariate.gf2.SimplePolynomialFunction;
 import com.kryptnostic.multivariate.util.SimplePolynomialFunctions;
 import com.kryptnostic.storage.v1.models.request.QueryHasherPairRequest;
+import com.kryptnostic.utils.SerializationTestUtils;
 
-public class QueryHasherPairRequestTests extends BaseSerializationTest {
+public class QueryHasherPairRequestTests extends SerializationTestUtils {
 
     @Test
     public void deserializeTest() throws IOException, SingularMatrixException {
