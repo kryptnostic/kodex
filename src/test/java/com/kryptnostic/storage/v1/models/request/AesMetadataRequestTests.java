@@ -141,40 +141,6 @@ public class AesMetadataRequestTests extends SecurityConfigurationTestUtils {
         Assert.assertThat( actual, CoreMatchers.containsString( expectedSubstring ) );
     }
 
-    /**
-     * Does serialization of an Encryptable properly throw an exception if you don't properly register public/private
-     * keys?
-     * 
-     * @throws IOException
-     * @throws JsonGenerationException
-     * 
-     */
-    @Test
-    public void testSerializationWithImplicitEncryptionKeyless() throws JsonGenerationException, IOException {
-        initializeCryptoService();
-
-        loader.put( PasswordCryptoService.class.getCanonicalName(), null );
-
-        BitVector key = BitVectors.randomVector( INDEX_LENGTH );
-        Metadata metadatum = new Metadata( new DocumentId( "TEST" ), "test", Arrays.asList( 1, 2, 3 ) );
-        Encryptable<Metadata> data = new Encryptable<Metadata>( metadatum );
-
-        // Create our request with our (PLAIN) Encryptable. It will get encrypted upon serialization
-        MetadataRequest req = new MetadataRequest( Arrays.asList( new IndexedMetadata( key, data, new DocumentId(
-                "test" ) ) ) );
-
-        boolean caught = false;
-        try {
-            serialize( req );
-        } catch ( Exception e ) {
-            e.printStackTrace();
-            if ( e.getCause() instanceof NullPointerException ) {
-                caught = true;
-            }
-        }
-        Assert.assertTrue( caught );
-    }
-
     @Test
     /**
      * Does serialization of an Encryptable work if you opt to encrypt it explicitly, rather than registering
