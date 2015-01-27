@@ -40,16 +40,15 @@ public interface KryptnosticContext {
     EncryptedSearchSharingKey generateSharingKey();
 
     BitVector encryptNonce( BitVector nonce );
-    
+
     byte[] rsaDecrypt( byte[] ciphertext ) throws SecurityConfigurationException;
+
     byte[] rsaEncrypt( byte[] plaintext ) throws SecurityConfigurationException;
 
-    void submitBridgeKeyWithSearchNonce(
-            DocumentId documentId,
-            EncryptedSearchSharingKey sharingKey,
-            BitVector searchNonce ) throws IrisException;
+    void submitBridgeKeyWithSearchNonce( DocumentId documentId, EncryptedSearchSharingKey sharingKey )
+            throws IrisException;
 
-    BitVector generateIndexForToken( String token, BitVector searchNonce, EncryptedSearchSharingKey sharingKey )
+    BitVector generateIndexForToken( String token, EncryptedSearchSharingKey sharingKey )
             throws ResourceNotFoundException;
 
     BitVector prepareSearchToken( String token );

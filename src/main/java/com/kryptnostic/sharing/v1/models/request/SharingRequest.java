@@ -14,18 +14,15 @@ public final class SharingRequest implements Serializable {
     private final Map<UserKey, byte[]> userKeys;
     private final DocumentId           documentId;
     private final byte[]               encryptedSharingKey;
-    private final byte[]               encryptedDocumentKey;
 
     @JsonCreator
     public SharingRequest(
             @JsonProperty( Names.ID_FIELD ) DocumentId encryptedDocumentId,
             @JsonProperty( Names.USERS_FIELD ) Map<UserKey, byte[]> userKey,
-            @JsonProperty( Names.DOCUMENT_SHARING_KEY_FIELD ) byte[] encryptedSharingKey,
-            @JsonProperty( Names.DOCUMENT_KEY_FIELD ) byte[] encryptedDocumentKey ) {
+            @JsonProperty( Names.DOCUMENT_SHARING_KEY_FIELD ) byte[] encryptedSharingKey ) {
         this.documentId = encryptedDocumentId;
         this.userKeys = userKey;
         this.encryptedSharingKey = encryptedSharingKey;
-        this.encryptedDocumentKey = encryptedDocumentKey;
     }
 
     @JsonProperty( Names.ID_FIELD )
@@ -41,10 +38,5 @@ public final class SharingRequest implements Serializable {
     @JsonProperty( Names.DOCUMENT_SHARING_KEY_FIELD )
     public byte[] getEncryptedSharingKey() {
         return encryptedSharingKey;
-    }
-
-    @JsonProperty( Names.DOCUMENT_KEY_FIELD )
-    public byte[] getEncryptedDocumentKey() {
-        return encryptedDocumentKey;
     }
 }
