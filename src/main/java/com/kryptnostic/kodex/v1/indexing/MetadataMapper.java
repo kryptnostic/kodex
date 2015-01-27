@@ -2,8 +2,6 @@ package com.kryptnostic.kodex.v1.indexing;
 
 import java.util.Set;
 
-import cern.colt.bitvector.BitVector;
-
 import com.kryptnostic.crypto.EncryptedSearchSharingKey;
 import com.kryptnostic.kodex.v1.exceptions.types.IrisException;
 import com.kryptnostic.kodex.v1.indexing.metadata.MappedMetadata;
@@ -19,6 +17,5 @@ public interface MetadataMapper {
 
     MappedMetadata mapTokensToKeys(
             Set<Metadata> metadata,
-            BitVector documentNonce,
             EncryptedSearchSharingKey sharingKey ) throws IrisException;
 }
