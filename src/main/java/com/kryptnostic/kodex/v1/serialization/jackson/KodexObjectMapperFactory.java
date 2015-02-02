@@ -34,11 +34,15 @@ public final class KodexObjectMapperFactory {
         return getObjectMapper( null );
     }
 
-    public static ObjectMapper getSmileMapper() {
+    public static ObjectMapper getSmileMapper( CryptoServiceLoader loader ) {
         ObjectMapper mapper = new ObjectMapper( new SmileFactory() );
         configureMapper( mapper );
-        configureMapperInjectables( mapper, null );
+        configureMapperInjectables( mapper, loader );
         return mapper;
+    }
+
+    public static ObjectMapper getSmileMapper() {
+        return getSmileMapper( null );
     }
 
     private static ObjectMapper getBaseMapper() {

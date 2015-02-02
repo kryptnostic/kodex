@@ -10,6 +10,7 @@ import com.kryptnostic.kodex.v1.crypto.ciphers.BlockCiphertext;
 import com.kryptnostic.kodex.v1.models.blocks.ChunkingStrategy;
 
 public class EncryptableBlock implements Serializable {
+    private static final long      serialVersionUID = 4238239382690642481L;
     private final BlockCiphertext  block;
     private final byte[]           verify;
     private final int              index;
