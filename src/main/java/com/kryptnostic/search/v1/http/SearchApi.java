@@ -8,12 +8,12 @@ import com.kryptnostic.search.v1.models.response.SearchResultResponse;
 
 public interface SearchApi {
     String SEARCH = "/search";
-    
+
     /**
      * Search on stored documents.
-     *   
+     * 
      * @return SearchResult
      */
-    @POST(SEARCH)
-    SearchResultResponse search(@Body SearchRequest requests);
+    @POST( SEARCH )
+    SearchResultResponse search( @Body SearchRequest requests );
 }

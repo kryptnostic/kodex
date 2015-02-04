@@ -56,10 +56,12 @@ public class KodexModule extends SimpleModule {
 
         SimpleSerializers keySerializers = new SimpleSerializers();
         keySerializers.addSerializer( DocumentId.class, new DocumentIdKeySerializer() );
+        keySerializers.addSerializer( BitVector.class, new BitVectorKeySerializer() );
         context.addKeySerializers( keySerializers );
 
         SimpleKeyDeserializers keyDeserializers = new SimpleKeyDeserializers();
         keyDeserializers.addDeserializer( DocumentId.class, new DocumentIdKeyDeserializer() );
+        keyDeserializers.addDeserializer( BitVector.class, new BitVectorKeyDeserializer() );
         context.addKeyDeserializers( keyDeserializers );
     }
 }
