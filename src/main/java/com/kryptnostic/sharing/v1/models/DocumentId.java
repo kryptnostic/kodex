@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.kryptnostic.kodex.v1.constants.Names;
 
-public class DocumentId implements Serializable {
+public class DocumentId implements Serializable, Comparable<DocumentId> {
     private static final long serialVersionUID = -273580841535768172L;
     private final String      documentId;
 
@@ -62,5 +62,10 @@ public class DocumentId implements Serializable {
     @Override
     public String toString() {
         return documentId;
+    }
+
+    @Override
+    public int compareTo( DocumentId o ) {
+        return documentId.compareTo( o.documentId );
     }
 }

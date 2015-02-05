@@ -21,11 +21,14 @@ import com.kryptnostic.storage.v1.models.EncryptableBlock;
 import com.kryptnostic.storage.v1.models.response.DocumentResponse;
 
 public interface DocumentApi {
-    String DOCUMENT         = "/document";
-    String ID               = "id";
-    String REALM            = "realm";
-    String USER             = "user";
-    String DOCUMENT_ID_PATH = "/{" + ID + "}";
+    String DOCUMENT                 = "/document";
+    String ID                       = "id";
+    String REALM                    = "realm";
+    String USER                     = "user";
+    String DOCUMENT_ID_PATH         = "/{" + ID + "}";
+    String OFFSET                   = "offset";
+    String PAGE_SIZE                = "pageSize";
+    String DOCUMENT_LIST_PAGED_PATH = "/{" + OFFSET + "}/{" + PAGE_SIZE + "}";
 
     /**
      * Request a new document be created in a pending state
@@ -86,10 +89,16 @@ public interface DocumentApi {
     @GET( DOCUMENT )
     BasicResponse<Collection<DocumentId>> getDocumentIds();
 
+    @GET( DOCUMENT + DOCUMENT_LIST_PAGED_PATH )
+    BasicResponse<Collection<DocumentId>> getDocumentIds(
+            @Path( OFFSET ) Integer offset,
+            @Path( PAGE_SIZE ) Integer pageSize );
+
     @POST( DOCUMENT + DOCUMENT_ID_PATH + "/blocks" )
     BasicResponse<List<EncryptableBlock>> getDocumentBlocks( @Path( ID ) String id, @Body List<Integer> indices )
             throws ResourceNotFoundException;
 
     @DELETE( DOCUMENT + DOCUMENT_ID_PATH )
     BasicResponse<String> delete( @Path( ID ) String id );
+
 }
