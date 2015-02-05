@@ -14,4 +14,6 @@ public interface SharingClient {
     void shareDocumentWithUsers( CryptoServiceLoader loader, DocumentId documentId, Set<UserKey> users );
 
     int processIncomingShares( CryptoServiceLoader loader ) throws IOException, SecurityConfigurationException;
+
+    int getIncomingSharesCount();
 }
