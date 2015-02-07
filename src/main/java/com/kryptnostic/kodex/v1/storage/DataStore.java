@@ -40,4 +40,10 @@ public interface DataStore {
      * @throws IOException
      */
     void put( String file, byte[] value ) throws IOException;
+
+    /**
+     * @param file
+     * @throws IOException
+     */
+    void delete( String file ) throws IOException;
 }
