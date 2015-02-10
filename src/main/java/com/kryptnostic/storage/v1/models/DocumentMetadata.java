@@ -3,6 +3,7 @@ package com.kryptnostic.storage.v1.models;
 import java.util.Set;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.joda.time.DateTime;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -28,6 +29,8 @@ public class DocumentMetadata {
     private final Set<UserKey>     owners;
     private final Set<UserKey>     readers;
     private final Set<UserKey>     writers;
+
+    private final DateTime         createdTime;
 
     @JsonIgnore
     public DocumentMetadata( String id ) {
@@ -85,6 +88,8 @@ public class DocumentMetadata {
         this.owners = owners;
         this.readers = readers;
         this.writers = writers;
+
+        this.createdTime = DateTime.now();
     }
 
     /**
@@ -143,5 +148,10 @@ public class DocumentMetadata {
     @JsonProperty( Names.WRITERS_FIELD )
     public Set<UserKey> getWriters() {
         return writers;
+    }
+
+    @JsonProperty( Names.CREATED_TIME )
+    public DateTime getCreatedTime() {
+        return createdTime;
     }
 }
