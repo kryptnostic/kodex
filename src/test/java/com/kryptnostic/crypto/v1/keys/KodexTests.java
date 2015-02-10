@@ -96,11 +96,11 @@ public class KodexTests {
 
         EncryptedSearchSharingKey sharingKey = new EncryptedSearchSharingKey( searchKey.newDocumentKey() );
         EncryptedSearchBridgeKey bridgeKey = new EncryptedSearchBridgeKey( searchKey, sharingKey );
-        
+
         String term = "serialization";
         BitVector test = searchKey.hash( term );
-        
-        BitVector encT = searchKey.prepareSearchToken( publicKey, term );//publicKey.getEncrypter().apply( test );
+
+        BitVector encT = searchKey.prepareSearchToken( publicKey, term );
 
         EnhancedBitMatrix intermediate = EnhancedBitMatrix.squareMatrixfromBitVector( globalHash.apply( test ) );
 
