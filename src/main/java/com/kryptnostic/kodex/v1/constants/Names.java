@@ -51,4 +51,10 @@ public final class Names {
     public static final String VERIFY_FIELD                  = "verify";
     public static final String BLOCK_FIELD                   = "block";
     public static final String TOTAL_FIELD                   = "total";
+    public static final String LEFT_FIELD                    = "left";
+    public static final String RIGHT_FIELD                   = "right";
+    public static final String OFFSET_FIELD                  = "offset";
+    public static final String PAIR_FIELD                    = "pair";
+    public static final String MAX_FIELD                     = "max";
+    public static final String QUERY_FIELD                   = "query";
 }

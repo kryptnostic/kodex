@@ -9,6 +9,8 @@ import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import retrofit.RetrofitError;
+
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
@@ -49,7 +51,9 @@ public class DefaultCryptoServiceLoader implements CryptoServiceLoader {
                         byte[] crypto = null;
                         try {
                             crypto = directoryApi.getDocumentId( key ).getData();
-                        } catch ( ResourceNotFoundException e ) {}
+                        } catch ( ResourceNotFoundException e ) {} catch ( RetrofitError e ) {
+                            throw new IOException( e );
+                        }
                         if ( crypto == null ) {
                             try {
                                 CryptoService cs = new AesCryptoService( DefaultCryptoServiceLoader.this.cypher );

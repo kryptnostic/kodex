@@ -55,6 +55,8 @@ public interface StorageClient {
      */
     Collection<DocumentId> getDocumentIds();
 
+    Collection<DocumentId> getDocumentIds( int offset, int pageSize );
+
     String uploadDocument( StorageRequest req ) throws BadRequestException, SecurityConfigurationException,
             IrisException, ResourceLockedException, ResourceNotFoundException;
 

@@ -1,6 +1,5 @@
 package com.kryptnostic.storage.v1.models;
 
-import java.io.Serializable;
 import java.util.Arrays;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -9,8 +8,7 @@ import com.kryptnostic.kodex.v1.constants.Names;
 import com.kryptnostic.kodex.v1.crypto.ciphers.BlockCiphertext;
 import com.kryptnostic.kodex.v1.models.blocks.ChunkingStrategy;
 
-public class EncryptableBlock implements Serializable {
-    private static final long      serialVersionUID = 4238239382690642481L;
+public class EncryptableBlock {
     private final BlockCiphertext  block;
     private final byte[]           verify;
     private final int              index;

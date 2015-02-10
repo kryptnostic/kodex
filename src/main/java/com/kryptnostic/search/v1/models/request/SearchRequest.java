@@ -1,13 +1,14 @@
 package com.kryptnostic.search.v1.models.request;
 
 import java.util.Arrays;
-import java.util.Collection;
+import java.util.List;
 
 import cern.colt.bitvector.BitVector;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.common.base.Optional;
+import com.kryptnostic.kodex.v1.constants.Names;
+import com.kryptnostic.search.v1.models.QueryHasherPairResult;
 
 /**
  * Search request for submittin
@@ -15,70 +16,99 @@ import com.google.common.base.Optional;
  * @author Matthew Tamayo-Rios &lt;matthew@kryptnostic.com&gt;
  */
 public class SearchRequest {
-    private static final String SEARCH_FUNCTION_PROPERTY = "query";
-    private static final String MAX_RESULTS_PROPERTY = "maxResults";
-    private static final String OFFSET_PROPERTY = "offset";
-    private static final String SORT_DATE_PROPERTY = "sortDate";
-    private static final String SORT_SCORE_PROPERTY = "sortScore";
+    public static final int                   DEFAULT_MAX_RESULTS = 30;
 
-    public static final int DEFAULT_MAX_RESULTS = 30;
+    private final List<BitVector>             searchToken;
+    private final List<QueryHasherPairResult> pairResults;
+    private final int                         maxResults;
+    private final int                         offset;
 
-    private final Collection<BitVector> searchToken;
-    private final int maxResults;
-    private final int offset;
-    private final SortDirection sortDate;
-    private final SortDirection sortScore;
-
-    public enum SortDirection {
-        DESC, ASC
+    public SearchRequest( List<BitVector> searchToken ) {
+        this( searchToken, DEFAULT_MAX_RESULTS, null, 0 );
     }
 
     @JsonCreator
-    public SearchRequest(@JsonProperty(SEARCH_FUNCTION_PROPERTY) Collection<BitVector> searchToken,
-            @JsonProperty(MAX_RESULTS_PROPERTY) Optional<Integer> maxResults,
-            @JsonProperty(OFFSET_PROPERTY) Optional<Integer> offset,
-            @JsonProperty(SORT_DATE_PROPERTY) Optional<SortDirection> sortDate,
-            @JsonProperty(SORT_SCORE_PROPERTY) Optional<SortDirection> sortScore) {
+    public SearchRequest(
+            @JsonProperty( Names.QUERY_FIELD ) List<BitVector> searchToken,
+            @JsonProperty( Names.MAX_FIELD ) int maxResults,
+            @JsonProperty( Names.PAIR_FIELD ) List<QueryHasherPairResult> pairResults,
+            @JsonProperty( Names.OFFSET_FIELD ) int offset ) {
+        // Preconditions.checkArgument( searchToken != null && pairResults != null
+        // && searchToken.size() == pairResults.size() );
         this.searchToken = searchToken;
-        // 0 = unlimited
-        this.maxResults = maxResults.or(DEFAULT_MAX_RESULTS);
-        this.offset = offset.or(0);
-        this.sortDate = sortDate.or(SortDirection.DESC);
-        this.sortScore = sortDate.or(SortDirection.DESC);
+        this.pairResults = pairResults;
+        this.maxResults = maxResults;
+        this.offset = offset;
     }
 
-    public static SearchRequest searchToken(BitVector searchToken) {
-        return SearchRequest.searchToken(Arrays.asList(searchToken));
+    public static SearchRequest searchToken( BitVector searchToken ) {
+        return SearchRequest.searchToken( Arrays.asList( searchToken ) );
     }
 
-    public static SearchRequest searchToken(Collection<BitVector> searchTokens) {
-        return new SearchRequest(searchTokens, Optional.<Integer> absent(), Optional.<Integer> absent(),
-                Optional.<SortDirection> absent(), Optional.<SortDirection> absent());
+    public static SearchRequest searchToken( List<BitVector> searchTokens ) {
+        return new SearchRequest( searchTokens );
     }
 
-    @JsonProperty(SEARCH_FUNCTION_PROPERTY)
-    public Collection<BitVector> getSearchToken() {
+    public static SearchRequest searchToken( List<BitVector> searchTokens, int maxResults ) {
+        return new SearchRequest( searchTokens, maxResults, null, 0 );
+    }
+
+    public static SearchRequest searchToken(
+            List<BitVector> searchTokens,
+            int maxResults,
+            List<QueryHasherPairResult> pairResults,
+            int offset ) {
+        return new SearchRequest( searchTokens, maxResults, pairResults, offset );
+    }
+
+    @JsonProperty( Names.QUERY_FIELD )
+    public List<BitVector> getSearchToken() {
         return searchToken;
     }
 
-    @JsonProperty(MAX_RESULTS_PROPERTY)
+    @JsonProperty( Names.MAX_FIELD )
     public int getMaxResults() {
         return maxResults;
     }
 
-    @JsonProperty(OFFSET_PROPERTY)
+    @JsonProperty( Names.PAIR_FIELD )
+    public List<QueryHasherPairResult> getPairResults() {
+        return pairResults;
+    }
+
+    @JsonProperty( Names.OFFSET_FIELD )
     public int getOffset() {
         return offset;
     }
 
-    @JsonProperty(SORT_DATE_PROPERTY)
-    public SortDirection getSortDate() {
-        return sortDate;
-    }
+    @Override
+    public boolean equals( Object obj ) {
+        if ( this == obj ) {
+            return true;
+        }
+        if ( obj == null ) {
+            return false;
+        }
+        if ( !( obj instanceof SearchRequest ) ) {
+            return false;
+        }
+        SearchRequest other = (SearchRequest) obj;
+        if ( searchToken == null ) {
+            if ( other.searchToken != null ) {
+                return false;
+            }
+        } else if ( !searchToken.equals( other.searchToken ) ) {
+            return false;
+        }
+        if ( pairResults == null ) {
+            if ( other.pairResults != null ) {
+                return false;
+            }
+        } else if ( !pairResults.equals( other.pairResults ) ) {
+            return false;
+        }
 
-    @JsonProperty(SORT_SCORE_PROPERTY)
-    public SortDirection getSortScore() {
-        return sortScore;
+        return offset == other.offset && maxResults == other.maxResults;
     }
 
 }
