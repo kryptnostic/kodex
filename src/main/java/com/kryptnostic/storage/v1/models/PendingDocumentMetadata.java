@@ -27,6 +27,12 @@ public class PendingDocumentMetadata extends DocumentMetadata {
         return receivedBlocks;
     }
 
+    @Override
+    public boolean equals( Object obj ) {
+        PendingDocumentMetadata other = (PendingDocumentMetadata) obj;
+        return super.equals( other ) && receivedBlocks == other.receivedBlocks;
+    }
+
     public int increment() {
         return ++receivedBlocks;
     }

@@ -2,6 +2,8 @@ package com.kryptnostic.sharing.v1.models;
 
 import java.io.Serializable;
 
+import org.joda.time.DateTime;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.kryptnostic.directory.v1.models.UserKey;
 import com.kryptnostic.kodex.v1.constants.Names;
@@ -18,6 +20,7 @@ public class Share implements Serializable {
     private final DocumentId  documentId;
     private final byte[]      encryptedSharingKey;
     private final byte[]      seal;
+    private DateTime          creationTime;
 
     public Share(
             @JsonProperty( Names.ID_FIELD ) DocumentId documentId,
@@ -43,8 +46,20 @@ public class Share implements Serializable {
         return seal;
     }
 
+    @JsonProperty( Names.TIME_FIELD )
+    public DateTime getCreationTime() {
+        return creationTime;
+    }
+
+    public void setCreationTime( DateTime creationTime ) {
+        this.creationTime = creationTime;
+    }
+
     public static Share fromSharingRequest( UserKey user, SharingRequest request ) {
-        return new Share( request.getDocumentId(), request.getEncryptedSharingKey(), request.getUserKeys().get( user ) );
+        Share share = new Share( request.getDocumentId(), request.getEncryptedSharingKey(), request.getUserKeys().get(
+                user ) );
+        share.setCreationTime( DateTime.now() );
+        return share;
     }
 
     @Override

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.InjectableValues.Std;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.smile.SmileFactory;
 import com.fasterxml.jackson.datatype.guava.GuavaModule;
+import com.fasterxml.jackson.datatype.joda.JodaModule;
 import com.fasterxml.jackson.module.afterburner.AfterburnerModule;
 import com.kryptnostic.crypto.padding.ZeroPaddingStrategy;
 import com.kryptnostic.kodex.v1.crypto.keys.CryptoServiceLoader;
@@ -61,6 +62,7 @@ public final class KodexObjectMapperFactory {
     private static void configureMapper( ObjectMapper mapper ) {
         mapper.registerModule( new KodexModule() );
         mapper.registerModule( new GuavaModule() );
+        mapper.registerModule( new JodaModule() );
         mapper.registerModule( new AfterburnerModule() );
         mapper.registerSubtypes(
                 CompoundPolynomialFunctionGF2.class,

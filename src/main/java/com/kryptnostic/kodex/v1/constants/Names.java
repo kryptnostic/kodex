@@ -57,4 +57,8 @@ public final class Names {
     public static final String PAIR_FIELD                    = "pair";
     public static final String MAX_FIELD                     = "max";
     public static final String QUERY_FIELD                   = "query";
+    public static final String TIME_FIELD                    = "time";
+    public static final String OWNERS_FIELD                  = "owners";
+    public static final String READERS_FIELD                 = "readers";
+    public static final String WRITERS_FIELD                 = "writers";
 }
