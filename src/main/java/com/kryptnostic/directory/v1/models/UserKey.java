@@ -2,7 +2,7 @@ package com.kryptnostic.directory.v1.models;
 
 import java.io.Serializable;
 import java.util.List;
-
+import static com.kryptnostic.kodex.v1.constants.Names.*;
 import org.apache.commons.lang3.StringUtils;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -11,8 +11,6 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Splitter;
 
 public class UserKey implements Principal,Serializable {
-    public static final String NAME_FIELD = "name";
-    public static final String REALM_FIELD = "realm";
     private static final long serialVersionUID = 1392846078227265603L;
     protected static final Splitter splitter = Splitter.on( "." ).trimResults().omitEmptyStrings();
     protected final String name;
