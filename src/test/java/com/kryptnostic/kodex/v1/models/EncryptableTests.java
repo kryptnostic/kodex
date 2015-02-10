@@ -31,7 +31,6 @@ import com.kryptnostic.kodex.v1.exceptions.types.SecurityConfigurationException;
 import com.kryptnostic.kodex.v1.indexing.metadata.Metadata;
 import com.kryptnostic.kodex.v1.serialization.crypto.Encryptable;
 import com.kryptnostic.kodex.v1.serialization.crypto.Encryptables;
-import com.kryptnostic.sharing.v1.models.DocumentId;
 import com.kryptnostic.utils.SecurityConfigurationTestUtils;
 
 @SuppressWarnings( "javadoc" )
@@ -130,7 +129,7 @@ public class EncryptableTests extends SecurityConfigurationTestUtils {
 
     @Test
     public void encryptableMetadataConstructionTest() {
-        Metadata m = new Metadata( new DocumentId( "ABC" ), "ABC", Arrays.asList( 1, 2, 3 ) );
+        Metadata m = new Metadata( "ABC", "ABC", Arrays.asList( 1, 2, 3 ) );
         Encryptable<Metadata> plainString = new Encryptable<Metadata>( m );
 
         Assert.assertNull( plainString.getEncryptedData() );
@@ -142,7 +141,7 @@ public class EncryptableTests extends SecurityConfigurationTestUtils {
     @Test
     public void encryptableMetadataEncryptionTest() throws JsonParseException, JsonMappingException, IOException,
             ClassNotFoundException, SecurityConfigurationException {
-        Metadata m = new Metadata( new DocumentId( "ABC" ), "ABC", Arrays.asList( 1, 2, 3 ) );
+        Metadata m = new Metadata( "ABC", "ABC", Arrays.asList( 1, 2, 3 ) );
 
         Encryptable<Metadata> plainString = new Encryptable<Metadata>( m );
         Encryptable<Metadata> cipherString = plainString.encrypt( loader );
@@ -172,8 +171,8 @@ public class EncryptableTests extends SecurityConfigurationTestUtils {
             InvalidParameterSpecException, SignatureException, SealedKodexException, CorruptKodexException,
             KodexException, InvalidAlgorithmParameterException {
 
-        Metadata m1 = new Metadata( new DocumentId( "ABC" ), "ABC", Arrays.asList( 1, 2, 3 ) );
-        Metadata m2 = new Metadata( new DocumentId( "ABC" ), "ABC", Arrays.asList( 1, 2, 3 ) );
+        Metadata m1 = new Metadata( "ABC", "ABC", Arrays.asList( 1, 2, 3 ) );
+        Metadata m2 = new Metadata( "ABC", "ABC", Arrays.asList( 1, 2, 3 ) );
         Encryptable<Metadata> plainString1 = new Encryptable<Metadata>( m1 );
         Encryptable<Metadata> plainString2 = new Encryptable<Metadata>( m2 );
         Encryptable<Metadata> cipherString1 = plainString1.encrypt( loader );

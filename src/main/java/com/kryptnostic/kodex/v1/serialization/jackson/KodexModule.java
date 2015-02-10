@@ -10,7 +10,6 @@ import com.fasterxml.jackson.databind.module.SimpleSerializers;
 import com.kryptnostic.kodex.v1.crypto.keys.CryptoServiceLoader;
 import com.kryptnostic.kodex.v1.serialization.crypto.Encryptable;
 import com.kryptnostic.multivariate.gf2.Monomial;
-import com.kryptnostic.sharing.v1.models.DocumentId;
 
 @SuppressWarnings( "serial" )
 public class KodexModule extends SimpleModule {
@@ -55,12 +54,10 @@ public class KodexModule extends SimpleModule {
         context.addDeserializers( deserializers );
 
         SimpleSerializers keySerializers = new SimpleSerializers();
-        keySerializers.addSerializer( DocumentId.class, new DocumentIdKeySerializer() );
         keySerializers.addSerializer( BitVector.class, new BitVectorKeySerializer() );
         context.addKeySerializers( keySerializers );
 
         SimpleKeyDeserializers keyDeserializers = new SimpleKeyDeserializers();
-        keyDeserializers.addDeserializer( DocumentId.class, new DocumentIdKeyDeserializer() );
         keyDeserializers.addDeserializer( BitVector.class, new BitVectorKeyDeserializer() );
         context.addKeyDeserializers( keyDeserializers );
     }

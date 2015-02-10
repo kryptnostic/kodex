@@ -17,13 +17,13 @@ import com.kryptnostic.sharing.v1.models.request.SharingRequest;
  */
 public class Share implements Serializable {
     private static final long serialVersionUID = 1145823070022684715L;
-    private final DocumentId  documentId;
+    private final String      documentId;
     private final byte[]      encryptedSharingKey;
     private final byte[]      seal;
     private DateTime          creationTime;
 
     public Share(
-            @JsonProperty( Names.ID_FIELD ) DocumentId documentId,
+            @JsonProperty( Names.ID_FIELD ) String documentId,
             @JsonProperty( Names.DOCUMENT_SHARING_KEY_FIELD ) byte[] encryptedSharingKey,
             @JsonProperty( Names.PASSWORD_FIELD ) byte[] seal ) {
         this.documentId = documentId;
@@ -32,7 +32,7 @@ public class Share implements Serializable {
     }
 
     @JsonProperty( Names.ID_FIELD )
-    public DocumentId getDocumentId() {
+    public String getDocumentId() {
         return documentId;
     }
 

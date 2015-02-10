@@ -6,20 +6,19 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
-import com.kryptnostic.sharing.v1.models.DocumentId;
 
 public class Metadata {
     public static final String  DOCUMENT_ID = "documentId";
     public static final String  TOKEN       = "token";
     public static final String  LOCATIONS   = "locations";
 
-    private final DocumentId    documentId;
+    private final String        documentId;
     private final String        token;
     private final List<Integer> locations;
 
     @JsonCreator
     public Metadata(
-            @JsonProperty( DOCUMENT_ID ) DocumentId documentId,
+            @JsonProperty( DOCUMENT_ID ) String documentId,
             @JsonProperty( TOKEN ) String token,
             @JsonProperty( LOCATIONS ) List<Integer> locations ) {
         this.documentId = documentId;
@@ -37,7 +36,7 @@ public class Metadata {
     }
 
     @JsonProperty( DOCUMENT_ID )
-    public DocumentId getDocumentId() {
+    public String getDocumentId() {
         return documentId;
     }
 

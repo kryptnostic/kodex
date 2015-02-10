@@ -23,7 +23,6 @@ import com.kryptnostic.kodex.v1.crypto.keys.CryptoServiceLoader;
 import com.kryptnostic.kodex.v1.exceptions.types.SecurityConfigurationException;
 import com.kryptnostic.kodex.v1.indexing.metadata.Metadata;
 import com.kryptnostic.kodex.v1.serialization.crypto.Encryptable;
-import com.kryptnostic.sharing.v1.models.DocumentId;
 import com.kryptnostic.storage.v1.models.IndexedMetadata;
 import com.kryptnostic.utils.SecurityConfigurationTestUtils;
 import com.kryptnostic.utils.TestKeyLoader;
@@ -45,7 +44,7 @@ public class AesMetadataRequestTests extends SecurityConfigurationTestUtils {
         initializeCryptoService();
 
         BitVector key = BitVectors.randomVector( INDEX_LENGTH );
-        DocumentId documentId = new DocumentId( "TEST" );
+        String documentId = "TEST";
         Metadata metadatum = new Metadata( documentId, "test", Arrays.asList( 1, 2, 3 ) );
         Encryptable<Metadata> data = new Encryptable<Metadata>( metadatum );
 
@@ -82,7 +81,7 @@ public class AesMetadataRequestTests extends SecurityConfigurationTestUtils {
         initializeCryptoService();
 
         BitVector key = BitVectors.randomVector( INDEX_LENGTH );
-        DocumentId documentId = new DocumentId( "TEST" );
+        String documentId = "TEST";
         Metadata metadatum = new Metadata( documentId, "test", Arrays.asList( 1, 2, 3 ) );
         Encryptable<Metadata> data = new Encryptable<Metadata>( metadatum );
 
@@ -123,14 +122,13 @@ public class AesMetadataRequestTests extends SecurityConfigurationTestUtils {
         initializeCryptoService();
 
         BitVector key = BitVectors.randomVector( INDEX_LENGTH );
-        Metadata metadatum = new Metadata( new DocumentId( "TEST" ), "test", Arrays.asList( 1, 2, 3 ) );
+        Metadata metadatum = new Metadata( "TEST", "test", Arrays.asList( 1, 2, 3 ) );
         Encryptable<Metadata> data = new Encryptable<Metadata>( metadatum );
 
         // implicit encryption via objectmapper
 
         // Create our request with our (PLAIN) Encryptable. It will get encrypted upon serialization
-        MetadataRequest req = new MetadataRequest( Arrays.asList( new IndexedMetadata( key, data, new DocumentId(
-                "test" ) ) ) );
+        MetadataRequest req = new MetadataRequest( Arrays.asList( new IndexedMetadata( key, data, "test" ) ) );
 
         String actual = serialize( req );
 
@@ -152,7 +150,7 @@ public class AesMetadataRequestTests extends SecurityConfigurationTestUtils {
     public void testSerializationWithExplicitEncryption() throws ClassNotFoundException,
             SecurityConfigurationException, IOException, ExecutionException {
         BitVector key = BitVectors.randomVector( INDEX_LENGTH );
-        Metadata metadatum = new Metadata( new DocumentId( "TEST" ), "test", Arrays.asList( 1, 2, 3 ) );
+        Metadata metadatum = new Metadata( "TEST", "test", Arrays.asList( 1, 2, 3 ) );
         Encryptable<Metadata> data = new Encryptable<Metadata>( metadatum );
 
         // explicit encryption
@@ -165,7 +163,7 @@ public class AesMetadataRequestTests extends SecurityConfigurationTestUtils {
         data = data.encrypt( loader );
 
         // create the metadataRequest with our (ENCRYPTED) Encryptable
-        DocumentId docId = new DocumentId( "test" );
+        String docId = "test";
         MetadataRequest req = new MetadataRequest( Arrays.asList( new IndexedMetadata( key, data, docId ) ) );
 
         String out = serialize( req );

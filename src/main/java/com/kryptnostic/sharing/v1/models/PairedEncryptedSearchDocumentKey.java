@@ -9,10 +9,10 @@ import com.kryptnostic.storage.v1.models.EncryptedSearchDocumentKey;
 public class PairedEncryptedSearchDocumentKey implements Serializable {
     private static final long                serialVersionUID = -6584084313085024163L;
     private final EncryptedSearchDocumentKey searchDocumentKey;
-    private final DocumentId                 documentId;
+    private final String                     documentId;
 
     public PairedEncryptedSearchDocumentKey(
-            @JsonProperty( Names.ID_FIELD ) DocumentId documentId,
+            @JsonProperty( Names.ID_FIELD ) String documentId,
             @JsonProperty( Names.DOCUMENT_SHARING_KEY_FIELD ) final EncryptedSearchDocumentKey searchDocumentKey ) {
         this.documentId = documentId;
         this.searchDocumentKey = searchDocumentKey;
@@ -24,7 +24,7 @@ public class PairedEncryptedSearchDocumentKey implements Serializable {
     }
 
     @JsonProperty( Names.ID_FIELD )
-    public DocumentId getDocumentId() {
+    public String getDocumentId() {
         return documentId;
     }
 }

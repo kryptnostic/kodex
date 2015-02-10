@@ -10,7 +10,6 @@ import retrofit.http.PUT;
 import retrofit.http.Path;
 
 import com.kryptnostic.kodex.v1.models.response.BasicResponse;
-import com.kryptnostic.sharing.v1.models.DocumentId;
 import com.kryptnostic.sharing.v1.models.IncomingShares;
 import com.kryptnostic.sharing.v1.models.request.KeyRegistrationRequest;
 import com.kryptnostic.sharing.v1.models.request.RevocationRequest;
@@ -27,7 +26,7 @@ public interface SharingApi {
     IncomingShares getIncomingShares();
 
     @POST( SHARE + DOCUMENT + "/{id}" )
-    BasicResponse<String> removeIncomingShares( @Path( "id" ) String id );
+    BasicResponse<String> removeIncomingShares( @Path( "id" ) String uuid );
 
     @POST( SHARE + DOCUMENT )
     BasicResponse<String> shareDocument( @Body SharingRequest request );
@@ -42,5 +41,5 @@ public interface SharingApi {
     KeyUpdateResponse registerKeys( @Body Set<EncryptedSearchDocumentKey> request );
 
     @DELETE( SHARE + KEYS )
-    KeyUpdateResponse removeKeys( @Body Set<DocumentId> ids );
+    KeyUpdateResponse removeKeys( @Body Set<String> uuids );
 }

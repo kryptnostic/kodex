@@ -7,17 +7,16 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.kryptnostic.directory.v1.models.UserKey;
 import com.kryptnostic.kodex.v1.constants.Names;
-import com.kryptnostic.sharing.v1.models.DocumentId;
 
 public final class SharingRequest implements Serializable {
     private static final long          serialVersionUID = 8493560981719181963L;
     private final Map<UserKey, byte[]> userKeys;
-    private final DocumentId           documentId;
+    private final String               documentId;
     private final byte[]               encryptedSharingKey;
 
     @JsonCreator
     public SharingRequest(
-            @JsonProperty( Names.ID_FIELD ) DocumentId encryptedDocumentId,
+            @JsonProperty( Names.ID_FIELD ) String encryptedDocumentId,
             @JsonProperty( Names.USERS_FIELD ) Map<UserKey, byte[]> userKey,
             @JsonProperty( Names.DOCUMENT_SHARING_KEY_FIELD ) byte[] encryptedSharingKey ) {
         this.documentId = encryptedDocumentId;
@@ -26,7 +25,7 @@ public final class SharingRequest implements Serializable {
     }
 
     @JsonProperty( Names.ID_FIELD )
-    public DocumentId getDocumentId() {
+    public String getDocumentId() {
         return documentId;
     }
 

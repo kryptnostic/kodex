@@ -10,7 +10,6 @@ import com.kryptnostic.kodex.v1.exceptions.types.IrisException;
 import com.kryptnostic.kodex.v1.exceptions.types.ResourceLockedException;
 import com.kryptnostic.kodex.v1.exceptions.types.ResourceNotFoundException;
 import com.kryptnostic.kodex.v1.exceptions.types.SecurityConfigurationException;
-import com.kryptnostic.sharing.v1.models.DocumentId;
 import com.kryptnostic.storage.v1.models.Document;
 import com.kryptnostic.storage.v1.models.EncryptableBlock;
 import com.kryptnostic.storage.v1.models.request.MetadataRequest;
@@ -31,9 +30,9 @@ public interface StorageClient {
      * @return document Document object
      * @throws ResourceNotFoundException The document with the specified ID was not found on the server
      */
-    Document getDocument( DocumentId id ) throws ResourceNotFoundException;
+    Document getDocument( String id ) throws ResourceNotFoundException;
 
-    List<Document> getDocuments( List<DocumentId> ids ) throws ResourceNotFoundException;
+    List<Document> getDocuments( List<String> ids ) throws ResourceNotFoundException;
 
     /**
      * Push metadata to the service
@@ -44,18 +43,18 @@ public interface StorageClient {
      */
     String uploadMetadata( MetadataRequest metadata ) throws BadRequestException;
 
-    void deleteMetadata( DocumentId id );
+    void deleteMetadata( String id );
 
-    void deleteDocument( DocumentId id );
+    void deleteDocument( String id );
 
     /**
      * Retrieve all the documentIds the current user has access to
      * 
      * @return Collection of documentIds
      */
-    Collection<DocumentId> getDocumentIds();
+    Collection<String> getDocumentIds();
 
-    Collection<DocumentId> getDocumentIds( int offset, int pageSize );
+    Collection<String> getDocumentIds( int offset, int pageSize );
 
     String uploadDocument( StorageRequest req ) throws BadRequestException, SecurityConfigurationException,
             IrisException, ResourceLockedException, ResourceNotFoundException;

@@ -8,8 +8,8 @@ import com.google.common.collect.Maps;
 public final class IncomingShares extends HashSet<Share> {
     private static final long serialVersionUID = -4163211276862529808L;
 
-    public Map<DocumentId, Share> asMap() {
-        Map<DocumentId, Share> sharingMap = Maps.newHashMap();
+    public Map<String, Share> asMap() {
+        Map<String, Share> sharingMap = Maps.newHashMap();
         for ( Share s : this ) {
             sharingMap.put( s.getDocumentId(), s );
         }
