@@ -17,6 +17,8 @@ public final class Names {
     public static final String DOCUMENT_KEY_FIELD            = "documentKey";
     public static final String EMAIL_FIELD                   = "email";
     public static final String NAME_FIELD                    = "name";
+    public static final String GIVEN_NAME_FIELD              = "givenName";
+    public static final String FAMILY_NAME_FIELD             = "familyName";
     public static final String METADATA_FIELD                = "metadata";
     public static final String REALM_FIELD                   = "realm";
     public static final String STATE_FIELD                   = "state";
