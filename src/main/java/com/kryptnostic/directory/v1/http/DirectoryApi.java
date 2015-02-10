@@ -10,7 +10,9 @@ import retrofit.http.Path;
 
 import com.codahale.metrics.annotation.Timed;
 import com.kryptnostic.directory.v1.models.ByteArrayEnvelope;
+import com.kryptnostic.directory.v1.models.DocumentServiceRequest;
 import com.kryptnostic.directory.v1.models.UserKey;
+import com.kryptnostic.directory.v1.models.response.DocumentServiceResponse;
 import com.kryptnostic.directory.v1.models.response.PublicKeyEnvelope;
 import com.kryptnostic.kodex.v1.constants.Names;
 import com.kryptnostic.kodex.v1.crypto.ciphers.BlockCiphertext;
@@ -62,6 +64,10 @@ public interface DirectoryApi {
     @Timed
     @GET( CONTROLLER + DOCUMENT_KEY + PARAM.ID )
     BasicResponse<byte[]> getDocumentId( @Path( Names.ID_FIELD ) String id ) throws ResourceNotFoundException;
+
+    @Timed
+    @POST( CONTROLLER + DOCUMENT_KEY )
+    DocumentServiceResponse getDocumentServices( @Body DocumentServiceRequest request );
 
     @Timed
     @POST( CONTROLLER + DOCUMENT_KEY + PARAM.ID )

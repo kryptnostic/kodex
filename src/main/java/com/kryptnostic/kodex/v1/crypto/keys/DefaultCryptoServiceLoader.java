@@ -3,6 +3,9 @@ package com.kryptnostic.kodex.v1.crypto.keys;
 import java.io.IOException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
@@ -14,8 +17,11 @@ import retrofit.RetrofitError;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.kryptnostic.directory.v1.http.DirectoryApi;
 import com.kryptnostic.directory.v1.models.ByteArrayEnvelope;
+import com.kryptnostic.directory.v1.models.DocumentServiceRequest;
 import com.kryptnostic.kodex.v1.client.KryptnosticConnection;
 import com.kryptnostic.kodex.v1.crypto.ciphers.AesCryptoService;
 import com.kryptnostic.kodex.v1.crypto.ciphers.CryptoService;
@@ -46,6 +52,32 @@ public class DefaultCryptoServiceLoader implements CryptoServiceLoader {
         this.cypher = cypher;
         keyCache = CacheBuilder.newBuilder().maximumSize( 1000 ).expireAfterWrite( 10, TimeUnit.MINUTES )
                 .build( new CacheLoader<String, CryptoService>() {
+                    @Override
+                    public Map<String, CryptoService> loadAll( Iterable<? extends String> keys ) throws IOException,
+                            SecurityConfigurationException {
+
+                        List<String> ids = Lists.newArrayList();
+                        for ( String k : keys ) {
+                            ids.add( k );
+                        }
+
+                        Map<String, byte[]> data = directoryApi.getDocumentServices( new DocumentServiceRequest( ids ) )
+                                .getData();
+
+                        Map<String, CryptoService> processedData = Maps.newHashMap();
+
+                        for ( Map.Entry<String, byte[]> entry : data.entrySet() ) {
+                            byte[] crypto = entry.getValue();
+                            if ( crypto != null ) {
+                                CryptoService service = connection.getRsaCryptoService().decrypt(
+                                        crypto,
+                                        AesCryptoService.class );
+                                processedData.put( entry.getKey(), service );
+                            }
+                        }
+                        return processedData;
+                    }
+
                     @Override
                     public CryptoService load( String key ) throws IOException, SecurityConfigurationException {
                         byte[] crypto = null;
@@ -85,5 +117,10 @@ public class DefaultCryptoServiceLoader implements CryptoServiceLoader {
         } catch ( SecurityConfigurationException | IOException e ) {
             throw new ExecutionException( e );
         }
+    }
+
+    @Override
+    public Map<String, CryptoService> getAll( Set<String> ids ) throws ExecutionException {
+        return keyCache.getAll( ids );
     }
 }

@@ -3,6 +3,7 @@ package com.kryptnostic.utils;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ExecutionException;
 
 import com.google.common.collect.Maps;
@@ -31,5 +32,14 @@ public class TestKeyLoader implements CryptoServiceLoader {
             services.put( id, s );
         }
         return s;
+    }
+
+    @Override
+    public Map<String, CryptoService> getAll( Set<String> ids ) throws ExecutionException {
+        Map<String, CryptoService> data = Maps.newHashMap();
+        for ( String id : ids ) {
+            data.put( id, get( id ) );
+        }
+        return data;
     }
 }
