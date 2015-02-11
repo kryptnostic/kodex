@@ -44,7 +44,7 @@ public interface KryptnosticContext {
 
     byte[] rsaEncrypt( byte[] plaintext ) throws SecurityConfigurationException;
 
-    void submitBridgeKeyWithSearchNonce( String documentId, EncryptedSearchSharingKey sharingKey ) throws IrisException;
+    void submitBridgeKeyWithSearchNonce( String objectId, EncryptedSearchSharingKey sharingKey ) throws IrisException;
 
     BitVector generateIndexForToken( String token, EncryptedSearchSharingKey sharingKey )
             throws ResourceNotFoundException;

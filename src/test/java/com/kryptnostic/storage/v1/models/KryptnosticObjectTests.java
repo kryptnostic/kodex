@@ -24,7 +24,7 @@ import com.kryptnostic.kodex.v1.serialization.crypto.Encryptable;
 import com.kryptnostic.utils.SecurityConfigurationTestUtils;
 
 @SuppressWarnings( "javadoc" )
-public class DocumentTests extends SecurityConfigurationTestUtils {
+public class KryptnosticObjectTests extends SecurityConfigurationTestUtils {
 
     @Test
     public void testEquals() throws SecurityConfigurationException, IOException, ClassNotFoundException,
@@ -36,16 +36,17 @@ public class DocumentTests extends SecurityConfigurationTestUtils {
         loader.put( "test", crypto );
         loader.put( "test2", crypto );
 
-        Document d1 = new Document( new DocumentMetadata( "test" ), "cool document" ).encrypt( loader );
-        Document d2 = new Document( new DocumentMetadata( "test" ), "cool document" ).encrypt( loader );
+        KryptnosticObject d1 = new KryptnosticObject( new ObjectMetadata( "test" ), "cool document" ).encrypt( loader );
+        KryptnosticObject d2 = new KryptnosticObject( new ObjectMetadata( "test" ), "cool document" ).encrypt( loader );
 
         Assert.assertEquals( d1, d1 );
         Assert.assertEquals( d1, d2 );
 
-        Document d3 = new Document( new DocumentMetadata( "test2" ), "cool document" ).encrypt( loader );
+        KryptnosticObject d3 = new KryptnosticObject( new ObjectMetadata( "test2" ), "cool document" ).encrypt( loader );
         Assert.assertNotEquals( d1, d3 );
 
-        Document d4 = new Document( new DocumentMetadata( "test" ), "cool document cool" ).encrypt( loader );
+        KryptnosticObject d4 = new KryptnosticObject( new ObjectMetadata( "test" ), "cool document cool" )
+                .encrypt( loader );
         Assert.assertEquals( d1, d4 );
         Assert.assertNotEquals( d1, d3 );
     }
@@ -59,9 +60,9 @@ public class DocumentTests extends SecurityConfigurationTestUtils {
 
         loader.put( "test", crypto );
 
-        Document doc = new Document( new DocumentMetadata( "test" ), "this is a test" );
+        KryptnosticObject doc = new KryptnosticObject( new ObjectMetadata( "test" ), "this is a test" );
         String out = serialize( doc );
-        Document result = deserialize( out, Document.class );
+        KryptnosticObject result = deserialize( out, KryptnosticObject.class );
 
         Assert.assertEquals( doc, result );
     }
@@ -75,7 +76,8 @@ public class DocumentTests extends SecurityConfigurationTestUtils {
 
         loader.put( "test", crypto );
 
-        Document doc = new Document( new DocumentMetadata( "test" ), "this is a test" ).encrypt( loader );
+        KryptnosticObject doc = new KryptnosticObject( new ObjectMetadata( "test" ), "this is a test" )
+                .encrypt( loader );
         String out = serialize( doc.getBody().getEncryptedData() );
         EncryptableBlock[] result = deserialize( out, EncryptableBlock[].class );
 
@@ -93,7 +95,8 @@ public class DocumentTests extends SecurityConfigurationTestUtils {
 
         loader.put( "test", crypto );
 
-        Document doc = new Document( new DocumentMetadata( "test" ), "this is a test" ).encrypt( loader );
+        KryptnosticObject doc = new KryptnosticObject( new ObjectMetadata( "test" ), "this is a test" )
+                .encrypt( loader );
 
         EncryptableBlock[] blocks = doc.getBody().getEncryptedData();
         for ( EncryptableBlock block : blocks ) {

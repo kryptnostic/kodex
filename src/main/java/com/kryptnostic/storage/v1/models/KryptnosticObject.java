@@ -15,17 +15,17 @@ import com.kryptnostic.kodex.v1.serialization.crypto.Encryptable;
  * 
  * @author sinaiman
  */
-public class Document {
+public class KryptnosticObject {
     private static final long         serialVersionUID = -6861113361696076897L;
 
-    private final DocumentMetadata    metadata;
+    private final ObjectMetadata    metadata;
     private final Encryptable<String> body;
 
     /**
      * @param data Plaintext string
      * @param metadata Document id + version
      */
-    public Document( DocumentMetadata metadata, String data ) {
+    public KryptnosticObject( ObjectMetadata metadata, String data ) {
         this.body = new Encryptable<String>( data, metadata.getId() );
         this.metadata = metadata;
     }
@@ -35,8 +35,8 @@ public class Document {
      * @param body Plaintext body
      * @return A new document with the specified id and body
      */
-    public static Document fromIdAndBody( String id, String body ) {
-        return new Document( new DocumentMetadata( id ), body );
+    public static KryptnosticObject fromIdAndBody( String id, String body ) {
+        return new KryptnosticObject( new ObjectMetadata( id ), body );
     }
 
     /**
@@ -44,8 +44,8 @@ public class Document {
      * @param body Encryptable representing document body
      */
     @JsonCreator
-    public Document(
-            @JsonProperty( Names.METADATA_FIELD ) DocumentMetadata metadata,
+    public KryptnosticObject(
+            @JsonProperty( Names.METADATA_FIELD ) ObjectMetadata metadata,
             @JsonProperty( Names.BODY_FIELD ) Encryptable<String> body ) {
         Preconditions.checkArgument( metadata.getId().equals( body.getCryptoServiceId() ) );
         this.body = body;
@@ -56,7 +56,7 @@ public class Document {
      * @return Document id + version
      */
     @JsonProperty( Names.METADATA_FIELD )
-    public DocumentMetadata getMetadata() {
+    public ObjectMetadata getMetadata() {
         return metadata;
     }
 
@@ -74,23 +74,23 @@ public class Document {
      * @throws SecurityConfigurationException
      * @throws IOException
      */
-    public Document encrypt( CryptoServiceLoader loader ) throws ClassNotFoundException,
+    public KryptnosticObject encrypt( CryptoServiceLoader loader ) throws ClassNotFoundException,
             SecurityConfigurationException, IOException {
         Encryptable<String> encryptedBody = body.encrypt( loader );
-        Document d = new Document( metadata, encryptedBody );
+        KryptnosticObject d = new KryptnosticObject( metadata, encryptedBody );
         return d;
     }
 
-    public Document decrypt( CryptoServiceLoader loader ) throws ClassNotFoundException,
+    public KryptnosticObject decrypt( CryptoServiceLoader loader ) throws ClassNotFoundException,
             SecurityConfigurationException, IOException {
         Encryptable<String> decryptedBody = body.decrypt( loader );
-        Document d = new Document( metadata, decryptedBody );
+        KryptnosticObject d = new KryptnosticObject( metadata, decryptedBody );
         return d;
     }
 
     @Override
     public boolean equals( Object o ) {
-        Document other = (Document) o;
+        KryptnosticObject other = (KryptnosticObject) o;
         return other.metadata.equals( metadata );
     }
 

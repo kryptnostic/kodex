@@ -94,7 +94,7 @@ public class KodexTests {
         SimplePolynomialFunction left = queryPair.getLeft();
         SimplePolynomialFunction right = queryPair.getRight();
 
-        EncryptedSearchSharingKey sharingKey = new EncryptedSearchSharingKey( searchKey.newDocumentKey() );
+        EncryptedSearchSharingKey sharingKey = new EncryptedSearchSharingKey( searchKey.newObjectKey() );
         EncryptedSearchBridgeKey bridgeKey = new EncryptedSearchBridgeKey( searchKey, sharingKey );
 
         String term = "serialization";

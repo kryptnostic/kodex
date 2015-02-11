@@ -11,7 +11,7 @@ public final class IncomingShares extends HashSet<Share> {
     public Map<String, Share> asMap() {
         Map<String, Share> sharingMap = Maps.newHashMap();
         for ( Share s : this ) {
-            sharingMap.put( s.getDocumentId(), s );
+            sharingMap.put( s.getObjectId(), s );
         }
         return sharingMap;
     }

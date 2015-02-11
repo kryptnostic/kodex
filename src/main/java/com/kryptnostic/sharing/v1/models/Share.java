@@ -10,30 +10,30 @@ import com.kryptnostic.kodex.v1.constants.Names;
 import com.kryptnostic.sharing.v1.models.request.SharingRequest;
 
 /**
- * Represents the information involved in securely sharing a document from on user to another.
+ * Represents the information involved in securely sharing an object from on user to another.
  * 
  * @author Matthew Tamayo-Rios &lt;matthew@kryptnostic.com&gt;
  *
  */
 public class Share implements Serializable {
     private static final long serialVersionUID = 1145823070022684715L;
-    private final String      documentId;
+    private final String      objectId;
     private final byte[]      encryptedSharingKey;
     private final byte[]      seal;
     private DateTime          creationTime;
 
     public Share(
-            @JsonProperty( Names.ID_FIELD ) String documentId,
+            @JsonProperty( Names.ID_FIELD ) String objectId,
             @JsonProperty( Names.DOCUMENT_SHARING_KEY_FIELD ) byte[] encryptedSharingKey,
             @JsonProperty( Names.PASSWORD_FIELD ) byte[] seal ) {
-        this.documentId = documentId;
+        this.objectId = objectId;
         this.encryptedSharingKey = encryptedSharingKey;
         this.seal = seal;
     }
 
     @JsonProperty( Names.ID_FIELD )
-    public String getDocumentId() {
-        return documentId;
+    public String getObjectId() {
+        return objectId;
     }
 
     @JsonProperty( Names.DOCUMENT_SHARING_KEY_FIELD )
@@ -56,7 +56,7 @@ public class Share implements Serializable {
     }
 
     public static Share fromSharingRequest( UserKey user, SharingRequest request ) {
-        Share share = new Share( request.getDocumentId(), request.getEncryptedSharingKey(), request.getUserKeys().get(
+        Share share = new Share( request.getObjectId(), request.getEncryptedSharingKey(), request.getUserKeys().get(
                 user ) );
         share.setCreationTime( DateTime.now() );
         return share;
@@ -66,7 +66,7 @@ public class Share implements Serializable {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ( ( documentId == null ) ? 0 : documentId.hashCode() );
+        result = prime * result + ( ( objectId == null ) ? 0 : objectId.hashCode() );
         return result;
     }
 
@@ -82,11 +82,11 @@ public class Share implements Serializable {
             return false;
         }
         Share other = (Share) obj;
-        if ( documentId == null ) {
-            if ( other.documentId != null ) {
+        if ( objectId == null ) {
+            if ( other.objectId != null ) {
                 return false;
             }
-        } else if ( !documentId.equals( other.documentId ) ) {
+        } else if ( !objectId.equals( other.objectId ) ) {
             return false;
         }
         return true;

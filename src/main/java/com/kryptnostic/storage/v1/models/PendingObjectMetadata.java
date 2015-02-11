@@ -7,11 +7,11 @@ import com.kryptnostic.kodex.v1.constants.Names;
 import com.kryptnostic.kodex.v1.crypto.ciphers.BlockCiphertext;
 import com.kryptnostic.kodex.v1.models.blocks.ChunkingStrategy;
 
-public class PendingDocumentMetadata extends DocumentMetadata {
+public class PendingObjectMetadata extends ObjectMetadata {
     private int receivedBlocks;
 
     @JsonCreator
-    public PendingDocumentMetadata(
+    public PendingObjectMetadata(
             @JsonProperty( Names.ID_FIELD ) String id,
             @JsonProperty( Names.VERSION_FIELD ) int version,
             @JsonProperty( Names.TOTAL_FIELD ) int numBlocks,
@@ -29,7 +29,7 @@ public class PendingDocumentMetadata extends DocumentMetadata {
 
     @Override
     public boolean equals( Object obj ) {
-        PendingDocumentMetadata other = (PendingDocumentMetadata) obj;
+        PendingObjectMetadata other = (PendingObjectMetadata) obj;
         return super.equals( other ) && receivedBlocks == other.receivedBlocks;
     }
 

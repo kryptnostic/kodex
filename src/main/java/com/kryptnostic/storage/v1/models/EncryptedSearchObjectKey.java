@@ -7,23 +7,23 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.kryptnostic.crypto.EncryptedSearchBridgeKey;
 import com.kryptnostic.kodex.v1.constants.Names;
 
-public class EncryptedSearchDocumentKey implements Serializable, Comparable<EncryptedSearchDocumentKey> {
+public class EncryptedSearchObjectKey implements Serializable, Comparable<EncryptedSearchObjectKey> {
     private static final long              serialVersionUID = -1727973926753941167L;
 
     private final EncryptedSearchBridgeKey bridgeKey;
-    private final String                   documentId;
+    private final String                   objectId;
 
     @JsonCreator
-    public EncryptedSearchDocumentKey(
+    public EncryptedSearchObjectKey(
             @JsonProperty( Names.KEY_FIELD ) EncryptedSearchBridgeKey bridgeKey,
-            @JsonProperty( Names.ID_FIELD ) String documentId ) {
+            @JsonProperty( Names.ID_FIELD ) String objectId ) {
         this.bridgeKey = bridgeKey;
-        this.documentId = documentId;
+        this.objectId = objectId;
     }
 
     @JsonProperty( Names.ID_FIELD )
-    public String getDocumentId() {
-        return documentId;
+    public String getObjectId() {
+        return objectId;
     }
 
     @JsonProperty( Names.KEY_FIELD )
@@ -36,12 +36,12 @@ public class EncryptedSearchDocumentKey implements Serializable, Comparable<Encr
         if ( o == null ) {
             return false;
         }
-        EncryptedSearchDocumentKey other = (EncryptedSearchDocumentKey) o;
-        return bridgeKey.equals( other.bridgeKey ) && documentId.equals( documentId );
+        EncryptedSearchObjectKey other = (EncryptedSearchObjectKey) o;
+        return bridgeKey.equals( other.bridgeKey ) && objectId.equals( objectId );
     }
 
     @Override
-    public int compareTo( EncryptedSearchDocumentKey o ) {
-        return documentId.compareTo( o.getDocumentId() );
+    public int compareTo( EncryptedSearchObjectKey o ) {
+        return objectId.compareTo( o.getObjectId() );
     }
 }

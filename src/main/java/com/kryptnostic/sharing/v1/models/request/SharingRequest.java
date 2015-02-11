@@ -11,22 +11,22 @@ import com.kryptnostic.kodex.v1.constants.Names;
 public final class SharingRequest implements Serializable {
     private static final long          serialVersionUID = 8493560981719181963L;
     private final Map<UserKey, byte[]> userKeys;
-    private final String               documentId;
+    private final String               objectId;
     private final byte[]               encryptedSharingKey;
 
     @JsonCreator
     public SharingRequest(
-            @JsonProperty( Names.ID_FIELD ) String encryptedDocumentId,
+            @JsonProperty( Names.ID_FIELD ) String objectId,
             @JsonProperty( Names.USERS_FIELD ) Map<UserKey, byte[]> userKey,
             @JsonProperty( Names.DOCUMENT_SHARING_KEY_FIELD ) byte[] encryptedSharingKey ) {
-        this.documentId = encryptedDocumentId;
+        this.objectId = objectId;
         this.userKeys = userKey;
         this.encryptedSharingKey = encryptedSharingKey;
     }
 
     @JsonProperty( Names.ID_FIELD )
-    public String getDocumentId() {
-        return documentId;
+    public String getObjectId() {
+        return objectId;
     }
 
     @JsonProperty( Names.USERS_FIELD )

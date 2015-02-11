@@ -6,23 +6,23 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.kryptnostic.kodex.v1.constants.Names;
 
-public class DocumentUserKey implements Serializable {
+public class ObjectUserKey implements Serializable {
 
-    private final String  documentId;
+    private final String  objectId;
     private final UserKey userKey;
 
     @JsonCreator
-    public DocumentUserKey(
-            @JsonProperty( Names.ID_FIELD ) String documentId,
+    public ObjectUserKey(
+            @JsonProperty( Names.ID_FIELD ) String objectId,
             @JsonProperty( Names.USER_FIELD ) UserKey userKey ) {
         super();
-        this.documentId = documentId;
+        this.objectId = objectId;
         this.userKey = userKey;
     }
 
     @JsonProperty( Names.ID_FIELD )
-    public String getDocumentId() {
-        return documentId;
+    public String getObjectId() {
+        return objectId;
     }
 
     @JsonProperty( Names.USER_FIELD )
@@ -34,7 +34,7 @@ public class DocumentUserKey implements Serializable {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ( ( documentId == null ) ? 0 : documentId.hashCode() );
+        result = prime * result + ( ( objectId == null ) ? 0 : objectId.hashCode() );
         return result;
     }
 
@@ -46,12 +46,12 @@ public class DocumentUserKey implements Serializable {
         if ( obj == null ) {
             return false;
         }
-        if ( !( obj instanceof DocumentUserKey ) ) {
+        if ( !( obj instanceof ObjectUserKey ) ) {
             return false;
         }
-        DocumentUserKey other = (DocumentUserKey) obj;
-        if ( documentId == null ) {
-            if ( other.documentId != null ) {
+        ObjectUserKey other = (ObjectUserKey) obj;
+        if ( objectId == null ) {
+            if ( other.objectId != null ) {
                 return false;
             }
         }
@@ -60,7 +60,7 @@ public class DocumentUserKey implements Serializable {
                 return false;
             }
         }
-        if ( !documentId.equals( other.documentId ) ) {
+        if ( !objectId.equals( other.objectId ) ) {
             return false;
         }
         if ( !userKey.equals( other.userKey ) ) {
@@ -71,7 +71,7 @@ public class DocumentUserKey implements Serializable {
 
     @Override
     public String toString() {
-        return userKey + documentId;
+        return userKey + objectId;
     }
 
     public byte[] asBytes() {

@@ -19,7 +19,7 @@ import com.kryptnostic.kodex.v1.models.blocks.ChunkingStrategy;
  * 
  * @author sinaiman
  */
-public class DocumentMetadata {
+public class ObjectMetadata {
     private final String           id;
     private final int              version;
     private final int              numBlocks;
@@ -33,7 +33,7 @@ public class DocumentMetadata {
     private final DateTime         createdTime;
 
     @JsonIgnore
-    public DocumentMetadata( String id ) {
+    public ObjectMetadata( String id ) {
         this( id, null, null );
     }
 
@@ -41,7 +41,7 @@ public class DocumentMetadata {
      * @param id Document identifier
      */
     @JsonIgnore
-    public DocumentMetadata( String id, BlockCiphertext encryptedClassName, ChunkingStrategy chunkingStrategy ) {
+    public ObjectMetadata( String id, BlockCiphertext encryptedClassName, ChunkingStrategy chunkingStrategy ) {
         this( id, 0, encryptedClassName, chunkingStrategy );
     }
 
@@ -50,7 +50,7 @@ public class DocumentMetadata {
      * @param version 0-based version index
      */
     @JsonIgnore
-    public DocumentMetadata(
+    public ObjectMetadata(
             String id,
             int version,
             BlockCiphertext encryptedClassName,
@@ -59,7 +59,7 @@ public class DocumentMetadata {
     }
 
     @JsonIgnore
-    public DocumentMetadata(
+    public ObjectMetadata(
             String id,
             int version,
             int numBlocks,
@@ -70,7 +70,7 @@ public class DocumentMetadata {
     }
 
     @JsonCreator
-    public DocumentMetadata(
+    public ObjectMetadata(
             @JsonProperty( Names.ID_FIELD ) String id,
             @JsonProperty( Names.VERSION_FIELD ) int version,
             @JsonProperty( Names.TOTAL_FIELD ) int numBlocks,
@@ -118,7 +118,7 @@ public class DocumentMetadata {
 
     @Override
     public boolean equals( Object obj ) {
-        DocumentMetadata other = (DocumentMetadata) obj;
+        ObjectMetadata other = (ObjectMetadata) obj;
         return id.equals( other.id ) && version == other.version && numBlocks == other.numBlocks
                 && CollectionUtils.isEqualCollection( owners, other.owners )
                 && CollectionUtils.isEqualCollection( writers, other.writers )

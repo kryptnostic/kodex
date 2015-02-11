@@ -1,5 +1,6 @@
 package com.kryptnostic.directory.v1.http;
 
+import java.util.Map;
 import java.util.Set;
 
 import retrofit.http.Body;
@@ -10,9 +11,7 @@ import retrofit.http.Path;
 
 import com.codahale.metrics.annotation.Timed;
 import com.kryptnostic.directory.v1.models.ByteArrayEnvelope;
-import com.kryptnostic.directory.v1.models.DocumentServiceRequest;
 import com.kryptnostic.directory.v1.models.UserKey;
-import com.kryptnostic.directory.v1.models.response.DocumentServiceResponse;
 import com.kryptnostic.directory.v1.models.response.PublicKeyEnvelope;
 import com.kryptnostic.kodex.v1.constants.Names;
 import com.kryptnostic.kodex.v1.crypto.ciphers.BlockCiphertext;
@@ -26,7 +25,7 @@ public interface DirectoryApi {
     String PUBLIC_KEY       = "/public";
     String PRIVATE_KEY      = "/private";
     String KODEX            = "/kodex";
-    String DOCUMENT_KEY     = "/document";
+    String OBJECT_KEY       = "/object";
     String NOTIFICATION_KEY = "/notifications";
 
     public static final class PARAM {
@@ -37,14 +36,21 @@ public interface DirectoryApi {
         public static final String ID    = "/{" + Names.ID_FIELD + "}";
     }
 
+    /**
+     * @param username
+     * @return Specified user's public key
+     */
     @Timed
-    @GET( CONTROLLER + PUBLIC_KEY + PARAM.REALM + PARAM.USER )
-    PublicKeyEnvelope getPublicKey( @Path( Names.REALM_FIELD ) String realm, @Path( Names.USER_FIELD ) String username );
+    @GET( CONTROLLER + PUBLIC_KEY + PARAM.USER )
+    PublicKeyEnvelope getPublicKey( @Path( Names.USER_FIELD ) String username );
 
     @Timed
     @PUT( CONTROLLER + PUBLIC_KEY )
     BasicResponse<String> setPublicKey( @Body PublicKeyEnvelope publicKey );
 
+    /**
+     * @return Encrypted private key of current user
+     */
     @Timed
     @GET( CONTROLLER + PRIVATE_KEY )
     BlockCiphertext getPrivateKey();
@@ -62,16 +68,19 @@ public interface DirectoryApi {
     BasicResponse<String> setKodex( @Body Kodex<String> kodex );
 
     @Timed
-    @GET( CONTROLLER + DOCUMENT_KEY + PARAM.ID )
-    BasicResponse<byte[]> getDocumentId( @Path( Names.ID_FIELD ) String id ) throws ResourceNotFoundException;
+    @GET( CONTROLLER + OBJECT_KEY + PARAM.ID )
+    BasicResponse<byte[]> getObjectCryptoService( @Path( Names.ID_FIELD ) String objectId )
+            throws ResourceNotFoundException;
 
     @Timed
-    @POST( CONTROLLER + DOCUMENT_KEY )
-    DocumentServiceResponse getDocumentServices( @Body DocumentServiceRequest request );
+    @POST( CONTROLLER + OBJECT_KEY )
+    Map<String, byte[]> getObjectCryptoServices( @Body Set<String> objectIds );
 
     @Timed
-    @POST( CONTROLLER + DOCUMENT_KEY + PARAM.ID )
-    BasicResponse<String> setDocumentId( @Path( Names.ID_FIELD ) String id, @Body ByteArrayEnvelope cryptoService );
+    @POST( CONTROLLER + OBJECT_KEY + PARAM.ID )
+    BasicResponse<String> setObjectCryptoService(
+            @Path( Names.ID_FIELD ) String objectId,
+            @Body ByteArrayEnvelope cryptoService );
 
     @GET( CONTROLLER + NOTIFICATION_KEY )
     BasicResponse<NotificationPreference> getNotificationPreferences();

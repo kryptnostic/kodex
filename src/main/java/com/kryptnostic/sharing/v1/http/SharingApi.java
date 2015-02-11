@@ -15,30 +15,30 @@ import com.kryptnostic.sharing.v1.models.request.KeyRegistrationRequest;
 import com.kryptnostic.sharing.v1.models.request.RevocationRequest;
 import com.kryptnostic.sharing.v1.models.request.SharingRequest;
 import com.kryptnostic.sharing.v1.models.response.KeyUpdateResponse;
-import com.kryptnostic.storage.v1.models.EncryptedSearchDocumentKey;
+import com.kryptnostic.storage.v1.models.EncryptedSearchObjectKey;
 
 public interface SharingApi {
     String SHARE    = "/share";
-    String DOCUMENT = "/document";
+    String OBJECT = "/object";
     String KEYS     = "/keys";
 
-    @GET( SHARE + DOCUMENT )
+    @GET( SHARE + OBJECT )
     IncomingShares getIncomingShares();
 
-    @POST( SHARE + DOCUMENT + "/{id}" )
+    @POST( SHARE + OBJECT + "/{id}" )
     BasicResponse<String> removeIncomingShares( @Path( "id" ) String uuid );
 
-    @POST( SHARE + DOCUMENT )
-    BasicResponse<String> shareDocument( @Body SharingRequest request );
+    @POST( SHARE + OBJECT )
+    BasicResponse<String> share( @Body SharingRequest request );
 
-    @DELETE( SHARE + DOCUMENT )
+    @DELETE( SHARE + OBJECT )
     BasicResponse<String> revokeAccess( @Body RevocationRequest request );
 
     @POST( SHARE + KEYS )
     KeyUpdateResponse registerKeys( @Body KeyRegistrationRequest request );
 
     @PUT( SHARE + KEYS )
-    KeyUpdateResponse registerKeys( @Body Set<EncryptedSearchDocumentKey> request );
+    KeyUpdateResponse registerKeys( @Body Set<EncryptedSearchObjectKey> request );
 
     @DELETE( SHARE + KEYS )
     KeyUpdateResponse removeKeys( @Body Set<String> uuids );
