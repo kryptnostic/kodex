@@ -27,6 +27,8 @@ public interface ObjectApi {
     String OFFSET                 = "offset";
     String PAGE_SIZE              = "pageSize";
     String OBJECT_LIST_PAGED_PATH = "/{" + OFFSET + "}/{" + PAGE_SIZE + "}";
+    String TYPE                   = "type";
+    String TYPE_PATH              = "/type/{" + TYPE + "}";
 
     /**
      * Request a new object be created in a pending state
@@ -89,6 +91,9 @@ public interface ObjectApi {
 
     @GET( OBJECT + OBJECT_LIST_PAGED_PATH )
     BasicResponse<Collection<String>> getObjectIds( @Path( OFFSET ) Integer offset, @Path( PAGE_SIZE ) Integer pageSize );
+
+    @GET( OBJECT + TYPE_PATH )
+    BasicResponse<Collection<String>> getObjectIdsByType( String type );
 
     @POST( OBJECT + OBJECT_ID_PATH + "/blocks" )
     BasicResponse<List<EncryptableBlock>> getObjectBlocks( @Path( ID ) String id, @Body List<Integer> indices )

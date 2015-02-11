@@ -63,4 +63,6 @@ public interface StorageClient {
 
     Map<Integer, String> getObjectPreview( String objectId, List<Integer> locations, int wordRadius )
             throws SecurityConfigurationException, ExecutionException, ResourceNotFoundException;
+
+    Collection<String> getObjectIdsByType( String type );
 }

@@ -20,6 +20,7 @@ import com.kryptnostic.kodex.v1.models.blocks.ChunkingStrategy;
  * @author sinaiman
  */
 public class ObjectMetadata {
+    private static final String    DEFAULT_TYPE = "";
     private final String           id;
     private final int              version;
     private final int              numBlocks;
@@ -31,6 +32,8 @@ public class ObjectMetadata {
     private final Set<UserKey>     writers;
 
     private final DateTime         createdTime;
+
+    private final String           type;
 
     @JsonIgnore
     public ObjectMetadata( String id ) {
@@ -50,11 +53,7 @@ public class ObjectMetadata {
      * @param version 0-based version index
      */
     @JsonIgnore
-    public ObjectMetadata(
-            String id,
-            int version,
-            BlockCiphertext encryptedClassName,
-            ChunkingStrategy chunkingStrategy ) {
+    public ObjectMetadata( String id, int version, BlockCiphertext encryptedClassName, ChunkingStrategy chunkingStrategy ) {
         this( id, version, 0, encryptedClassName, chunkingStrategy );
     }
 
@@ -66,7 +65,7 @@ public class ObjectMetadata {
             BlockCiphertext encryptedClassName,
             ChunkingStrategy chunkingStrategy ) {
         this( id, version, numBlocks, encryptedClassName, chunkingStrategy, Sets.<UserKey> newHashSet(), Sets
-                .<UserKey> newHashSet(), Sets.<UserKey> newHashSet() );
+                .<UserKey> newHashSet(), Sets.<UserKey> newHashSet(), DEFAULT_TYPE );
     }
 
     @JsonCreator
@@ -78,7 +77,8 @@ public class ObjectMetadata {
             @JsonProperty( Names.STRATEGY_FIELD ) ChunkingStrategy chunkingStrategy,
             @JsonProperty( Names.OWNERS_FIELD ) Set<UserKey> owners,
             @JsonProperty( Names.READERS_FIELD ) Set<UserKey> readers,
-            @JsonProperty( Names.WRITERS_FIELD ) Set<UserKey> writers ) {
+            @JsonProperty( Names.WRITERS_FIELD ) Set<UserKey> writers,
+            @JsonProperty( Names.TYPE_FIELD ) String type ) {
         this.id = id;
         this.version = version;
         this.numBlocks = numBlocks;
@@ -88,6 +88,8 @@ public class ObjectMetadata {
         this.owners = owners;
         this.readers = readers;
         this.writers = writers;
+
+        this.type = type;
 
         this.createdTime = DateTime.now();
     }
@@ -153,5 +155,10 @@ public class ObjectMetadata {
     @JsonProperty( Names.CREATED_TIME )
     public DateTime getCreatedTime() {
         return createdTime;
+    }
+
+    @JsonProperty( Names.TYPE_FIELD )
+    public String getType() {
+        return type;
     }
 }
