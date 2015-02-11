@@ -17,18 +17,19 @@ import com.kryptnostic.kodex.v1.exceptions.types.ResourceNotLockedException;
 import com.kryptnostic.kodex.v1.models.response.BasicResponse;
 import com.kryptnostic.storage.v1.models.EncryptableBlock;
 import com.kryptnostic.storage.v1.models.KryptnosticObject;
+import com.kryptnostic.storage.v1.models.request.PendingObjectRequest;
 
 public interface ObjectApi {
-    String OBJECT                 = "/object";
-    String ID                     = "id";
-    String REALM                  = "realm";
-    String USER                   = "user";
-    String OBJECT_ID_PATH         = "/{" + ID + "}";
-    String OFFSET                 = "offset";
-    String PAGE_SIZE              = "pageSize";
-    String OBJECT_LIST_PAGED_PATH = "/{" + OFFSET + "}/{" + PAGE_SIZE + "}";
-    String TYPE                   = "type";
-    String TYPE_PATH              = "/type/{" + TYPE + "}";
+    final String OBJECT                 = "/object";
+    final String ID                     = "id";
+    final String REALM                  = "realm";
+    final String USER                   = "user";
+    final String OBJECT_ID_PATH         = "/{" + ID + "}";
+    final String OFFSET                 = "offset";
+    final String PAGE_SIZE              = "pageSize";
+    final String OBJECT_LIST_PAGED_PATH = "/{" + OFFSET + "}/{" + PAGE_SIZE + "}";
+    final String TYPE                   = "type";
+    final String TYPE_PATH              = "/type/{" + TYPE + "}";
 
     /**
      * Request a new object be created in a pending state
@@ -37,7 +38,7 @@ public interface ObjectApi {
      * @throws BadRequestException Request was invalid
      */
     @PUT( OBJECT )
-    BasicResponse<String> createPendingObject() throws BadRequestException;
+    BasicResponse<String> createPendingObject( @Body PendingObjectRequest request ) throws BadRequestException;
 
     /**
      * Request an existing object be put into a pending state
@@ -93,7 +94,7 @@ public interface ObjectApi {
     BasicResponse<Collection<String>> getObjectIds( @Path( OFFSET ) Integer offset, @Path( PAGE_SIZE ) Integer pageSize );
 
     @GET( OBJECT + TYPE_PATH )
-    BasicResponse<Collection<String>> getObjectIdsByType( String type );
+    BasicResponse<Collection<String>> getObjectIdsByType( @Path( TYPE ) String type );
 
     @POST( OBJECT + OBJECT_ID_PATH + "/blocks" )
     BasicResponse<List<EncryptableBlock>> getObjectBlocks( @Path( ID ) String id, @Body List<Integer> indices )

@@ -20,20 +20,20 @@ import com.kryptnostic.kodex.v1.models.blocks.ChunkingStrategy;
  * @author sinaiman
  */
 public class ObjectMetadata {
-    private static final String    DEFAULT_TYPE = "";
-    private final String           id;
-    private final int              version;
-    private final int              numBlocks;
-    private final BlockCiphertext  encryptedClassName;
-    private final ChunkingStrategy chunkingStrategy;
+    public static final String       DEFAULT_TYPE = "";
+    protected final String           id;
+    protected final int              version;
+    protected final int              numBlocks;
+    protected final BlockCiphertext  encryptedClassName;
+    protected final ChunkingStrategy chunkingStrategy;
 
-    private final Set<UserKey>     owners;
-    private final Set<UserKey>     readers;
-    private final Set<UserKey>     writers;
+    protected final Set<UserKey>     owners;
+    protected final Set<UserKey>     readers;
+    protected final Set<UserKey>     writers;
 
-    private final DateTime         createdTime;
+    protected final DateTime         createdTime;
 
-    private final String           type;
+    protected final String           type;
 
     @JsonIgnore
     public ObjectMetadata( String id ) {

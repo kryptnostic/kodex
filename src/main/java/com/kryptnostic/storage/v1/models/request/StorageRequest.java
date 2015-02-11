@@ -5,13 +5,19 @@ public class StorageRequest {
     private final String  objectBody;
     private final boolean isSearchable;
     private final boolean isStoreable;
+    private final String  type;
 
-    public StorageRequest( String objectId, String objectBody, boolean isSearchable, boolean isStoreable ) {
+    public StorageRequest( String objectId, String objectBody, boolean isSearchable, boolean isStoreable, String type ) {
         super();
         this.objectId = objectId;
         this.objectBody = objectBody;
         this.isSearchable = isSearchable;
         this.isStoreable = isStoreable;
+        this.type = type;
+    }
+
+    public String getType() {
+        return type;
     }
 
     public String getObjectId() {
