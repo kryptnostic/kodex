@@ -27,14 +27,15 @@ public class EncryptableBlock implements Serializable {
             @JsonProperty( Names.INDEX_FIELD ) int index,
             @JsonProperty( Names.LAST_FIELD ) boolean isLast,
             @JsonProperty( Names.NAME_FIELD ) BlockCiphertext encryptedClassName,
-            @JsonProperty( Names.STRATEGY_FIELD ) ChunkingStrategy chunkingStrategy ) {
+            @JsonProperty( Names.STRATEGY_FIELD ) ChunkingStrategy chunkingStrategy,
+            @JsonProperty( Names.CREATED_TIME ) DateTime createdTime ) {
         this.block = block;
         this.verify = verify;
         this.index = index;
         this.isLast = isLast;
         this.encryptedClassName = encryptedClassName;
         this.chunkingStrategy = chunkingStrategy;
-        this.creationTime = DateTime.now();
+        this.creationTime = createdTime;
     }
 
     @JsonProperty( Names.BLOCK_FIELD )

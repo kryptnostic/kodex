@@ -2,6 +2,8 @@ package com.kryptnostic.storage.v1.models;
 
 import java.util.HashSet;
 
+import org.joda.time.DateTime;
+
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Optional;
@@ -21,7 +23,8 @@ public class PendingObjectMetadata extends ObjectMetadata {
             @JsonProperty( Names.NAME_FIELD ) BlockCiphertext encryptedClassName,
             @JsonProperty( Names.STRATEGY_FIELD ) ChunkingStrategy chunkingStrategy,
             @JsonProperty( Names.BLOCKS_FIELD ) Optional<Integer> receivedBlocks,
-            @JsonProperty( Names.TYPE_FIELD ) String type ) {
+            @JsonProperty( Names.TYPE_FIELD ) String type,
+            @JsonProperty( Names.CREATED_TIME ) DateTime createdTime ) {
         super(
                 id,
                 version,
@@ -31,7 +34,8 @@ public class PendingObjectMetadata extends ObjectMetadata {
                 new HashSet<UserKey>(),
                 new HashSet<UserKey>(),
                 new HashSet<UserKey>(),
-                type );
+                type,
+                createdTime );
         this.receivedBlocks = receivedBlocks.or( 0 );
     }
 

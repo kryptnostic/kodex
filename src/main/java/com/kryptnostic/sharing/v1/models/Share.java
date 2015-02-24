@@ -25,10 +25,12 @@ public class Share implements Serializable {
     public Share(
             @JsonProperty( Names.ID_FIELD ) String objectId,
             @JsonProperty( Names.DOCUMENT_SHARING_KEY_FIELD ) byte[] encryptedSharingKey,
-            @JsonProperty( Names.PASSWORD_FIELD ) byte[] seal ) {
+            @JsonProperty( Names.PASSWORD_FIELD ) byte[] seal,
+            @JsonProperty( Names.TIME_FIELD ) DateTime createdTime ) {
         this.objectId = objectId;
         this.encryptedSharingKey = encryptedSharingKey;
         this.seal = seal;
+        this.creationTime = createdTime;
     }
 
     @JsonProperty( Names.ID_FIELD )
@@ -51,14 +53,9 @@ public class Share implements Serializable {
         return creationTime;
     }
 
-    public void setCreationTime( DateTime creationTime ) {
-        this.creationTime = creationTime;
-    }
-
     public static Share fromSharingRequest( UserKey user, SharingRequest request ) {
         Share share = new Share( request.getObjectId(), request.getEncryptedSharingKey(), request.getUserKeys().get(
-                user ) );
-        share.setCreationTime( DateTime.now() );
+                user ), DateTime.now() );
         return share;
     }
 

@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import org.apache.commons.codec.binary.StringUtils;
+import org.joda.time.DateTime;
 
 import com.fasterxml.jackson.annotation.JacksonInject;
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -287,7 +288,7 @@ public class Encryptable<T> implements Serializable {
             BlockCiphertext ciphertext = ciphertextBlocks.get( i );
             boolean isLast = i == total - 1;
             blocks[ i ] = new EncryptableBlock( ciphertext, hashFunction.hashBytes( ciphertext.getContents() )
-                    .asBytes(), i, isLast, encryptedClassName, getChunkingStrategy() );
+                    .asBytes(), i, isLast, encryptedClassName, getChunkingStrategy(), DateTime.now() );
         }
 
         return new Encryptable<T>( blocks, encryptedClassName, cryptoServiceId );

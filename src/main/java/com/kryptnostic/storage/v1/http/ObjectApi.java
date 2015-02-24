@@ -17,6 +17,7 @@ import com.kryptnostic.kodex.v1.exceptions.types.ResourceNotLockedException;
 import com.kryptnostic.kodex.v1.models.response.BasicResponse;
 import com.kryptnostic.storage.v1.models.EncryptableBlock;
 import com.kryptnostic.storage.v1.models.KryptnosticObject;
+import com.kryptnostic.storage.v1.models.ObjectMetadata;
 import com.kryptnostic.storage.v1.models.request.PendingObjectRequest;
 
 public interface ObjectApi {
@@ -31,6 +32,7 @@ public interface ObjectApi {
     final String TYPE                   = "type";
     final String TYPE_PATH              = "/type/{" + TYPE + "}";
     final String OBJECT_APPEND_PATH     = "/append";
+    final String OBJECT_METADATA_PATH   = "/metadata";
 
     /**
      * Request a new object be created in a pending state
@@ -80,6 +82,9 @@ public interface ObjectApi {
      */
     @GET( OBJECT + OBJECT_ID_PATH )
     KryptnosticObject getObject( @Path( ID ) String id ) throws ResourceNotFoundException;
+
+    @GET( OBJECT + OBJECT_ID_PATH + OBJECT_METADATA_PATH )
+    ObjectMetadata getObjectMetadata( @Path( ID ) String id ) throws ResourceNotFoundException;
 
     @POST( OBJECT )
     BasicResponse<List<KryptnosticObject>> getObjects( @Body List<String> objectIds ) throws ResourceNotFoundException;

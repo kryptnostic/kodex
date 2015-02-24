@@ -69,6 +69,8 @@ public interface StorageClient {
 
     Collection<String> getObjectIdsByType( String type, int offset, int pageSize );
 
+    ObjectMetadata getObjectMetadata( String id ) throws ResourceNotFoundException;
+
     /**
      * @param objectMetadata
      * @param body
