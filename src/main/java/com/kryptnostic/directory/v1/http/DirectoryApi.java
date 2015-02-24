@@ -31,18 +31,20 @@ public interface DirectoryApi {
     public static final class PARAM {
         private PARAM() {}
 
-        public static final String REALM = "/{" + Names.REALM_FIELD + "}";
-        public static final String USER  = "/{" + Names.USER_FIELD + "}";
-        public static final String ID    = "/{" + Names.ID_FIELD + "}";
+        public static final String REALM         = "/{" + Names.REALM_FIELD + "}";
+        public static final String USER          = "/{" + Names.USER_FIELD + "}";
+        public static final String ID            = "/{" + Names.ID_FIELD + "}";
+        public static final String USER_WITH_DOT = "/{" + Names.USER_FIELD + ":.+}";
     }
 
     /**
      * @param username
      * @return Specified user's public key
+     * @throws ResourceNotFoundException
      */
     @Timed
     @GET( CONTROLLER + PUBLIC_KEY + PARAM.USER )
-    PublicKeyEnvelope getPublicKey( @Path( Names.USER_FIELD ) String username );
+    PublicKeyEnvelope getPublicKey( @Path( Names.USER_FIELD ) String username ) throws ResourceNotFoundException;
 
     @Timed
     @PUT( CONTROLLER + PUBLIC_KEY )

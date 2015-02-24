@@ -1,12 +1,14 @@
 package com.kryptnostic.storage.v1.models;
 
-import java.util.HashSet;
+import java.util.Set;
 
 import org.joda.time.DateTime;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Optional;
+import com.google.common.collect.Sets;
 import com.kryptnostic.directory.v1.models.UserKey;
 import com.kryptnostic.kodex.v1.constants.Names;
 import com.kryptnostic.kodex.v1.crypto.ciphers.BlockCiphertext;
@@ -22,21 +24,38 @@ public class PendingObjectMetadata extends ObjectMetadata {
             @JsonProperty( Names.TOTAL_FIELD ) int numBlocks,
             @JsonProperty( Names.NAME_FIELD ) BlockCiphertext encryptedClassName,
             @JsonProperty( Names.STRATEGY_FIELD ) ChunkingStrategy chunkingStrategy,
-            @JsonProperty( Names.BLOCKS_FIELD ) Optional<Integer> receivedBlocks,
+            @JsonProperty( Names.OWNERS_FIELD ) Set<UserKey> owners,
+            @JsonProperty( Names.READERS_FIELD ) Set<UserKey> readers,
+            @JsonProperty( Names.WRITERS_FIELD ) Set<UserKey> writers,
             @JsonProperty( Names.TYPE_FIELD ) String type,
-            @JsonProperty( Names.CREATED_TIME ) DateTime createdTime ) {
+            @JsonProperty( Names.CREATED_TIME ) DateTime createdTime,
+            @JsonProperty( Names.BLOCKS_FIELD ) Optional<Integer> receivedBlocks ) {
         super(
                 id,
                 version,
                 numBlocks,
                 encryptedClassName,
                 chunkingStrategy,
-                new HashSet<UserKey>(),
-                new HashSet<UserKey>(),
-                new HashSet<UserKey>(),
+                owners,
+                readers,
+                writers,
                 type,
                 createdTime );
         this.receivedBlocks = receivedBlocks.or( 0 );
+    }
+
+    @JsonIgnore
+    public PendingObjectMetadata(
+            String id,
+            int version,
+            int numBlocks,
+            BlockCiphertext encryptedClassName,
+            ChunkingStrategy chunkingStrategy,
+            Optional<Integer> receivedBlocks,
+            String type,
+            DateTime createdTime ) {
+        this( id, version, numBlocks, encryptedClassName, chunkingStrategy, Sets.<UserKey> newHashSet(), Sets
+                .<UserKey> newHashSet(), Sets.<UserKey> newHashSet(), type, createdTime, receivedBlocks );
     }
 
     @JsonProperty( Names.BLOCKS_FIELD )
@@ -50,6 +69,7 @@ public class PendingObjectMetadata extends ObjectMetadata {
         return super.equals( other ) && receivedBlocks == other.receivedBlocks;
     }
 
+    @JsonIgnore
     public int increment() {
         return ++receivedBlocks;
     }
