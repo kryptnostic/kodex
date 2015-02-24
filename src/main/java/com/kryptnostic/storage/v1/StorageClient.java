@@ -12,6 +12,7 @@ import com.kryptnostic.kodex.v1.exceptions.types.ResourceNotFoundException;
 import com.kryptnostic.kodex.v1.exceptions.types.SecurityConfigurationException;
 import com.kryptnostic.storage.v1.models.EncryptableBlock;
 import com.kryptnostic.storage.v1.models.KryptnosticObject;
+import com.kryptnostic.storage.v1.models.ObjectMetadata;
 import com.kryptnostic.storage.v1.models.request.MetadataRequest;
 import com.kryptnostic.storage.v1.models.request.StorageRequest;
 
@@ -59,10 +60,21 @@ public interface StorageClient {
     String uploadObject( StorageRequest req ) throws BadRequestException, SecurityConfigurationException,
             IrisException, ResourceLockedException, ResourceNotFoundException;
 
-    List<EncryptableBlock> getObjectBlocks( String id, List<Integer> indices ) throws ResourceNotFoundException;
+    List<EncryptableBlock> getObjectBlocks( String objectId, List<Integer> indices ) throws ResourceNotFoundException;
 
     Map<Integer, String> getObjectPreview( String objectId, List<Integer> locations, int wordRadius )
             throws SecurityConfigurationException, ExecutionException, ResourceNotFoundException;
 
     Collection<String> getObjectIdsByType( String type );
+
+    /**
+     * @param objectMetadata
+     * @param body
+     * @return objectId
+     * @throws SecurityConfigurationException
+     * @throws ExecutionException
+     * @throws ResourceNotFoundException
+     */
+    String appendObject( ObjectMetadata objectMetadata, String body ) throws SecurityConfigurationException,
+            ExecutionException, ResourceNotFoundException;
 }

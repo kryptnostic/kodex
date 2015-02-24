@@ -20,6 +20,7 @@ import com.kryptnostic.kodex.v1.models.blocks.ChunkingStrategy;
  * @author sinaiman
  */
 public class ObjectMetadata {
+    @JsonIgnore
     public static final String       DEFAULT_TYPE = "";
     protected final String           id;
     protected final int              version;

@@ -30,6 +30,7 @@ public interface ObjectApi {
     final String OBJECT_LIST_PAGED_PATH = "/{" + OFFSET + "}/{" + PAGE_SIZE + "}";
     final String TYPE                   = "type";
     final String TYPE_PATH              = "/type/{" + TYPE + "}";
+    final String OBJECT_APPEND_PATH     = "/append";
 
     /**
      * Request a new object be created in a pending state
@@ -102,5 +103,9 @@ public interface ObjectApi {
 
     @DELETE( OBJECT + OBJECT_ID_PATH )
     BasicResponse<String> delete( @Path( ID ) String id );
+
+    @POST( OBJECT + OBJECT_ID_PATH + OBJECT_APPEND_PATH )
+    BasicResponse<String> appendObject( @Path( ID ) String objectId, @Body EncryptableBlock blockToAppend )
+            throws ResourceNotFoundException;
 
 }

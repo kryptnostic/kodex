@@ -3,6 +3,8 @@ package com.kryptnostic.storage.v1.models;
 import java.io.Serializable;
 import java.util.Arrays;
 
+import org.joda.time.DateTime;
+
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.kryptnostic.kodex.v1.constants.Names;
@@ -16,6 +18,7 @@ public class EncryptableBlock implements Serializable {
     private final boolean          isLast;
     private final BlockCiphertext  encryptedClassName;
     private final ChunkingStrategy chunkingStrategy;
+    private DateTime               creationTime;
 
     @JsonCreator
     public EncryptableBlock(
@@ -31,6 +34,7 @@ public class EncryptableBlock implements Serializable {
         this.isLast = isLast;
         this.encryptedClassName = encryptedClassName;
         this.chunkingStrategy = chunkingStrategy;
+        this.creationTime = DateTime.now();
     }
 
     @JsonProperty( Names.BLOCK_FIELD )
@@ -61,6 +65,11 @@ public class EncryptableBlock implements Serializable {
     @JsonProperty( Names.STRATEGY_FIELD )
     public ChunkingStrategy getChunkingStrategy() {
         return chunkingStrategy;
+    }
+
+    @JsonProperty( Names.CREATED_TIME )
+    public DateTime getCreationTime() {
+        return creationTime;
     }
 
     @Override
