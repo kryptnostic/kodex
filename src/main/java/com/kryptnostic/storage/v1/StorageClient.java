@@ -67,6 +67,8 @@ public interface StorageClient {
 
     Collection<String> getObjectIdsByType( String type );
 
+    Collection<String> getObjectIdsByType( String type, int offset, int pageSize );
+
     /**
      * @param objectMetadata
      * @param body

@@ -94,6 +94,12 @@ public interface ObjectApi {
     @GET( OBJECT + OBJECT_LIST_PAGED_PATH )
     BasicResponse<Collection<String>> getObjectIds( @Path( OFFSET ) Integer offset, @Path( PAGE_SIZE ) Integer pageSize );
 
+    @GET( OBJECT + TYPE_PATH + OBJECT_LIST_PAGED_PATH )
+    BasicResponse<Collection<String>> getObjectIdsByType(
+            @Path( TYPE ) String type,
+            @Path( OFFSET ) Integer offset,
+            @Path( PAGE_SIZE ) Integer pageSize );
+
     @GET( OBJECT + TYPE_PATH )
     BasicResponse<Collection<String>> getObjectIdsByType( @Path( TYPE ) String type );
 

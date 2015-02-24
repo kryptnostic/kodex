@@ -21,7 +21,7 @@ import com.kryptnostic.kodex.v1.models.blocks.ChunkingStrategy;
  */
 public class ObjectMetadata {
     @JsonIgnore
-    public static final String       DEFAULT_TYPE = "";
+    public static final String       DEFAULT_TYPE = "object";
     protected final String           id;
     protected final int              version;
     protected final int              numBlocks;
@@ -69,6 +69,21 @@ public class ObjectMetadata {
                 .<UserKey> newHashSet(), Sets.<UserKey> newHashSet(), DEFAULT_TYPE );
     }
 
+    @JsonIgnore
+    public ObjectMetadata(
+            String id,
+            int version,
+            int numBlocks,
+            BlockCiphertext encryptedClassName,
+            ChunkingStrategy chunkingStrategy,
+            Set<UserKey> owners,
+            Set<UserKey> readers,
+            Set<UserKey> writers,
+            String type ) {
+        this( id, version, numBlocks, encryptedClassName, chunkingStrategy, owners, readers, writers, type, DateTime
+                .now() );
+    }
+
     @JsonCreator
     public ObjectMetadata(
             @JsonProperty( Names.ID_FIELD ) String id,
@@ -79,7 +94,8 @@ public class ObjectMetadata {
             @JsonProperty( Names.OWNERS_FIELD ) Set<UserKey> owners,
             @JsonProperty( Names.READERS_FIELD ) Set<UserKey> readers,
             @JsonProperty( Names.WRITERS_FIELD ) Set<UserKey> writers,
-            @JsonProperty( Names.TYPE_FIELD ) String type ) {
+            @JsonProperty( Names.TYPE_FIELD ) String type,
+            @JsonProperty( Names.CREATED_TIME ) DateTime createdTime ) {
         this.id = id;
         this.version = version;
         this.numBlocks = numBlocks;
@@ -90,9 +106,9 @@ public class ObjectMetadata {
         this.readers = readers;
         this.writers = writers;
 
-        this.type = type;
+        this.type = type.toLowerCase();
 
-        this.createdTime = DateTime.now();
+        this.createdTime = createdTime;
     }
 
     /**
