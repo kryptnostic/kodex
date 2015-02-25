@@ -9,6 +9,7 @@ import retrofit.http.POST;
 import retrofit.http.PUT;
 import retrofit.http.Path;
 
+import com.kryptnostic.kodex.v1.exceptions.types.ResourceNotFoundException;
 import com.kryptnostic.kodex.v1.models.response.BasicResponse;
 import com.kryptnostic.sharing.v1.models.IncomingShares;
 import com.kryptnostic.sharing.v1.models.request.KeyRegistrationRequest;
@@ -18,9 +19,10 @@ import com.kryptnostic.sharing.v1.models.response.KeyUpdateResponse;
 import com.kryptnostic.storage.v1.models.EncryptedSearchObjectKey;
 
 public interface SharingApi {
-    String SHARE    = "/share";
-    String OBJECT = "/object";
-    String KEYS     = "/keys";
+    String SHARE       = "/share";
+    String OBJECT      = "/object";
+    String KEYS        = "/keys";
+    String OBJECT_KEYS = "/objectKeys";
 
     @GET( SHARE + OBJECT )
     IncomingShares getIncomingShares();
@@ -42,4 +44,7 @@ public interface SharingApi {
 
     @DELETE( SHARE + KEYS )
     KeyUpdateResponse removeKeys( @Body Set<String> uuids );
+
+    @GET( SHARE + OBJECT + "/{id}" + OBJECT_KEYS )
+    EncryptedSearchObjectKey getEncryptedSearchObjectKey( @Path( "id" ) String id ) throws ResourceNotFoundException;
 }

@@ -78,7 +78,9 @@ public interface StorageClient {
      * @throws SecurityConfigurationException
      * @throws ExecutionException
      * @throws ResourceNotFoundException
+     * @throws IrisException
+     * @throws BadRequestException
      */
     String appendObject( ObjectMetadata objectMetadata, String body ) throws SecurityConfigurationException,
-            ExecutionException, ResourceNotFoundException;
+            ExecutionException, ResourceNotFoundException, IrisException, BadRequestException;
 }
