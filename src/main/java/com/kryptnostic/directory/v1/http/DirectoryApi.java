@@ -85,10 +85,10 @@ public interface DirectoryApi {
             @Body ByteArrayEnvelope cryptoService );
 
     @GET( CONTROLLER + NOTIFICATION_KEY )
-    BasicResponse<NotificationPreference> getNotificationPreferences();
+    BasicResponse<NotificationPreference> getNotificationPreference();
 
     @PUT( CONTROLLER + NOTIFICATION_KEY )
-    BasicResponse<String> setNotificationPreferences( @Body NotificationPreference preferences );
+    BasicResponse<String> setNotificationPreference( @Body NotificationPreference preferences );
 
     @Timed
     @GET( CONTROLLER + PARAM.REALM )
