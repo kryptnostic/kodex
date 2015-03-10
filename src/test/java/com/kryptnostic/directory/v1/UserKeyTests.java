@@ -4,8 +4,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.kryptnostic.directory.v1.models.AbstractKey;
-import com.kryptnostic.directory.v1.models.UserKey;
+import com.kryptnostic.directory.v1.model.AbstractKey;
+import com.kryptnostic.directory.v1.principal.UserKey;
 
 public class UserKeyTests {
     private static final String REALM  = "Caemlyn";

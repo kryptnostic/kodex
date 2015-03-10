@@ -1,4 +1,4 @@
-package com.kryptnostic.directory.v1.models.response;
+package com.kryptnostic.directory.v1.model.response;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
