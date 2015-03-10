@@ -10,9 +10,9 @@ import retrofit.http.PUT;
 import retrofit.http.Path;
 
 import com.codahale.metrics.annotation.Timed;
-import com.kryptnostic.directory.v1.models.ByteArrayEnvelope;
-import com.kryptnostic.directory.v1.models.UserKey;
-import com.kryptnostic.directory.v1.models.response.PublicKeyEnvelope;
+import com.kryptnostic.directory.v1.model.ByteArrayEnvelope;
+import com.kryptnostic.directory.v1.model.response.PublicKeyEnvelope;
+import com.kryptnostic.directory.v1.principal.UserKey;
 import com.kryptnostic.kodex.v1.constants.Names;
 import com.kryptnostic.kodex.v1.crypto.ciphers.BlockCiphertext;
 import com.kryptnostic.kodex.v1.crypto.keys.Kodex;

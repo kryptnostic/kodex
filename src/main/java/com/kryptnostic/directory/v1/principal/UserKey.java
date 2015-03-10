@@ -1,4 +1,4 @@
-package com.kryptnostic.directory.v1.models;
+package com.kryptnostic.directory.v1.principal;
 
 import static com.kryptnostic.kodex.v1.constants.Names.NAME_FIELD;
 import static com.kryptnostic.kodex.v1.constants.Names.REALM_FIELD;
@@ -12,6 +12,7 @@ import org.apache.commons.lang3.StringUtils;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Preconditions;
+import com.kryptnostic.directory.v1.model.AbstractKey;
 
 public class UserKey extends AbstractKey implements Serializable {
     private static final long serialVersionUID = 1392846078227265603L;

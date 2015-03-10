@@ -1,9 +1,10 @@
-package com.kryptnostic.directory.v1.models;
+package com.kryptnostic.directory.v1.model;
 
 import java.io.Serializable;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.kryptnostic.directory.v1.principal.UserKey;
 import com.kryptnostic.kodex.v1.constants.Names;
 
 public class ObjectUserKey implements Serializable {

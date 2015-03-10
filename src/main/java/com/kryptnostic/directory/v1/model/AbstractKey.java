@@ -1,4 +1,4 @@
-package com.kryptnostic.directory.v1.models;
+package com.kryptnostic.directory.v1.model;
 
 import java.io.Serializable;
 
@@ -9,6 +9,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Splitter;
+import com.kryptnostic.directory.v1.principal.Principal;
 import com.kryptnostic.kodex.v1.constants.Names;
 
 public abstract class AbstractKey implements Principal, Serializable {

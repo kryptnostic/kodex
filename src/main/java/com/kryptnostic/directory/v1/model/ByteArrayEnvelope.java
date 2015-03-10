@@ -1,4 +1,4 @@
-package com.kryptnostic.directory.v1.models;
+package com.kryptnostic.directory.v1.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;

@@ -1,4 +1,4 @@
-package com.kryptnostic.directory.v1.models;
+package com.kryptnostic.directory.v1.principal;
 
 
 public interface Principal {

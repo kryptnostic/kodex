@@ -3,7 +3,7 @@ package com.kryptnostic.sharing.v1;
 import java.io.IOException;
 import java.util.Set;
 
-import com.kryptnostic.directory.v1.models.UserKey;
+import com.kryptnostic.directory.v1.principal.UserKey;
 import com.kryptnostic.kodex.v1.exceptions.types.ResourceNotFoundException;
 import com.kryptnostic.kodex.v1.exceptions.types.SecurityConfigurationException;
 import com.kryptnostic.storage.v1.models.EncryptedSearchObjectKey;
