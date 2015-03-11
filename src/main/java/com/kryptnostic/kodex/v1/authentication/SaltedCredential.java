@@ -9,9 +9,10 @@ import javax.crypto.spec.PBEKeySpec;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.kryptnostic.kodex.v1.crypto.ciphers.Cyphers;
 import com.kryptnostic.kodex.v1.crypto.keys.SecretKeyFactoryType;
 
-public final class IntermediateHashedCredential {
+public final class SaltedCredential {
     private static final String CREDENTIAL_FIELD = "credential";
     private static final String SALT_FIELD       = "salt";
     private static final int    ITERATIONS       = 1000;
@@ -19,18 +20,22 @@ public final class IntermediateHashedCredential {
     private final byte[]        credential;
     private final byte[]        salt;
 
-    private IntermediateHashedCredential( byte[] credential, byte[] salt ) {
+    private SaltedCredential( byte[] credential, byte[] salt ) {
         this.credential = credential;
         this.salt = salt;
     }
+    
+    public SaltedCredential( String credential ) throws InvalidKeySpecException, NoSuchAlgorithmException {
+        this( credential , Cyphers.generateSalt( KEY_SIZE << 3 ) );
+    }
 
-    public IntermediateHashedCredential( String credential, byte[] localSalt, byte[] remoteSalt ) throws InvalidKeySpecException,
+    public SaltedCredential( String credential, byte[] salt ) throws InvalidKeySpecException,
             NoSuchAlgorithmException {
         SecretKeyFactory skf = SecretKeyFactoryType.PBKDF2WithHmacSHA1.getInstance();
-        PBEKeySpec spec = new PBEKeySpec( credential.toCharArray(), localSalt, ITERATIONS, KEY_SIZE );
+        PBEKeySpec spec = new PBEKeySpec( credential.toCharArray(), salt , ITERATIONS, KEY_SIZE );
         SecretKey key = skf.generateSecret( spec );
         this.credential = key.getEncoded();
-        salt = remoteSalt;
+        this.salt = salt;
     }
 
     @JsonProperty( CREDENTIAL_FIELD )
@@ -44,9 +49,9 @@ public final class IntermediateHashedCredential {
     }
 
     @JsonCreator
-    public static IntermediateHashedCredential fromRawBytes(
+    public static SaltedCredential fromRawBytes(
             @JsonProperty( CREDENTIAL_FIELD ) byte[] credential,
             @JsonProperty( SALT_FIELD ) byte[] salt ) {
-        return new IntermediateHashedCredential( credential, salt );
+        return new SaltedCredential( credential, salt );
     }
 }
