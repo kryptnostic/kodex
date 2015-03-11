@@ -16,7 +16,7 @@ import com.kryptnostic.kodex.v1.constants.Names;
 public class DeveloperRegistrationRequest {
     private final String            realm;
     private final String            username;
-    private final byte[]            password;
+    private final String            password;
     private final byte[]            certificate;
     private final String            email;
     private final String            givenName;
@@ -38,7 +38,7 @@ public class DeveloperRegistrationRequest {
     public DeveloperRegistrationRequest(
             @JsonProperty( Names.REALM_FIELD ) String realm,
             @JsonProperty( Names.NAME_FIELD ) String username,
-            @JsonProperty( Names.PASSWORD_FIELD ) byte[] password,
+            @JsonProperty( Names.PASSWORD_FIELD ) String password,
             @JsonProperty( Names.CERTIFICATE_PROPERTY ) byte[] certificate,
             @JsonProperty( Names.EMAIL_FIELD ) String email,
             @JsonProperty( Names.GIVEN_NAME_FIELD ) String givenName,
@@ -85,7 +85,7 @@ public class DeveloperRegistrationRequest {
     }
 
     @JsonProperty( Names.PASSWORD_FIELD )
-    public byte[] getPassword() {
+    public String getPassword() {
         return password;
     }
 
@@ -178,7 +178,7 @@ public class DeveloperRegistrationRequest {
         result = prime * result + ( ( givenName == null ) ? 0 : givenName.hashCode() );
         result = prime * result + ( ( organization == null ) ? 0 : organization.hashCode() );
         result = prime * result + ( ( organizationSize == null ) ? 0 : organizationSize.hashCode() );
-        result = prime * result + Arrays.hashCode( password );
+        result = prime * result + ( ( password == null ) ? 0 : password.hashCode() );
         result = prime * result + ( ( primaryUseCase == null ) ? 0 : primaryUseCase.hashCode() );
         result = prime * result + ( ( realm == null ) ? 0 : realm.hashCode() );
         result = prime * result + ( ( reason == null ) ? 0 : reason.hashCode() );
@@ -223,7 +223,9 @@ public class DeveloperRegistrationRequest {
         if ( organizationSize == null ) {
             if ( other.organizationSize != null ) return false;
         } else if ( !organizationSize.equals( other.organizationSize ) ) return false;
-        if ( !Arrays.equals( password, other.password ) ) return false;
+        if ( password == null ) {
+            if ( other.password != null ) return false;
+        } else if ( !password.equals( other.password ) ) return false;
         if ( primaryUseCase == null ) {
             if ( other.primaryUseCase != null ) return false;
         } else if ( !primaryUseCase.equals( other.primaryUseCase ) ) return false;

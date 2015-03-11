@@ -29,7 +29,7 @@ public interface User extends Principal {
     String getEmail();
 
     @Nullable
-    byte[] getPassword();
+    String getPassword();
 
     @Nullable
     byte[] getCertificate();

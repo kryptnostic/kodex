@@ -11,19 +11,19 @@ import com.kryptnostic.kodex.v1.constants.Names;
  */
 public class AuthenticationRequest extends UserKey {
     private static final long serialVersionUID = 82608351393994618L;
-    private final byte[]      password;
+    private final String      password;
 
     @JsonCreator
     public AuthenticationRequest(
             @JsonProperty( Names.REALM_FIELD ) String realm,
             @JsonProperty( Names.NAME_FIELD ) String name,
-            @JsonProperty( Names.PASSWORD_FIELD ) byte[] password ) {
+            @JsonProperty( Names.PASSWORD_FIELD ) String password ) {
         super( realm, name );
         this.password = password;
     }
 
     @JsonProperty( Names.PASSWORD_FIELD )
-    public byte[] getPassword() {
+    public String getPassword() {
         return password;
     }
 

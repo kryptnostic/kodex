@@ -6,19 +6,19 @@ import com.kryptnostic.directory.v1.principal.UserKey;
 import com.kryptnostic.kodex.v1.constants.Names;
 
 public class ActivateUserResponse {
-    private final byte[]  password;
+    private final String  password;
     private final UserKey userKey;
 
     @JsonCreator
     public ActivateUserResponse(
-            @JsonProperty( Names.PASSWORD_FIELD ) byte[] password,
+            @JsonProperty( Names.PASSWORD_FIELD ) String password,
             @JsonProperty( Names.USER_FIELD ) UserKey userKey ) {
         this.password = password;
         this.userKey = userKey;
     }
 
     @JsonProperty( Names.PASSWORD_FIELD )
-    public byte[] getPassword() {
+    public String getPassword() {
         return password;
     }
 
