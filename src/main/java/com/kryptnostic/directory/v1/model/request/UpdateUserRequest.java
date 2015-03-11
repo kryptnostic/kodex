@@ -3,6 +3,7 @@ package com.kryptnostic.directory.v1.model.request;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Optional;
+import com.kryptnostic.directory.v1.principal.User;
 import com.kryptnostic.kodex.v1.constants.Names;
 
 /**
@@ -18,7 +19,7 @@ public final class UpdateUserRequest {
     private final Optional<String> givenName;
     private final Optional<String> familyName;
     private final Optional<String> email;
-    private final Optional<byte[]> password;
+    private final Optional<String> password;
     private final Optional<byte[]> certificate;
 
     @JsonCreator
@@ -27,7 +28,7 @@ public final class UpdateUserRequest {
             @JsonProperty( Names.GIVEN_NAME_FIELD ) Optional<String> givenName,
             @JsonProperty( Names.FAMILY_NAME_FIELD ) Optional<String> familyName,
             @JsonProperty( Names.EMAIL_FIELD ) Optional<String> email,
-            @JsonProperty( Names.PASSWORD_FIELD ) Optional<byte[]> password,
+            @JsonProperty( Names.PASSWORD_FIELD ) Optional<String> password,
             @JsonProperty( Names.CERTIFICATE_PROPERTY ) Optional<byte[]> certificate ) {
         this.username = username;
         this.givenName = givenName;
@@ -58,7 +59,7 @@ public final class UpdateUserRequest {
     }
 
     @JsonProperty( Names.PASSWORD_FIELD )
-    public Optional<byte[]> getPassword() {
+    public Optional<String> getPassword() {
         return password;
     }
 

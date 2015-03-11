@@ -37,7 +37,7 @@ public final class KryptnosticUser extends UserKey implements User, Serializable
     private final String              email;
     private final String              givenName;
     private final String              familyName;
-    private final byte[]              password;
+    private final String              password;
     private final byte[]              certificate;
     private final Set<GroupKey>       groups           = Sets.newConcurrentHashSet();
     private final Map<String, String> attributes       = Maps.newConcurrentMap();
@@ -49,14 +49,14 @@ public final class KryptnosticUser extends UserKey implements User, Serializable
             @JsonProperty( GIVEN_NAME_FIELD ) String givenName,
             @JsonProperty( FAMILY_NAME_FIELD ) String familyName,
             @JsonProperty( EMAIL_FIELD ) String email,
-            @JsonProperty( PASSWORD_FIELD ) Optional<byte[]> password,
+            @JsonProperty( PASSWORD_FIELD ) String password,
             @JsonProperty( CERTIFICATE_PROPERTY ) Optional<byte[]> certificate,
             @JsonProperty( GROUPS_PROPERTY ) Set<GroupKey> groups,
             @JsonProperty( ATTRIBUTES_FIELD ) Map<String, String> attributes ) {
         super( realm, name );
         this.groups.addAll( groups );
         this.attributes.putAll( attributes );
-        this.password = password.or( new byte[ 0 ] );
+        this.password = password;
         this.certificate = certificate.or( new byte[ 0 ] );
         this.email = email;
         this.givenName = givenName;
@@ -100,7 +100,7 @@ public final class KryptnosticUser extends UserKey implements User, Serializable
 
     @Override
     @JsonProperty( PASSWORD_FIELD )
-    public byte[] getPassword() {
+    public String getPassword() {
         return password;
     }
 
@@ -129,8 +129,8 @@ public final class KryptnosticUser extends UserKey implements User, Serializable
 
     @Override
     public String toString() {
-        return "HeraclesUser [password=" + Arrays.toString( password ) + ", certificate="
-                + Arrays.toString( certificate ) + ", groups=" + groups + ", attributes=" + attributes + "]";
+        return "HeraclesUser [password=" + password + ", certificate=" + Arrays.toString( certificate ) + ", groups="
+                + groups + ", attributes=" + attributes + "]";
     }
 
     public static class HeraclesUserBuilder {
@@ -139,7 +139,7 @@ public final class KryptnosticUser extends UserKey implements User, Serializable
         public String              email;
         public String              givenName;
         public String              familyName;
-        public byte[]              password;
+        public String              password;
         public byte[]              certificate;
         public Set<GroupKey>       groups;
         public Map<String, String> attributes;
@@ -153,13 +153,13 @@ public final class KryptnosticUser extends UserKey implements User, Serializable
             this.attributes = Maps.newConcurrentMap();
         }
 
-        public HeraclesUserBuilder withPassword( byte[] password ) {
+        public HeraclesUserBuilder withPassword( String password ) {
             this.password = password;
             return this;
         }
 
         public HeraclesUserBuilder withEmptyPassword() {
-            this.password = new byte[ 0 ];
+            this.password = new String();
             return this;
         }
 

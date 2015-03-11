@@ -25,7 +25,7 @@ public final class DeveloperRegistration extends DeveloperRegistrationRequest {
     public DeveloperRegistration(
             @JsonProperty( Names.REALM_FIELD ) String realm,
             @JsonProperty( Names.NAME_FIELD ) String username,
-            @JsonProperty( Names.PASSWORD_FIELD ) byte[] password,
+            @JsonProperty( Names.PASSWORD_FIELD ) String password,
             @JsonProperty( Names.CERTIFICATE_PROPERTY ) byte[] certificate,
             @JsonProperty( Names.EMAIL_FIELD ) String email,
             @JsonProperty( Names.GIVEN_NAME_FIELD ) String givenName,
@@ -147,7 +147,7 @@ public final class DeveloperRegistration extends DeveloperRegistrationRequest {
     public static class RegistrationBuilder {
         private String           realm;
         private String           username;
-        private byte[]           password;
+        private String           password;
         private byte[]           certificate;
         private String           email;
         private String           givenName;

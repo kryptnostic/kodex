@@ -9,14 +9,14 @@ public class ActivateUserRequest {
     private final ReservationToken reservationToken;
     private final String           realm;
     private final String           username;
-    private final byte[]           password;
+    private final String           password;
 
     @JsonCreator
     public ActivateUserRequest(
             @JsonProperty( Names.TOKEN_PROPERTY ) ReservationToken reservationToken,
             @JsonProperty( Names.REALM_FIELD ) String realm,
             @JsonProperty( Names.NAME_FIELD ) String username,
-            @JsonProperty( Names.PASSWORD_FIELD ) byte[] password ) {
+            @JsonProperty( Names.PASSWORD_FIELD ) String password ) {
         this.reservationToken = reservationToken;
         this.realm = realm;
         this.username = username;
@@ -39,7 +39,7 @@ public class ActivateUserRequest {
     }
 
     @JsonProperty( Names.PASSWORD_FIELD )
-    public byte[] getPassword() {
+    public String getPassword() {
         return password;
     }
 }
