@@ -31,8 +31,6 @@ public class KryptnosticObjectTests extends SecurityConfigurationTestUtils {
             InvalidKeyException, NoSuchAlgorithmException, InvalidAlgorithmParameterException,
             IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, InvalidKeySpecException,
             InvalidParameterSpecException, SealedKodexException, SignatureException, Exception {
-        initializeCryptoService();
-
         loader.put( "test", crypto );
         loader.put( "test2", crypto );
 
@@ -56,8 +54,6 @@ public class KryptnosticObjectTests extends SecurityConfigurationTestUtils {
             InvalidKeyException, NoSuchAlgorithmException, InvalidAlgorithmParameterException,
             IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, InvalidKeySpecException,
             InvalidParameterSpecException, SealedKodexException, SignatureException, Exception {
-        initializeCryptoService();
-
         loader.put( "test", crypto );
 
         KryptnosticObject doc = new KryptnosticObject( new ObjectMetadata( "test" ), "this is a test" );
@@ -72,8 +68,6 @@ public class KryptnosticObjectTests extends SecurityConfigurationTestUtils {
             ClassNotFoundException, InvalidKeyException, NoSuchAlgorithmException, InvalidAlgorithmParameterException,
             IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, InvalidKeySpecException,
             InvalidParameterSpecException, SealedKodexException, SignatureException, Exception {
-        initializeCryptoService();
-
         loader.put( "test", crypto );
 
         KryptnosticObject doc = new KryptnosticObject( new ObjectMetadata( "test" ), "this is a test" )
@@ -89,8 +83,6 @@ public class KryptnosticObjectTests extends SecurityConfigurationTestUtils {
             InvalidKeyException, NoSuchAlgorithmException, InvalidAlgorithmParameterException,
             IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, InvalidKeySpecException,
             InvalidParameterSpecException, SealedKodexException, SignatureException, Exception {
-        initializeCryptoService();
-
         HashFunction hashFunction = Encryptable.hashFunction;
 
         loader.put( "test", crypto );

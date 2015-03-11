@@ -52,7 +52,7 @@ public interface ObjectApi {
      * @throws ResourceNotFoundException the object doesnt exist
      */
     @PUT( OBJECT + OBJECT_ID_PATH )
-    BasicResponse<String> createPendingObject( @Path( ID ) String id ) throws ResourceLockedException,
+    BasicResponse<String> createPendingObjectFromExisting( @Path( ID ) String id ) throws ResourceLockedException,
             ResourceNotFoundException;
 
     /**

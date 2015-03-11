@@ -7,14 +7,13 @@ import java.util.concurrent.ExecutionException;
 import org.hamcrest.CoreMatchers;
 import org.junit.Assert;
 import org.junit.Ignore;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 import cern.colt.bitvector.BitVector;
 
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kryptnostic.bitwise.BitVectors;
 import com.kryptnostic.kodex.v1.crypto.ciphers.CryptoService;
 import com.kryptnostic.kodex.v1.crypto.ciphers.Cypher;
@@ -23,16 +22,15 @@ import com.kryptnostic.kodex.v1.crypto.keys.CryptoServiceLoader;
 import com.kryptnostic.kodex.v1.exceptions.types.SecurityConfigurationException;
 import com.kryptnostic.kodex.v1.indexing.metadata.Metadata;
 import com.kryptnostic.kodex.v1.serialization.crypto.Encryptable;
+import com.kryptnostic.kodex.v1.serialization.jackson.KodexObjectMapperFactory;
 import com.kryptnostic.storage.v1.models.IndexedMetadata;
 import com.kryptnostic.utils.SecurityConfigurationTestUtils;
 import com.kryptnostic.utils.TestKeyLoader;
 
 @SuppressWarnings( "javadoc" )
 public class AesMetadataRequestTests extends SecurityConfigurationTestUtils {
-    private static final int INDEX_LENGTH = 256;
 
-    @Rule
-    public ExpectedException exception    = ExpectedException.none();
+    private static final int INDEX_LENGTH = 256;
 
     @Test
     /**
@@ -41,7 +39,6 @@ public class AesMetadataRequestTests extends SecurityConfigurationTestUtils {
      */
     public void testImplicitDeserialization() throws SecurityConfigurationException, IOException,
             ClassNotFoundException {
-        initializeCryptoService();
 
         BitVector key = BitVectors.randomVector( INDEX_LENGTH );
         String documentId = "TEST";
@@ -78,7 +75,6 @@ public class AesMetadataRequestTests extends SecurityConfigurationTestUtils {
     // for comparison by cryptoService
     public void testImplicitDeserializationKeyless() throws SecurityConfigurationException, IOException,
             ClassNotFoundException {
-        initializeCryptoService();
 
         BitVector key = BitVectors.randomVector( INDEX_LENGTH );
         String documentId = "TEST";
@@ -89,9 +85,6 @@ public class AesMetadataRequestTests extends SecurityConfigurationTestUtils {
         data = data.encrypt( loader );
 
         String expected = serialize( new MetadataRequest( Arrays.asList( new IndexedMetadata( key, data, documentId ) ) ) );
-
-        // kill private key!
-        initializeCryptoService();
 
         MetadataRequest deserialized = deserialize( expected, MetadataRequest.class );
 
@@ -119,8 +112,6 @@ public class AesMetadataRequestTests extends SecurityConfigurationTestUtils {
      */
     public void testSerializationWithImplicitEncryption() throws JsonGenerationException, JsonMappingException,
             IOException {
-        initializeCryptoService();
-
         BitVector key = BitVectors.randomVector( INDEX_LENGTH );
         Metadata metadatum = new Metadata( "TEST", "test", Arrays.asList( 1, 2, 3 ) );
         Encryptable<Metadata> data = new Encryptable<Metadata>( metadatum );
@@ -166,9 +157,11 @@ public class AesMetadataRequestTests extends SecurityConfigurationTestUtils {
         String docId = "test";
         MetadataRequest req = new MetadataRequest( Arrays.asList( new IndexedMetadata( key, data, docId ) ) );
 
-        String out = serialize( req );
-        MetadataRequest outReq = deserialize( out, MetadataRequest.class );
+        ObjectMapper unloadedMapper = KodexObjectMapperFactory.getObjectMapper();
 
-        Assert.assertEquals( serialize( req ), serialize( outReq ) );
+        String out = serialize( req, unloadedMapper );
+        MetadataRequest outReq = deserialize( out, MetadataRequest.class, unloadedMapper );
+
+        Assert.assertEquals( serialize( req, unloadedMapper ), serialize( outReq, unloadedMapper ) );
     }
 }

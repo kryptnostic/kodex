@@ -11,12 +11,14 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.SignatureException;
 import java.security.cert.CertificateException;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManagerFactory;
 
 import org.apache.commons.lang3.tuple.Pair;
+import org.junit.Before;
 
 import retrofit.client.Client;
 import retrofit.client.OkClient;
@@ -32,7 +34,6 @@ import com.kryptnostic.kodex.v1.crypto.keys.Kodex.CorruptKodexException;
 import com.kryptnostic.kodex.v1.crypto.keys.Kodex.SealedKodexException;
 import com.kryptnostic.kodex.v1.exceptions.types.KodexException;
 import com.kryptnostic.kodex.v1.exceptions.types.SecurityConfigurationException;
-import com.kryptnostic.kodex.v1.serialization.jackson.KodexObjectMapperFactory;
 import com.kryptnostic.linear.EnhancedBitMatrix.SingularMatrixException;
 import com.kryptnostic.multivariate.gf2.SimplePolynomialFunction;
 import com.kryptnostic.storage.v1.models.request.QueryHasherPairRequest;
@@ -47,30 +48,30 @@ import com.squareup.okhttp.OkHttpClient;
 public class SecurityConfigurationTestUtils extends SerializationTestUtils {
     protected PasswordCryptoService crypto;
     protected KeyPair               pair;
-    protected TestKeyLoader         loader;
     protected Kodex<String>         kodex;
 
-    protected void initializeCryptoService() {
-        resetSecurity();
-        loader.put( PasswordCryptoService.class.getCanonicalName(), crypto );
+    @Before
+    public void resetSecurity() throws ExecutionException {
+        this.crypto = new PasswordCryptoService( Cypher.AES_CTR_128, new BigInteger( 130, new SecureRandom() )
+                .toString( 32 ).toCharArray() );
+        this.loader.clear();
+        this.loader.put( PasswordCryptoService.class.getCanonicalName(), crypto );
+        generateRsaKeyPair();
     }
 
-    private void resetSecurity() {
-        loader = new TestKeyLoader();
-        mapper = KodexObjectMapperFactory.getObjectMapper( loader );
-
-        crypto = new PasswordCryptoService( Cypher.AES_CTR_128, new BigInteger( 130, new SecureRandom() ).toString( 32 )
-                .toCharArray() );
-
-        generateRsaKeyPair();
+    private void generateRsaKeyPair() {
+        try {
+            pair = Keys.generateRsaKeyPair( 4096 );
+        } catch ( NoSuchAlgorithmException e ) {
+            e.printStackTrace();
+        }
     }
 
     protected void generateKodex( SimplePolynomialFunction globalHashFunction ) {
         try {
             this.kodex = new Kodex<String>( Cypher.RSA_OAEP_SHA1_1024, Cypher.AES_CBC_PKCS5_128, pair.getPublic() );
             kodex.unseal( pair.getPublic(), pair.getPrivate() );
-            new FreshKodexLoader( pair, globalHashFunction ).generateAllKeys( kodex );
-
+            new FreshKodexLoader( globalHashFunction ).generateAllKeys( kodex );
         } catch (
                 SecurityConfigurationException
                 | KodexException
@@ -83,14 +84,6 @@ public class SecurityConfigurationTestUtils extends SerializationTestUtils {
                 | InvalidAlgorithmParameterException
                 | SignatureException e ) {
             // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-    }
-
-    private void generateRsaKeyPair() {
-        try {
-            pair = Keys.generateRsaKeyPair( 4096 );
-        } catch ( NoSuchAlgorithmException e ) {
             e.printStackTrace();
         }
     }
@@ -124,13 +117,10 @@ public class SecurityConfigurationTestUtils extends SerializationTestUtils {
     // FIXME:copied from freshkodexloader
     private static class FreshKodexLoader {
 
-        private final KeyPair                  keyPair;
         private final SimplePolynomialFunction globalHashFunction;
 
-        public FreshKodexLoader( KeyPair keyPair, SimplePolynomialFunction globalHashFunction ) {
+        public FreshKodexLoader( SimplePolynomialFunction globalHashFunction ) {
             Preconditions.checkNotNull( globalHashFunction );
-            Preconditions.checkNotNull( keyPair );
-            this.keyPair = keyPair;
             this.globalHashFunction = globalHashFunction;
         }
 

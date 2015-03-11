@@ -42,4 +42,8 @@ public class TestKeyLoader implements CryptoServiceLoader {
         }
         return data;
     }
+
+    public void clear() {
+        services.clear();
+    }
 }

@@ -13,4 +13,6 @@ public interface CryptoServiceLoader {
     void put( String id, CryptoService service ) throws ExecutionException;
 
     Map<String, CryptoService> getAll( Set<String> ids ) throws ExecutionException;
+
+    void clear();
 }

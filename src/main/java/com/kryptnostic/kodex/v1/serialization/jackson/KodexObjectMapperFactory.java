@@ -35,7 +35,7 @@ public final class KodexObjectMapperFactory {
     private KodexObjectMapperFactory() {};
 
     public static void setGlobalObjectMapper( ObjectMapper mapper ) {
-        globalMapper = mapper;
+        // globalMapper = mapper;
     }
 
     public static ObjectMapper getObjectMapper( CryptoServiceLoader loader ) {

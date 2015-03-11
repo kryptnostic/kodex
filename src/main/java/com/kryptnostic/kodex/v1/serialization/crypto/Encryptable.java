@@ -438,8 +438,9 @@ public class Encryptable<T> implements Serializable {
         return mapper;
     }
 
+    // TODO FIXME wtf code smell
     public static void setMapper( ObjectMapper mapper ) {
-        Encryptable.mapper = mapper;
+        // Encryptable.mapper = mapper;
     }
 
 }

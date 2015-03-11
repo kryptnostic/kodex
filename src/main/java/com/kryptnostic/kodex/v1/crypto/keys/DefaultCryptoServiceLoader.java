@@ -120,4 +120,9 @@ public class DefaultCryptoServiceLoader implements CryptoServiceLoader {
     public Map<String, CryptoService> getAll( Set<String> ids ) throws ExecutionException {
         return keyCache.getAll( ids );
     }
+
+    @Override
+    public void clear() {
+        keyCache.cleanUp();
+    }
 }

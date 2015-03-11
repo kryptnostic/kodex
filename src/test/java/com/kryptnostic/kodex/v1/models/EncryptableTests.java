@@ -56,7 +56,6 @@ public class EncryptableTests extends SecurityConfigurationTestUtils {
         // kodex.setKey( PublicKey.class.getCanonicalName(), new JacksonKodexMarshaller<PublicKey>(
         // PublicKey.class,
         // mapper ), publicKey );
-        initializeCryptoService();
         Encryptable.setMapper( mapper );
     }
 
