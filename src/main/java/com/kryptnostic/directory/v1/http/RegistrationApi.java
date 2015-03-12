@@ -13,7 +13,7 @@ public interface RegistrationApi {
     /**
      * Register a developer for the Kryptnostic platform.
      * 
-     * @param {@link DeveloperRegistrationRequest}
+     * @param request {@link DeveloperRegistrationRequest}
      * @return {@link DeveloperRegistration}
      */
     @POST( DEVELOPERS )
