@@ -36,6 +36,7 @@ import com.kryptnostic.kodex.v1.exceptions.types.KodexException;
 import com.kryptnostic.kodex.v1.exceptions.types.SecurityConfigurationException;
 import com.kryptnostic.linear.EnhancedBitMatrix.SingularMatrixException;
 import com.kryptnostic.multivariate.gf2.SimplePolynomialFunction;
+import com.kryptnostic.multivariate.util.SimplePolynomialFunctions;
 import com.kryptnostic.storage.v1.models.request.QueryHasherPairRequest;
 import com.squareup.okhttp.OkHttpClient;
 
@@ -46,6 +47,7 @@ import com.squareup.okhttp.OkHttpClient;
  *
  */
 public class SecurityConfigurationTestUtils extends SerializationTestUtils {
+    private static Kodex<String>    availableKodex;
     protected PasswordCryptoService crypto;
     protected KeyPair               pair;
     protected Kodex<String>         kodex;
@@ -86,6 +88,16 @@ public class SecurityConfigurationTestUtils extends SerializationTestUtils {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+    }
+
+    protected Kodex<String> getAnyKodex() {
+        if ( SecurityConfigurationTestUtils.availableKodex == null ) {
+            if ( this.kodex == null ) {
+                generateKodex( SimplePolynomialFunctions.randomFunction( 128, 64 ) );
+            }
+            SecurityConfigurationTestUtils.availableKodex = kodex;
+        }
+        return SecurityConfigurationTestUtils.availableKodex;
     }
 
     protected Client createHttpClient() {
