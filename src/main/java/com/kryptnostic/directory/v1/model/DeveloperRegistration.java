@@ -176,6 +176,7 @@ public final class DeveloperRegistration extends DeveloperRegistrationRequest {
             this.realm = request.getRealm();
             this.username = request.getUsername();
             this.password = request.getPassword();
+            this.encryptedSalt = request.getEncryptedSalt();
             this.certificate = request.getCertificate();
             this.email = request.getEmail();
             this.givenName = request.getGivenName();
@@ -212,6 +213,7 @@ public final class DeveloperRegistration extends DeveloperRegistrationRequest {
             Preconditions.checkNotNull( realm );
             Preconditions.checkNotNull( username );
             Preconditions.checkNotNull( password );
+            Preconditions.checkNotNull( encryptedSalt );
             Preconditions.checkNotNull( certificate );
             Preconditions.checkNotNull( email );
             Preconditions.checkNotNull( givenName );

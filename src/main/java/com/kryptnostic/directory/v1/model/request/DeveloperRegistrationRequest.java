@@ -5,6 +5,7 @@ import java.util.Arrays;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Optional;
+import com.google.common.base.Preconditions;
 import com.kryptnostic.kodex.v1.constants.Names;
 import com.kryptnostic.kodex.v1.crypto.ciphers.BlockCiphertext;
 
@@ -60,7 +61,7 @@ public class DeveloperRegistrationRequest {
         this.realm = realm;
         this.username = username;
         this.password = password;
-        this.encryptedSalt = encryptedSalt;
+        this.encryptedSalt = Preconditions.checkNotNull( encryptedSalt );
         this.certificate = certificate;
         this.email = email;
         this.givenName = givenName;
