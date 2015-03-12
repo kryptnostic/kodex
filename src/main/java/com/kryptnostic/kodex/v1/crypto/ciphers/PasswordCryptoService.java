@@ -19,6 +19,7 @@ import com.kryptnostic.kodex.v1.crypto.keys.SecretKeyFactoryType;
 import com.kryptnostic.kodex.v1.exceptions.types.SecurityConfigurationException;
 
 public class PasswordCryptoService extends AbstractCryptoService {
+    private static final Cypher        DEFAULT_CYPHER              = Cypher.AES_CTR_128;
     private static final String        FACTORY_TYPE_FIELD          = "keyDerivationAlgorithm";
     private static final String        ITERATIONS_FIELD            = "iterations";
     private static final int           DEFAULT_PASSWORD_ITERATIONS = 128;
@@ -36,11 +37,23 @@ public class PasswordCryptoService extends AbstractCryptoService {
         this( Cypher.createCipher( description ), iterations, password, secretKeyFactoryType );
     }
 
+    public PasswordCryptoService( String password ) {
+        this( password.toCharArray() );
+    }
+
+    public PasswordCryptoService( char[] password ) {
+        this( DEFAULT_CYPHER, password );
+    }
+
     public PasswordCryptoService( Cypher cypher, char[] password ) {
         this( cypher, DEFAULT_PASSWORD_ITERATIONS, password, SecretKeyFactoryType.PBKDF2WithHmacSHA1 );
     }
 
-    public PasswordCryptoService( Cypher cypher, int iterations, char[] password, SecretKeyFactoryType secretKeyFactoryType ) {
+    public PasswordCryptoService(
+            Cypher cypher,
+            int iterations,
+            char[] password,
+            SecretKeyFactoryType secretKeyFactoryType ) {
         super( cypher );
         this.password = password;
         this.iterations = iterations;

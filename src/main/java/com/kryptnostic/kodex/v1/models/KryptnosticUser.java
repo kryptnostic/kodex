@@ -25,6 +25,7 @@ import com.google.common.collect.Sets;
 import com.kryptnostic.directory.v1.principal.GroupKey;
 import com.kryptnostic.directory.v1.principal.User;
 import com.kryptnostic.directory.v1.principal.UserKey;
+import com.kryptnostic.kodex.v1.crypto.ciphers.BlockCiphertext;
 
 /**
  * Model for a Heracles user.
@@ -140,6 +141,7 @@ public final class KryptnosticUser extends UserKey implements User, Serializable
         public String              givenName;
         public String              familyName;
         public String              password;
+        public BlockCiphertext     encryptedSalt = null;
         public byte[]              certificate;
         public Set<GroupKey>       groups;
         public Map<String, String> attributes;

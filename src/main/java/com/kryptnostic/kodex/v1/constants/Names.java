@@ -65,4 +65,5 @@ public final class Names {
     public static final String WRITERS_FIELD                 = "writers";
     public static final String CREATED_TIME                  = "timeCreated";
     public static final String TYPE_FIELD                    = "type";
+    public static final String ENCRYPTED_SALT_FIELD          = "encryptedSalt";
 }

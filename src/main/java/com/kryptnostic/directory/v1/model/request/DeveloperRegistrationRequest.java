@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Optional;
 import com.kryptnostic.kodex.v1.constants.Names;
+import com.kryptnostic.kodex.v1.crypto.ciphers.BlockCiphertext;
 
 /**
  * Request to create a developer registration.
@@ -17,6 +18,7 @@ public class DeveloperRegistrationRequest {
     private final String            realm;
     private final String            username;
     private final String            password;
+    private final BlockCiphertext   encryptedSalt;
     private final byte[]            certificate;
     private final String            email;
     private final String            givenName;
@@ -39,6 +41,7 @@ public class DeveloperRegistrationRequest {
             @JsonProperty( Names.REALM_FIELD ) String realm,
             @JsonProperty( Names.NAME_FIELD ) String username,
             @JsonProperty( Names.PASSWORD_FIELD ) String password,
+            @JsonProperty( Names.ENCRYPTED_SALT_FIELD ) BlockCiphertext encryptedSalt,
             @JsonProperty( Names.CERTIFICATE_PROPERTY ) byte[] certificate,
             @JsonProperty( Names.EMAIL_FIELD ) String email,
             @JsonProperty( Names.GIVEN_NAME_FIELD ) String givenName,
@@ -57,6 +60,7 @@ public class DeveloperRegistrationRequest {
         this.realm = realm;
         this.username = username;
         this.password = password;
+        this.encryptedSalt = encryptedSalt;
         this.certificate = certificate;
         this.email = email;
         this.givenName = givenName;
@@ -87,6 +91,11 @@ public class DeveloperRegistrationRequest {
     @JsonProperty( Names.PASSWORD_FIELD )
     public String getPassword() {
         return password;
+    }
+
+    @JsonProperty( Names.ENCRYPTED_SALT_FIELD )
+    public BlockCiphertext getEncryptedSalt() {
+        return encryptedSalt;
     }
 
     @JsonProperty( Names.CERTIFICATE_PROPERTY )

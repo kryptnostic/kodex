@@ -10,6 +10,7 @@ import com.kryptnostic.directory.v1.exception.AlreadyDeniedException;
 import com.kryptnostic.directory.v1.exception.AlreadyOpenException;
 import com.kryptnostic.directory.v1.model.request.DeveloperRegistrationRequest;
 import com.kryptnostic.kodex.v1.constants.Names;
+import com.kryptnostic.kodex.v1.crypto.ciphers.BlockCiphertext;
 
 /**
  * Model for Developer registrations.
@@ -26,6 +27,7 @@ public final class DeveloperRegistration extends DeveloperRegistrationRequest {
             @JsonProperty( Names.REALM_FIELD ) String realm,
             @JsonProperty( Names.NAME_FIELD ) String username,
             @JsonProperty( Names.PASSWORD_FIELD ) String password,
+            @JsonProperty( Names.ENCRYPTED_SALT_FIELD ) BlockCiphertext encryptedSalt,
             @JsonProperty( Names.CERTIFICATE_PROPERTY ) byte[] certificate,
             @JsonProperty( Names.EMAIL_FIELD ) String email,
             @JsonProperty( Names.GIVEN_NAME_FIELD ) String givenName,
@@ -47,6 +49,7 @@ public final class DeveloperRegistration extends DeveloperRegistrationRequest {
                 realm,
                 username,
                 password,
+                encryptedSalt,
                 certificate,
                 email,
                 givenName,
@@ -71,6 +74,7 @@ public final class DeveloperRegistration extends DeveloperRegistrationRequest {
                 builder.realm,
                 builder.username,
                 builder.password,
+                builder.encryptedSalt,
                 builder.certificate,
                 builder.email,
                 builder.givenName,
@@ -148,6 +152,7 @@ public final class DeveloperRegistration extends DeveloperRegistrationRequest {
         private String           realm;
         private String           username;
         private String           password;
+        private BlockCiphertext  encryptedSalt;
         private byte[]           certificate;
         private String           email;
         private String           givenName;
@@ -186,6 +191,11 @@ public final class DeveloperRegistration extends DeveloperRegistrationRequest {
             this.expectedNumberOfUsers = request.getExpectedNumberOfUsers().orNull();
             this.tier = request.getTier().orNull();
             this.reason = request.getReason().orNull();
+        }
+
+        public RegistrationBuilder withEncryptedSalt( BlockCiphertext encryptedSalt ) {
+            this.encryptedSalt = encryptedSalt;
+            return this;
         }
 
         public RegistrationBuilder withStatus( RequestStatus status ) {

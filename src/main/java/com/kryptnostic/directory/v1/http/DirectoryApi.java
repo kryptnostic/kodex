@@ -27,6 +27,7 @@ public interface DirectoryApi {
     String KODEX            = "/kodex";
     String OBJECT_KEY       = "/object";
     String NOTIFICATION_KEY = "/notifications";
+    String SALT_KEY         = "/salt";
 
     public static final class PARAM {
         private PARAM() {}
@@ -49,6 +50,19 @@ public interface DirectoryApi {
     @Timed
     @PUT( CONTROLLER + PUBLIC_KEY )
     BasicResponse<String> setPublicKey( @Body PublicKeyEnvelope publicKey );
+
+    /**
+     * Retrieves the password encrypted salt for authentication from the server.
+     * 
+     * @return A ciphertext of the password encrypted for the user.
+     */
+    @Timed
+    @GET( CONTROLLER + SALT_KEY + PARAM.REALM + PARAM.USER )
+    BlockCiphertext getSalt();
+
+    @Timed
+    @PUT( CONTROLLER + SALT_KEY )
+    BasicResponse<String> setSalt( @Body BlockCiphertext encryptedSalt );
 
     /**
      * @return Encrypted private key of current user
