@@ -2,8 +2,6 @@ package com.kryptnostic.directory.v1.model;
 
 import java.io.Serializable;
 
-import org.apache.commons.lang3.StringUtils;
-
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -14,7 +12,8 @@ import com.kryptnostic.kodex.v1.constants.Names;
 
 public abstract class AbstractKey implements Principal, Serializable {
     private static final long       serialVersionUID    = 737151589325060845L;
-    public static final String      DELIMITER           = ".";
+    public static final String      DELIMITER           = "|";
+    public static final String      VALID_REALM_REGEX   = "^[A-Za-z0-9\\.\\-_]+$";
     public static final int         MAX_USERNAME_LENGTH = 1024;
     public static final int         MAX_REALM_LENGTH    = 1024;
 
@@ -52,14 +51,14 @@ public abstract class AbstractKey implements Principal, Serializable {
     public static boolean isValidUsername( String name ) {
         Preconditions.checkArgument( name.length() < MAX_USERNAME_LENGTH, "Username cannot be longer than "
                 + MAX_USERNAME_LENGTH + "characters" );
+        Preconditions.checkArgument( !name.contains( DELIMITER ) );
         return true;
     }
 
     @JsonIgnore
     public static boolean isValidRealm( String realm ) {
-        Preconditions.checkArgument(
-                StringUtils.isAlphanumeric( realm ),
-                "Realm name cannot be blank and must consist of only alpha numeric characters." );
+        Preconditions.checkArgument( realm.matches( VALID_REALM_REGEX ), "Realm must consist of valid characters: "
+                + VALID_REALM_REGEX );
         Preconditions.checkArgument( realm.length() < MAX_REALM_LENGTH, "Realm name cannot be longer than "
                 + MAX_REALM_LENGTH + "characters" );
         return true;
