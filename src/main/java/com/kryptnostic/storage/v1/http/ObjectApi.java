@@ -21,7 +21,7 @@ import com.kryptnostic.storage.v1.models.ObjectMetadata;
 import com.kryptnostic.storage.v1.models.request.PendingObjectRequest;
 
 public interface ObjectApi {
-    final String OBJECT                 = "/object";
+    final String CONTROLLER                 = "/object";
     final String ID                     = "id";
     final String REALM                  = "realm";
     final String USER                   = "user";
@@ -40,7 +40,7 @@ public interface ObjectApi {
      * @return The ID of the newly created object
      * @throws BadRequestException Request was invalid
      */
-    @PUT( OBJECT )
+    @PUT( CONTROLLER )
     BasicResponse<String> createPendingObject( @Body PendingObjectRequest request ) throws BadRequestException;
 
     /**
@@ -51,7 +51,7 @@ public interface ObjectApi {
      * @throws ResourceLockedException if the object is currently pending
      * @throws ResourceNotFoundException the object doesnt exist
      */
-    @PUT( OBJECT + OBJECT_ID_PATH )
+    @PUT( CONTROLLER + OBJECT_ID_PATH )
     BasicResponse<String> createPendingObjectFromExisting( @Path( ID ) String id ) throws ResourceLockedException,
             ResourceNotFoundException;
 
@@ -70,7 +70,7 @@ public interface ObjectApi {
      * @throws ResourceNotLockedException if the specified object has not been locked for updating
      * @throws BadRequestException if the block is invalid
      */
-    @POST( OBJECT + OBJECT_ID_PATH )
+    @POST( CONTROLLER + OBJECT_ID_PATH )
     BasicResponse<String> updateObject( @Path( ID ) String id, @Body EncryptableBlock block )
             throws ResourceNotFoundException, ResourceNotLockedException, BadRequestException;
 
@@ -80,42 +80,42 @@ public interface ObjectApi {
      * @param id
      * @return Contents of object
      */
-    @GET( OBJECT + OBJECT_ID_PATH )
+    @GET( CONTROLLER + OBJECT_ID_PATH )
     KryptnosticObject getObject( @Path( ID ) String id ) throws ResourceNotFoundException;
 
-    @GET( OBJECT + OBJECT_ID_PATH + OBJECT_METADATA_PATH )
+    @GET( CONTROLLER + OBJECT_ID_PATH + OBJECT_METADATA_PATH )
     ObjectMetadata getObjectMetadata( @Path( ID ) String id ) throws ResourceNotFoundException;
 
-    @POST( OBJECT )
+    @POST( CONTROLLER )
     BasicResponse<List<KryptnosticObject>> getObjects( @Body List<String> objectIds ) throws ResourceNotFoundException;
 
     /**
      * 
      * @return Collection of object ids
      */
-    @GET( OBJECT )
+    @GET( CONTROLLER )
     BasicResponse<Collection<String>> getObjectIds();
 
-    @GET( OBJECT + OBJECT_LIST_PAGED_PATH )
+    @GET( CONTROLLER + OBJECT_LIST_PAGED_PATH )
     BasicResponse<Collection<String>> getObjectIds( @Path( OFFSET ) Integer offset, @Path( PAGE_SIZE ) Integer pageSize );
 
-    @GET( OBJECT + TYPE_PATH + OBJECT_LIST_PAGED_PATH )
+    @GET( CONTROLLER + TYPE_PATH + OBJECT_LIST_PAGED_PATH )
     BasicResponse<Collection<String>> getObjectIdsByType(
             @Path( TYPE ) String type,
             @Path( OFFSET ) Integer offset,
             @Path( PAGE_SIZE ) Integer pageSize );
 
-    @GET( OBJECT + TYPE_PATH )
+    @GET( CONTROLLER + TYPE_PATH )
     BasicResponse<Collection<String>> getObjectIdsByType( @Path( TYPE ) String type );
 
-    @POST( OBJECT + OBJECT_ID_PATH + "/blocks" )
+    @POST( CONTROLLER + OBJECT_ID_PATH + "/blocks" )
     BasicResponse<List<EncryptableBlock>> getObjectBlocks( @Path( ID ) String id, @Body List<Integer> indices )
             throws ResourceNotFoundException;
 
-    @DELETE( OBJECT + OBJECT_ID_PATH )
+    @DELETE( CONTROLLER + OBJECT_ID_PATH )
     BasicResponse<String> delete( @Path( ID ) String id );
 
-    @POST( OBJECT + OBJECT_ID_PATH + OBJECT_APPEND_PATH )
+    @POST( CONTROLLER + OBJECT_ID_PATH + OBJECT_APPEND_PATH )
     BasicResponse<String> appendObject( @Path( ID ) String objectId, @Body EncryptableBlock blockToAppend )
             throws ResourceNotFoundException;
 
