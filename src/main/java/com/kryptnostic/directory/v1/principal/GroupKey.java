@@ -26,8 +26,8 @@ public class GroupKey extends AbstractKey implements Serializable {
         Preconditions.checkState( parts.size() == 2, "FQN should only yield two parts." );
         String realm = parts.get( 0 );
         String name = parts.get( 1 );
-        isValidRealm( realm );
-        isValidUsername( name );
+        Preconditions.checkState( isValidRealm( realm ), "Invalid realm" );
+        Preconditions.checkState( isValidUsername( name ), "Invalid name" );
         return new GroupKey( realm, name );
     }
 
