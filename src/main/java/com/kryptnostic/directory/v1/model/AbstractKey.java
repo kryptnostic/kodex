@@ -2,15 +2,18 @@ package com.kryptnostic.directory.v1.model;
 
 import java.io.Serializable;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.common.base.Preconditions;
 import com.google.common.base.Splitter;
 import com.kryptnostic.directory.v1.principal.Principal;
 import com.kryptnostic.kodex.v1.constants.Names;
 
 public abstract class AbstractKey implements Principal, Serializable {
+    private static final Logger     logger              = LoggerFactory.getLogger( AbstractKey.class );
     private static final long       serialVersionUID    = 737151589325060845L;
     public static final String      DELIMITER           = "|";
     public static final String      VALID_REALM_REGEX   = "^[A-Za-z0-9\\.\\-_]+$";
@@ -49,18 +52,23 @@ public abstract class AbstractKey implements Principal, Serializable {
 
     @JsonIgnore
     public static boolean isValidUsername( String name ) {
-        Preconditions.checkArgument( name.length() < MAX_USERNAME_LENGTH, "Username cannot be longer than "
-                + MAX_USERNAME_LENGTH + "characters" );
-        Preconditions.checkArgument( !name.contains( DELIMITER ) );
+        if ( name.length() > MAX_USERNAME_LENGTH ) {
+            logger.error( "Username cannot be longer than " + MAX_USERNAME_LENGTH + "characters" );
+            return false;
+        }
         return true;
     }
 
     @JsonIgnore
     public static boolean isValidRealm( String realm ) {
-        Preconditions.checkArgument( realm.matches( VALID_REALM_REGEX ), "Realm must consist of valid characters: "
-                + VALID_REALM_REGEX );
-        Preconditions.checkArgument( realm.length() < MAX_REALM_LENGTH, "Realm name cannot be longer than "
-                + MAX_REALM_LENGTH + "characters" );
+        if ( !realm.matches( VALID_REALM_REGEX ) ) {
+            logger.error( "Realm must consist of valid characters: " + VALID_REALM_REGEX );
+            return false;
+        }
+        if ( realm.length() > MAX_REALM_LENGTH ) {
+            logger.error( "Realm name cannot be longer than " + MAX_REALM_LENGTH + "characters" );
+            return false;
+        }
         return true;
     }
 }
