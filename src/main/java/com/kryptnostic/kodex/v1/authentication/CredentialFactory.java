@@ -7,7 +7,7 @@ import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 
-import org.apache.commons.codec.binary.StringUtils;
+import org.apache.commons.codec.binary.Hex;
 
 import com.google.common.base.Preconditions;
 import com.kryptnostic.kodex.v1.crypto.ciphers.BlockCiphertext;
@@ -25,7 +25,7 @@ public final class CredentialFactory {
 
     public static CredentialPair generateCredentialPair( String password ) throws InvalidKeySpecException,
             NoSuchAlgorithmException, SecurityConfigurationException {
-        byte[] salt = Cyphers.generateSalt( KEY_SIZE << 3 );
+        byte[] salt = Cyphers.generateSalt( KEY_SIZE / 8 );
         return new CredentialPair( deriveCredential( password, salt ), encryptSalt( password, salt ) );
     }
 
@@ -41,8 +41,8 @@ public final class CredentialFactory {
         PBEKeySpec spec = new PBEKeySpec( Preconditions.checkNotNull( password, "Password cannot be null" )
                 .toCharArray(), Preconditions.checkNotNull( salt, "Salt cannot be null" ), ITERATIONS, KEY_SIZE );
         SecretKey key = skf.generateSecret( spec );
-        
-        return StringUtils.newStringUtf8( key.getEncoded() );
+
+        return Hex.encodeHexString( key.getEncoded() );
     }
 
     private static BlockCiphertext encryptSalt( String password, byte[] salt ) throws SecurityConfigurationException {

@@ -46,4 +46,6 @@ public interface DataStore {
      * @throws IOException
      */
     void delete( String file ) throws IOException;
+
+    void clear() throws IOException;
 }
