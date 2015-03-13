@@ -42,7 +42,7 @@ public final class CredentialFactory {
                 .toCharArray(), Preconditions.checkNotNull( salt, "Salt cannot be null" ), ITERATIONS, KEY_SIZE );
         SecretKey key = skf.generateSecret( spec );
 
-        return Hex.encodeHexString( key.getEncoded() );
+        return new String( Hex.encodeHex( key.getEncoded() ) );
     }
 
     private static BlockCiphertext encryptSalt( String password, byte[] salt ) throws SecurityConfigurationException {
