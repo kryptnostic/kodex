@@ -1,5 +1,7 @@
 package com.kryptnostic.storage.v1.models.request;
 
+import com.kryptnostic.storage.v1.models.StorageRequestBuilder;
+
 public class StorageRequest {
     private final String  objectId;
     private final String  objectBody;
@@ -14,6 +16,10 @@ public class StorageRequest {
         this.isSearchable = isSearchable;
         this.isStoreable = isStoreable;
         this.type = type;
+    }
+
+    public static StorageRequestBuilder builder() {
+        return new StorageRequestBuilder();
     }
 
     public String getType() {
