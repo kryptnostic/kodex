@@ -7,6 +7,11 @@ import retrofit.http.POST;
 import retrofit.http.PUT;
 import retrofit.http.Path;
 
+import com.kryptnostic.directory.v1.exception.ActiveReservationException;
+import com.kryptnostic.directory.v1.exception.AddUserException;
+import com.kryptnostic.directory.v1.exception.ReservationTakenException;
+import com.kryptnostic.directory.v1.exception.ReservationTokenMismatchException;
+import com.kryptnostic.directory.v1.exception.UserUpdateException;
 import com.kryptnostic.directory.v1.model.Reservation;
 import com.kryptnostic.directory.v1.model.request.ActivateUserRequest;
 import com.kryptnostic.directory.v1.model.request.ReserveUserRequest;
@@ -15,6 +20,8 @@ import com.kryptnostic.directory.v1.model.response.ActivateUserResponse;
 import com.kryptnostic.directory.v1.model.response.ReserveUserResponse;
 import com.kryptnostic.directory.v1.model.response.UserResponse;
 import com.kryptnostic.directory.v1.principal.UserKey;
+import com.kryptnostic.kodex.v1.exceptions.types.BadRequestException;
+import com.kryptnostic.kodex.v1.exceptions.types.ResourceNotFoundException;
 
 /**
  * RESTful API for adding, modifying, and removing users on the Kryptnostic platform.
@@ -35,9 +42,12 @@ public interface UserDirectoryApi {
      * 
      * @param request {@link ReserveUserRequest}
      * @return {@link ReserveUserResponse}
+     * @throws ReservationTakenException
+     * @throws BadRequestException
      */
     @POST( RESERVATIONS )
-    ReserveUserResponse reserve( @Body ReserveUserRequest request ); // developer
+    ReserveUserResponse reserve( @Body ReserveUserRequest request ) throws ReservationTakenException,
+            BadRequestException; // developer
 
     /**
      * Get the reservation corresponding to the reservation ID.
@@ -54,9 +64,10 @@ public interface UserDirectoryApi {
      * 
      * @param userId String form of reserved {@link UserKey}: {@code [ realm ].[ username ] }
      * @return {@link Reservation}
+     * @throws BadRequestException
      */
     @DELETE( RESERVATIONS + ID_PATH )
-    Reservation deleteReservation( @Path( ID ) String userId ); // developer
+    Reservation deleteReservation( @Path( ID ) String userId ) throws BadRequestException; // developer
 
     /**
      * Activate a user account, using the one-time user reservation token to create an account with a password. This is
@@ -64,9 +75,14 @@ public interface UserDirectoryApi {
      * 
      * @param request {@link ActivateUserRequest}
      * @return {@link ActivateUserResponse}
+     * @throws AddUserException
+     * @throws ReservationTokenMismatchException
+     * @throws ActiveReservationException
+     * @throws ResourceNotFoundException
      */
     @POST( USERS )
-    ActivateUserResponse activate( @Body ActivateUserRequest request ); // public
+    ActivateUserResponse activate( @Body ActivateUserRequest request ) throws AddUserException,
+            ResourceNotFoundException, ActiveReservationException, ReservationTokenMismatchException; // public
 
     /**
      * Update and existing user account details, including username and password. If the username is changed, then that
@@ -75,9 +91,13 @@ public interface UserDirectoryApi {
      * @param userId String form of reserved {@link UserKey}: {@code [ realm ].[ username ] }
      * @param request {@link UpdateUserRequest}
      * @return {@link UserResponse}
+     * @throws UserUpdateException
+     * @throws ReservationTakenException
+     * @throws BadRequestException
      */
     @PUT( USERS + ID_PATH )
-    UserResponse update( @Path( ID ) String userId, @Body UpdateUserRequest request ); // user
+    UserResponse update( @Path( ID ) String userId, @Body UpdateUserRequest request ) throws UserUpdateException,
+            ReservationTakenException, BadRequestException; // user
 
     /**
      * Get the account details for a given user.
