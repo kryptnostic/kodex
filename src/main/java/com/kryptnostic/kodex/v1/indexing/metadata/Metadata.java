@@ -6,23 +6,19 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
-import com.kryptnostic.sharing.v1.models.DocumentId;
+import com.kryptnostic.kodex.v1.constants.Names;
 
 public class Metadata {
-    public static final String  DOCUMENT_ID = "documentId";
-    public static final String  TOKEN       = "token";
-    public static final String  LOCATIONS   = "locations";
-
-    private final DocumentId    documentId;
+    private final String        objectId;
     private final String        token;
     private final List<Integer> locations;
 
     @JsonCreator
     public Metadata(
-            @JsonProperty( DOCUMENT_ID ) DocumentId documentId,
-            @JsonProperty( TOKEN ) String token,
-            @JsonProperty( LOCATIONS ) List<Integer> locations ) {
-        this.documentId = documentId;
+            @JsonProperty( Names.ID_FIELD ) String objectId,
+            @JsonProperty( Names.TOKEN_PROPERTY ) String token,
+            @JsonProperty( Names.INDEX_FIELD ) List<Integer> locations ) {
+        this.objectId = objectId;
         this.token = token;
 
         // strip negative locations
@@ -36,17 +32,17 @@ public class Metadata {
         this.locations = ImmutableList.copyOf( validLocations );
     }
 
-    @JsonProperty( DOCUMENT_ID )
-    public DocumentId getDocumentId() {
-        return documentId;
+    @JsonProperty( Names.ID_FIELD )
+    public String getObjectId() {
+        return objectId;
     }
 
-    @JsonProperty( TOKEN )
+    @JsonProperty( Names.TOKEN_PROPERTY )
     public String getToken() {
         return token;
     }
 
-    @JsonProperty( LOCATIONS )
+    @JsonProperty( Names.INDEX_FIELD )
     public List<Integer> getLocations() {
         return locations;
     }
@@ -55,7 +51,7 @@ public class Metadata {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ( ( documentId == null ) ? 0 : documentId.hashCode() );
+        result = prime * result + ( ( objectId == null ) ? 0 : objectId.hashCode() );
         result = prime * result + ( ( locations == null ) ? 0 : locations.hashCode() );
         result = prime * result + ( ( token == null ) ? 0 : token.hashCode() );
         return result;
@@ -73,11 +69,11 @@ public class Metadata {
             return false;
         }
         Metadata other = (Metadata) obj;
-        if ( documentId == null ) {
-            if ( other.documentId != null ) {
+        if ( objectId == null ) {
+            if ( other.objectId != null ) {
                 return false;
             }
-        } else if ( !documentId.equals( other.documentId ) ) {
+        } else if ( !objectId.equals( other.objectId ) ) {
             return false;
         }
         if ( locations == null ) {
@@ -99,6 +95,6 @@ public class Metadata {
 
     @Override
     public String toString() {
-        return "Metadata [documentId=" + documentId + ", token=" + token + ", locations=" + locations + "]";
+        return "Metadata [objectId=" + objectId + ", token=" + token + ", locations=" + locations + "]";
     }
 }

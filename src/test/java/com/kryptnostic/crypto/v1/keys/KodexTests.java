@@ -28,7 +28,7 @@ import com.kryptnostic.crypto.EncryptedSearchPrivateKey;
 import com.kryptnostic.crypto.EncryptedSearchSharingKey;
 import com.kryptnostic.crypto.PrivateKey;
 import com.kryptnostic.crypto.PublicKey;
-import com.kryptnostic.directory.v1.models.UserKey;
+import com.kryptnostic.directory.v1.principal.UserKey;
 import com.kryptnostic.kodex.v1.crypto.ciphers.Cypher;
 import com.kryptnostic.kodex.v1.crypto.keys.JacksonKodexMarshaller;
 import com.kryptnostic.kodex.v1.crypto.keys.Keys;
@@ -67,10 +67,7 @@ public class KodexTests {
             InvalidParameterSpecException, SealedKodexException, IOException, InvalidAlgorithmParameterException,
             SignatureException, CorruptKodexException, SecurityConfigurationException, KodexException,
             SingularMatrixException {
-        Kodex<String> expected = new Kodex<String>(
-                Cypher.RSA_OAEP_SHA1_1024,
-                Cypher.AES_CTR_128,
-                pair.getPublic() );
+        Kodex<String> expected = new Kodex<String>( Cypher.RSA_OAEP_SHA1_1024, Cypher.AES_CTR_128, pair.getPublic() );
         Assert.assertTrue( expected.isSealed() );
 
         expected.unseal( pair.getPublic(), pair.getPrivate() );
@@ -97,27 +94,21 @@ public class KodexTests {
         SimplePolynomialFunction left = queryPair.getLeft();
         SimplePolynomialFunction right = queryPair.getRight();
 
-        EncryptedSearchSharingKey sharingKey = new EncryptedSearchSharingKey( searchKey.newDocumentKey() );
+        EncryptedSearchSharingKey sharingKey = new EncryptedSearchSharingKey( searchKey.newObjectKey() );
         EncryptedSearchBridgeKey bridgeKey = new EncryptedSearchBridgeKey( searchKey, sharingKey );
 
-        BitVector test = searchKey.hash( "serialization" );
-        BitVector nonce = BitVectors.randomVector( 64 );
+        String term = "serialization";
+        BitVector test = searchKey.hash( term );
 
-        BitVector encT = publicKey.getEncrypter().apply( test, BitVectors.randomVector( 64 ) );
-        BitVector encN = publicKey.getEncrypter().apply( nonce, BitVectors.randomVector( 64 ) );
+        BitVector encT = searchKey.prepareSearchToken( publicKey, term );
 
-        EnhancedBitMatrix intermediate = EnhancedBitMatrix.squareMatrixfromBitVector( globalHash.apply( BitVectors
-                .concatenate( test, nonce ) ) );
+        EnhancedBitMatrix intermediate = EnhancedBitMatrix.squareMatrixfromBitVector( globalHash.apply( test ) );
 
         BitVector expectedKey = BitVectors.fromSquareMatrix( intermediate.multiply( sharingKey.getMiddle() ).multiply(
                 intermediate ) );
 
-        EnhancedBitMatrix iL = EnhancedBitMatrix.squareMatrixfromBitVector( left.apply( BitVectors.concatenate(
-                encT,
-                encN ) ) );
-        EnhancedBitMatrix iR = EnhancedBitMatrix.squareMatrixfromBitVector( right.apply( BitVectors.concatenate(
-                encT,
-                encN ) ) );
+        EnhancedBitMatrix iL = EnhancedBitMatrix.squareMatrixfromBitVector( left.apply( encT ) );
+        EnhancedBitMatrix iR = EnhancedBitMatrix.squareMatrixfromBitVector( right.apply( encT ) );
 
         BitVector actualKey = BitVectors.fromSquareMatrix( iL.multiply( bridgeKey.getBridge() ).multiply( iR ) );
 
@@ -150,7 +141,6 @@ public class KodexTests {
         EncryptedSearchPrivateKey recoveredSearchKey = expected.getKeyWithJackson(
                 EncryptedSearchPrivateKey.class.getCanonicalName(),
                 EncryptedSearchPrivateKey.class );
-
 
         bridgeKey = new EncryptedSearchBridgeKey( recoveredSearchKey, sharingKey );
 

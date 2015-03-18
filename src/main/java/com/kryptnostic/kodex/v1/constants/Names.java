@@ -17,6 +17,8 @@ public final class Names {
     public static final String DOCUMENT_KEY_FIELD            = "documentKey";
     public static final String EMAIL_FIELD                   = "email";
     public static final String NAME_FIELD                    = "name";
+    public static final String GIVEN_NAME_FIELD              = "givenName";
+    public static final String FAMILY_NAME_FIELD             = "familyName";
     public static final String METADATA_FIELD                = "metadata";
     public static final String REALM_FIELD                   = "realm";
     public static final String STATE_FIELD                   = "state";
@@ -51,4 +53,17 @@ public final class Names {
     public static final String VERIFY_FIELD                  = "verify";
     public static final String BLOCK_FIELD                   = "block";
     public static final String TOTAL_FIELD                   = "total";
+    public static final String LEFT_FIELD                    = "left";
+    public static final String RIGHT_FIELD                   = "right";
+    public static final String OFFSET_FIELD                  = "offset";
+    public static final String PAIR_FIELD                    = "pair";
+    public static final String MAX_FIELD                     = "max";
+    public static final String QUERY_FIELD                   = "query";
+    public static final String TIME_FIELD                    = "time";
+    public static final String OWNERS_FIELD                  = "owners";
+    public static final String READERS_FIELD                 = "readers";
+    public static final String WRITERS_FIELD                 = "writers";
+    public static final String CREATED_TIME                  = "timeCreated";
+    public static final String TYPE_FIELD                    = "type";
+    public static final String ENCRYPTED_SALT_FIELD          = "encryptedSalt";
 }

@@ -7,14 +7,13 @@ import cern.colt.bitvector.BitVector;
 
 import com.kryptnostic.crypto.EncryptedSearchBridgeKey;
 import com.kryptnostic.crypto.EncryptedSearchSharingKey;
-import com.kryptnostic.directory.v1.models.UserKey;
+import com.kryptnostic.directory.v1.principal.UserKey;
 import com.kryptnostic.kodex.v1.crypto.ciphers.RsaCompressingCryptoService;
 import com.kryptnostic.kodex.v1.crypto.ciphers.RsaCompressingEncryptionService;
 import com.kryptnostic.kodex.v1.exceptions.types.IrisException;
 import com.kryptnostic.kodex.v1.exceptions.types.ResourceNotFoundException;
 import com.kryptnostic.kodex.v1.exceptions.types.SecurityConfigurationException;
 import com.kryptnostic.multivariate.gf2.SimplePolynomialFunction;
-import com.kryptnostic.sharing.v1.models.DocumentId;
 
 /**
  * KryptnosticContext is responsible for maintaining shared state between the KryptnosticClient and Kryptnostic
@@ -40,16 +39,14 @@ public interface KryptnosticContext {
     EncryptedSearchSharingKey generateSharingKey();
 
     BitVector encryptNonce( BitVector nonce );
-    
+
     byte[] rsaDecrypt( byte[] ciphertext ) throws SecurityConfigurationException;
+
     byte[] rsaEncrypt( byte[] plaintext ) throws SecurityConfigurationException;
 
-    void submitBridgeKeyWithSearchNonce(
-            DocumentId documentId,
-            EncryptedSearchSharingKey sharingKey,
-            BitVector searchNonce ) throws IrisException;
+    void submitBridgeKeyWithSearchNonce( String objectId, EncryptedSearchSharingKey sharingKey ) throws IrisException;
 
-    BitVector generateIndexForToken( String token, BitVector searchNonce, EncryptedSearchSharingKey sharingKey )
+    BitVector generateIndexForToken( String token, EncryptedSearchSharingKey sharingKey )
             throws ResourceNotFoundException;
 
     BitVector prepareSearchToken( String token );

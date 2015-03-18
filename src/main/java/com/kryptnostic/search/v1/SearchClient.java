@@ -1,8 +1,7 @@
 package com.kryptnostic.search.v1;
 
-import java.util.Collection;
-
-import com.kryptnostic.search.v1.models.SearchResult;
+import com.kryptnostic.search.v1.models.request.SearchRequest;
+import com.kryptnostic.search.v1.models.response.SearchResultResponse;
 
 public interface SearchClient {
     /**
@@ -10,5 +9,12 @@ public interface SearchClient {
      * 
      * @return Set &lt;Metadatum&gt; a collection of Metadatum associating the query with documents.
      */
-    public Collection<SearchResult> search( String query );
+    public SearchResultResponse search( String query );
+
+    public SearchResultResponse search( String query, SearchRequest request );
+
+    public SearchResultResponse search( SearchRequest request );
+
+    public SearchResultResponse nextPage( SearchResultResponse request );
+
 }

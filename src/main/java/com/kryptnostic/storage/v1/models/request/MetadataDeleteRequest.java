@@ -3,19 +3,17 @@ package com.kryptnostic.storage.v1.models.request;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.kryptnostic.sharing.v1.models.DocumentId;
+import com.kryptnostic.kodex.v1.constants.Names;
 
 public class MetadataDeleteRequest {
-    public final static String FIELD_METADATA = "metadata";
+    private List<String> ids;
 
-    private List<DocumentId>   ids;
-
-    public MetadataDeleteRequest( @JsonProperty( FIELD_METADATA ) List<DocumentId> ids ) {
+    public MetadataDeleteRequest( @JsonProperty( Names.ID_FIELD ) List<String> ids ) {
         this.ids = ids;
     }
 
-    @JsonProperty( FIELD_METADATA )
-    public List<DocumentId> getIds() {
+    @JsonProperty( Names.ID_FIELD )
+    public List<String> getIds() {
         return ids;
     }
 

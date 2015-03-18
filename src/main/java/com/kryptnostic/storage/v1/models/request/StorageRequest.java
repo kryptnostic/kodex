@@ -1,25 +1,37 @@
 package com.kryptnostic.storage.v1.models.request;
 
+import com.kryptnostic.storage.v1.models.StorageRequestBuilder;
+
 public class StorageRequest {
-    private final String  documentId;
-    private final String  documentBody;
+    private final String  objectId;
+    private final String  objectBody;
     private final boolean isSearchable;
     private final boolean isStoreable;
+    private final String  type;
 
-    public StorageRequest( String documentId, String documentBody, boolean isSearchable, boolean isStoreable ) {
+    public StorageRequest( String objectId, String objectBody, boolean isSearchable, boolean isStoreable, String type ) {
         super();
-        this.documentId = documentId;
-        this.documentBody = documentBody;
+        this.objectId = objectId;
+        this.objectBody = objectBody;
         this.isSearchable = isSearchable;
         this.isStoreable = isStoreable;
+        this.type = type;
     }
 
-    public String getDocumentId() {
-        return documentId;
+    public static StorageRequestBuilder builder() {
+        return new StorageRequestBuilder();
     }
 
-    public String getDocumentBody() {
-        return documentBody;
+    public String getType() {
+        return type;
+    }
+
+    public String getObjectId() {
+        return objectId;
+    }
+
+    public String getObjectBody() {
+        return objectBody;
     }
 
     public boolean isSearchable() {

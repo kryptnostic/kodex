@@ -11,6 +11,7 @@ def getVersionName = { ->
     if (tagVer.contains('dev')) {
         semVer += "-SNAPSHOT"
     }
+
     return semVer
 }
 
@@ -50,7 +51,7 @@ repositories {
 
 }
 
-ext.fhe_core_version='0.1.1-SNAPSHOT'
+ext.fhe_core_version='0.1.2'
 ext.retrofit_version='1.6.1'
 
 dependencies {
@@ -75,6 +76,8 @@ dependencies {
      */
     compile 'joda-time:joda-time:2.3'
     
+    compile 'com.fasterxml.jackson.datatype:jackson-datatype-joda:2.4.0'
+    
     /*
      * APACHE COMMONS
      * Logging, StringUtils, RandomStringUtils, IOUtils, and more
@@ -97,7 +100,7 @@ dependencies {
     } else {
         logger.quiet("$project.name is using jar dependencies.")
         compile "com.kryptnostic:kryptnostic-api:${fhe_core_version}"
-    	compile "com.kryptnostic:kryptnostic-core:${fhe_core_version}"
+   	 	compile "com.kryptnostic:kryptnostic-core:${fhe_core_version}"
     }
     
     compile "com.squareup.retrofit:retrofit:${retrofit_version}"
@@ -152,5 +155,5 @@ eclipse {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '2.0'
+    gradleVersion = '2.2'
 }
