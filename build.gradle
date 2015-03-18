@@ -1,0 +1,159 @@
+//Easy semantic version based off describe + tags
+def getVersionName = { ->
+    def stdout = new ByteArrayOutputStream()
+    exec {
+        commandLine 'git', 'describe', '--tags', '--dirty', '--long'
+        standardOutput = stdout
+    }
+    def tagVer = stdout.toString().trim()
+    def semVer = (tagVer =~ /v?([\d\.]+)/)[0][1]
+
+    if (tagVer.contains('dev')) {
+        semVer += "-SNAPSHOT"
+    }
+
+    return semVer
+}
+
+description = "Kryptnostic Java client"
+group = "com.kryptnostic"
+version = getVersionName()
+
+apply plugin: "maven-publish"
+apply plugin: "application"
+apply plugin: "java"
+apply plugin: "maven"
+apply plugin: "eclipse"
+apply plugin: "idea"
+apply from: "publish.gradle"
+apply plugin: "jacoco"
+
+sourceCompatibility=JavaVersion.VERSION_1_7
+
+repositories {
+  mavenCentral()  
+  mavenLocal()
+  maven {
+    url "https://build.shibboleth.net/nexus/content/groups/public/"
+  }
+  maven {
+    url "http://maven.springframework.org/snapshot"
+  }
+  maven {
+    url  "http://maven.springframework.org/milestone"
+  }
+  maven {
+   url "http://repo.maven.apache.org/maven2"
+  }
+  maven {
+   url "https://oss.sonatype.org/content/repositories/snapshots"
+  }
+
+}
+
+ext.fhe_core_version='0.1.2'
+ext.retrofit_version='1.6.1'
+
+dependencies {
+    /*
+     * SL4J + LOG4J
+     * Currently use Log4J through sl4j. 
+     * TODO: Switch to logback
+     */
+    compile group: 'org.slf4j', name: 'slf4j-log4j12', version:'1.7.6'
+    compile group: 'org.slf4j', name: 'slf4j-api', version:'1.7.6'
+
+    compile "log4j:log4j:1.2.17"
+
+    /*
+     * GUAVA 
+     * EventBus, FluentIterables, ListenableFutures and more
+     */
+    compile 'com.google.guava:guava:18.0'
+
+    /*
+     JODA TIME - A better datetime class.
+     */
+    compile 'joda-time:joda-time:2.3'
+    
+    compile 'com.fasterxml.jackson.datatype:jackson-datatype-joda:2.4.0'
+    
+    /*
+     * APACHE COMMONS
+     * Logging, StringUtils, RandomStringUtils, IOUtils, and more
+     */
+
+    compile 'commons-io:commons-io:2.4'
+    compile 'org.apache.commons:commons-lang3:3.1'
+    compile 'commons-logging:commons-logging:1.1.3'
+    compile 'commons-collections:commons-collections:3.2.1'
+
+    /*
+     * Kryo serialization -- faster generic Java serialization
+     */
+    compile 'com.esotericsoftware.kryo:kryo:2.22'
+
+	if( project.hasProperty('developmentMode') && project.developmentMode ) {
+        logger.quiet("$project.name is using project dependencies.")
+        compile( project(":fhe-core:kryptnostic-api") )
+        compile( project(":fhe-core:kryptnostic-core") )
+    } else {
+        logger.quiet("$project.name is using jar dependencies.")
+        compile "com.kryptnostic:kryptnostic-api:${fhe_core_version}"
+   	 	compile "com.kryptnostic:kryptnostic-core:${fhe_core_version}"
+    }
+    
+    compile "com.squareup.retrofit:retrofit:${retrofit_version}"
+    compile "com.squareup.okhttp:okhttp-urlconnection:2.0.0"
+    compile "com.squareup.okhttp:okhttp:2.0.0"
+	// FIXME: not working! use the following to replace com.kryptnostic.kodex.v1.utils.JacksonConverter plz!
+	// compile "com.squareup.retrofit:retrofit-converters:1.6.0" // not available for 1.6.1 //#${retrofit_version}
+
+    /*
+     * TESTING
+     */
+    testCompile 'junit:junit:4.11'
+}
+
+task sourcesJar(type : Jar) {
+  classifier = 'sources'
+  from sourceSets.main.allSource
+}
+
+task javadocJar(type: Jar) {
+    classifier = 'javadoc'
+    from javadoc
+}
+
+task testJar(type: Jar, dependsOn: testClasses) {
+    classifier = 'tests'
+    from sourceSets.test.output
+}
+
+configurations {
+    tests
+      published.extendsFrom tests, archives 
+}
+
+artifacts {
+	archives sourcesJar, javadocJar
+	tests testJar
+}
+
+install { 
+	configuration = configurations.published 
+} 
+
+eclipse {
+    ext.downloadSources = true
+    ext.downloadJavadoc = true
+    ext.sourceCompatibility=JavaVersion.VERSION_1_7
+    classpath {
+         containers.remove('org.eclipse.jdt.launching.JRE_CONTAINER')
+         containers 'org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7'
+    }
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.2'
+}
