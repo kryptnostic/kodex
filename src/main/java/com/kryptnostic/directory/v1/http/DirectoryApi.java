@@ -69,7 +69,7 @@ public interface DirectoryApi {
      */
     @Timed
     @GET( CONTROLLER + PRIVATE_KEY )
-    BlockCiphertext getPrivateKey();
+    BlockCiphertext getPrivateKey() throws ResourceNotFoundException;
 
     @Timed
     @PUT( CONTROLLER + PRIVATE_KEY )
@@ -77,7 +77,7 @@ public interface DirectoryApi {
 
     @Timed
     @GET( CONTROLLER + KODEX )
-    Kodex<String> getKodex();
+    Kodex<String> getKodex() throws ResourceNotFoundException;
 
     @Timed
     @PUT( CONTROLLER + KODEX )
