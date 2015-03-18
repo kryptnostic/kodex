@@ -110,6 +110,7 @@ public class AesMetadataRequestTests extends SecurityConfigurationTestUtils {
      * @throws JsonMappingException
      * @throws IOException
      */
+    @Ignore
     public void testSerializationWithImplicitEncryption() throws JsonGenerationException, JsonMappingException,
             IOException {
         BitVector key = BitVectors.randomVector( INDEX_LENGTH );
