@@ -1,5 +1,6 @@
 package com.kryptnostic.storage.v1;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -63,7 +64,8 @@ public interface StorageClient {
     List<EncryptableBlock> getObjectBlocks( String objectId, List<Integer> indices ) throws ResourceNotFoundException;
 
     Map<Integer, String> getObjectPreview( String objectId, List<Integer> locations, int wordRadius )
-            throws SecurityConfigurationException, ExecutionException, ResourceNotFoundException;
+            throws SecurityConfigurationException, ExecutionException, ResourceNotFoundException,
+            ClassNotFoundException, IOException;
 
     Collection<String> getObjectIdsByType( String type );
 
