@@ -4,13 +4,15 @@ import java.io.Serializable;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.base.Preconditions;
 import com.kryptnostic.directory.v1.principal.UserKey;
 import com.kryptnostic.kodex.v1.constants.Names;
 
 public class ObjectUserKey implements Serializable {
 
-    private final String  objectId;
-    private final UserKey userKey;
+    public static final String SEPARATOR = ":";
+    private final String       objectId;
+    private final UserKey      userKey;
 
     @JsonCreator
     public ObjectUserKey(
@@ -72,7 +74,17 @@ public class ObjectUserKey implements Serializable {
 
     @Override
     public String toString() {
-        return userKey + objectId;
+        return userKey + SEPARATOR + objectId;
+    }
+
+    public static ObjectUserKey fromString( String value ) {
+        int index = value.lastIndexOf( ObjectUserKey.SEPARATOR );
+        Preconditions.checkState( index > -1, "Separator character " + SEPARATOR
+                + " should be present for ObjectUserKey" );
+        String userKeyString = value.substring( 0, index );
+        String objectIdString = value.substring( index + 1 );
+        UserKey userKey = UserKey.fromString( userKeyString );
+        return new ObjectUserKey( objectIdString, userKey );
     }
 
     public byte[] asBytes() {
