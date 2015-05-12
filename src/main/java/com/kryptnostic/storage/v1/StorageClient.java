@@ -40,10 +40,9 @@ public interface StorageClient {
      * Push metadata to the service
      * 
      * @param metadata Properly formatted metadata
-     * @return Object id
      * @throws BadRequestException The metadata was malformed or otherwise rejected by the server
      */
-    String uploadMetadata( MetadataRequest metadata ) throws BadRequestException;
+    void uploadMetadata( List<MetadataRequest> metadata ) throws BadRequestException;
 
     void deleteMetadata( String id );
 
