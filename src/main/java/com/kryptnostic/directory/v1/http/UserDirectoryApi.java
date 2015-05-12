@@ -9,6 +9,7 @@ import retrofit.http.Path;
 
 import com.kryptnostic.directory.v1.exception.ActiveReservationException;
 import com.kryptnostic.directory.v1.exception.AddUserException;
+import com.kryptnostic.directory.v1.exception.RealmMismatchException;
 import com.kryptnostic.directory.v1.exception.ReservationTakenException;
 import com.kryptnostic.directory.v1.exception.ReservationTokenMismatchException;
 import com.kryptnostic.directory.v1.exception.UserUpdateException;
@@ -65,9 +66,10 @@ public interface UserDirectoryApi {
      * @param userId String form of reserved {@link UserKey}: {@code [ realm ].[ username ] }
      * @return {@link Reservation}
      * @throws BadRequestException
+     * @throws RealmMismatchException
      */
     @DELETE( RESERVATIONS + ID_PATH )
-    Reservation deleteReservation( @Path( ID ) String userId ) throws BadRequestException; // developer
+    Reservation deleteReservation( @Path( ID ) String userId ) throws BadRequestException, RealmMismatchException; // developer
 
     /**
      * Activate a user account, using the one-time user reservation token to create an account with a password. This is
@@ -113,7 +115,8 @@ public interface UserDirectoryApi {
      * 
      * @param userId String form of reserved {@link UserKey}: {@code [ realm ].[ username ] }
      * @return {@link UserResponse}
+     * @throws RealmMismatchException
      */
     @DELETE( USERS + ID_PATH )
-    UserResponse deleteUser( @Path( ID ) String userId ); // developer
+    UserResponse deleteUser( @Path( ID ) String userId ) throws RealmMismatchException; // developer
 }
