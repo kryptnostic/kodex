@@ -21,6 +21,7 @@ import com.kryptnostic.storage.v1.models.EncryptedSearchObjectKey;
 public interface SharingApi {
     String SHARE       = "/share";
     String OBJECT      = "/object";
+    String REVOKE      = "/revoke";
     String KEYS        = "/keys";
     String OBJECT_KEYS = "/objectKeys";
 
@@ -30,10 +31,10 @@ public interface SharingApi {
     @POST( SHARE + OBJECT + "/{id}" )
     BasicResponse<String> removeIncomingShares( @Path( "id" ) String uuid );
 
-    @POST( SHARE + OBJECT )
+    @POST( SHARE + OBJECT + SHARE )
     BasicResponse<String> share( @Body SharingRequest request );
 
-    @DELETE( SHARE + OBJECT )
+    @POST( SHARE + OBJECT + REVOKE )
     BasicResponse<String> revokeAccess( @Body RevocationRequest request );
 
     @POST( SHARE + KEYS )
