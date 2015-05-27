@@ -58,7 +58,8 @@ public interface DirectoryApi {
      */
     @Timed
     @GET( CONTROLLER + SALT_KEY + PARAM.REALM + PARAM.USER )
-    BlockCiphertext getSalt( @Path( Names.REALM_FIELD ) String realm, @Path( Names.USER_FIELD ) String username );
+    BlockCiphertext getSalt( @Path( Names.REALM_FIELD ) String realm, @Path( Names.USER_FIELD ) String username )
+            throws ResourceNotFoundException;
 
     @Timed
     @PUT( CONTROLLER + SALT_KEY )

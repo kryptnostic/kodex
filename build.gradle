@@ -51,8 +51,9 @@ repositories {
 
 }
 
-ext.fhe_core_version='0.1.2'
-ext.retrofit_version='1.6.1'
+ext.jackson_version='2.4.4'
+ext.fhe_core_version='0.1.2-SNAPSHOT'
+ext.retrofit_version='1.9.0'
 
 dependencies {
     /*
@@ -76,7 +77,14 @@ dependencies {
      */
     compile 'joda-time:joda-time:2.3'
     
-    compile 'com.fasterxml.jackson.datatype:jackson-datatype-joda:2.4.0'
+    compile "com.fasterxml.jackson.core:jackson-databind:${jackson_version}"
+    compile "com.fasterxml.jackson.datatype:jackson-datatype-guava:${jackson_version}"
+    compile "com.fasterxml.jackson.module:jackson-module-jaxb-annotations:${jackson_version}"
+    compile "com.fasterxml.jackson.module:jackson-module-afterburner:${jackson_version}"
+    compile "com.fasterxml.jackson.dataformat:jackson-dataformat-smile:${jackson_version}"
+    compile "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:${jackson_version}"
+    compile "com.fasterxml.jackson.datatype:jackson-datatype-joda:${jackson_version}"
+     
     
     /*
      * APACHE COMMONS
@@ -104,8 +112,8 @@ dependencies {
     }
     
     compile "com.squareup.retrofit:retrofit:${retrofit_version}"
-    compile "com.squareup.okhttp:okhttp-urlconnection:2.0.0"
-    compile "com.squareup.okhttp:okhttp:2.0.0"
+    compile "com.squareup.okhttp:okhttp-urlconnection:2.3.0"
+    compile "com.squareup.okhttp:okhttp:2.3.0"
 	// FIXME: not working! use the following to replace com.kryptnostic.kodex.v1.utils.JacksonConverter plz!
 	// compile "com.squareup.retrofit:retrofit-converters:1.6.0" // not available for 1.6.1 //#${retrofit_version}
 

@@ -1,5 +1,6 @@
 package com.kryptnostic.storage.v1;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -39,10 +40,9 @@ public interface StorageClient {
      * Push metadata to the service
      * 
      * @param metadata Properly formatted metadata
-     * @return Object id
      * @throws BadRequestException The metadata was malformed or otherwise rejected by the server
      */
-    String uploadMetadata( MetadataRequest metadata ) throws BadRequestException;
+    void uploadMetadata( List<MetadataRequest> metadata ) throws BadRequestException;
 
     void deleteMetadata( String id );
 
@@ -63,7 +63,8 @@ public interface StorageClient {
     List<EncryptableBlock> getObjectBlocks( String objectId, List<Integer> indices ) throws ResourceNotFoundException;
 
     Map<Integer, String> getObjectPreview( String objectId, List<Integer> locations, int wordRadius )
-            throws SecurityConfigurationException, ExecutionException, ResourceNotFoundException;
+            throws SecurityConfigurationException, ExecutionException, ResourceNotFoundException,
+            ClassNotFoundException, IOException;
 
     Collection<String> getObjectIdsByType( String type );
 
