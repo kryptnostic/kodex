@@ -206,9 +206,9 @@ public final class KryptnosticUser extends UserKey implements User, Serializable
         }
 
         public HeraclesUserBuilder asRegistrar() {
-			addGroup( SecurityGroups.REGISTRAR);
-			return this;
-		}
+            addGroup( SecurityGroups.REGISTRAR);
+            return this;
+        }
 
         public HeraclesUserBuilder withGroups( Set<GroupKey> groups ) {
             this.groups.addAll( groups );
