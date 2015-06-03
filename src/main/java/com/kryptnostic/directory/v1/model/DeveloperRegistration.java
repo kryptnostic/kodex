@@ -14,7 +14,7 @@ import com.kryptnostic.kodex.v1.crypto.ciphers.BlockCiphertext;
 
 /**
  * Model for Developer registrations.
- * 
+ *
  * @author Nick Hewitt
  *
  */
@@ -26,8 +26,6 @@ public final class DeveloperRegistration extends DeveloperRegistrationRequest {
     public DeveloperRegistration(
             @JsonProperty( Names.REALM_FIELD ) String realm,
             @JsonProperty( Names.NAME_FIELD ) String username,
-            @JsonProperty( Names.PASSWORD_FIELD ) String password,
-            @JsonProperty( Names.ENCRYPTED_SALT_FIELD ) BlockCiphertext encryptedSalt,
             @JsonProperty( Names.CERTIFICATE_PROPERTY ) byte[] certificate,
             @JsonProperty( Names.EMAIL_FIELD ) String email,
             @JsonProperty( Names.GIVEN_NAME_FIELD ) String givenName,
@@ -48,8 +46,6 @@ public final class DeveloperRegistration extends DeveloperRegistrationRequest {
         super(
                 realm,
                 username,
-                password,
-                encryptedSalt,
                 certificate,
                 email,
                 givenName,
@@ -73,8 +69,6 @@ public final class DeveloperRegistration extends DeveloperRegistrationRequest {
         super(
                 builder.realm,
                 builder.username,
-                builder.password,
-                builder.encryptedSalt,
                 builder.certificate,
                 builder.email,
                 builder.givenName,
@@ -97,7 +91,7 @@ public final class DeveloperRegistration extends DeveloperRegistrationRequest {
 
     /**
      * Gets the integer representation of the status for lookup.
-     * 
+     *
      * @return
      */
     @JsonIgnore
@@ -175,8 +169,6 @@ public final class DeveloperRegistration extends DeveloperRegistrationRequest {
         public RegistrationBuilder( DeveloperRegistrationRequest request ) {
             this.realm = request.getRealm();
             this.username = request.getUsername();
-            this.password = request.getPassword();
-            this.encryptedSalt = request.getEncryptedSalt();
             this.certificate = request.getCertificate();
             this.email = request.getEmail();
             this.givenName = request.getGivenName();
