@@ -10,7 +10,6 @@ import com.kryptnostic.directory.v1.exception.AlreadyDeniedException;
 import com.kryptnostic.directory.v1.exception.AlreadyOpenException;
 import com.kryptnostic.directory.v1.model.request.DeveloperRegistrationRequest;
 import com.kryptnostic.kodex.v1.constants.Names;
-import com.kryptnostic.kodex.v1.crypto.ciphers.BlockCiphertext;
 
 /**
  * Model for Developer registrations.
@@ -145,8 +144,6 @@ public final class DeveloperRegistration extends DeveloperRegistrationRequest {
     public static class RegistrationBuilder {
         private String           realm;
         private String           username;
-        private String           password;
-        private BlockCiphertext  encryptedSalt;
         private byte[]           certificate;
         private String           email;
         private String           givenName;
@@ -186,11 +183,6 @@ public final class DeveloperRegistration extends DeveloperRegistrationRequest {
             this.reason = request.getReason().orNull();
         }
 
-        public RegistrationBuilder withEncryptedSalt( BlockCiphertext encryptedSalt ) {
-            this.encryptedSalt = encryptedSalt;
-            return this;
-        }
-
         public RegistrationBuilder withStatus( RequestStatus status ) {
             this.status = status;
             return this;
@@ -204,8 +196,6 @@ public final class DeveloperRegistration extends DeveloperRegistrationRequest {
         public DeveloperRegistration build() {
             Preconditions.checkNotNull( realm );
             Preconditions.checkNotNull( username );
-            Preconditions.checkNotNull( password );
-            Preconditions.checkNotNull( encryptedSalt );
             Preconditions.checkNotNull( certificate );
             Preconditions.checkNotNull( email );
             Preconditions.checkNotNull( givenName );
