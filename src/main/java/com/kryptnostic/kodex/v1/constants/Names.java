@@ -66,6 +66,7 @@ public final class Names {
     public static final String CREATED_TIME                  = "timeCreated";
     public static final String TYPE_FIELD                    = "type";
     public static final String ENCRYPTED_SALT_FIELD          = "encryptedSalt";
+    public static final String RESET_TOKEN_FIELD             = "resetToken";
     
     public static final String REGISTRAR_USER_SUFFIX         = "_registrar";
 }

@@ -29,7 +29,7 @@ import com.kryptnostic.kodex.v1.crypto.ciphers.BlockCiphertext;
 
 /**
  * Model for a Heracles user.
- * 
+ *
  * @author Nick Hewitt
  *
  */
