@@ -9,7 +9,7 @@ import org.apache.commons.lang3.Validate;
  */
 public final class ObjectIds {
 
-    private ObjectIds() { /* not to be instantiated */}
+    private ObjectIds() { /* not to be instantiated */ }
 
     public static final String CHILD_OBJECT_SEPARATOR = ":";
 
@@ -24,7 +24,7 @@ public final class ObjectIds {
     }
 
     public static String getParentObjectId(String childId) {
-        Validate.isTrue(isChildObjectId(childId), "objectId must be a child object Id");
+        Validate.isTrue(isChildObjectId(childId), "objectId must represent a child object");
         return childId.split(CHILD_OBJECT_SEPARATOR)[0];
     }
 }
