@@ -10,7 +10,7 @@ import com.kryptnostic.kodex.v1.constants.Names;
  * Request to update {@link User} data. Username and password may be updated. If either field has a different value than
  * that of the current, authenticated user, then it will be substituted. The new username must be available to be
  * updated. Groups and attributes are not updatable from this request.
- * 
+ *
  * @author Nick Hewitt
  *
  */
