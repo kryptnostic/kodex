@@ -21,6 +21,7 @@ public final class UpdateUserRequest {
     private final Optional<String> email;
     private final Optional<String> password;
     private final Optional<byte[]> certificate;
+    private final Optional<String> resetToken;
 
     @JsonCreator
     public UpdateUserRequest(
@@ -29,13 +30,15 @@ public final class UpdateUserRequest {
             @JsonProperty( Names.FAMILY_NAME_FIELD ) Optional<String> familyName,
             @JsonProperty( Names.EMAIL_FIELD ) Optional<String> email,
             @JsonProperty( Names.PASSWORD_FIELD ) Optional<String> password,
-            @JsonProperty( Names.CERTIFICATE_PROPERTY ) Optional<byte[]> certificate ) {
+            @JsonProperty( Names.CERTIFICATE_PROPERTY ) Optional<byte[]> certificate,
+            @JsonProperty( Names.RESET_TOKEN_FIELD) Optional<String> resetToken ) {
         this.username = username;
         this.givenName = givenName;
         this.familyName = familyName;
         this.email = email;
         this.password = password;
         this.certificate = certificate;
+        this.resetToken = resetToken;
     }
 
     @JsonProperty( Names.NAME_FIELD )
@@ -66,6 +69,11 @@ public final class UpdateUserRequest {
     @JsonProperty( Names.CERTIFICATE_PROPERTY )
     public Optional<byte[]> getCertificate() {
         return certificate;
+    }
+
+    @JsonProperty( Names.RESET_TOKEN_FIELD )
+    public Optional<String> getResetToken() {
+        return resetToken;
     }
 
 }

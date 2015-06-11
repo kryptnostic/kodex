@@ -68,6 +68,6 @@ public final class Names {
     public static final String PARENT_OBJECT_ID_FIELD        = "parentObjectId";
     public static final String ENCRYPTED_SALT_FIELD          = "encryptedSalt";
     public static final String CHILD_OBJECT_COUNT_FIELD      = "childObjectCount";
-
+    public static final String RESET_TOKEN_FIELD             = "resetToken";
     public static final String REGISTRAR_USER_SUFFIX         = "_registrar";
 }
