@@ -65,8 +65,9 @@ public final class Names {
     public static final String WRITERS_FIELD                 = "writers";
     public static final String CREATED_TIME                  = "timeCreated";
     public static final String TYPE_FIELD                    = "type";
+    public static final String PARENT_OBJECT_ID_FIELD        = "parentObjectId";
     public static final String ENCRYPTED_SALT_FIELD          = "encryptedSalt";
+    public static final String CHILD_OBJECT_COUNT_FIELD      = "childObjectCount";
     public static final String RESET_TOKEN_FIELD             = "resetToken";
-    
     public static final String REGISTRAR_USER_SUFFIX         = "_registrar";
 }
