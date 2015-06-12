@@ -4,7 +4,6 @@ import retrofit.http.Body;
 import retrofit.http.DELETE;
 import retrofit.http.GET;
 import retrofit.http.POST;
-import retrofit.http.PUT;
 import retrofit.http.Path;
 
 import com.kryptnostic.directory.v1.exception.ActiveReservationException;
@@ -36,6 +35,7 @@ public interface UserDirectoryApi {
     public static final String CONTROLLER   = "/directory";
     public static final String USERS        = "/users";
     public static final String RESERVATIONS = "/reservations";
+    public static final String RESET     = "/reset";
     public static final String ID_PATH      = "/{" + ID + "}";
     public static final String ID_WITH_DOT  = "/{" + ID + ":.+}";
 
@@ -99,7 +99,7 @@ public interface UserDirectoryApi {
      * @throws BadRequestException
      * @throws MailException
      */
-    @PUT( USERS + ID_PATH )
+    @POST( USERS + ID_PATH )
     UserResponse update( @Path( ID ) String userId, @Body UpdateUserRequest request ) throws UserUpdateException,
             ReservationTakenException, BadRequestException, MailException; // user
 
@@ -121,4 +121,18 @@ public interface UserDirectoryApi {
      */
     @DELETE( USERS + ID_PATH )
     UserResponse deleteUser( @Path( ID ) String userId ) throws RealmMismatchException; // developer
+
+    /**
+     * Reset a users password given a reset token
+     * @param userId
+     * @param request
+     * @return
+     * @throws UserUpdateException
+     * @throws ReservationTakenException
+     * @throws BadRequestException
+     * @throws MailException
+     */
+    @POST( USERS + RESET + ID_WITH_DOT )
+    UserResponse resetPassword(String userId, UpdateUserRequest request) throws UserUpdateException, ReservationTakenException,
+            BadRequestException, MailException;
 }
