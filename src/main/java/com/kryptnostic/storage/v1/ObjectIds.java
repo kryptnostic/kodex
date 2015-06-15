@@ -27,4 +27,9 @@ public final class ObjectIds {
         Validate.isTrue(isChildObjectId(childId), "objectId must represent a child object");
         return childId.split(CHILD_OBJECT_SEPARATOR)[0];
     }
+
+    public static int getChildIndex(String childId) {
+        Validate.isTrue(isChildObjectId(childId), "objectId must represent a child object");
+        return Integer.parseInt(childId.split(CHILD_OBJECT_SEPARATOR)[1]);
+    }
 }
