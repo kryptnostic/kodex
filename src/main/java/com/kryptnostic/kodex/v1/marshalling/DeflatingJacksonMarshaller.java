@@ -19,8 +19,15 @@ public class DeflatingJacksonMarshaller  {
         final Inflater inflater = new Inflater();
         ByteBuffer in = ByteBuffer.wrap( bytes );
         int uncompressedLength = in.getInt();
+        int compressedLength = bytes.length - INTEGER_BYTES;
 
-        byte[] compressedBytes = new byte[ bytes.length - INTEGER_BYTES ];
+        Preconditions.checkState( compressedLength >= 0, String.format(
+               "Expected compressed data length to be non-negative " +
+               "when deserializaing %d bytes into an instance of %s. " +
+               "The caller's byte array may be missing data, a compressed byte count, or both.",
+               bytes.length, reference.getName()));
+
+        byte[] compressedBytes = new byte[ compressedLength ];
         byte[] uncompressedBytes = new byte[ uncompressedLength ];
         in.get( compressedBytes );
 
@@ -36,7 +43,7 @@ public class DeflatingJacksonMarshaller  {
                 "Expected length and decompressed length do not match." );
         return mapper.readValue( uncompressedBytes, reference );
     }
-    
+
     public<T> T fromBytes( byte[] bytes , TypeReference<T> reference) throws IOException {
         final Inflater inflater = new Inflater();
         ByteBuffer in = ByteBuffer.wrap( bytes );
