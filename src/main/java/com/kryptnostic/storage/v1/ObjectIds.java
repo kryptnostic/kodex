@@ -1,7 +1,11 @@
 package com.kryptnostic.storage.v1;
 
+import java.util.List;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
+
+import com.google.common.collect.Lists;
 
 /**
  * Utility methods for working with object storage ID's.
@@ -31,5 +35,14 @@ public final class ObjectIds {
     public static int getChildIndex(String childId) {
         Validate.isTrue(isChildObjectId(childId), "objectId must represent a child object");
         return Integer.parseInt(childId.split(CHILD_OBJECT_SEPARATOR)[1]);
+    }
+
+    public static List<String> getChildIds(String parentId, int childObjectCount) {
+        List<String> childIds = Lists.newArrayList();
+
+        for (int i = 0; i < childObjectCount; i++) {
+            childIds.add( getChildObjectId(parentId, i) );
+        }
+        return childIds;
     }
 }
