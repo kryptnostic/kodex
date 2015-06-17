@@ -20,7 +20,7 @@ group = "com.kryptnostic"
 version = getVersionName()
 
 apply plugin: "maven-publish"
-apply plugin: "application"
+apply plugin: "distribution"
 apply plugin: "java"
 apply plugin: "maven"
 apply plugin: "eclipse"
@@ -163,5 +163,5 @@ eclipse {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '2.2'
+    gradleVersion = '2.4'
 }

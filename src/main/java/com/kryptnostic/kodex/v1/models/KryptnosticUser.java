@@ -29,7 +29,7 @@ import com.kryptnostic.kodex.v1.crypto.ciphers.BlockCiphertext;
 
 /**
  * Model for a Heracles user.
- * 
+ *
  * @author Nick Hewitt
  *
  */
@@ -202,6 +202,11 @@ public final class KryptnosticUser extends UserKey implements User, Serializable
 
         public HeraclesUserBuilder asAdmin() {
             addGroup( SecurityGroups.ADMIN );
+            return this;
+        }
+
+        public HeraclesUserBuilder asRegistrar() {
+            addGroup( SecurityGroups.REGISTRAR);
             return this;
         }
 

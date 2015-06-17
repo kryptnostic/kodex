@@ -5,21 +5,17 @@ import java.util.Arrays;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Optional;
-import com.google.common.base.Preconditions;
 import com.kryptnostic.kodex.v1.constants.Names;
-import com.kryptnostic.kodex.v1.crypto.ciphers.BlockCiphertext;
 
 /**
  * Request to create a developer registration.
- * 
+ *
  * @author Nick Hewitt
  *
  */
 public class DeveloperRegistrationRequest {
     private final String            realm;
     private final String            username;
-    private final String            password;
-    private final BlockCiphertext   encryptedSalt;
     private final byte[]            certificate;
     private final String            email;
     private final String            givenName;
@@ -41,8 +37,6 @@ public class DeveloperRegistrationRequest {
     public DeveloperRegistrationRequest(
             @JsonProperty( Names.REALM_FIELD ) String realm,
             @JsonProperty( Names.NAME_FIELD ) String username,
-            @JsonProperty( Names.PASSWORD_FIELD ) String password,
-            @JsonProperty( Names.ENCRYPTED_SALT_FIELD ) BlockCiphertext encryptedSalt,
             @JsonProperty( Names.CERTIFICATE_PROPERTY ) byte[] certificate,
             @JsonProperty( Names.EMAIL_FIELD ) String email,
             @JsonProperty( Names.GIVEN_NAME_FIELD ) String givenName,
@@ -60,8 +54,6 @@ public class DeveloperRegistrationRequest {
             @JsonProperty( Names.REASON_FIELD ) Optional<String> reason ) {
         this.realm = realm;
         this.username = username;
-        this.password = password;
-        this.encryptedSalt = Preconditions.checkNotNull( encryptedSalt );
         this.certificate = certificate;
         this.email = email;
         this.givenName = givenName;
@@ -87,16 +79,6 @@ public class DeveloperRegistrationRequest {
     @JsonProperty( Names.NAME_FIELD )
     public String getUsername() {
         return username;
-    }
-
-    @JsonProperty( Names.PASSWORD_FIELD )
-    public String getPassword() {
-        return password;
-    }
-
-    @JsonProperty( Names.ENCRYPTED_SALT_FIELD )
-    public BlockCiphertext getEncryptedSalt() {
-        return encryptedSalt;
     }
 
     @JsonProperty( Names.CERTIFICATE_PROPERTY )
@@ -188,7 +170,6 @@ public class DeveloperRegistrationRequest {
         result = prime * result + ( ( givenName == null ) ? 0 : givenName.hashCode() );
         result = prime * result + ( ( organization == null ) ? 0 : organization.hashCode() );
         result = prime * result + ( ( organizationSize == null ) ? 0 : organizationSize.hashCode() );
-        result = prime * result + ( ( password == null ) ? 0 : password.hashCode() );
         result = prime * result + ( ( primaryUseCase == null ) ? 0 : primaryUseCase.hashCode() );
         result = prime * result + ( ( realm == null ) ? 0 : realm.hashCode() );
         result = prime * result + ( ( reason == null ) ? 0 : reason.hashCode() );
@@ -233,9 +214,6 @@ public class DeveloperRegistrationRequest {
         if ( organizationSize == null ) {
             if ( other.organizationSize != null ) return false;
         } else if ( !organizationSize.equals( other.organizationSize ) ) return false;
-        if ( password == null ) {
-            if ( other.password != null ) return false;
-        } else if ( !password.equals( other.password ) ) return false;
         if ( primaryUseCase == null ) {
             if ( other.primaryUseCase != null ) return false;
         } else if ( !primaryUseCase.equals( other.primaryUseCase ) ) return false;

@@ -1,9 +1,13 @@
 package com.kryptnostic.storage.v1.models;
 
+import javax.annotation.Nullable;
+
+import com.google.common.base.Optional;
 import com.kryptnostic.storage.v1.models.request.StorageRequest;
 
 public class StorageRequestBuilder {
     private String  objectId;
+    private Optional<String> parentObjectId;
     private String  objectBody;
     private boolean isSearchable;
     private boolean isStoreable;
@@ -12,6 +16,7 @@ public class StorageRequestBuilder {
     public StorageRequestBuilder() {
         objectBody = null;
         objectId = null;
+        parentObjectId = Optional.absent();
         isSearchable = true;
         isStoreable = true;
         type = ObjectMetadata.DEFAULT_TYPE;
@@ -21,6 +26,7 @@ public class StorageRequestBuilder {
         StorageRequestBuilder b = new StorageRequestBuilder();
         b.objectBody = o.objectBody;
         b.objectId = o.objectId;
+        b.parentObjectId = o.parentObjectId;
         b.isSearchable = o.isSearchable;
         b.isStoreable = o.isStoreable;
         b.type = o.type;
@@ -36,6 +42,12 @@ public class StorageRequestBuilder {
     public StorageRequestBuilder withId( String objectId ) {
         StorageRequestBuilder b = clone( this );
         b.objectId = objectId;
+        return b;
+    }
+
+    public StorageRequestBuilder withParentId( @Nullable String parentObjectId ) {
+        StorageRequestBuilder b = clone ( this );
+        b.parentObjectId = Optional.fromNullable(parentObjectId);
         return b;
     }
 
@@ -76,6 +88,6 @@ public class StorageRequestBuilder {
         if ( !isSearchable && !isStoreable ) {
             throw new IllegalStateException( "Not searchable or storeable, so no-op" );
         }
-        return new StorageRequest( objectId, objectBody, isSearchable, isStoreable, type );
+        return new StorageRequest( objectId, parentObjectId, objectBody, isSearchable, isStoreable, type );
     }
 }

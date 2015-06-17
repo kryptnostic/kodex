@@ -21,7 +21,7 @@ import com.kryptnostic.storage.v1.models.ObjectMetadata;
 import com.kryptnostic.storage.v1.models.request.PendingObjectRequest;
 
 public interface ObjectApi {
-    final String CONTROLLER                 = "/object";
+    final String CONTROLLER             = "/object";
     final String ID                     = "id";
     final String REALM                  = "realm";
     final String USER                   = "user";
@@ -36,7 +36,7 @@ public interface ObjectApi {
 
     /**
      * Request a new object be created in a pending state
-     * 
+     *
      * @return The ID of the newly created object
      * @throws BadRequestException Request was invalid
      */
@@ -45,7 +45,7 @@ public interface ObjectApi {
 
     /**
      * Request an existing object be put into a pending state
-     * 
+     *
      * @param id
      * @return
      * @throws ResourceLockedException if the object is currently pending
@@ -57,12 +57,12 @@ public interface ObjectApi {
 
     /**
      * Update a object using an EncryptableBlock
-     * 
+     *
      * Precondition: object is in a pending state
-     * 
+     *
      * Postcondition: If this is the last block required to make the object valid, the object will be put into a
      * non-pending state and be available for reading
-     * 
+     *
      * @param id Id of object to update
      * @param block A single block for the object
      * @return The progress and verification data for the updated object
@@ -76,7 +76,7 @@ public interface ObjectApi {
 
     /**
      * Retrieve an object's contents
-     * 
+     *
      * @param id
      * @return Contents of object
      */
@@ -90,7 +90,7 @@ public interface ObjectApi {
     BasicResponse<List<KryptnosticObject>> getObjects( @Body List<String> objectIds ) throws ResourceNotFoundException;
 
     /**
-     * 
+     *
      * @return Collection of object ids
      */
     @GET( CONTROLLER )
