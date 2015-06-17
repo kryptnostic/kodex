@@ -15,7 +15,7 @@ public final class ObjectIds {
 
     private ObjectIds() { /* not to be instantiated */ }
 
-    public static final String CHILD_OBJECT_SEPARATOR = ":";
+    public static final String CHILD_OBJECT_SEPARATOR = "~";
 
     public static String getChildObjectId(String objectId, int childIndex) {
         Validate.isTrue(StringUtils.isNotBlank(objectId));
