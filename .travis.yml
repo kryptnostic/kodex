@@ -1,7 +1,0 @@
-language: java
-jdk:
-  - oraclejdk7
-  - openjdk7
-git:
-  depth: 500
-script: "./gradlew check --debug"
