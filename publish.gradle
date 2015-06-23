@@ -5,10 +5,22 @@ exec {
 }
 def branch=stdout.toString().trim();
 
+apply plugin: "maven-publish"
+apply plugin: "signing"
+
+configurations {
+    pom
+}
+
+signing {
+    sign configurations.archives
+}
+
+signing {
+    sign configurations.pom
+}
+
 if ( (branch.equals("develop") || branch.equals("master") ) && ( System.getenv("bamboo_JAR_SIGNING_KEYRING") != null) && ( System.getenv("bamboo_JAR_SIGNING_PASSWORD")!=null ) && ( System.getenv("bamboo_SONATYPE_USERNAME")!=null ) && ( System.getenv("bamboo_SONATYPE_PASSWORD")!=null ) ) {
-    
-    apply plugin: "maven-publish"
-    apply plugin: "signing"
 
     ext {
         snapshotUrl = "https://oss.sonatype.org/content/repositories/snapshots"
@@ -19,18 +31,6 @@ if ( (branch.equals("develop") || branch.equals("master") ) && ( System.getenv("
     ext."signing.keyId" = 'FDEB5A45'
     ext."signing.secretKeyRingFile" = "$System.env.bamboo_JAR_SIGNING_KEYRING" 
     ext."signing.password" = "$System.env.bamboo_JAR_SIGNING_PASSWORD"
-
-    configurations {
-        pom
-    }
-
-    signing {
-        sign configurations.archives
-    }
-
-    signing {
-        sign configurations.pom
-    }
 
     publishing {
         repositories {
@@ -57,8 +57,8 @@ if ( (branch.equals("develop") || branch.equals("master") ) && ( System.getenv("
                 pom.withXml {
                     asNode().children().last() + {
                         resolveStrategy = Closure.DELEGATE_FIRST
-                        name 'fhe-core'
-                        description 'Kryptnostic Service APIs'
+                        name 'kodex'
+                        description 'Kryptnostic Object Models'
                         url 'https://www.github.com/kryptnostic/kodex'
                         scm {
                             url 'https://www.github.com/kryptnostic/kodex'
@@ -77,11 +77,6 @@ if ( (branch.equals("develop") || branch.equals("master") ) && ( System.getenv("
                                 id 'geekbeast'
                                 name 'Matthew Tamayo-Rios'
                                 email 'matthew@kryptnostic.com'
-                            }
-                            developer {
-                                id 'hubsmoke'
-                                name 'Sina Iman'
-                                email 'sina@kryptnostic.com'
                             }
                             developer {
                                 id 'nickdhewitt'
