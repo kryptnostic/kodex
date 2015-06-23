@@ -8,19 +8,19 @@ def branch=stdout.toString().trim();
 apply plugin: "maven-publish"
 apply plugin: "signing"
 
-configurations {
-    pom
-}
-
-signing {
-    sign configurations.archives
-}
-
-signing {
-    sign configurations.pom
-}
-
 if ( (branch.equals("develop") || branch.equals("master") ) && ( System.getenv("bamboo_JAR_SIGNING_KEYRING") != null) && ( System.getenv("bamboo_JAR_SIGNING_PASSWORD")!=null ) && ( System.getenv("bamboo_SONATYPE_USERNAME")!=null ) && ( System.getenv("bamboo_SONATYPE_PASSWORD")!=null ) ) {
+
+    configurations {
+        pom
+    }
+
+    signing {
+        sign configurations.archives
+    }
+
+    signing {
+        sign configurations.pom
+    }
 
     ext {
         snapshotUrl = "https://oss.sonatype.org/content/repositories/snapshots"
