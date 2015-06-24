@@ -21,11 +21,11 @@ version = getVersionName()
 
 apply plugin: "java"
 apply plugin: "maven"
-apply plugin: "distribution"
 apply plugin: "eclipse"
 apply plugin: "idea"
 apply plugin: "jacoco"
 apply from: "publish.gradle"
+apply plugin: "maven-publish"
 
 sourceCompatibility=JavaVersion.VERSION_1_7
 
@@ -124,14 +124,12 @@ dependencies {
 
 task sourcesJar(type : Jar) {
     classifier = 'sources'
-    extension = 'jar'
     from sourceSets.main.allSource
 }
 
-task javadocJar(type: Jar) {
+task javadocJar(type: Jar, dependsOn: javadoc) {
     classifier = 'javadoc'
-    extension = 'jar'
-    from javadoc
+    from javadoc.destinationDir
 }
 
 task testJar(type: Jar, dependsOn: testClasses) {
@@ -145,7 +143,9 @@ configurations {
 }
 
 artifacts {
-	archives sourcesJar, javadocJar
+	archives sourcesJar
+    archives jar
+    archives javadocJar
 	tests testJar
 }
 
