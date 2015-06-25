@@ -57,6 +57,7 @@ if ( (branch.equals("develop") || branch.equals("master") )
 
                 artifact javadocJar
                 artifact sourcesJar
+                artifact testJar
 
                 pom.withXml {
                     asNode().children().last() + {
