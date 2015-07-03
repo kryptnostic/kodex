@@ -132,7 +132,7 @@ public interface UserDirectoryApi {
      * @throws BadRequestException
      * @throws MailException
      */
-    @POST( USERS + RESET + ID_WITH_DOT )
-    UserResponse resetPassword(String userId, UpdateUserRequest request) throws UserUpdateException, ReservationTakenException,
+    @POST( USERS + RESET + ID_PATH )
+    UserResponse resetPassword( @Path( ID ) String userId, @Body UpdateUserRequest request) throws UserUpdateException, ReservationTakenException,
             BadRequestException, MailException;
 }
