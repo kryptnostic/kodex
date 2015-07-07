@@ -22,6 +22,7 @@ public class PendingObjectMetadata extends ObjectMetadata {
             @JsonProperty( Names.ID_FIELD ) String id,
             @JsonProperty( Names.VERSION_FIELD ) int version,
             @JsonProperty( Names.TOTAL_FIELD ) int numBlocks,
+            @JsonProperty( Names.SIZE_FIELD ) int size,
             @JsonProperty( Names.CHILD_OBJECT_COUNT_FIELD ) int childObjectCount,
             @JsonProperty( Names.NAME_FIELD ) BlockCiphertext encryptedClassName,
             @JsonProperty( Names.STRATEGY_FIELD ) ChunkingStrategy chunkingStrategy,
@@ -35,6 +36,7 @@ public class PendingObjectMetadata extends ObjectMetadata {
                 id,
                 version,
                 numBlocks,
+                size,
                 childObjectCount,
                 encryptedClassName,
                 chunkingStrategy,
@@ -51,12 +53,13 @@ public class PendingObjectMetadata extends ObjectMetadata {
             String id,
             int version,
             int numBlocks,
+            int size,
             BlockCiphertext encryptedClassName,
             ChunkingStrategy chunkingStrategy,
             Optional<Integer> receivedBlocks,
             String type,
             DateTime createdTime ) {
-        this( id, version, numBlocks, 0, encryptedClassName, chunkingStrategy, Sets.<UserKey> newHashSet(), Sets
+        this( id, version, numBlocks, size, 0, encryptedClassName, chunkingStrategy, Sets.<UserKey> newHashSet(), Sets
                 .<UserKey> newHashSet(), Sets.<UserKey> newHashSet(), type, createdTime, receivedBlocks );
     }
 
@@ -75,5 +78,6 @@ public class PendingObjectMetadata extends ObjectMetadata {
     public int increment() {
         return ++receivedBlocks;
     }
+
 
 }

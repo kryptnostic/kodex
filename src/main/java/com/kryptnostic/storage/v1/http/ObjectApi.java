@@ -18,6 +18,7 @@ import com.kryptnostic.kodex.v1.models.response.BasicResponse;
 import com.kryptnostic.storage.v1.models.EncryptableBlock;
 import com.kryptnostic.storage.v1.models.KryptnosticObject;
 import com.kryptnostic.storage.v1.models.ObjectMetadata;
+import com.kryptnostic.storage.v1.models.request.AppendObjectRequest;
 import com.kryptnostic.storage.v1.models.request.PendingObjectRequest;
 
 public interface ObjectApi {
@@ -116,7 +117,7 @@ public interface ObjectApi {
     BasicResponse<String> delete( @Path( ID ) String id );
 
     @POST( CONTROLLER + OBJECT_ID_PATH + OBJECT_APPEND_PATH )
-    BasicResponse<String> appendObject( @Path( ID ) String objectId, @Body EncryptableBlock blockToAppend )
+    BasicResponse<String> appendObject( @Path( ID ) String objectId, @Body AppendObjectRequest req )
             throws ResourceNotFoundException;
 
 }
