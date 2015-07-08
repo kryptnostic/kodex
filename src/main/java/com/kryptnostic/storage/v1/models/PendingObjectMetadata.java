@@ -79,5 +79,4 @@ public class PendingObjectMetadata extends ObjectMetadata {
         return ++receivedBlocks;
     }
 
-
 }

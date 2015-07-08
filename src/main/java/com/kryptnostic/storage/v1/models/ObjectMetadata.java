@@ -25,26 +25,26 @@ import com.kryptnostic.kodex.v1.models.blocks.ChunkingStrategy;
 @Immutable
 public class ObjectMetadata {
     @JsonIgnore
-    public static final String       DEFAULT_TYPE = "object";
-    protected final String           id;
-    protected final int              version;
-    protected final int              numBlocks;
-    protected final int              childObjectCount;
-    protected final BlockCiphertext  encryptedClassName;
-    protected final ChunkingStrategy chunkingStrategy;
+    public static final String            DEFAULT_TYPE = "object";
+    protected final String                id;
+    protected final int                   version;
+    protected final int                   numBlocks;
+    protected final int                   childObjectCount;
+    protected final BlockCiphertext       encryptedClassName;
+    protected final ChunkingStrategy      chunkingStrategy;
 
     protected final ImmutableSet<UserKey> owners;
     protected final ImmutableSet<UserKey> readers;
     protected final ImmutableSet<UserKey> writers;
 
-    protected final DateTime         createdTime;
+    protected final DateTime              createdTime;
 
-    protected final String           type;
-    protected final int				 size;
-
+    protected final String                type;
+    protected final int                   size;
 
     /**
      * constructs metadata with default values
+     * 
      * @param id
      */
     @JsonIgnore
@@ -86,12 +86,24 @@ public class ObjectMetadata {
             Set<UserKey> readers,
             Set<UserKey> writers,
             String type ) {
-        this( id, version, numBlocks, size, childObjectCount, encryptedClassName, chunkingStrategy, owners,
-                readers, writers, type, DateTime.now() );
+        this(
+                id,
+                version,
+                numBlocks,
+                size,
+                childObjectCount,
+                encryptedClassName,
+                chunkingStrategy,
+                owners,
+                readers,
+                writers,
+                type,
+                DateTime.now() );
     }
 
-    public static ObjectMetadata copyIncrementingChildCount(ObjectMetadata meta){
-        return new ObjectMetadata(meta.getId(),
+    public static ObjectMetadata copyIncrementingChildCount( ObjectMetadata meta ) {
+        return new ObjectMetadata(
+                meta.getId(),
                 meta.getVersion(),
                 meta.getNumBlocks(),
                 meta.getSize(),
@@ -102,7 +114,7 @@ public class ObjectMetadata {
                 meta.getReaders(),
                 meta.getWriters(),
                 meta.getType(),
-                meta.getCreatedTime());
+                meta.getCreatedTime() );
     }
 
     @JsonCreator
@@ -118,7 +130,7 @@ public class ObjectMetadata {
             @JsonProperty( Names.READERS_FIELD ) Set<UserKey> readers,
             @JsonProperty( Names.WRITERS_FIELD ) Set<UserKey> writers,
             @JsonProperty( Names.TYPE_FIELD ) String type,
-            @JsonProperty( Names.CREATED_TIME ) DateTime createdTime) {
+            @JsonProperty( Names.CREATED_TIME ) DateTime createdTime ) {
         this.id = id;
         this.version = version;
         this.numBlocks = numBlocks;
@@ -127,9 +139,9 @@ public class ObjectMetadata {
         this.encryptedClassName = encryptedClassName;
         this.chunkingStrategy = chunkingStrategy;
 
-        this.owners = ImmutableSet.copyOf(owners);
-        this.readers = ImmutableSet.copyOf(readers);
-        this.writers = ImmutableSet.copyOf(writers);
+        this.owners = ImmutableSet.copyOf( owners );
+        this.readers = ImmutableSet.copyOf( readers );
+        this.writers = ImmutableSet.copyOf( writers );
 
         this.type = type.toLowerCase();
 
@@ -208,8 +220,8 @@ public class ObjectMetadata {
     public int getChildObjectCount() {
         return childObjectCount;
     }
-    
-    @JsonProperty( Names.SIZE_FIELD)
+
+    @JsonProperty( Names.SIZE_FIELD )
     public int getSize() {
         return size;
     }
