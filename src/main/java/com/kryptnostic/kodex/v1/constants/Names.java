@@ -70,5 +70,5 @@ public final class Names {
     public static final String CHILD_OBJECT_COUNT_FIELD      = "childObjectCount";
     public static final String RESET_TOKEN_FIELD             = "resetToken";
     public static final String REGISTRAR_USER_SUFFIX         = "_registrar";
-	public static final String SIZE_FIELD 					 = "size";
+    public static final String SIZE_FIELD 					 = "size";
 }
