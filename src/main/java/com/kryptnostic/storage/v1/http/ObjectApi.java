@@ -116,7 +116,7 @@ public interface ObjectApi {
     BasicResponse<String> delete( @Path( ID ) String id );
 
     @POST( CONTROLLER + OBJECT_ID_PATH + OBJECT_APPEND_PATH )
-    BasicResponse<String> appendObject( @Path( ID ) String objectId, @Body EncryptableBlock blockToAppend )
+    BasicResponse<String> appendObject( @Path( ID ) String objectId, @Body EncryptableBlock block )
             throws ResourceNotFoundException;
 
 }
