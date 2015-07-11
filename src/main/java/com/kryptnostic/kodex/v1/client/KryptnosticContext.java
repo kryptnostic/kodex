@@ -2,12 +2,12 @@ package com.kryptnostic.kodex.v1.client;
 
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 import cern.colt.bitvector.BitVector;
 
 import com.kryptnostic.crypto.EncryptedSearchBridgeKey;
 import com.kryptnostic.crypto.EncryptedSearchSharingKey;
-import com.kryptnostic.directory.v1.principal.UserKey;
 import com.kryptnostic.kodex.v1.crypto.ciphers.RsaCompressingCryptoService;
 import com.kryptnostic.kodex.v1.crypto.ciphers.RsaCompressingEncryptionService;
 import com.kryptnostic.kodex.v1.exceptions.types.IrisException;
@@ -51,7 +51,7 @@ public interface KryptnosticContext {
 
     BitVector prepareSearchToken( String token );
 
-    Map<UserKey, RsaCompressingEncryptionService> getEncryptionServiceForUsers( Set<UserKey> users );
+    Map<UUID, RsaCompressingEncryptionService> getEncryptionServiceForUsers( Set<UUID> users );
 
     RsaCompressingCryptoService getRsaCryptoService() throws SecurityConfigurationException;
 

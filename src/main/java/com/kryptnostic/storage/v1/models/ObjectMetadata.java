@@ -1,6 +1,7 @@
 package com.kryptnostic.storage.v1.models;
 
 import java.util.Set;
+import java.util.UUID;
 
 import javax.annotation.concurrent.Immutable;
 
@@ -12,7 +13,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
-import com.kryptnostic.directory.v1.principal.UserKey;
 import com.kryptnostic.kodex.v1.constants.Names;
 import com.kryptnostic.kodex.v1.crypto.ciphers.BlockCiphertext;
 import com.kryptnostic.kodex.v1.models.blocks.ChunkingStrategy;
@@ -33,9 +33,9 @@ public class ObjectMetadata {
     protected final BlockCiphertext  encryptedClassName;
     protected final ChunkingStrategy chunkingStrategy;
 
-    protected final ImmutableSet<UserKey> owners;
-    protected final ImmutableSet<UserKey> readers;
-    protected final ImmutableSet<UserKey> writers;
+    protected final ImmutableSet<UUID> owners;
+    protected final ImmutableSet<UUID> readers;
+    protected final ImmutableSet<UUID> writers;
 
     protected final DateTime         createdTime;
 
@@ -67,8 +67,8 @@ public class ObjectMetadata {
             int numBlocks,
             BlockCiphertext encryptedClassName,
             ChunkingStrategy chunkingStrategy ) {
-        this( id, version, numBlocks, 0, encryptedClassName, chunkingStrategy, Sets.<UserKey> newHashSet(), Sets
-                .<UserKey> newHashSet(), Sets.<UserKey> newHashSet(), DEFAULT_TYPE );
+        this( id, version, numBlocks, 0, encryptedClassName, chunkingStrategy, Sets.<UUID> newHashSet(), Sets
+                .<UUID> newHashSet(), Sets.<UUID> newHashSet(), DEFAULT_TYPE );
     }
 
     @JsonIgnore
@@ -79,9 +79,9 @@ public class ObjectMetadata {
             int childObjectCount,
             BlockCiphertext encryptedClassName,
             ChunkingStrategy chunkingStrategy,
-            Set<UserKey> owners,
-            Set<UserKey> readers,
-            Set<UserKey> writers,
+            Set<UUID> owners,
+            Set<UUID> readers,
+            Set<UUID> writers,
             String type ) {
         this( id, version, numBlocks, childObjectCount, encryptedClassName, chunkingStrategy, owners,
                 readers, writers, type, DateTime.now() );
@@ -109,9 +109,9 @@ public class ObjectMetadata {
             @JsonProperty( Names.CHILD_OBJECT_COUNT_FIELD ) int childObjectCount,
             @JsonProperty( Names.NAME_FIELD ) BlockCiphertext encryptedClassName,
             @JsonProperty( Names.STRATEGY_FIELD ) ChunkingStrategy chunkingStrategy,
-            @JsonProperty( Names.OWNERS_FIELD ) Set<UserKey> owners,
-            @JsonProperty( Names.READERS_FIELD ) Set<UserKey> readers,
-            @JsonProperty( Names.WRITERS_FIELD ) Set<UserKey> writers,
+            @JsonProperty( Names.OWNERS_FIELD ) Set<UUID> owners,
+            @JsonProperty( Names.READERS_FIELD ) Set<UUID> readers,
+            @JsonProperty( Names.WRITERS_FIELD ) Set<UUID> writers,
             @JsonProperty( Names.TYPE_FIELD ) String type,
             @JsonProperty( Names.CREATED_TIME ) DateTime createdTime) {
         this.id = id;
@@ -174,17 +174,17 @@ public class ObjectMetadata {
     }
 
     @JsonProperty( Names.OWNERS_FIELD )
-    public Set<UserKey> getOwners() {
+    public Set<UUID> getOwners() {
         return owners;
     }
 
     @JsonProperty( Names.READERS_FIELD )
-    public Set<UserKey> getReaders() {
+    public Set<UUID> getReaders() {
         return readers;
     }
 
     @JsonProperty( Names.WRITERS_FIELD )
-    public Set<UserKey> getWriters() {
+    public Set<UUID> getWriters() {
         return writers;
     }
 

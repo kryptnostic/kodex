@@ -1,11 +1,11 @@
 package com.kryptnostic.kodex.v1.authentication;
 
+import java.util.UUID;
+
 import retrofit.RequestInterceptor;
 
-import com.kryptnostic.directory.v1.principal.UserKey;
-
 public class PreauthenticationRequestInterceptor implements RequestInterceptor {
-    private UserKey user;
+    private UUID user;
     private String  credential;
 
     public PreauthenticationRequestInterceptor() {
@@ -13,12 +13,12 @@ public class PreauthenticationRequestInterceptor implements RequestInterceptor {
         this.credential = null;
     }
 
-    public PreauthenticationRequestInterceptor( UserKey user, String credential ) {
+    public PreauthenticationRequestInterceptor( UUID user, String credential ) {
         this.user = user;
         this.credential = credential;
     }
 
-    public void updateCredentials( UserKey user, String credential ) {
+    public void updateCredentials( UUID user, String credential ) {
         this.user = user;
         this.credential = credential;
     }

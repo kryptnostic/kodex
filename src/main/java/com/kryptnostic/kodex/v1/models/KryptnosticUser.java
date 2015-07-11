@@ -6,6 +6,7 @@ import static com.kryptnostic.kodex.v1.constants.Names.EMAIL_FIELD;
 import static com.kryptnostic.kodex.v1.constants.Names.FAMILY_NAME_FIELD;
 import static com.kryptnostic.kodex.v1.constants.Names.GIVEN_NAME_FIELD;
 import static com.kryptnostic.kodex.v1.constants.Names.GROUPS_PROPERTY;
+import static com.kryptnostic.kodex.v1.constants.Names.ID_FIELD;
 import static com.kryptnostic.kodex.v1.constants.Names.NAME_FIELD;
 import static com.kryptnostic.kodex.v1.constants.Names.PASSWORD_FIELD;
 import static com.kryptnostic.kodex.v1.constants.Names.REALM_FIELD;
@@ -14,9 +15,9 @@ import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
@@ -24,7 +25,6 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.kryptnostic.directory.v1.principal.GroupKey;
 import com.kryptnostic.directory.v1.principal.User;
-import com.kryptnostic.directory.v1.principal.UserKey;
 import com.kryptnostic.kodex.v1.crypto.ciphers.BlockCiphertext;
 
 /**
@@ -33,8 +33,11 @@ import com.kryptnostic.kodex.v1.crypto.ciphers.BlockCiphertext;
  * @author Nick Hewitt
  *
  */
-public final class KryptnosticUser extends UserKey implements User, Serializable {
+public final class KryptnosticUser implements User, Serializable {
     private static final long         serialVersionUID = 3581755283203968675L;
+    private final UUID                id;
+    private final String              realm;
+    private final String              username;
     private final String              email;
     private final String              givenName;
     private final String              familyName;
@@ -45,8 +48,9 @@ public final class KryptnosticUser extends UserKey implements User, Serializable
 
     @JsonCreator
     public KryptnosticUser(
+            @JsonProperty( ID_FIELD ) UUID id,
             @JsonProperty( REALM_FIELD ) String realm,
-            @JsonProperty( NAME_FIELD ) String name,
+            @JsonProperty( NAME_FIELD ) String username,
             @JsonProperty( GIVEN_NAME_FIELD ) String givenName,
             @JsonProperty( FAMILY_NAME_FIELD ) String familyName,
             @JsonProperty( EMAIL_FIELD ) String email,
@@ -54,7 +58,9 @@ public final class KryptnosticUser extends UserKey implements User, Serializable
             @JsonProperty( CERTIFICATE_PROPERTY ) Optional<byte[]> certificate,
             @JsonProperty( GROUPS_PROPERTY ) Set<GroupKey> groups,
             @JsonProperty( ATTRIBUTES_FIELD ) Map<String, String> attributes ) {
-        super( realm, name );
+        this.id = id;
+        this.realm = realm;
+        this.username = username;
         this.groups.addAll( groups );
         this.attributes.putAll( attributes );
         this.password = password;
@@ -65,7 +71,9 @@ public final class KryptnosticUser extends UserKey implements User, Serializable
     }
 
     private KryptnosticUser( HeraclesUserBuilder builder ) {
-        super( builder.realm, builder.username );
+        this.id = builder.id;
+        this.realm = builder.realm;
+        this.username = builder.username;
         this.password = builder.password;
         this.certificate = builder.certificate;
         this.givenName = builder.givenName;
@@ -76,9 +84,8 @@ public final class KryptnosticUser extends UserKey implements User, Serializable
     }
 
     @Override
-    @JsonIgnore
-    public String getId() {
-        return UserKey.buildFqn( realm, name );
+    public UUID getId() {
+        return id;
     }
 
     @Override
@@ -124,6 +131,18 @@ public final class KryptnosticUser extends UserKey implements User, Serializable
     }
 
     @Override
+    @JsonProperty( NAME_FIELD )
+    public String getName() {
+        return this.username;
+    }
+
+    @Override
+    @JsonProperty( REALM_FIELD )
+    public String getRealm() {
+        return this.realm;
+    }
+
+    @Override
     public String getAttribute( String key ) {
         return attributes.get( key );
     }
@@ -135,6 +154,7 @@ public final class KryptnosticUser extends UserKey implements User, Serializable
     }
 
     public static class HeraclesUserBuilder {
+        public UUID                id;
         public String              realm;
         public String              username;
         public String              email;
@@ -190,6 +210,11 @@ public final class KryptnosticUser extends UserKey implements User, Serializable
             return this;
         }
 
+        public HeraclesUserBuilder withId( UUID id ) {
+            this.id = id;
+            return this;
+        }
+
         public HeraclesUserBuilder asUser() {
             addGroup( SecurityGroups.USER );
             return this;
@@ -206,7 +231,7 @@ public final class KryptnosticUser extends UserKey implements User, Serializable
         }
 
         public HeraclesUserBuilder asRegistrar() {
-            addGroup( SecurityGroups.REGISTRAR);
+            addGroup( SecurityGroups.REGISTRAR );
             return this;
         }
 
@@ -232,4 +257,5 @@ public final class KryptnosticUser extends UserKey implements User, Serializable
             return new KryptnosticUser( this );
         }
     }
+
 }

@@ -2,6 +2,7 @@ package com.kryptnostic.directory.v1.principal;
 
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 import javax.annotation.Nullable;
 
@@ -17,7 +18,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
     include = JsonTypeInfo.As.PROPERTY,
     property = "@class" )
 public interface User extends Principal {
-    String getId();
+    UUID getId();
 
     @Nullable
     String getGivenName();

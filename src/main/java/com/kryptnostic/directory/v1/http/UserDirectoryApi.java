@@ -1,5 +1,7 @@
 package com.kryptnostic.directory.v1.http;
 
+import java.util.UUID;
+
 import retrofit.http.Body;
 import retrofit.http.DELETE;
 import retrofit.http.GET;
@@ -20,7 +22,6 @@ import com.kryptnostic.directory.v1.model.request.UpdateUserRequest;
 import com.kryptnostic.directory.v1.model.response.ActivateUserResponse;
 import com.kryptnostic.directory.v1.model.response.ReserveUserResponse;
 import com.kryptnostic.directory.v1.model.response.UserResponse;
-import com.kryptnostic.directory.v1.principal.UserKey;
 import com.kryptnostic.kodex.v1.exceptions.types.BadRequestException;
 import com.kryptnostic.kodex.v1.exceptions.types.ResourceNotFoundException;
 
@@ -54,7 +55,7 @@ public interface UserDirectoryApi {
     /**
      * Get the reservation corresponding to the reservation ID.
      *
-     * @param userId String form of reserved {@link UserKey}: {@code [ realm ].[ username ] }
+     * @param userId String form of reserved {@link UUID}: {@code [ realm ].[ username ] }
      * @return {@link Reservation}
      */
     @GET( RESERVATIONS + ID_PATH )
@@ -64,7 +65,7 @@ public interface UserDirectoryApi {
      * Delete the reservation corresponding to the reservation ID. If the reservation is already active, it cannot be
      * deleted. You must first delete the user account, then may delete the reservation.
      *
-     * @param userId String form of reserved {@link UserKey}: {@code [ realm ].[ username ] }
+     * @param userId String form of reserved {@link UUID}: {@code [ realm ].[ username ] }
      * @return {@link Reservation}
      * @throws BadRequestException
      * @throws RealmMismatchException
@@ -91,7 +92,7 @@ public interface UserDirectoryApi {
      * Update and existing user account details, including username and password. If the username is changed, then that
      * username will become available for other users in the realm to reserve.
      *
-     * @param userId String form of reserved {@link UserKey}: {@code [ realm ].[ username ] }
+     * @param userId String form of reserved {@link UUID}: {@code [ realm ].[ username ] }
      * @param request {@link UpdateUserRequest}
      * @return {@link UserResponse}
      * @throws UserUpdateException
@@ -106,7 +107,7 @@ public interface UserDirectoryApi {
     /**
      * Get the account details for a given user.
      *
-     * @param userId String form of reserved {@link UserKey}: {@code [ realm ].[ username ] }
+     * @param userId String form of reserved {@link UUID}: {@code [ realm ].[ username ] }
      * @return {@link UserResponse}
      */
     @GET( USERS + ID_PATH )
@@ -115,7 +116,7 @@ public interface UserDirectoryApi {
     /**
      * Delete a specific user, removing it from the active directory.
      *
-     * @param userId String form of reserved {@link UserKey}: {@code [ realm ].[ username ] }
+     * @param userId String form of reserved {@link UUID}: {@code [ realm ].[ username ] }
      * @return {@link UserResponse}
      * @throws RealmMismatchException
      */

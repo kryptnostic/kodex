@@ -8,6 +8,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SignatureException;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.InvalidParameterSpecException;
+import java.util.UUID;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
@@ -28,14 +29,13 @@ import com.kryptnostic.crypto.EncryptedSearchPrivateKey;
 import com.kryptnostic.crypto.EncryptedSearchSharingKey;
 import com.kryptnostic.crypto.PrivateKey;
 import com.kryptnostic.crypto.PublicKey;
-import com.kryptnostic.directory.v1.principal.UserKey;
 import com.kryptnostic.kodex.v1.crypto.ciphers.Cypher;
 import com.kryptnostic.kodex.v1.crypto.keys.JacksonKodexMarshaller;
 import com.kryptnostic.kodex.v1.crypto.keys.Keys;
 import com.kryptnostic.kodex.v1.crypto.keys.Kodex;
-import com.kryptnostic.kodex.v1.crypto.keys.KodexMarshaller;
 import com.kryptnostic.kodex.v1.crypto.keys.Kodex.CorruptKodexException;
 import com.kryptnostic.kodex.v1.crypto.keys.Kodex.SealedKodexException;
+import com.kryptnostic.kodex.v1.crypto.keys.KodexMarshaller;
 import com.kryptnostic.kodex.v1.exceptions.types.KodexException;
 import com.kryptnostic.kodex.v1.exceptions.types.SecurityConfigurationException;
 import com.kryptnostic.kodex.v1.serialization.jackson.KodexObjectMapperFactory;
@@ -47,7 +47,7 @@ import com.kryptnostic.storage.v1.models.request.QueryHasherPairRequest;
 
 public class KodexTests {
     private static KeyPair                   pair;
-    private static KodexMarshaller<UserKey>  marshaller;
+    private static KodexMarshaller<UUID>  marshaller;
     private static PrivateKey                privateKey = new PrivateKey( 128, 64 );
     private static PublicKey                 publicKey  = new PublicKey( privateKey );
     private static EncryptedSearchPrivateKey searchKey;
@@ -57,7 +57,7 @@ public class KodexTests {
     public static void generateKeys() throws NoSuchAlgorithmException, SingularMatrixException {
         pair = Keys.generateRsaKeyPair( 1024 );
         searchKey = new EncryptedSearchPrivateKey( 8 );
-        marshaller = new JacksonKodexMarshaller<UserKey>( UserKey.class );
+        marshaller = new JacksonKodexMarshaller<UUID>( UUID.class );
         globalHash = SimplePolynomialFunctions.denseRandomMultivariateQuadratic( 128, 64 );
     }
 
@@ -73,7 +73,7 @@ public class KodexTests {
         expected.unseal( pair.getPublic(), pair.getPrivate() );
         Assert.assertTrue( !expected.isSealed() );
 
-        expected.setKey( "test", marshaller, new UserKey( "kryptnostic", "tester" ) );
+        expected.setKey( "test", marshaller, UUID.randomUUID() );
         expected.seal();
 
         Assert.assertTrue( expected.isSealed() );
