@@ -1,5 +1,7 @@
 package com.kryptnostic.directory.v1.model;
 
+import java.util.UUID;
+
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -24,7 +26,7 @@ public final class DeveloperRegistration extends DeveloperRegistrationRequest {
     @JsonCreator
     public DeveloperRegistration(
             @JsonProperty( Names.REALM_FIELD ) String realm,
-            @JsonProperty( Names.NAME_FIELD ) String username,
+            @JsonProperty( Names.USERNAME_FIELD ) String username,
             @JsonProperty( Names.CERTIFICATE_PROPERTY ) byte[] certificate,
             @JsonProperty( Names.EMAIL_FIELD ) String email,
             @JsonProperty( Names.GIVEN_NAME_FIELD ) String givenName,
@@ -65,29 +67,18 @@ public final class DeveloperRegistration extends DeveloperRegistrationRequest {
     }
 
     private DeveloperRegistration( RegistrationBuilder builder ) {
-        super(
-                builder.realm,
-                builder.username,
-                builder.certificate,
-                builder.email,
-                builder.givenName,
-                Optional.fromNullable( builder.familyName ),
-                Optional.fromNullable( builder.organization ),
-                Optional.fromNullable( builder.address ),
-                Optional.fromNullable( builder.state ),
-                Optional.fromNullable( builder.country ),
-                Optional.fromNullable( builder.zipCode ),
-                Optional.fromNullable( builder.organizationSize ),
-                Optional.fromNullable( builder.primaryUseCase ),
-                Optional.fromNullable( builder.businessType ),
-                Optional.fromNullable( builder.expectedNumberOfUsers ),
-                Optional.fromNullable( builder.tier ),
-                Optional.fromNullable( builder.reason ) );
-
+        super( builder.realm, builder.username, builder.certificate, builder.email, builder.givenName, Optional
+                .fromNullable( builder.familyName ), Optional.fromNullable( builder.organization ), Optional
+                .fromNullable( builder.address ), Optional.fromNullable( builder.state ), Optional
+                .fromNullable( builder.country ), Optional.fromNullable( builder.zipCode ), Optional
+                .fromNullable( builder.organizationSize ), Optional.fromNullable( builder.primaryUseCase ), Optional
+                .fromNullable( builder.businessType ), Optional.fromNullable( builder.expectedNumberOfUsers ), Optional
+                .fromNullable( builder.tier ), Optional.fromNullable( builder.reason ) );
         this.token = builder.token;
         this.status = builder.status;
     }
 
+    // TOOD: Remove this. RequestStatus is setup to be serialized correctly as int via Jackson annotations.
     /**
      * Gets the integer representation of the status for lookup.
      *
@@ -142,6 +133,7 @@ public final class DeveloperRegistration extends DeveloperRegistrationRequest {
     }
 
     public static class RegistrationBuilder {
+        private UUID             registrationId;
         private String           realm;
         private String           username;
         private byte[]           certificate;
@@ -181,6 +173,11 @@ public final class DeveloperRegistration extends DeveloperRegistrationRequest {
             this.expectedNumberOfUsers = request.getExpectedNumberOfUsers().orNull();
             this.tier = request.getTier().orNull();
             this.reason = request.getReason().orNull();
+        }
+
+        public RegistrationBuilder withRegistrationId( UUID registrationId ) {
+            this.registrationId = registrationId;
+            return this;
         }
 
         public RegistrationBuilder withStatus( RequestStatus status ) {

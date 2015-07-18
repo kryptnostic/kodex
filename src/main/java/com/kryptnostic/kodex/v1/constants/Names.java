@@ -16,7 +16,7 @@ public final class Names {
     public static final String DOCUMENT_FIELD                = "document";
     public static final String DOCUMENT_KEY_FIELD            = "documentKey";
     public static final String EMAIL_FIELD                   = "email";
-    public static final String NAME_FIELD                    = "name";
+    public static final String USERNAME_FIELD                = "name";
     public static final String GIVEN_NAME_FIELD              = "givenName";
     public static final String FAMILY_NAME_FIELD             = "familyName";
     public static final String METADATA_FIELD                = "metadata";
@@ -70,4 +70,6 @@ public final class Names {
     public static final String CHILD_OBJECT_COUNT_FIELD      = "childObjectCount";
     public static final String RESET_TOKEN_FIELD             = "resetToken";
     public static final String REGISTRAR_USER_SUFFIX         = "_registrar";
+    public static final String CONFIRMATION_FIELD            = "confirmationEmailNeeded";
+    public static final String NAME_FIELD                    = "name";
 }

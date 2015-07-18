@@ -10,10 +10,13 @@ import com.kryptnostic.directory.v1.exception.ReservationTakenException;
 import com.kryptnostic.directory.v1.model.DeveloperRegistration;
 import com.kryptnostic.directory.v1.model.request.DeveloperRegistrationRequest;
 import com.kryptnostic.kodex.v1.exceptions.types.BadRequestException;
+import com.kryptnostic.registration.v1.models.UserRegistration;
+import com.kryptnostic.registration.v1.models.UserRegistrationRequest;
 
 public interface RegistrationApi {
-    public static final String CONTROLLER = "/registration";
-    public static final String DEVELOPERS = "/developers";
+    String CONTROLLER = "/registration";
+    String DEVELOPERS = "/developers";
+    String USER       = "/user";
 
     /**
      * Register a developer for the Kryptnostic platform.
@@ -28,5 +31,14 @@ public interface RegistrationApi {
     @POST( DEVELOPERS )
     DeveloperRegistration register( @Body DeveloperRegistrationRequest request ) throws ReservationTakenException,
             DeveloperAlreadyExistsException, InvalidEmailException, MailException, BadRequestException;
+
+    /**
+     * User registration information.
+     * 
+     * @param request
+     * @return
+     */
+    @POST( USER )
+    UserRegistration register( @Body UserRegistrationRequest request );
 
 }

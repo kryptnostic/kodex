@@ -8,6 +8,7 @@ import retrofit.http.GET;
 import retrofit.http.POST;
 import retrofit.http.Path;
 
+import com.google.common.base.Optional;
 import com.kryptnostic.directory.v1.exception.ActiveReservationException;
 import com.kryptnostic.directory.v1.exception.AddUserException;
 import com.kryptnostic.directory.v1.exception.MailException;
@@ -32,13 +33,20 @@ import com.kryptnostic.kodex.v1.exceptions.types.ResourceNotFoundException;
  *
  */
 public interface UserDirectoryApi {
-    public static final String ID           = "id";
-    public static final String CONTROLLER   = "/directory";
-    public static final String USERS        = "/users";
-    public static final String RESERVATIONS = "/reservations";
-    public static final String RESET     = "/reset";
-    public static final String ID_PATH      = "/{" + ID + "}";
-    public static final String ID_WITH_DOT  = "/{" + ID + ":.+}";
+    public static final String CONTROLLER    = "/directory";
+    public static final String ID            = "id";
+    public static final String EMAIL         = "email";
+    public static final String REALM         = "realm";
+    public static final String USERNAME      = "username";
+    public static final String USERS         = "/users";
+    public static final String RESERVATIONS  = "/reservations";
+    public static final String RESET         = "/reset";
+    public static final String ID_PATH       = "/{" + ID + "}";
+    public static final String ID_WITH_DOT   = "/{" + ID + ":.+}";
+    public static final String REALM_PATH    = "/{" + REALM + "}";
+    public static final String USERNAME_PATH = "/{" + USERNAME + "}";
+    public static final String EMAIL_PATH    = "/" + EMAIL + "/{" + EMAIL + "}"; //+EMAIL needed to disambiguate from get user
+    public static final String EMAIL_PATH_WITH_DOT    = "/" + EMAIL + "/{" + EMAIL + ":.+}";  
 
     /**
      * Reserve an account for a user with specified Realm and Username.
@@ -107,11 +115,11 @@ public interface UserDirectoryApi {
     /**
      * Get the account details for a given user.
      *
-     * @param userId String form of reserved {@link UUID}: {@code [ realm ].[ username ] }
+     * @param userId String form of reserved {@link UUID}
      * @return {@link UserResponse}
      */
     @GET( USERS + ID_PATH )
-    UserResponse getUser( @Path( ID ) String userId ); // developer
+    UserResponse getUser( @Path( ID ) UUID userId ); // developer
 
     /**
      * Delete a specific user, removing it from the active directory.
@@ -125,6 +133,7 @@ public interface UserDirectoryApi {
 
     /**
      * Reset a users password given a reset token
+     * 
      * @param userId
      * @param request
      * @return
@@ -134,6 +143,26 @@ public interface UserDirectoryApi {
      * @throws MailException
      */
     @POST( USERS + RESET + ID_PATH )
-    UserResponse resetPassword( @Path( ID ) String userId, @Body UpdateUserRequest request) throws UserUpdateException, ReservationTakenException,
-            BadRequestException, MailException;
+    UserResponse resetPassword( @Path( ID ) String userId, @Body UpdateUserRequest request )
+            throws UserUpdateException, ReservationTakenException, BadRequestException, MailException;
+
+    /**
+     * Allows resolving an e-mail to a UUID. This is an open API.
+     * 
+     * @param email
+     * @return
+     */
+    @GET( USERS + EMAIL_PATH )
+    Optional<UUID> resolve( @Path( EMAIL ) String email );
+
+    /**
+     * Deprecated API. Will be removed in next version.
+     * 
+     * @param realm The realm in which to look for the user.
+     * @param username The username to perform map to a UUID.
+     * @return The UUID for the user.
+     */
+    @Deprecated
+    @GET( USERS + REALM_PATH + USERNAME_PATH )
+    Optional<UUID> resolve( @Path( REALM ) String realm, @Path( USERNAME ) String username );
 }

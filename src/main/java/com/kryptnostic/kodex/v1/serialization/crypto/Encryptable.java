@@ -96,7 +96,7 @@ public class Encryptable<T> implements Serializable {
     private transient final String     className;
     @JsonProperty( Names.DATA_FIELD )
     protected final EncryptableBlock[] encryptedData;
-    @JsonProperty( Names.NAME_FIELD )
+    @JsonProperty( Names.USERNAME_FIELD )
     protected final BlockCiphertext    encryptedClassName;
     @JsonProperty( Names.KEY_FIELD )
     protected final String             cryptoServiceId;
@@ -234,7 +234,7 @@ public class Encryptable<T> implements Serializable {
     @JsonCreator
     public Encryptable(
             @JsonProperty( Names.DATA_FIELD ) EncryptableBlock[] ciphertext,
-            @JsonProperty( Names.NAME_FIELD ) BlockCiphertext className,
+            @JsonProperty( Names.USERNAME_FIELD ) BlockCiphertext className,
             @JsonProperty( Names.KEY_FIELD ) String cryptoServiceId,
             @JacksonInject CryptoServiceLoader loader ) throws SecurityConfigurationException,
             ClassNotFoundException,
@@ -403,7 +403,7 @@ public class Encryptable<T> implements Serializable {
      * @return Encrypted representation of target class for data payload. If the Encryptable is in a decrypted state,
      *         this returns null
      */
-    @JsonProperty( Names.NAME_FIELD )
+    @JsonProperty( Names.USERNAME_FIELD )
     public BlockCiphertext getEncryptedClassName() {
         return encryptedClassName;
     }

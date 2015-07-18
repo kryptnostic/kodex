@@ -26,7 +26,7 @@ public class EncryptableBlock implements Serializable {
             @JsonProperty( Names.VERIFY_FIELD ) byte[] verify,
             @JsonProperty( Names.INDEX_FIELD ) int index,
             @JsonProperty( Names.LAST_FIELD ) boolean isLast,
-            @JsonProperty( Names.NAME_FIELD ) BlockCiphertext encryptedClassName,
+            @JsonProperty( Names.USERNAME_FIELD ) BlockCiphertext encryptedClassName,
             @JsonProperty( Names.STRATEGY_FIELD ) ChunkingStrategy chunkingStrategy,
             @JsonProperty( Names.CREATED_TIME ) DateTime createdTime ) {
         this.block = block;
@@ -58,7 +58,7 @@ public class EncryptableBlock implements Serializable {
         return isLast;
     }
 
-    @JsonProperty( Names.NAME_FIELD )
+    @JsonProperty( Names.USERNAME_FIELD )
     public BlockCiphertext getEncryptedClassName() {
         return encryptedClassName;
     }

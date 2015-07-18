@@ -36,7 +36,7 @@ public class DeveloperRegistrationRequest {
     @JsonCreator
     public DeveloperRegistrationRequest(
             @JsonProperty( Names.REALM_FIELD ) String realm,
-            @JsonProperty( Names.NAME_FIELD ) String username,
+            @JsonProperty( Names.USERNAME_FIELD ) String username,
             @JsonProperty( Names.CERTIFICATE_PROPERTY ) byte[] certificate,
             @JsonProperty( Names.EMAIL_FIELD ) String email,
             @JsonProperty( Names.GIVEN_NAME_FIELD ) String givenName,
@@ -61,7 +61,7 @@ public class DeveloperRegistrationRequest {
         this.organization = organization;
         this.address = address;
         this.state = state;
-        this.zipCode = zipCode;
+       this.zipCode = zipCode;
         this.country = country;
         this.organizationSize = organizationSize;
         this.primaryUseCase = primaryUseCase;
@@ -76,7 +76,7 @@ public class DeveloperRegistrationRequest {
         return realm;
     }
 
-    @JsonProperty( Names.NAME_FIELD )
+    @JsonProperty( Names.USERNAME_FIELD )
     public String getUsername() {
         return username;
     }

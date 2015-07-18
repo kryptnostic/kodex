@@ -61,7 +61,7 @@ public class EncryptableSerializer extends JsonSerializer<Encryptable> {
             SecurityConfigurationException, ClassNotFoundException {
         Encryptable<?> encryptedValue = value.encrypt( loader );
         jgen.writeObjectField( Names.DATA_FIELD, encryptedValue.getEncryptedData() );
-        jgen.writeObjectField( Names.NAME_FIELD, encryptedValue.getEncryptedClassName() );
+        jgen.writeObjectField( Names.USERNAME_FIELD, encryptedValue.getEncryptedClassName() );
         jgen.writeObjectField( Names.KEY_FIELD, encryptedValue.getCryptoServiceId() );
     }
 }

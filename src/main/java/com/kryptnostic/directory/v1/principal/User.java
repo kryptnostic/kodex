@@ -18,7 +18,9 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
     include = JsonTypeInfo.As.PROPERTY,
     property = "@class" )
 public interface User extends Principal {
-    UUID getId();
+    String getName();
+
+    String getRealm();
 
     @Nullable
     String getGivenName();
@@ -35,7 +37,7 @@ public interface User extends Principal {
     @Nullable
     byte[] getCertificate();
 
-    Set<GroupKey> getGroups();
+    Set<UUID> getGroups();
 
     Map<String, String> getAttributes();
 

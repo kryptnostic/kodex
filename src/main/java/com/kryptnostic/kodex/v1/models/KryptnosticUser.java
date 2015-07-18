@@ -7,9 +7,9 @@ import static com.kryptnostic.kodex.v1.constants.Names.FAMILY_NAME_FIELD;
 import static com.kryptnostic.kodex.v1.constants.Names.GIVEN_NAME_FIELD;
 import static com.kryptnostic.kodex.v1.constants.Names.GROUPS_PROPERTY;
 import static com.kryptnostic.kodex.v1.constants.Names.ID_FIELD;
-import static com.kryptnostic.kodex.v1.constants.Names.NAME_FIELD;
 import static com.kryptnostic.kodex.v1.constants.Names.PASSWORD_FIELD;
 import static com.kryptnostic.kodex.v1.constants.Names.REALM_FIELD;
+import static com.kryptnostic.kodex.v1.constants.Names.USERNAME_FIELD;
 
 import java.io.Serializable;
 import java.util.Arrays;
@@ -23,7 +23,6 @@ import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import com.kryptnostic.directory.v1.principal.GroupKey;
 import com.kryptnostic.directory.v1.principal.User;
 import com.kryptnostic.kodex.v1.crypto.ciphers.BlockCiphertext;
 
@@ -43,20 +42,20 @@ public final class KryptnosticUser implements User, Serializable {
     private final String              familyName;
     private final String              password;
     private final byte[]              certificate;
-    private final Set<GroupKey>       groups           = Sets.newConcurrentHashSet();
+    private final Set<UUID>       groups           = Sets.newConcurrentHashSet();
     private final Map<String, String> attributes       = Maps.newConcurrentMap();
 
     @JsonCreator
     public KryptnosticUser(
             @JsonProperty( ID_FIELD ) UUID id,
             @JsonProperty( REALM_FIELD ) String realm,
-            @JsonProperty( NAME_FIELD ) String username,
+            @JsonProperty( USERNAME_FIELD ) String username,
             @JsonProperty( GIVEN_NAME_FIELD ) String givenName,
             @JsonProperty( FAMILY_NAME_FIELD ) String familyName,
             @JsonProperty( EMAIL_FIELD ) String email,
             @JsonProperty( PASSWORD_FIELD ) String password,
             @JsonProperty( CERTIFICATE_PROPERTY ) Optional<byte[]> certificate,
-            @JsonProperty( GROUPS_PROPERTY ) Set<GroupKey> groups,
+            @JsonProperty( GROUPS_PROPERTY ) Set<UUID> groups,
             @JsonProperty( ATTRIBUTES_FIELD ) Map<String, String> attributes ) {
         this.id = id;
         this.realm = realm;
@@ -126,12 +125,12 @@ public final class KryptnosticUser implements User, Serializable {
 
     @Override
     @JsonProperty( GROUPS_PROPERTY )
-    public Set<GroupKey> getGroups() {
+    public Set<UUID> getGroups() {
         return groups;
     }
 
     @Override
-    @JsonProperty( NAME_FIELD )
+    @JsonProperty( USERNAME_FIELD )
     public String getName() {
         return this.username;
     }
@@ -149,7 +148,7 @@ public final class KryptnosticUser implements User, Serializable {
 
     @Override
     public String toString() {
-        return "HeraclesUser [password=" + password + ", certificate=" + Arrays.toString( certificate ) + ", groups="
+        return "HeraclesUser [id="+id+",username=" + username + ",password=" + password + ", certificate=" + Arrays.toString( certificate ) + ", groups="
                 + groups + ", attributes=" + attributes + "]";
     }
 
@@ -163,7 +162,7 @@ public final class KryptnosticUser implements User, Serializable {
         public String              password;
         public BlockCiphertext     encryptedSalt = null;
         public byte[]              certificate;
-        public Set<GroupKey>       groups;
+        public Set<UUID>       groups;
         public Map<String, String> attributes;
 
         // TODO add created and update dates
@@ -235,13 +234,13 @@ public final class KryptnosticUser implements User, Serializable {
             return this;
         }
 
-        public HeraclesUserBuilder withGroups( Set<GroupKey> groups ) {
+        public HeraclesUserBuilder withGroups( Set<UUID> groups ) {
             this.groups.addAll( groups );
             return this;
         }
 
-        private void addGroup( String groupName ) {
-            this.groups.add( new GroupKey( this.realm, groupName ) );
+        private void addGroup( UUID groupId ) {
+            this.groups.add( groupId );
         }
 
         public HeraclesUserBuilder withAttributes( Map<String, String> attributes ) {

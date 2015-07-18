@@ -107,7 +107,7 @@ public class ObjectMetadata {
             @JsonProperty( Names.VERSION_FIELD ) int version,
             @JsonProperty( Names.TOTAL_FIELD ) int numBlocks,
             @JsonProperty( Names.CHILD_OBJECT_COUNT_FIELD ) int childObjectCount,
-            @JsonProperty( Names.NAME_FIELD ) BlockCiphertext encryptedClassName,
+            @JsonProperty( Names.USERNAME_FIELD ) BlockCiphertext encryptedClassName,
             @JsonProperty( Names.STRATEGY_FIELD ) ChunkingStrategy chunkingStrategy,
             @JsonProperty( Names.OWNERS_FIELD ) Set<UUID> owners,
             @JsonProperty( Names.READERS_FIELD ) Set<UUID> readers,
@@ -163,7 +163,7 @@ public class ObjectMetadata {
                 && CollectionUtils.isEqualCollection( readers, other.readers );
     }
 
-    @JsonProperty( Names.NAME_FIELD )
+    @JsonProperty( Names.USERNAME_FIELD )
     public BlockCiphertext getEncryptedClassName() {
         return encryptedClassName;
     }

@@ -34,6 +34,6 @@ public class AuthenticationRequest {
 
     @Override
     public String toString() {
-        return "AuthenticationRequest [password=*******" + ", uuid=" + id.toString() + "]";
+        return "AuthenticationRequest [password=*******" + ", uuid=" + (id == null ? "null" : id.toString() ) + "]";
     }
 }
