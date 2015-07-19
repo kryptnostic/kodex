@@ -40,6 +40,7 @@ public class ObjectMetadata {
     protected final DateTime         createdTime;
 
     protected final String           type;
+    protected final int              size;
 
 
     /**
@@ -67,7 +68,7 @@ public class ObjectMetadata {
             int numBlocks,
             BlockCiphertext encryptedClassName,
             ChunkingStrategy chunkingStrategy ) {
-        this( id, version, numBlocks, 0, encryptedClassName, chunkingStrategy, Sets.<UserKey> newHashSet(), Sets
+        this( id, version, numBlocks, 0, 0, encryptedClassName, chunkingStrategy, Sets.<UserKey> newHashSet(), Sets
                 .<UserKey> newHashSet(), Sets.<UserKey> newHashSet(), DEFAULT_TYPE );
     }
 
@@ -76,6 +77,7 @@ public class ObjectMetadata {
             String id,
             int version,
             int numBlocks,
+            int size,
             int childObjectCount,
             BlockCiphertext encryptedClassName,
             ChunkingStrategy chunkingStrategy,
@@ -83,7 +85,7 @@ public class ObjectMetadata {
             Set<UserKey> readers,
             Set<UserKey> writers,
             String type ) {
-        this( id, version, numBlocks, childObjectCount, encryptedClassName, chunkingStrategy, owners,
+        this( id, version, numBlocks, size, childObjectCount, encryptedClassName, chunkingStrategy, owners,
                 readers, writers, type, DateTime.now() );
     }
 
@@ -91,6 +93,7 @@ public class ObjectMetadata {
         return new ObjectMetadata(meta.getId(),
                 meta.getVersion(),
                 meta.getNumBlocks(),
+                meta.getSize(),
                 meta.getChildObjectCount() + 1,
                 meta.getEncryptedClassName(),
                 meta.getChunkingStrategy(),
@@ -106,6 +109,7 @@ public class ObjectMetadata {
             @JsonProperty( Names.ID_FIELD ) String id,
             @JsonProperty( Names.VERSION_FIELD ) int version,
             @JsonProperty( Names.TOTAL_FIELD ) int numBlocks,
+            @JsonProperty( Names.SIZE_FIELD ) int size,
             @JsonProperty( Names.CHILD_OBJECT_COUNT_FIELD ) int childObjectCount,
             @JsonProperty( Names.NAME_FIELD ) BlockCiphertext encryptedClassName,
             @JsonProperty( Names.STRATEGY_FIELD ) ChunkingStrategy chunkingStrategy,
@@ -128,6 +132,7 @@ public class ObjectMetadata {
         this.type = type.toLowerCase();
 
         this.createdTime = createdTime;
+        this.size = size;
     }
 
     /**
@@ -201,5 +206,10 @@ public class ObjectMetadata {
     @JsonProperty( Names.CHILD_OBJECT_COUNT_FIELD )
     public int getChildObjectCount() {
         return childObjectCount;
+    }
+    
+    @JsonProperty( Names.SIZE_FIELD )
+    public int getSize() {
+        return size;
     }
 }

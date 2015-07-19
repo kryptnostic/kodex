@@ -84,12 +84,10 @@ dependencies {
     compile "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:${jackson_version}"
     compile "com.fasterxml.jackson.datatype:jackson-datatype-joda:${jackson_version}"
      
-    
     /*
      * APACHE COMMONS
      * Logging, StringUtils, RandomStringUtils, IOUtils, and more
      */
-
     compile 'commons-io:commons-io:2.4'
     compile 'org.apache.commons:commons-lang3:3.1'
     compile 'commons-logging:commons-logging:1.1.3'
