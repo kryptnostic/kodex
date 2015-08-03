@@ -1,5 +1,7 @@
 package com.kryptnostic.directory.v1.http;
 
+import java.util.UUID;
+
 import retrofit.http.Body;
 import retrofit.http.POST;
 
@@ -10,7 +12,6 @@ import com.kryptnostic.directory.v1.exception.ReservationTakenException;
 import com.kryptnostic.directory.v1.model.DeveloperRegistration;
 import com.kryptnostic.directory.v1.model.request.DeveloperRegistrationRequest;
 import com.kryptnostic.kodex.v1.exceptions.types.BadRequestException;
-import com.kryptnostic.registration.v1.models.UserRegistration;
 import com.kryptnostic.registration.v1.models.UserRegistrationRequest;
 
 public interface RegistrationApi {
@@ -19,7 +20,8 @@ public interface RegistrationApi {
     String USER       = "/user";
 
     /**
-     * Register a developer for the Kryptnostic platform.
+     * Register a developer for the Kryptnostic platform. Developers accounts are subject to verification and approval
+     * by the Kryptnostic team.
      * 
      * @param request {@link DeveloperRegistrationRequest}
      * @return {@link DeveloperRegistration}
@@ -33,12 +35,12 @@ public interface RegistrationApi {
             DeveloperAlreadyExistsException, InvalidEmailException, MailException, BadRequestException;
 
     /**
-     * User registration information.
+     * Registers a normal user using the domain of their e-mail as their domain.
      * 
      * @param request
      * @return
      */
     @POST( USER )
-    UserRegistration register( @Body UserRegistrationRequest request );
+    UUID register( @Body UserRegistrationRequest request );
 
 }

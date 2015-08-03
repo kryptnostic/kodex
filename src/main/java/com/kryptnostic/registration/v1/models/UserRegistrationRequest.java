@@ -5,28 +5,28 @@ import com.google.common.base.Optional;
 import com.kryptnostic.kodex.v1.constants.Names;
 
 public class UserRegistrationRequest {
-    private final String           username;
+    private final String           password;
     private final String           email;
     private final Optional<String> givenName;
     private final Optional<String> familyName;
     private final boolean          confirmationEmailNeeded;
 
     public UserRegistrationRequest(
-            @JsonProperty( Names.USERNAME_FIELD ) final String username,
             @JsonProperty( Names.EMAIL_FIELD ) final String email,
+            @JsonProperty( Names.PASSWORD_FIELD ) final String password,
             @JsonProperty( Names.CONFIRMATION_FIELD ) final Optional<Boolean> confirmationEmailNeeded,
             @JsonProperty( Names.GIVEN_NAME_FIELD ) final Optional<String> givenName,
             @JsonProperty( Names.FAMILY_NAME_FIELD ) final Optional<String> familyName ) {
-        this.username = username;
+        this.password = password;
         this.email = email;
         this.confirmationEmailNeeded = confirmationEmailNeeded.or( false );
         this.givenName = givenName;
         this.familyName = familyName;
     }
 
-    @JsonProperty( Names.USERNAME_FIELD )
-    public String getUsername() {
-        return username;
+    @JsonProperty( Names.PASSWORD_FIELD )
+    public String getPassword() {
+        return password;
     }
 
     @JsonProperty( Names.EMAIL_FIELD )

@@ -9,6 +9,7 @@ import static com.kryptnostic.kodex.v1.constants.Names.GROUPS_PROPERTY;
 import static com.kryptnostic.kodex.v1.constants.Names.ID_FIELD;
 import static com.kryptnostic.kodex.v1.constants.Names.PASSWORD_FIELD;
 import static com.kryptnostic.kodex.v1.constants.Names.REALM_FIELD;
+import static com.kryptnostic.kodex.v1.constants.Names.ROLES_FIELD;
 import static com.kryptnostic.kodex.v1.constants.Names.USERNAME_FIELD;
 
 import java.io.Serializable;
@@ -42,7 +43,8 @@ public final class KryptnosticUser implements User, Serializable {
     private final String              familyName;
     private final String              password;
     private final byte[]              certificate;
-    private final Set<UUID>       groups           = Sets.newConcurrentHashSet();
+    private final Set<UUID>           groups           = Sets.newConcurrentHashSet();
+    private final Set<String>         roles            = Sets.newHashSet();
     private final Map<String, String> attributes       = Maps.newConcurrentMap();
 
     @JsonCreator
@@ -56,6 +58,7 @@ public final class KryptnosticUser implements User, Serializable {
             @JsonProperty( PASSWORD_FIELD ) String password,
             @JsonProperty( CERTIFICATE_PROPERTY ) Optional<byte[]> certificate,
             @JsonProperty( GROUPS_PROPERTY ) Set<UUID> groups,
+            @JsonProperty( ROLES_FIELD ) Set<String> roles,
             @JsonProperty( ATTRIBUTES_FIELD ) Map<String, String> attributes ) {
         this.id = id;
         this.realm = realm;
@@ -147,9 +150,14 @@ public final class KryptnosticUser implements User, Serializable {
     }
 
     @Override
+    public Set<String> getRoles() {
+        return roles;
+    }
+
+    @Override
     public String toString() {
-        return "HeraclesUser [id="+id+",username=" + username + ",password=" + password + ", certificate=" + Arrays.toString( certificate ) + ", groups="
-                + groups + ", attributes=" + attributes + "]";
+        return "HeraclesUser [id=" + id + ",username=" + username + ",password=" + password + ", certificate="
+                + Arrays.toString( certificate ) + ", groups=" + groups + ", attributes=" + attributes + "]";
     }
 
     public static class HeraclesUserBuilder {
@@ -162,7 +170,8 @@ public final class KryptnosticUser implements User, Serializable {
         public String              password;
         public BlockCiphertext     encryptedSalt = null;
         public byte[]              certificate;
-        public Set<UUID>       groups;
+        public Set<UUID>           groups;
+        public Set<String>         roles;
         public Map<String, String> attributes;
 
         // TODO add created and update dates
@@ -172,6 +181,10 @@ public final class KryptnosticUser implements User, Serializable {
             this.username = username;
             this.groups = Sets.newConcurrentHashSet();
             this.attributes = Maps.newConcurrentMap();
+        }
+        
+        public HeraclesUserBuilder( String email ) {
+            this.email = email;
         }
 
         public HeraclesUserBuilder withPassword( String password ) {
@@ -215,32 +228,33 @@ public final class KryptnosticUser implements User, Serializable {
         }
 
         public HeraclesUserBuilder asUser() {
-            addGroup( SecurityGroups.USER );
+            addRoles( SecurityRoles.USER );
             return this;
         }
 
         public HeraclesUserBuilder asDeveloper() {
-            addGroup( SecurityGroups.DEVELOPER );
+            addRoles( SecurityRoles.DEVELOPER );
             return this;
         }
 
         public HeraclesUserBuilder asAdmin() {
-            addGroup( SecurityGroups.ADMIN );
+            addRoles( SecurityRoles.ADMIN );
             return this;
         }
 
         public HeraclesUserBuilder asRegistrar() {
-            addGroup( SecurityGroups.REGISTRAR );
+            addRoles( SecurityRoles.REGISTRAR );
             return this;
         }
 
         public HeraclesUserBuilder withGroups( Set<UUID> groups ) {
+            Preconditions.checkNotNull( groups, "Groups cannot be null." );
             this.groups.addAll( groups );
             return this;
         }
 
-        private void addGroup( UUID groupId ) {
-            this.groups.add( groupId );
+        private void addRoles( String role ) {
+            this.roles.add( role );
         }
 
         public HeraclesUserBuilder withAttributes( Map<String, String> attributes ) {

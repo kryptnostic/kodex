@@ -2,6 +2,8 @@ package com.kryptnostic.directory.v1.model;
 
 import java.util.UUID;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -20,13 +22,13 @@ import com.kryptnostic.kodex.v1.constants.Names;
  *
  */
 public final class DeveloperRegistration extends DeveloperRegistrationRequest {
-    private final ReservationToken token;
-    private final RequestStatus    status;
+    private final RequestStatus status;
 
     @JsonCreator
     public DeveloperRegistration(
             @JsonProperty( Names.REALM_FIELD ) String realm,
             @JsonProperty( Names.USERNAME_FIELD ) String username,
+            @JsonProperty( Names.PASSWORD_FIELD ) String password,
             @JsonProperty( Names.CERTIFICATE_PROPERTY ) byte[] certificate,
             @JsonProperty( Names.EMAIL_FIELD ) String email,
             @JsonProperty( Names.GIVEN_NAME_FIELD ) String givenName,
@@ -42,11 +44,11 @@ public final class DeveloperRegistration extends DeveloperRegistrationRequest {
             @JsonProperty( Names.EXPECTED_NUMBER_OF_USER_FIELD ) Optional<Integer> expectedNumberOfUsers,
             @JsonProperty( Names.TIER_FIELD ) Optional<Integer> tier,
             @JsonProperty( Names.REASON_FIELD ) Optional<String> reason,
-            @JsonProperty( Names.TOKEN_PROPERTY ) ReservationToken token,
             @JsonProperty( Names.STATUS_FIELD ) RequestStatus status ) {
         super(
                 realm,
                 username,
+                Optional.of( password ),
                 certificate,
                 email,
                 givenName,
@@ -62,19 +64,30 @@ public final class DeveloperRegistration extends DeveloperRegistrationRequest {
                 expectedNumberOfUsers,
                 tier,
                 reason );
-        this.token = token;
+
         this.status = status;
     }
 
     private DeveloperRegistration( RegistrationBuilder builder ) {
-        super( builder.realm, builder.username, builder.certificate, builder.email, builder.givenName, Optional
-                .fromNullable( builder.familyName ), Optional.fromNullable( builder.organization ), Optional
-                .fromNullable( builder.address ), Optional.fromNullable( builder.state ), Optional
-                .fromNullable( builder.country ), Optional.fromNullable( builder.zipCode ), Optional
-                .fromNullable( builder.organizationSize ), Optional.fromNullable( builder.primaryUseCase ), Optional
-                .fromNullable( builder.businessType ), Optional.fromNullable( builder.expectedNumberOfUsers ), Optional
-                .fromNullable( builder.tier ), Optional.fromNullable( builder.reason ) );
-        this.token = builder.token;
+        super(
+                builder.realm,
+                builder.username,
+                Optional.of( builder.password ),
+                builder.certificate,
+                builder.email,
+                builder.givenName,
+                Optional.fromNullable( builder.familyName ),
+                Optional.fromNullable( builder.organization ),
+                Optional.fromNullable( builder.address ),
+                Optional.fromNullable( builder.state ),
+                Optional.fromNullable( builder.country ),
+                Optional.fromNullable( builder.zipCode ),
+                Optional.fromNullable( builder.organizationSize ),
+                Optional.fromNullable( builder.primaryUseCase ),
+                Optional.fromNullable( builder.businessType ),
+                Optional.fromNullable( builder.expectedNumberOfUsers ),
+                Optional.fromNullable( builder.tier ),
+                Optional.fromNullable( builder.reason ) );
         this.status = builder.status;
     }
 
@@ -89,11 +102,6 @@ public final class DeveloperRegistration extends DeveloperRegistrationRequest {
         return status.getValue();
     }
 
-    @JsonProperty( Names.TOKEN_PROPERTY )
-    public ReservationToken getToken() {
-        return token;
-    }
-
     @JsonProperty( Names.STATUS_FIELD )
     public RequestStatus getStatus() {
         return status;
@@ -104,8 +112,7 @@ public final class DeveloperRegistration extends DeveloperRegistrationRequest {
         if ( this.status.equals( RequestStatus.APPROVED ) ) {
             throw new AlreadyApprovedException();
         }
-        return new DeveloperRegistration.RegistrationBuilder( this ).withToken( this.getToken() )
-                .withStatus( RequestStatus.APPROVED ).build();
+        return new DeveloperRegistration.RegistrationBuilder( this ).withStatus( RequestStatus.APPROVED ).build();
     }
 
     @JsonIgnore
@@ -116,8 +123,7 @@ public final class DeveloperRegistration extends DeveloperRegistrationRequest {
         if ( this.status.equals( RequestStatus.DENIED ) ) {
             throw new AlreadyDeniedException();
         }
-        return new DeveloperRegistration.RegistrationBuilder( this ).withToken( this.getToken() )
-                .withStatus( RequestStatus.DENIED ).build();
+        return new DeveloperRegistration.RegistrationBuilder( this ).withStatus( RequestStatus.DENIED ).build();
     }
 
     @JsonIgnore
@@ -128,32 +134,31 @@ public final class DeveloperRegistration extends DeveloperRegistrationRequest {
         if ( this.status.equals( RequestStatus.DENIED ) ) {
             throw new AlreadyOpenException();
         }
-        return new DeveloperRegistration.RegistrationBuilder( this ).withToken( this.getToken() )
-                .withStatus( RequestStatus.OPEN ).build();
+        return new DeveloperRegistration.RegistrationBuilder( this ).withStatus( RequestStatus.OPEN ).build();
     }
 
     public static class RegistrationBuilder {
-        private UUID             registrationId;
-        private String           realm;
-        private String           username;
-        private byte[]           certificate;
-        private String           email;
-        private String           givenName;
-        private RequestStatus    status;
+        private UUID          registrationId;
+        private String        realm;
+        private String        username;
+        private byte[]        certificate;
+        private String        email;
+        private String        givenName;
+        private RequestStatus status;
 
-        private String           familyName;
-        private String           organization;
-        private String           address;
-        private String           state;
-        private String           country;
-        private Integer          zipCode;
-        private Integer          organizationSize;
-        private String           primaryUseCase;
-        private String           businessType;
-        private Integer          expectedNumberOfUsers;
-        private Integer          tier;
-        private String           reason;
-        private ReservationToken token;
+        private String        familyName;
+        private String        organization;
+        private String        address;
+        private String        state;
+        private String        country;
+        private Integer       zipCode;
+        private Integer       organizationSize;
+        private String        primaryUseCase;
+        private String        businessType;
+        private Integer       expectedNumberOfUsers;
+        private Integer       tier;
+        private String        reason;
+        private String        password;
 
         public RegistrationBuilder( DeveloperRegistrationRequest request ) {
             this.realm = request.getRealm();
@@ -173,7 +178,8 @@ public final class DeveloperRegistration extends DeveloperRegistrationRequest {
             this.expectedNumberOfUsers = request.getExpectedNumberOfUsers().orNull();
             this.tier = request.getTier().orNull();
             this.reason = request.getReason().orNull();
-        }
+            this.password = request.getPassword();
+       }
 
         public RegistrationBuilder withRegistrationId( UUID registrationId ) {
             this.registrationId = registrationId;
@@ -185,19 +191,14 @@ public final class DeveloperRegistration extends DeveloperRegistrationRequest {
             return this;
         }
 
-        public RegistrationBuilder withToken( ReservationToken token ) {
-            this.token = token;
-            return this;
-        }
-
         public DeveloperRegistration build() {
-            Preconditions.checkNotNull( realm );
-            Preconditions.checkNotNull( username );
             Preconditions.checkNotNull( certificate );
-            Preconditions.checkNotNull( email );
-            Preconditions.checkNotNull( givenName );
             Preconditions.checkNotNull( status );
-            Preconditions.checkNotNull( token );
+            Preconditions.checkArgument( StringUtils.isNotBlank( realm ) );
+            Preconditions.checkArgument( StringUtils.isNotBlank( username ) );
+            Preconditions.checkArgument( StringUtils.isNotBlank( email ) );
+            Preconditions.checkArgument( StringUtils.isNotBlank( givenName ) );
+            Preconditions.checkArgument( StringUtils.isNotBlank( password ) );
             return new DeveloperRegistration( this );
         }
     }
@@ -207,7 +208,7 @@ public final class DeveloperRegistration extends DeveloperRegistrationRequest {
         final int prime = 31;
         int result = super.hashCode();
         result = prime * result + ( ( status == null ) ? 0 : status.hashCode() );
-        result = prime * result + ( ( token == null ) ? 0 : token.hashCode() );
+        result = prime * result + ( ( password == null ) ? 0 : password.hashCode() );
         return result;
     }
 
@@ -218,9 +219,9 @@ public final class DeveloperRegistration extends DeveloperRegistrationRequest {
         if ( getClass() != obj.getClass() ) return false;
         DeveloperRegistration other = (DeveloperRegistration) obj;
         if ( status != other.status ) return false;
-        if ( token == null ) {
-            if ( other.token != null ) return false;
-        } else if ( !token.equals( other.token ) ) return false;
+        if ( password == null ) {
+            if ( other.password != null ) return false;
+        } else if ( !password.equals( other.password ) ) return false;
         return true;
     }
 

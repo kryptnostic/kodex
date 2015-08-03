@@ -5,6 +5,7 @@ import java.util.Arrays;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Optional;
+import com.kryptnostic.directory.v1.model.ReservationToken;
 import com.kryptnostic.kodex.v1.constants.Names;
 
 /**
@@ -16,10 +17,10 @@ import com.kryptnostic.kodex.v1.constants.Names;
 public class DeveloperRegistrationRequest {
     private final String            realm;
     private final String            username;
+    protected final String          password;
     private final byte[]            certificate;
     private final String            email;
     private final String            givenName;
-
     private final Optional<String>  familyName;
     private final Optional<String>  organization;
     private final Optional<String>  address;
@@ -37,6 +38,7 @@ public class DeveloperRegistrationRequest {
     public DeveloperRegistrationRequest(
             @JsonProperty( Names.REALM_FIELD ) String realm,
             @JsonProperty( Names.USERNAME_FIELD ) String username,
+            @JsonProperty( Names.PASSWORD_FIELD ) Optional<String> password,
             @JsonProperty( Names.CERTIFICATE_PROPERTY ) byte[] certificate,
             @JsonProperty( Names.EMAIL_FIELD ) String email,
             @JsonProperty( Names.GIVEN_NAME_FIELD ) String givenName,
@@ -61,7 +63,7 @@ public class DeveloperRegistrationRequest {
         this.organization = organization;
         this.address = address;
         this.state = state;
-       this.zipCode = zipCode;
+        this.zipCode = zipCode;
         this.country = country;
         this.organizationSize = organizationSize;
         this.primaryUseCase = primaryUseCase;
@@ -69,6 +71,7 @@ public class DeveloperRegistrationRequest {
         this.expectedNumberOfUsers = expectedNumberOfUsers;
         this.tier = tier;
         this.reason = reason;
+        this.password = password.or( ReservationToken.getSecureToken().getValue() );
     }
 
     @JsonProperty( Names.REALM_FIELD )
@@ -79,6 +82,11 @@ public class DeveloperRegistrationRequest {
     @JsonProperty( Names.USERNAME_FIELD )
     public String getUsername() {
         return username;
+    }
+
+    @JsonProperty( Names.PASSWORD_FIELD )
+    public String getPassword() {
+        return password;
     }
 
     @JsonProperty( Names.CERTIFICATE_PROPERTY )

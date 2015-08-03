@@ -37,6 +37,8 @@ public interface User extends Principal {
     @Nullable
     byte[] getCertificate();
 
+    Set<String> getRoles();
+
     Set<UUID> getGroups();
 
     Map<String, String> getAttributes();
