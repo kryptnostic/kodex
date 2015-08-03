@@ -7,19 +7,16 @@ import com.kryptnostic.kodex.v1.constants.Names;
 
 public class ActivateUserRequest {
     private final ReservationToken reservationToken;
-    private final String           realm;
-    private final String           username;
+    private final String           email;
     private final String           password;
 
     @JsonCreator
     public ActivateUserRequest(
             @JsonProperty( Names.TOKEN_PROPERTY ) ReservationToken reservationToken,
-            @JsonProperty( Names.REALM_FIELD ) String realm,
-            @JsonProperty( Names.NAME_FIELD ) String username,
+            @JsonProperty( Names.EMAIL_FIELD ) String email,
             @JsonProperty( Names.PASSWORD_FIELD ) String password ) {
         this.reservationToken = reservationToken;
-        this.realm = realm;
-        this.username = username;
+        this.email = email;
         this.password = password;
     }
 
@@ -28,18 +25,14 @@ public class ActivateUserRequest {
         return reservationToken;
     }
 
-    @JsonProperty( Names.REALM_FIELD )
-    public String getRealm() {
-        return realm;
-    }
-
-    @JsonProperty( Names.NAME_FIELD )
-    public String getUsername() {
-        return username;
+    @JsonProperty( Names.EMAIL_FIELD )
+    public String getEmail() {
+        return email;
     }
 
     @JsonProperty( Names.PASSWORD_FIELD )
     public String getPassword() {
         return password;
     }
+
 }

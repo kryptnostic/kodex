@@ -1,9 +1,10 @@
 package com.kryptnostic.kodex.v1.client;
 
+import java.util.UUID;
+
 import com.kryptnostic.crypto.EncryptedSearchPrivateKey;
 import com.kryptnostic.crypto.PrivateKey;
 import com.kryptnostic.crypto.PublicKey;
-import com.kryptnostic.directory.v1.principal.UserKey;
 import com.kryptnostic.kodex.v1.crypto.ciphers.ICryptoService;
 import com.kryptnostic.kodex.v1.crypto.ciphers.RsaCompressingCryptoService;
 import com.kryptnostic.kodex.v1.crypto.keys.CryptoServiceLoader;
@@ -45,7 +46,7 @@ public interface KryptnosticConnection {
 
     java.security.PublicKey getRsaPublicKey();
 
-    UserKey getUserKey();
+    UUID getUserId();
 
     String getUrl();
 

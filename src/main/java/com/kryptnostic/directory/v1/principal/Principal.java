@@ -1,7 +1,7 @@
 package com.kryptnostic.directory.v1.principal;
 
+import java.util.UUID;
 
 public interface Principal {
-    String getName();
-    String getRealm();
+    UUID getId();
 }

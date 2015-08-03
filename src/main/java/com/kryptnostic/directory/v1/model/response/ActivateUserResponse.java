@@ -1,18 +1,19 @@
 package com.kryptnostic.directory.v1.model.response;
 
+import java.util.UUID;
+
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.kryptnostic.directory.v1.principal.UserKey;
 import com.kryptnostic.kodex.v1.constants.Names;
 
 public class ActivateUserResponse {
     private final String  password;
-    private final UserKey userKey;
+    private final UUID userKey;
 
     @JsonCreator
     public ActivateUserResponse(
             @JsonProperty( Names.PASSWORD_FIELD ) String password,
-            @JsonProperty( Names.USER_FIELD ) UserKey userKey ) {
+            @JsonProperty( Names.USER_FIELD ) UUID userKey ) {
         this.password = password;
         this.userKey = userKey;
     }
@@ -23,7 +24,7 @@ public class ActivateUserResponse {
     }
 
     @JsonProperty( Names.USER_FIELD )
-    public UserKey getUserKey() {
+    public UUID getUserKey() {
         return userKey;
     }
 

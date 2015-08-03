@@ -1,23 +1,21 @@
 package com.kryptnostic.directory.v1.model;
 
-import java.io.Serializable;
+import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Preconditions;
-import com.kryptnostic.directory.v1.principal.UserKey;
 import com.kryptnostic.kodex.v1.constants.Names;
 
-public class ObjectUserKey implements Serializable {
-
+public class ObjectUserKey {
     public static final String SEPARATOR = ":";
     private final String       objectId;
-    private final UserKey      userKey;
+    private final UUID         userKey;
 
     @JsonCreator
     public ObjectUserKey(
             @JsonProperty( Names.ID_FIELD ) String objectId,
-            @JsonProperty( Names.USER_FIELD ) UserKey userKey ) {
+            @JsonProperty( Names.USER_FIELD ) UUID userKey ) {
         super();
         this.objectId = objectId;
         this.userKey = userKey;
@@ -29,7 +27,7 @@ public class ObjectUserKey implements Serializable {
     }
 
     @JsonProperty( Names.USER_FIELD )
-    public UserKey getUserKey() {
+    public UUID getUserKey() {
         return userKey;
     }
 
@@ -83,7 +81,7 @@ public class ObjectUserKey implements Serializable {
                 + " should be present for ObjectUserKey" );
         String userKeyString = value.substring( 0, index );
         String objectIdString = value.substring( index + 1 );
-        UserKey userKey = UserKey.fromString( userKeyString );
+        UUID userKey = UUID.fromString( userKeyString );
         return new ObjectUserKey( objectIdString, userKey );
     }
 

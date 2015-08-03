@@ -25,7 +25,7 @@ public final class Reservation extends ReserveUserRequest {
     @JsonCreator
     public Reservation(
             @JsonProperty( Names.REALM_FIELD ) String realm,
-            @JsonProperty( Names.NAME_FIELD ) String username,
+            @JsonProperty( Names.USERNAME_FIELD ) String username,
             @JsonProperty( Names.EMAIL_FIELD ) String email,
             @JsonProperty( Names.GIVEN_NAME_FIELD ) String givenName,
             @JsonProperty( Names.STATUS_FIELD ) UserStatus status,

@@ -2,10 +2,10 @@ package com.kryptnostic.directory.v1.model.response;
 
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.kryptnostic.directory.v1.principal.GroupKey;
 import com.kryptnostic.directory.v1.principal.User;
 import com.kryptnostic.kodex.v1.constants.Names;
 
@@ -16,23 +16,27 @@ import com.kryptnostic.kodex.v1.constants.Names;
  *
  */
 public final class UserResponse {
+    private final UUID                userId;
     private final String              realm;
     private final String              name;
     private final String              givenName;
     private final String              familyName;
     private final String              email;
-    private final Set<GroupKey>       groups;
+    private final Set<UUID>       groups;
     private final Map<String, String> attributes;
 
     @JsonCreator
     public UserResponse(
+            @JsonProperty( Names.ID_FIELD ) UUID userId,
             @JsonProperty( Names.REALM_FIELD ) String realm,
-            @JsonProperty( Names.NAME_FIELD ) String name,
+            @JsonProperty( Names.USERNAME_FIELD ) String name,
             @JsonProperty( Names.GIVEN_NAME_FIELD ) String givenName,
             @JsonProperty( Names.FAMILY_NAME_FIELD ) String familyName,
             @JsonProperty( Names.EMAIL_FIELD ) String email,
-            @JsonProperty( Names.GROUP_PROPERTY ) Set<GroupKey> groups,
+            @JsonProperty( Names.GROUP_PROPERTY ) Set<UUID> groups,
             @JsonProperty( Names.ATTRIBUTES_FIELD ) Map<String, String> attributes ) {
+        this.userId = userId;
+
         this.realm = realm;
         this.name = name;
         this.givenName = givenName;
@@ -44,6 +48,7 @@ public final class UserResponse {
 
     public static UserResponse fromUser( User user ) {
         return new UserResponse(
+                user.getId(),
                 user.getRealm(),
                 user.getName(),
                 user.getGivenName(),
@@ -51,6 +56,11 @@ public final class UserResponse {
                 user.getEmail(),
                 user.getGroups(),
                 user.getAttributes() );
+    }
+
+    @JsonProperty( Names.ID_FIELD )
+    public UUID getUserId() {
+        return userId;
     }
 
     @JsonProperty( Names.GIVEN_NAME_FIELD )
@@ -63,7 +73,7 @@ public final class UserResponse {
         return familyName;
     }
 
-    @JsonProperty( Names.NAME_FIELD )
+    @JsonProperty( Names.USERNAME_FIELD )
     public String getName() {
         return name;
     }
@@ -79,7 +89,7 @@ public final class UserResponse {
     }
 
     @JsonProperty( Names.GROUP_PROPERTY )
-    public Set<GroupKey> getGroups() {
+    public Set<UUID> getGroups() {
         return groups;
     }
 
