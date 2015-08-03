@@ -181,10 +181,21 @@ public final class KryptnosticUser implements User, Serializable {
             this.username = username;
             this.groups = Sets.newConcurrentHashSet();
             this.attributes = Maps.newConcurrentMap();
+            this.roles = Sets.newConcurrentHashSet();
+            this.givenName = "";
+            this.familyName = "";
+            this.certificate = new byte[0];
         }
-        
+
         public HeraclesUserBuilder( String email ) {
             this.email = email;
+            this.username = email;
+            this.givenName = "";
+            this.familyName = "";
+            this.certificate = new byte[0];
+            this.groups = Sets.newConcurrentHashSet();
+            this.attributes = Maps.newConcurrentMap();
+            this.roles = Sets.newConcurrentHashSet();
         }
 
         public HeraclesUserBuilder withPassword( String password ) {
@@ -192,6 +203,11 @@ public final class KryptnosticUser implements User, Serializable {
             return this;
         }
 
+        public HeraclesUserBuilder withRealm( String realm ) {
+            this.realm = realm;
+            return this;
+        }
+        
         public HeraclesUserBuilder withEmptyPassword() {
             this.password = new String();
             return this;
@@ -266,7 +282,7 @@ public final class KryptnosticUser implements User, Serializable {
             Preconditions.checkNotNull( this.realm );
             Preconditions.checkNotNull( this.username );
             Preconditions.checkNotNull( this.password );
-            Preconditions.checkState( !this.groups.isEmpty(), "User must be assigned to at least one group." );
+            Preconditions.checkState( !this.roles.isEmpty(), "User must be assigned to at least one role." );
             return new KryptnosticUser( this );
         }
     }

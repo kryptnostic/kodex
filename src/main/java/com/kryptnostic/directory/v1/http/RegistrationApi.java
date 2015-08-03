@@ -20,21 +20,6 @@ public interface RegistrationApi {
     String USER       = "/user";
 
     /**
-     * Register a developer for the Kryptnostic platform. Developers accounts are subject to verification and approval
-     * by the Kryptnostic team.
-     * 
-     * @param request {@link DeveloperRegistrationRequest}
-     * @return {@link DeveloperRegistration}
-     * @throws ReservationTakenException
-     * @throws InvalidEmailException
-     * @throws DeveloperAlreadyExistsException
-     * @throws MailException
-     */
-    @POST( DEVELOPERS )
-    DeveloperRegistration register( @Body DeveloperRegistrationRequest request ) throws ReservationTakenException,
-            DeveloperAlreadyExistsException, InvalidEmailException, MailException, BadRequestException;
-
-    /**
      * Registers a normal user using the domain of their e-mail as their domain.
      * 
      * @param request

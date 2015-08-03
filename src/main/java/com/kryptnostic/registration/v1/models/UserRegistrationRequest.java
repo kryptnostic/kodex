@@ -1,5 +1,6 @@
 package com.kryptnostic.registration.v1.models;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Optional;
 import com.kryptnostic.kodex.v1.constants.Names;
@@ -11,12 +12,13 @@ public class UserRegistrationRequest {
     private final Optional<String> familyName;
     private final boolean          confirmationEmailNeeded;
 
+    @JsonCreator
     public UserRegistrationRequest(
-            @JsonProperty( Names.EMAIL_FIELD ) final String email,
-            @JsonProperty( Names.PASSWORD_FIELD ) final String password,
-            @JsonProperty( Names.CONFIRMATION_FIELD ) final Optional<Boolean> confirmationEmailNeeded,
-            @JsonProperty( Names.GIVEN_NAME_FIELD ) final Optional<String> givenName,
-            @JsonProperty( Names.FAMILY_NAME_FIELD ) final Optional<String> familyName ) {
+            @JsonProperty( Names.EMAIL_FIELD ) String email,
+            @JsonProperty( Names.PASSWORD_FIELD ) String password,
+            @JsonProperty( Names.CONFIRMATION_FIELD ) Optional<Boolean> confirmationEmailNeeded,
+            @JsonProperty( Names.GIVEN_NAME_FIELD ) Optional<String> givenName,
+            @JsonProperty( Names.FAMILY_NAME_FIELD ) Optional<String> familyName ) {
         this.password = password;
         this.email = email;
         this.confirmationEmailNeeded = confirmationEmailNeeded.or( false );
