@@ -25,25 +25,26 @@ import com.kryptnostic.kodex.v1.models.blocks.ChunkingStrategy;
 @Immutable
 public class ObjectMetadata {
     @JsonIgnore
-    public static final String       DEFAULT_TYPE = "object";
-    protected final String           id;
-    protected final int              version;
-    protected final int              numBlocks;
-    protected final int              childObjectCount;
-    protected final BlockCiphertext  encryptedClassName;
-    protected final ChunkingStrategy chunkingStrategy;
+    public static final String         DEFAULT_TYPE = "object";
+    protected final String             id;
+    protected final int                version;
+    protected final int                numBlocks;
+    protected final int                childObjectCount;
+    protected final BlockCiphertext    encryptedClassName;
+    protected final ChunkingStrategy   chunkingStrategy;
 
     protected final ImmutableSet<UUID> owners;
     protected final ImmutableSet<UUID> readers;
     protected final ImmutableSet<UUID> writers;
 
-    protected final DateTime         createdTime;
+    protected final DateTime           createdTime;
 
-    protected final String           type;
-
+    protected final String             type;
+    protected final int                size;
 
     /**
      * constructs metadata with default values
+     * 
      * @param id
      */
     @JsonIgnore
@@ -67,7 +68,7 @@ public class ObjectMetadata {
             int numBlocks,
             BlockCiphertext encryptedClassName,
             ChunkingStrategy chunkingStrategy ) {
-        this( id, version, numBlocks, 0, encryptedClassName, chunkingStrategy, Sets.<UUID> newHashSet(), Sets
+        this( id, version, numBlocks, 0, 0, encryptedClassName, chunkingStrategy, Sets.<UUID> newHashSet(), Sets
                 .<UUID> newHashSet(), Sets.<UUID> newHashSet(), DEFAULT_TYPE );
     }
 
@@ -76,6 +77,7 @@ public class ObjectMetadata {
             String id,
             int version,
             int numBlocks,
+            int size,
             int childObjectCount,
             BlockCiphertext encryptedClassName,
             ChunkingStrategy chunkingStrategy,
@@ -83,14 +85,27 @@ public class ObjectMetadata {
             Set<UUID> readers,
             Set<UUID> writers,
             String type ) {
-        this( id, version, numBlocks, childObjectCount, encryptedClassName, chunkingStrategy, owners,
-                readers, writers, type, DateTime.now() );
+        this(
+                id,
+                version,
+                numBlocks,
+                size,
+                childObjectCount,
+                encryptedClassName,
+                chunkingStrategy,
+                owners,
+                readers,
+                writers,
+                type,
+                DateTime.now() );
     }
 
-    public static ObjectMetadata copyIncrementingChildCount(ObjectMetadata meta){
-        return new ObjectMetadata(meta.getId(),
+    public static ObjectMetadata copyIncrementingChildCount( ObjectMetadata meta ) {
+        return new ObjectMetadata(
+                meta.getId(),
                 meta.getVersion(),
                 meta.getNumBlocks(),
+                meta.getSize(),
                 meta.getChildObjectCount() + 1,
                 meta.getEncryptedClassName(),
                 meta.getChunkingStrategy(),
@@ -98,7 +113,7 @@ public class ObjectMetadata {
                 meta.getReaders(),
                 meta.getWriters(),
                 meta.getType(),
-                meta.getCreatedTime());
+                meta.getCreatedTime() );
     }
 
     @JsonCreator
@@ -106,6 +121,7 @@ public class ObjectMetadata {
             @JsonProperty( Names.ID_FIELD ) String id,
             @JsonProperty( Names.VERSION_FIELD ) int version,
             @JsonProperty( Names.TOTAL_FIELD ) int numBlocks,
+            @JsonProperty( Names.SIZE_FIELD ) int size,
             @JsonProperty( Names.CHILD_OBJECT_COUNT_FIELD ) int childObjectCount,
             @JsonProperty( Names.USERNAME_FIELD ) BlockCiphertext encryptedClassName,
             @JsonProperty( Names.STRATEGY_FIELD ) ChunkingStrategy chunkingStrategy,
@@ -113,7 +129,7 @@ public class ObjectMetadata {
             @JsonProperty( Names.READERS_FIELD ) Set<UUID> readers,
             @JsonProperty( Names.WRITERS_FIELD ) Set<UUID> writers,
             @JsonProperty( Names.TYPE_FIELD ) String type,
-            @JsonProperty( Names.CREATED_TIME ) DateTime createdTime) {
+            @JsonProperty( Names.CREATED_TIME ) DateTime createdTime ) {
         this.id = id;
         this.version = version;
         this.numBlocks = numBlocks;
@@ -121,13 +137,14 @@ public class ObjectMetadata {
         this.encryptedClassName = encryptedClassName;
         this.chunkingStrategy = chunkingStrategy;
 
-        this.owners = ImmutableSet.copyOf(owners);
-        this.readers = ImmutableSet.copyOf(readers);
-        this.writers = ImmutableSet.copyOf(writers);
+        this.owners = ImmutableSet.copyOf( owners );
+        this.readers = ImmutableSet.copyOf( readers );
+        this.writers = ImmutableSet.copyOf( writers );
 
         this.type = type.toLowerCase();
 
         this.createdTime = createdTime;
+        this.size = size;
     }
 
     /**
@@ -201,5 +218,10 @@ public class ObjectMetadata {
     @JsonProperty( Names.CHILD_OBJECT_COUNT_FIELD )
     public int getChildObjectCount() {
         return childObjectCount;
+    }
+
+    @JsonProperty( Names.SIZE_FIELD )
+    public int getSize() {
+        return size;
     }
 }

@@ -73,4 +73,5 @@ public final class Names {
     public static final String CONFIRMATION_FIELD            = "confirmationEmailNeeded";
     public static final String NAME_FIELD                    = "name";
     public static final String ROLES_FIELD                   = "roles";
+    public static final String SIZE_FIELD                    = "size";
 }
