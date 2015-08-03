@@ -40,7 +40,7 @@ public interface DirectoryApi {
     }
 
     /**
-     * @param username
+     * @param id The id of the user whose public key shall be retrieved.
      * @return Specified user's public key
      * @throws ResourceNotFoundException
      */
@@ -55,6 +55,7 @@ public interface DirectoryApi {
     /**
      * Retrieves the password encrypted salt for authentication from the server.
      * 
+     * @param id The id of the user whose encrypted salt shall be retrieved.
      * @return A ciphertext of the password encrypted for the user.
      */
     @Timed
