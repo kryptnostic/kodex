@@ -18,10 +18,14 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
+import javax.annotation.concurrent.Immutable;
+
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.kryptnostic.directory.v1.principal.User;
@@ -29,23 +33,24 @@ import com.kryptnostic.kodex.v1.crypto.ciphers.BlockCiphertext;
 
 /**
  * Model for a Heracles user.
- *
- * @author Nick Hewitt
- *
+ * @author Nick Hewitt, Ryan Buckheit
  */
+@Immutable
 public final class KryptnosticUser implements User, Serializable {
-    private static final long         serialVersionUID = 3581755283203968675L;
-    private final UUID                id;
-    private final String              realm;
-    private final String              username;
-    private final String              email;
-    private final String              givenName;
-    private final String              familyName;
-    private final String              password;
-    private final byte[]              certificate;
-    private final Set<UUID>           groups           = Sets.newConcurrentHashSet();
-    private final Set<String>         roles            = Sets.newHashSet();
-    private final Map<String, String> attributes       = Maps.newConcurrentMap();
+
+    private static final long serialVersionUID = 667467236790964696L;
+
+    private final UUID                  id;
+    private final String                realm;
+    private final String                username;
+    private final String                email;
+    private final String                givenName;
+    private final String                familyName;
+    private final String                password;
+    private final byte[]                certificate;
+    private final ImmutableSet<UUID>    groups;
+    private final ImmutableSet<String>  roles;
+    private final ImmutableMap<String, String> attributes;
 
     @JsonCreator
     public KryptnosticUser(
@@ -63,26 +68,14 @@ public final class KryptnosticUser implements User, Serializable {
         this.id = id;
         this.realm = realm;
         this.username = username;
-        this.groups.addAll( groups );
-        this.attributes.putAll( attributes );
         this.password = password;
         this.certificate = certificate.or( new byte[ 0 ] );
         this.email = email;
         this.givenName = givenName;
         this.familyName = familyName;
-    }
-
-    private KryptnosticUser( HeraclesUserBuilder builder ) {
-        this.id = builder.id;
-        this.realm = builder.realm;
-        this.username = builder.username;
-        this.password = builder.password;
-        this.certificate = builder.certificate;
-        this.givenName = builder.givenName;
-        this.familyName = builder.familyName;
-        this.email = builder.email;
-        this.groups.addAll( builder.groups );
-        this.attributes.putAll( builder.attributes );
+        this.roles = ImmutableSet.copyOf( roles );
+        this.groups = ImmutableSet.copyOf( groups );
+        this.attributes = ImmutableMap.copyOf( attributes );
     }
 
     @Override
@@ -157,7 +150,7 @@ public final class KryptnosticUser implements User, Serializable {
     @Override
     public String toString() {
         return "HeraclesUser [id=" + id + ",username=" + username + ",password=" + password + ", certificate="
-                + Arrays.toString( certificate ) + ", groups=" + groups + ", attributes=" + attributes + "]";
+                + Arrays.toString( certificate ) + ", groups=" + groups + ", attributes=" + attributes + ", roles=" + roles + "]";
     }
 
     public static class HeraclesUserBuilder {
@@ -207,7 +200,7 @@ public final class KryptnosticUser implements User, Serializable {
             this.realm = realm;
             return this;
         }
-        
+
         public HeraclesUserBuilder withEmptyPassword() {
             this.password = new String();
             return this;
@@ -283,7 +276,18 @@ public final class KryptnosticUser implements User, Serializable {
             Preconditions.checkNotNull( this.username );
             Preconditions.checkNotNull( this.password );
             Preconditions.checkState( !this.roles.isEmpty(), "User must be assigned to at least one role." );
-            return new KryptnosticUser( this );
+
+            return new KryptnosticUser( this.id,
+                    this.realm,
+                    this.username,
+                    this.givenName,
+                    this.familyName,
+                    this.email,
+                    this.password,
+                    Optional.of( this.certificate ),
+                    ImmutableSet.copyOf( this.groups ),
+                    ImmutableSet.copyOf( this.roles ),
+                    ImmutableMap.copyOf( this.attributes ) );
         }
     }
 
