@@ -45,7 +45,7 @@ public class ObjectMetadata {
 
     /**
      * constructs metadata with default values
-     * 
+     *
      * @param id
      */
     @JsonIgnore
@@ -217,7 +217,7 @@ public class ObjectMetadata {
     public UUID getCreator() {
        return creator;
     }
-
+    
     @JsonProperty( Names.OWNERS_FIELD )
     public Set<UUID> getOwners() {
         return owners;
