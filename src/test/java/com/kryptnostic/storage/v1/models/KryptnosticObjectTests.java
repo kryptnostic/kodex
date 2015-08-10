@@ -35,16 +35,19 @@ public class KryptnosticObjectTests extends SecurityConfigurationTestUtils {
         loader.put( "test", crypto );
         loader.put( "test2", crypto );
 
-        KryptnosticObject d1 = new KryptnosticObject( new ObjectMetadata( "test" ), "cool document" ).encrypt( loader );
-        KryptnosticObject d2 = new KryptnosticObject( new ObjectMetadata( "test" ), "cool document" ).encrypt( loader );
+        KryptnosticObject d1 = new KryptnosticObject( new ObjectMetadata( "test", null ), "cool document" )
+                .encrypt( loader );
+        KryptnosticObject d2 = new KryptnosticObject( new ObjectMetadata( "test", null ), "cool document" )
+                .encrypt( loader );
 
         Assert.assertEquals( d1, d1 );
         Assert.assertEquals( d1, d2 );
 
-        KryptnosticObject d3 = new KryptnosticObject( new ObjectMetadata( "test2" ), "cool document" ).encrypt( loader );
+        KryptnosticObject d3 = new KryptnosticObject( new ObjectMetadata( "test2", null ), "cool document" )
+                .encrypt( loader );
         Assert.assertNotEquals( d1, d3 );
 
-        KryptnosticObject d4 = new KryptnosticObject( new ObjectMetadata( "test" ), "cool document cool" )
+        KryptnosticObject d4 = new KryptnosticObject( new ObjectMetadata( "test", null ), "cool document cool" )
                 .encrypt( loader );
         Assert.assertEquals( d1, d4 );
         Assert.assertNotEquals( d1, d3 );
@@ -58,7 +61,7 @@ public class KryptnosticObjectTests extends SecurityConfigurationTestUtils {
             InvalidParameterSpecException, SealedKodexException, SignatureException, Exception {
         loader.put( "test", crypto );
 
-        KryptnosticObject doc = new KryptnosticObject( new ObjectMetadata( "test" ), "this is a test" );
+        KryptnosticObject doc = new KryptnosticObject( new ObjectMetadata( "test", null ), "this is a test" );
         String out = serialize( doc );
         KryptnosticObject result = deserialize( out, KryptnosticObject.class );
 
@@ -72,7 +75,7 @@ public class KryptnosticObjectTests extends SecurityConfigurationTestUtils {
             InvalidParameterSpecException, SealedKodexException, SignatureException, Exception {
         loader.put( "test", crypto );
 
-        KryptnosticObject doc = new KryptnosticObject( new ObjectMetadata( "test" ), "this is a test" )
+        KryptnosticObject doc = new KryptnosticObject( new ObjectMetadata( "test", null ), "this is a test" )
                 .encrypt( loader );
         String out = serialize( doc.getBody().getEncryptedData() );
         EncryptableBlock[] result = deserialize( out, EncryptableBlock[].class );
@@ -89,7 +92,7 @@ public class KryptnosticObjectTests extends SecurityConfigurationTestUtils {
 
         loader.put( "test", crypto );
 
-        KryptnosticObject doc = new KryptnosticObject( new ObjectMetadata( "test" ), "this is a test" )
+        KryptnosticObject doc = new KryptnosticObject( new ObjectMetadata( "test", null ), "this is a test" )
                 .encrypt( loader );
 
         EncryptableBlock[] blocks = doc.getBody().getEncryptedData();

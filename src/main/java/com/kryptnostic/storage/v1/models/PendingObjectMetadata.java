@@ -26,6 +26,7 @@ public class PendingObjectMetadata extends ObjectMetadata {
             @JsonProperty( Names.CHILD_OBJECT_COUNT_FIELD ) int childObjectCount,
             @JsonProperty( Names.USERNAME_FIELD ) BlockCiphertext encryptedClassName,
             @JsonProperty( Names.STRATEGY_FIELD ) ChunkingStrategy chunkingStrategy,
+            @JsonProperty( Names.CREATOR_FIELD ) UUID creator,
             @JsonProperty( Names.OWNERS_FIELD ) Set<UUID> owners,
             @JsonProperty( Names.READERS_FIELD ) Set<UUID> readers,
             @JsonProperty( Names.WRITERS_FIELD ) Set<UUID> writers,
@@ -40,6 +41,7 @@ public class PendingObjectMetadata extends ObjectMetadata {
                 childObjectCount,
                 encryptedClassName,
                 chunkingStrategy,
+                creator,
                 owners,
                 readers,
                 writers,
@@ -56,11 +58,54 @@ public class PendingObjectMetadata extends ObjectMetadata {
             int size,
             BlockCiphertext encryptedClassName,
             ChunkingStrategy chunkingStrategy,
+            UUID creator,
             Optional<Integer> receivedBlocks,
             String type,
             DateTime createdTime ) {
-        this( id, version, numBlocks, size, 0, encryptedClassName, chunkingStrategy, Sets.<UUID> newHashSet(), Sets
-                .<UUID> newHashSet(), Sets.<UUID> newHashSet(), type, createdTime, receivedBlocks );
+        this(
+                id,
+                version,
+                numBlocks,
+                size,
+                0,
+                encryptedClassName,
+                chunkingStrategy,
+                creator,
+                Sets.<UUID> newHashSet(),
+                Sets.<UUID> newHashSet(),
+                Sets.<UUID> newHashSet(),
+                type,
+                createdTime,
+                receivedBlocks );
+    }
+    
+    public PendingObjectMetadata(
+            String id,
+            int version,
+            int numBlocks,
+            int size,
+            BlockCiphertext encryptedClassName,
+            ChunkingStrategy chunkingStrategy,
+            UUID creator,
+            Set<UUID> owners,
+            Optional<Integer> receivedBlocks,
+            String type,
+            DateTime createdTime ) {
+        this(
+                id,
+                version,
+                numBlocks,
+                size,
+                0,
+                encryptedClassName,
+                chunkingStrategy,
+                creator,
+                owners,
+                Sets.<UUID> newHashSet(),
+                Sets.<UUID> newHashSet(),
+                type,
+                createdTime,
+                receivedBlocks );
     }
 
     @JsonProperty( Names.BLOCKS_FIELD )
