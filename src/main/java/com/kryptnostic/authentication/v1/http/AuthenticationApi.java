@@ -19,6 +19,8 @@ import com.kryptnostic.authentication.v1.model.EmailAuthenticationRequest;
 public interface AuthenticationApi {
     String CONTROLLER  = "/authentication";
 
+    String UUID        = "/uuid";
+    String EMAIL       = "/email";
     String LOGIN       = "/login";
     String CERTIFICATE = "/certificate";
 
@@ -29,10 +31,10 @@ public interface AuthenticationApi {
      * @param request AuthenticationRequest
      * @return The handle
      */
-    @POST( LOGIN )
+    @POST( UUID )
     Optional<String> authenticate( @Body AuthenticationRequest request );
 
-    @POST( LOGIN )
+    @POST( EMAIL )
     Optional<UUID> authenticate( @Body EmailAuthenticationRequest request );
 
 }
