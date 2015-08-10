@@ -13,7 +13,6 @@ import com.kryptnostic.directory.v1.exception.MailException;
 import com.kryptnostic.directory.v1.exception.RealmMismatchException;
 import com.kryptnostic.directory.v1.exception.ReservationTakenException;
 import com.kryptnostic.directory.v1.exception.UserUpdateException;
-import com.kryptnostic.directory.v1.model.response.UserResponse;
 import com.kryptnostic.directory.v1.principal.User;
 import com.kryptnostic.kodex.v1.exceptions.types.BadRequestException;
 
