@@ -6,6 +6,7 @@ import java.util.UUID;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.google.common.base.Optional;
 import com.kryptnostic.kodex.v1.models.UserAttributes;
@@ -38,9 +39,11 @@ public interface User extends Principal {
     Set<UUID> getGroups();
 
     @Nullable
+    @JsonIgnore
     Optional<String> getGivenName();
 
     @Nullable
+    @JsonIgnore
     Optional<String> getFamilyName();
 
     UserAttributes getAttributes();

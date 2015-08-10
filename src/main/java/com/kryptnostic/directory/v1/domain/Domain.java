@@ -1,8 +1,10 @@
 package com.kryptnostic.directory.v1.domain;
 
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Optional;
 import com.kryptnostic.kodex.v1.constants.Names;
@@ -10,7 +12,7 @@ import com.kryptnostic.kodex.v1.constants.Names;
 public class Domain {
     private final UUID    id;
     private final String  name;
-    private final int size; //Total number of users in domain
+    private final AtomicInteger size; //Total number of users in domain
     private final boolean confirmationEmailRequired;
 
     @JsonCreator
@@ -21,7 +23,7 @@ public class Domain {
             @JsonProperty( Names.CONFIRMATION_FIELD ) Optional<Boolean> confirmationEmailRequired ) {
         this.id = id;
         this.name = name;
-        this.size = size;
+        this.size = new AtomicInteger( size );
         this.confirmationEmailRequired = confirmationEmailRequired.or( false );
     }
 
@@ -37,12 +39,18 @@ public class Domain {
     
     @JsonProperty( Names.SIZE_FIELD )
     public int getSize() {
-        return size;
+        return size.get();
     }
 
     @JsonProperty( Names.CONFIRMATION_FIELD )
     public boolean isConfirmationEmailRequired() {
         return confirmationEmailRequired;
+    }
+    
+    @JsonIgnore
+    public Domain incrementSize() {
+        size.incrementAndGet();
+        return this;
     }
 
 }
