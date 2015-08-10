@@ -39,7 +39,7 @@ public final class KryptnosticUser implements User, Serializable {
     private final String         realm;
     private final String         username;
     private final byte[]         certificate;
-    private final Set<UUID>      groups           = Sets.newConcurrentHashSet();
+    private final Set<UUID>      groups           = Sets.newHashSet();
     private final Set<String>    roles            = Sets.newHashSet();
     private final UserAttributes attributes       = new UserAttributes( Maps.<String, String> newConcurrentMap() );
 
@@ -58,18 +58,9 @@ public final class KryptnosticUser implements User, Serializable {
         this.username = username;
         this.groups.addAll( groups );
         this.attributes.putAll( attributes );
+        this.roles.addAll( roles );
         this.certificate = certificate.or( new byte[ 0 ] );
         this.email = email;
-    }
-
-    private KryptnosticUser( HeraclesUserBuilder builder ) {
-        this.id = builder.id;
-        this.realm = builder.realm;
-        this.username = builder.username;
-        this.certificate = builder.certificate;
-        this.email = builder.email;
-        this.groups.addAll( builder.groups );
-        this.attributes.putAll( builder.attributes );
     }
 
     @Override
@@ -142,30 +133,17 @@ public final class KryptnosticUser implements User, Serializable {
     }
 
     public static class HeraclesUserBuilder {
-        public UUID                id;
-        public String              realm;
-        public String              username;
-        public String              email;
-        public String              givenName;
-        public String              familyName;
-        public BlockCiphertext     encryptedSalt = null;
-        public byte[]              certificate;
-        public Set<UUID>           groups;
-        public Set<String>         roles;
-        public Map<String, String> attributes;
-
-        // TODO add created and update dates
-
-        public HeraclesUserBuilder( String realm, String username ) {
-            this.realm = realm;
-            this.username = username;
-            this.groups = Sets.newConcurrentHashSet();
-            this.attributes = Maps.newConcurrentMap();
-            this.roles = Sets.newConcurrentHashSet();
-            this.givenName = "";
-            this.familyName = "";
-            this.certificate = new byte[ 0 ];
-        }
+        public UUID            id;
+        public String          realm;
+        public String          username;
+        public String          email;
+        public String          givenName;
+        public String          familyName;
+        public BlockCiphertext encryptedSalt = null;
+        public byte[]          certificate;
+        public Set<UUID>       groups;
+        public Set<String>     roles;
+        public UserAttributes  attributes;
 
         public HeraclesUserBuilder( String email ) {
             this.email = email;
@@ -174,7 +152,7 @@ public final class KryptnosticUser implements User, Serializable {
             this.familyName = "";
             this.certificate = new byte[ 0 ];
             this.groups = Sets.newConcurrentHashSet();
-            this.attributes = Maps.newConcurrentMap();
+            this.attributes = new UserAttributes( Maps.<String,String>newConcurrentMap() );
             this.roles = Sets.newConcurrentHashSet();
         }
 
@@ -252,7 +230,16 @@ public final class KryptnosticUser implements User, Serializable {
             Preconditions.checkNotNull( this.realm );
             Preconditions.checkNotNull( this.username );
             Preconditions.checkState( !this.roles.isEmpty(), "User must be assigned to at least one role." );
-            return new KryptnosticUser( this );
+
+            return new KryptnosticUser(
+                    id,
+                    realm,
+                    username,
+                    email,
+                    Optional.of( certificate ),
+                    groups,
+                    roles,
+                    attributes );
         }
     }
 
