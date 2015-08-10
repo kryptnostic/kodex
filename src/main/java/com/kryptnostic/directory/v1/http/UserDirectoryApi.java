@@ -2,8 +2,7 @@ package com.kryptnostic.directory.v1.http;
 
 import java.util.UUID;
 
-import org.springframework.web.bind.annotation.RequestBody;
-
+import retrofit.http.Body;
 import retrofit.http.DELETE;
 import retrofit.http.GET;
 import retrofit.http.PUT;
@@ -52,7 +51,7 @@ public interface UserDirectoryApi {
 
     /**
      * Delete a specific user, removing it from the directory.
-     * 
+     *
      * @param userId the user id of the user to be deleted.
      * @return the UUID of the user deleted if any.
      * @throws RealmMismatchException
@@ -62,7 +61,7 @@ public interface UserDirectoryApi {
 
     /**
      * Allows resolving an e-mail to a UUID. This is an open API.
-     * 
+     *
      * @param email
      * @return
      */
@@ -71,7 +70,7 @@ public interface UserDirectoryApi {
 
     /**
      * Deprecated API. Will be removed in next version.
-     * 
+     *
      * @param realm The realm in which to look for the user.
      * @param username The username to perform map to a UUID.
      * @return The UUID for the user.
@@ -82,7 +81,7 @@ public interface UserDirectoryApi {
 
     /**
      * This API resets the users authenticator. It does not impact key information.
-     * 
+     *
      * @param userKey
      * @param newPassword
      * @return
@@ -92,7 +91,7 @@ public interface UserDirectoryApi {
      * @throws MailException
      */
     @PUT( USERS + ID_PATH )
-    Optional<UUID> resetPassword( @Path( ID ) UUID userKey, @RequestBody String newPassword ) throws UserUpdateException,
+    Optional<UUID> resetPassword( @Path( ID ) UUID userKey, @Body String newPassword ) throws UserUpdateException,
             ReservationTakenException, BadRequestException, MailException;
 
 }

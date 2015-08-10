@@ -11,7 +11,7 @@ import com.kryptnostic.kodex.v1.constants.Names;
 
 /**
  * Wrapper around User data to hide confidential account information.
- * 
+ *
  * @author Nick Hewitt
  *
  */
@@ -51,8 +51,8 @@ public final class UserResponse {
                 user.getId(),
                 user.getRealm(),
                 user.getName(),
-                user.getGivenName(),
-                user.getFamilyName(),
+                user.getGivenName().get(),
+                user.getFamilyName().get(),
                 user.getEmail(),
                 user.getGroups(),
                 user.getAttributes() );
