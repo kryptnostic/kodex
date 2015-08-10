@@ -1,11 +1,13 @@
 package com.kryptnostic.authentication.v1.http;
 
+import java.util.UUID;
+
 import retrofit.http.Body;
 import retrofit.http.POST;
 
 import com.google.common.base.Optional;
 import com.kryptnostic.authentication.v1.model.AuthenticationRequest;
-import com.kryptnostic.directory.v1.principal.User;
+import com.kryptnostic.authentication.v1.model.EmailAuthenticationRequest;
 
 /**
  * The purpose of this class is to enable applications to provide an authentication experience wrapped around
@@ -17,6 +19,8 @@ import com.kryptnostic.directory.v1.principal.User;
 public interface AuthenticationApi {
     String CONTROLLER  = "/authentication";
 
+    String UUID        = "/uuid";
+    String EMAIL       = "/email";
     String LOGIN       = "/login";
     String CERTIFICATE = "/certificate";
 
@@ -25,9 +29,12 @@ public interface AuthenticationApi {
      * CSRF as any attacker capable of forging the attack will already have the user's credentials.
      * 
      * @param request AuthenticationRequest
-     * @return User information
+     * @return The handle
      */
-    @POST( LOGIN )
-    Optional<User> authenticate( @Body AuthenticationRequest request );
+    @POST( UUID )
+    Optional<String> authenticate( @Body AuthenticationRequest request );
+
+    @POST( EMAIL )
+    Optional<UUID> authenticate( @Body EmailAuthenticationRequest request );
 
 }

@@ -12,7 +12,7 @@ import com.kryptnostic.directory.v1.exception.ReservationTakenException;
 import com.kryptnostic.directory.v1.model.DeveloperRegistration;
 import com.kryptnostic.directory.v1.model.request.DeveloperRegistrationRequest;
 import com.kryptnostic.kodex.v1.exceptions.types.BadRequestException;
-import com.kryptnostic.registration.v1.models.UserRegistrationRequest;
+import com.kryptnostic.registration.v1.models.UserCreationRequest;
 
 public interface RegistrationApi {
     String CONTROLLER = "/registration";
@@ -26,6 +26,6 @@ public interface RegistrationApi {
      * @return
      */
     @POST( USER )
-    UUID register( @Body UserRegistrationRequest request );
+    UUID register( @Body UserCreationRequest request );
 
 }

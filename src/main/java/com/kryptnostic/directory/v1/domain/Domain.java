@@ -10,15 +10,18 @@ import com.kryptnostic.kodex.v1.constants.Names;
 public class Domain {
     private final UUID    id;
     private final String  name;
+    private final int size; //Total number of users in domain
     private final boolean confirmationEmailRequired;
 
     @JsonCreator
     public Domain(
             @JsonProperty( Names.ID_FIELD ) UUID id,
             @JsonProperty( Names.REALM_FIELD ) String name,
+            @JsonProperty( Names.SIZE_FIELD ) int size, 
             @JsonProperty( Names.CONFIRMATION_FIELD ) Optional<Boolean> confirmationEmailRequired ) {
         this.id = id;
         this.name = name;
+        this.size = size;
         this.confirmationEmailRequired = confirmationEmailRequired.or( false );
     }
 
@@ -30,6 +33,11 @@ public class Domain {
     @JsonProperty( Names.REALM_FIELD )
     public String getName() {
         return name;
+    }
+    
+    @JsonProperty( Names.SIZE_FIELD )
+    public int getSize() {
+        return size;
     }
 
     @JsonProperty( Names.CONFIRMATION_FIELD )

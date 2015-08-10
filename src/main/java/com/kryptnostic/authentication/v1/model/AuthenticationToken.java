@@ -10,6 +10,7 @@ import com.kryptnostic.kodex.v1.constants.Names;
  * @author Matthew Tamayo-Rios &lt;matthew@kryptnostic.com&gt;
  *
  */
+@Deprecated
 public class AuthenticationToken {
     private final UUID user;
     private final String  token;
