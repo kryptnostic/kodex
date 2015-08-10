@@ -9,4 +9,8 @@ public class UserAttributes extends ConcurrentHashMap<String, String> {
     public UserAttributes( ConcurrentMap<String, String> attributes ) {
         super( attributes );
     }
+
+    public UserAttributes( int initialCapacity ) {
+        super( initialCapacity );
+    }
 }
