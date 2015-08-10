@@ -29,7 +29,7 @@ public final class UpdateUserRequest {
     @JsonCreator
     public UpdateUserRequest(
             @JsonProperty( Names.EMAIL_FIELD ) String email,
-            @JsonProperty(  NEW_EMAIL_FIELD ) Optional<String> newEmail,
+            @JsonProperty( NEW_EMAIL_FIELD ) Optional<String> newEmail,
             @JsonProperty( Names.USERNAME_FIELD ) Optional<String> username,
             @JsonProperty( Names.GIVEN_NAME_FIELD ) Optional<String> givenName,
             @JsonProperty( Names.FAMILY_NAME_FIELD ) Optional<String> familyName,

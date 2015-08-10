@@ -4,26 +4,24 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Optional;
 import com.kryptnostic.kodex.v1.constants.Names;
+import com.kryptnostic.kodex.v1.models.UserAttributes;
 
-public class UserRegistrationRequest {
-    private final String           password;
-    private final String           email;
-    private final Optional<String> givenName;
-    private final Optional<String> familyName;
-    private final boolean          confirmationEmailNeeded;
+public class UserCreationRequest {
+    private final String                   password;
+    private final String                   email;
+    private final Optional<UserAttributes> attributes;
+    private final boolean                  confirmationEmailNeeded;
 
     @JsonCreator
-    public UserRegistrationRequest(
+    public UserCreationRequest(
             @JsonProperty( Names.EMAIL_FIELD ) String email,
             @JsonProperty( Names.PASSWORD_FIELD ) String password,
-            @JsonProperty( Names.CONFIRMATION_FIELD ) Optional<Boolean> confirmationEmailNeeded,
-            @JsonProperty( Names.GIVEN_NAME_FIELD ) Optional<String> givenName,
-            @JsonProperty( Names.FAMILY_NAME_FIELD ) Optional<String> familyName ) {
+            @JsonProperty( Names.ATTRIBUTES_FIELD ) Optional<UserAttributes> attributes,
+            @JsonProperty( Names.CONFIRMATION_FIELD ) Optional<Boolean> confirmationEmailNeeded ) {
         this.password = password;
         this.email = email;
         this.confirmationEmailNeeded = confirmationEmailNeeded.or( false );
-        this.givenName = givenName;
-        this.familyName = familyName;
+        this.attributes = attributes;
     }
 
     @JsonProperty( Names.PASSWORD_FIELD )
@@ -38,12 +36,19 @@ public class UserRegistrationRequest {
 
     @JsonProperty( Names.GIVEN_NAME_FIELD )
     public Optional<String> getFamilyName() {
-        return familyName;
+        return attributes.isPresent() ? Optional.fromNullable( attributes.get().get( Names.GIVEN_NAME_FIELD ) )
+                : Optional.<String> absent();
     }
 
     @JsonProperty( Names.FAMILY_NAME_FIELD )
     public Optional<String> getGivenName() {
-        return givenName;
+        return attributes.isPresent() ? Optional.fromNullable( attributes.get().get( Names.FAMILY_NAME_FIELD ) )
+                : Optional.<String> absent();
+    }
+
+    @JsonProperty( Names.ATTRIBUTES_FIELD )
+    public Optional<UserAttributes> getAttributes() {
+        return attributes;
     }
 
     @JsonProperty( Names.CONFIRMATION_FIELD )
