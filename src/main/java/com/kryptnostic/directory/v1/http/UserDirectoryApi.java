@@ -43,7 +43,7 @@ public interface UserDirectoryApi {
      * Get the account details for a given user.
      *
      * @param userId String form of reserved {@link UUID}
-     * @return {@link UserResponse}
+     * @return The user
      */
     @GET( USERS + ID_PATH )
     Optional<User> getUser( @Path( ID ) UUID userId ); // developer
