@@ -33,6 +33,7 @@ public class ObjectMetadata {
     protected final BlockCiphertext    encryptedClassName;
     protected final ChunkingStrategy   chunkingStrategy;
 
+    protected final UUID               creator;
     protected final ImmutableSet<UUID> owners;
     protected final ImmutableSet<UUID> readers;
     protected final ImmutableSet<UUID> writers;
@@ -48,8 +49,8 @@ public class ObjectMetadata {
      * @param id
      */
     @JsonIgnore
-    public ObjectMetadata( String id ) {
-        this( id, 0, null, null );
+    public ObjectMetadata( String id, UUID creator ) {
+        this( id, 0, null, null, creator );
     }
 
     /**
@@ -57,8 +58,13 @@ public class ObjectMetadata {
      * @param version 0-based version index
      */
     @JsonIgnore
-    public ObjectMetadata( String id, int version, BlockCiphertext encryptedClassName, ChunkingStrategy chunkingStrategy ) {
-        this( id, version, 0, encryptedClassName, chunkingStrategy );
+    public ObjectMetadata(
+            String id,
+            int version,
+            BlockCiphertext encryptedClassName,
+            ChunkingStrategy chunkingStrategy,
+            UUID creator ) {
+        this( id, version, 0, encryptedClassName, chunkingStrategy, creator );
     }
 
     @JsonIgnore
@@ -67,9 +73,21 @@ public class ObjectMetadata {
             int version,
             int numBlocks,
             BlockCiphertext encryptedClassName,
-            ChunkingStrategy chunkingStrategy ) {
-        this( id, version, numBlocks, 0, 0, encryptedClassName, chunkingStrategy, Sets.<UUID> newHashSet(), Sets
-                .<UUID> newHashSet(), Sets.<UUID> newHashSet(), DEFAULT_TYPE );
+            ChunkingStrategy chunkingStrategy,
+            UUID creator ) {
+        this(
+                id,
+                version,
+                numBlocks,
+                0,
+                0,
+                encryptedClassName,
+                chunkingStrategy,
+                creator,
+                Sets.<UUID> newHashSet(),
+                Sets.<UUID> newHashSet(),
+                Sets.<UUID> newHashSet(),
+                DEFAULT_TYPE );
     }
 
     @JsonIgnore
@@ -81,6 +99,7 @@ public class ObjectMetadata {
             int childObjectCount,
             BlockCiphertext encryptedClassName,
             ChunkingStrategy chunkingStrategy,
+            UUID creator,
             Set<UUID> owners,
             Set<UUID> readers,
             Set<UUID> writers,
@@ -93,6 +112,7 @@ public class ObjectMetadata {
                 childObjectCount,
                 encryptedClassName,
                 chunkingStrategy,
+                creator,
                 owners,
                 readers,
                 writers,
@@ -109,6 +129,7 @@ public class ObjectMetadata {
                 meta.getChildObjectCount() + 1,
                 meta.getEncryptedClassName(),
                 meta.getChunkingStrategy(),
+                meta.getCreator(),
                 meta.getOwners(),
                 meta.getReaders(),
                 meta.getWriters(),
@@ -125,6 +146,7 @@ public class ObjectMetadata {
             @JsonProperty( Names.CHILD_OBJECT_COUNT_FIELD ) int childObjectCount,
             @JsonProperty( Names.USERNAME_FIELD ) BlockCiphertext encryptedClassName,
             @JsonProperty( Names.STRATEGY_FIELD ) ChunkingStrategy chunkingStrategy,
+            @JsonProperty( Names.CREATOR_FIELD ) UUID creator,
             @JsonProperty( Names.OWNERS_FIELD ) Set<UUID> owners,
             @JsonProperty( Names.READERS_FIELD ) Set<UUID> readers,
             @JsonProperty( Names.WRITERS_FIELD ) Set<UUID> writers,
@@ -137,6 +159,7 @@ public class ObjectMetadata {
         this.encryptedClassName = encryptedClassName;
         this.chunkingStrategy = chunkingStrategy;
 
+        this.creator = creator;
         this.owners = ImmutableSet.copyOf( owners );
         this.readers = ImmutableSet.copyOf( readers );
         this.writers = ImmutableSet.copyOf( writers );
@@ -188,6 +211,12 @@ public class ObjectMetadata {
     @JsonProperty( Names.STRATEGY_FIELD )
     public ChunkingStrategy getChunkingStrategy() {
         return chunkingStrategy;
+    }
+
+    @JsonProperty( Names.CREATOR_FIELD )
+    public UUID getCreator() {
+        // TODO Auto-generated method stub
+        return null;
     }
 
     @JsonProperty( Names.OWNERS_FIELD )

@@ -30,7 +30,7 @@ public final class Names {
     public static final String ID_FIELD                      = "id";
     public static final String CSRF_TOKEN                    = "csrfToken";
     public static final String PASSWORD_FIELD                = "password";
-    public static final String CERTIFICATE_FIELD          = "certificate";
+    public static final String CERTIFICATE_FIELD             = "certificate";
     public static final String GROUP_PROPERTY                = "group";
     public static final String GROUPS_PROPERTY               = "groups";
     public static final String USER_FIELD                    = "user";
@@ -74,4 +74,6 @@ public final class Names {
     public static final String NAME_FIELD                    = "name";
     public static final String ROLES_FIELD                   = "roles";
     public static final String SIZE_FIELD                    = "size";
+    public static final String INHERIT_OWNERSHIP_FIELD       = "inhertitOwnership";
+    public static final String CREATOR_FIELD                 = "creator";
 }
