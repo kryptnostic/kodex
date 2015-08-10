@@ -16,9 +16,8 @@ import com.kryptnostic.kodex.v1.serialization.crypto.Encryptable;
  * @author sinaiman
  */
 public class KryptnosticObject {
-    private static final long         serialVersionUID = -6861113361696076897L;
 
-    private final ObjectMetadata    metadata;
+    private final ObjectMetadata      metadata;
     private final Encryptable<String> body;
 
     /**
@@ -36,7 +35,8 @@ public class KryptnosticObject {
      * @return A new document with the specified id and body
      */
     public static KryptnosticObject fromIdAndBody( String id, String body ) {
-        return new KryptnosticObject( new ObjectMetadata( id ), body );
+        //Null creator is fine as this is only called from uploadObject and metadata isn't passed to server.
+        return new KryptnosticObject( new ObjectMetadata( id, null ), body );
     }
 
     /**
