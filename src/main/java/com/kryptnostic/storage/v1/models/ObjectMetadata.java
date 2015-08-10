@@ -215,8 +215,7 @@ public class ObjectMetadata {
 
     @JsonProperty( Names.CREATOR_FIELD )
     public UUID getCreator() {
-        // TODO Auto-generated method stub
-        return null;
+       return creator;
     }
 
     @JsonProperty( Names.OWNERS_FIELD )
