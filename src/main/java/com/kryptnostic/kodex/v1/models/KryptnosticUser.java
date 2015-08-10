@@ -1,7 +1,7 @@
 package com.kryptnostic.kodex.v1.models;
 
 import static com.kryptnostic.kodex.v1.constants.Names.ATTRIBUTES_FIELD;
-import static com.kryptnostic.kodex.v1.constants.Names.CERTIFICATE_PROPERTY;
+import static com.kryptnostic.kodex.v1.constants.Names.CERTIFICATE_FIELD;
 import static com.kryptnostic.kodex.v1.constants.Names.EMAIL_FIELD;
 import static com.kryptnostic.kodex.v1.constants.Names.FAMILY_NAME_FIELD;
 import static com.kryptnostic.kodex.v1.constants.Names.GIVEN_NAME_FIELD;
@@ -49,7 +49,7 @@ public final class KryptnosticUser implements User, Serializable {
             @JsonProperty( REALM_FIELD ) String realm,
             @JsonProperty( USERNAME_FIELD ) String username,
             @JsonProperty( EMAIL_FIELD ) String email,
-            @JsonProperty( CERTIFICATE_PROPERTY ) Optional<byte[]> certificate,
+            @JsonProperty( CERTIFICATE_FIELD ) Optional<byte[]> certificate,
             @JsonProperty( GROUPS_PROPERTY ) Set<UUID> groups,
             @JsonProperty( ROLES_FIELD ) Set<String> roles,
             @JsonProperty( ATTRIBUTES_FIELD ) UserAttributes attributes ) {
@@ -96,7 +96,7 @@ public final class KryptnosticUser implements User, Serializable {
     }
 
     @Override
-    @JsonProperty( CERTIFICATE_PROPERTY )
+    @JsonProperty( CERTIFICATE_FIELD )
     public byte[] getCertificate() {
         return certificate;
     }

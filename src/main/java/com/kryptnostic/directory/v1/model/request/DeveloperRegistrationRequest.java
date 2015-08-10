@@ -39,7 +39,7 @@ public class DeveloperRegistrationRequest {
             @JsonProperty( Names.REALM_FIELD ) String realm,
             @JsonProperty( Names.USERNAME_FIELD ) String username,
             @JsonProperty( Names.PASSWORD_FIELD ) Optional<String> password,
-            @JsonProperty( Names.CERTIFICATE_PROPERTY ) byte[] certificate,
+            @JsonProperty( Names.CERTIFICATE_FIELD ) byte[] certificate,
             @JsonProperty( Names.EMAIL_FIELD ) String email,
             @JsonProperty( Names.GIVEN_NAME_FIELD ) String givenName,
             @JsonProperty( Names.FAMILY_NAME_FIELD ) Optional<String> familyName,
@@ -89,7 +89,7 @@ public class DeveloperRegistrationRequest {
         return password;
     }
 
-    @JsonProperty( Names.CERTIFICATE_PROPERTY )
+    @JsonProperty( Names.CERTIFICATE_FIELD )
     public byte[] getCertificate() {
         return certificate;
     }

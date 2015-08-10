@@ -30,7 +30,7 @@ public final class Names {
     public static final String ID_FIELD                      = "id";
     public static final String CSRF_TOKEN                    = "csrfToken";
     public static final String PASSWORD_FIELD                = "password";
-    public static final String CERTIFICATE_PROPERTY          = "certificate";
+    public static final String CERTIFICATE_FIELD          = "certificate";
     public static final String GROUP_PROPERTY                = "group";
     public static final String GROUPS_PROPERTY               = "groups";
     public static final String USER_FIELD                    = "user";

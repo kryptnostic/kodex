@@ -9,17 +9,20 @@ import com.kryptnostic.kodex.v1.models.UserAttributes;
 public class UserCreationRequest {
     private final String                   password;
     private final String                   email;
+    private final String                   name;
     private final Optional<UserAttributes> attributes;
     private final boolean                  confirmationEmailNeeded;
 
     @JsonCreator
     public UserCreationRequest(
             @JsonProperty( Names.EMAIL_FIELD ) String email,
+            @JsonProperty( Names.NAME_FIELD ) String name,
             @JsonProperty( Names.PASSWORD_FIELD ) String password,
             @JsonProperty( Names.ATTRIBUTES_FIELD ) Optional<UserAttributes> attributes,
             @JsonProperty( Names.CONFIRMATION_FIELD ) Optional<Boolean> confirmationEmailNeeded ) {
         this.password = password;
         this.email = email;
+        this.name = name;
         this.confirmationEmailNeeded = confirmationEmailNeeded.or( false );
         this.attributes = attributes;
     }
@@ -33,17 +36,10 @@ public class UserCreationRequest {
     public String getEmail() {
         return email;
     }
-
-    @JsonProperty( Names.GIVEN_NAME_FIELD )
-    public Optional<String> getFamilyName() {
-        return attributes.isPresent() ? Optional.fromNullable( attributes.get().get( Names.GIVEN_NAME_FIELD ) )
-                : Optional.<String> absent();
-    }
-
-    @JsonProperty( Names.FAMILY_NAME_FIELD )
-    public Optional<String> getGivenName() {
-        return attributes.isPresent() ? Optional.fromNullable( attributes.get().get( Names.FAMILY_NAME_FIELD ) )
-                : Optional.<String> absent();
+    
+    @JsonProperty( Names.NAME_FIELD )
+    public String getDisplayName() {
+        return name;
     }
 
     @JsonProperty( Names.ATTRIBUTES_FIELD )
