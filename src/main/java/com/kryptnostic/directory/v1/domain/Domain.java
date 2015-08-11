@@ -53,4 +53,10 @@ public class Domain {
         return this;
     }
 
+    @Override
+    public String toString() {
+        return "Domain [id=" + id + ", name=" + name + ", size=" + size + ", confirmationEmailRequired="
+                + confirmationEmailRequired + "]";
+    }
+
 }
