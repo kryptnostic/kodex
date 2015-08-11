@@ -38,6 +38,7 @@ public interface DirectoryApi {
         public static final String USER          = "/{" + Names.USER_FIELD + "}";
         public static final String ID            = "/{" + Names.ID_FIELD + "}";
         public static final String USER_WITH_DOT = "/{" + Names.USER_FIELD + ":.+}";
+        public static final String REALM_WITH_DOT         = "/{" + Names.REALM_FIELD + ":.+}";
     }
 
     /**

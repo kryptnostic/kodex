@@ -8,7 +8,7 @@ import com.kryptnostic.kodex.v1.exceptions.types.ResourceNotFoundException;
 import com.kryptnostic.sharing.v1.models.NotificationPreference;
 
 public interface DirectoryClient {
-    Set<UUID> listUserInRealm( String realm );
+    Set<UUID> listUsersInRealm( String realm );
 
     PublicKeyEnvelope getPublicKey( UUID id ) throws ResourceNotFoundException;
 
