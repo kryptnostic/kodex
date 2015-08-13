@@ -18,22 +18,23 @@ public class KryptoModule extends SimpleModule {
                                                                               "SNAPSHOT",
                                                                               "com.kryptnostic",
                                                                               "krypto" );
-    protected final CryptoServiceLoader loader;
+    protected final Optional<CryptoServiceLoader> loader;
 
     public KryptoModule() {
-        this( null );
+        super( "KryptoModule", KRYPTO_JACKSON_MODULE_VERSION );
+        this.loader = Optional.absent();
     }
 
     public KryptoModule( CryptoServiceLoader loader ) {
         super( "KryptoModule", KRYPTO_JACKSON_MODULE_VERSION );
-        this.loader = loader;
+        this.loader = Optional.of(loader);
     }
 
     @Override
     public void setupModule( SetupContext context ) {
         super.setupModule( context );
         SimpleSerializers serializers = new SimpleSerializers();
-        serializers.addSerializer( Encryptable.class, new EncryptableSerializer( Optional.of( loader ) ) );
+        serializers.addSerializer( Encryptable.class, new EncryptableSerializer(  loader  ) );
         context.addSerializers( serializers );
     }
 }

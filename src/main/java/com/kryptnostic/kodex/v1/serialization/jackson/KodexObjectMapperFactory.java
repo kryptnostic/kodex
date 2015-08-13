@@ -47,7 +47,7 @@ public final class KodexObjectMapperFactory {
         configureNoCryptoOnSerialization( globalJsonMapper );
 
         globalSmileMapper = newSmileMapper();
-        configureNoCryptoOnSerialization( globalJsonMapper );
+        configureNoCryptoOnSerialization( globalSmileMapper );
     }
 
     private KodexObjectMapperFactory() {};
@@ -96,6 +96,7 @@ public final class KodexObjectMapperFactory {
         Std injectableValues = new Std();
         injectableValues.addValue( CryptoServiceLoaderHolder.class, CryptoServiceLoaderHolder.getEmptyHolder() );
         mapper.setInjectableValues( injectableValues );
+        mapper.registerModule( new KryptoModule() );
     }
 
     private static void configureCryptoOnSerialization(
