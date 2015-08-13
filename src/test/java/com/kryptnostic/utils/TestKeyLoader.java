@@ -41,11 +41,7 @@ public class TestKeyLoader implements CryptoServiceLoader {
 
     @Override
     public Map<String, CryptoService> getAll( Set<String> ids ) throws ExecutionException {
-        Map<String, CryptoService> data = Maps.newHashMap();
-        for ( String id : ids ) {
-            data.put( id, get( id ) );
-        }
-        return data;
+        return Maps.newHashMap( services );
     }
 
     public void clear() {
