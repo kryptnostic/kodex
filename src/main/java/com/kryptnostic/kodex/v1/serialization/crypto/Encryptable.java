@@ -18,6 +18,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
@@ -30,6 +31,7 @@ import com.kryptnostic.kodex.v1.crypto.ciphers.PasswordCryptoService;
 import com.kryptnostic.kodex.v1.crypto.keys.CryptoServiceLoader;
 import com.kryptnostic.kodex.v1.exceptions.types.SecurityConfigurationException;
 import com.kryptnostic.kodex.v1.models.blocks.ChunkingStrategy;
+import com.kryptnostic.kodex.v1.serialization.jackson.CryptoServiceLoaderHolder;
 import com.kryptnostic.kodex.v1.serialization.jackson.KodexObjectMapperFactory;
 import com.kryptnostic.storage.v1.models.EncryptableBlock;
 
@@ -84,7 +86,7 @@ import com.kryptnostic.storage.v1.models.EncryptableBlock;
  */
 public class Encryptable<T> implements Serializable {
     private static final long          serialVersionUID = 5128167833341065251L;
-    private static final Logger logger  = LoggerFactory.getLogger( Encryptable.class );
+    private static final Logger        logger           = LoggerFactory.getLogger( Encryptable.class );
     /**
      * This hash function is used to validate block integrity
      */
@@ -193,18 +195,18 @@ public class Encryptable<T> implements Serializable {
             EncryptableBlock[] ciphertext,
             BlockCiphertext className,
             String cryptoServiceId,
-            CryptoServiceLoader loader,
+            CryptoServiceLoaderHolder loader,
             ChunkingStrategy chunkingStrategy ) throws SecurityConfigurationException,
             ClassNotFoundException,
             IOException {
         this.cryptoServiceId = cryptoServiceId;
         this.chunkingStrategy = chunkingStrategy;
-
-        CryptoService crypto = null;
-
-        try {
-            crypto = getCryptoService( loader );
-        } catch ( SecurityConfigurationException e ) {}
+        Optional<CryptoService> crypto;
+        if ( loader.isPresent() ) {
+            try {
+                crypto = getCryptoService( loader.get() );
+            } catch ( SecurityConfigurationException e ) {}
+        }
 
         if ( crypto != null ) {
             Encryptable<T> encrypted = new Encryptable<T>( ciphertext, className, cryptoServiceId );
@@ -239,7 +241,7 @@ public class Encryptable<T> implements Serializable {
             @JsonProperty( Names.DATA_FIELD ) EncryptableBlock[] ciphertext,
             @JsonProperty( Names.USERNAME_FIELD ) BlockCiphertext className,
             @JsonProperty( Names.KEY_FIELD ) String cryptoServiceId,
-            @JacksonInject CryptoServiceLoader loader ) throws SecurityConfigurationException,
+            @JacksonInject CryptoServiceLoaderHolder loader ) throws SecurityConfigurationException,
             ClassNotFoundException,
             IOException {
         this( ciphertext, className, cryptoServiceId, loader, new DefaultChunkingStrategy() );
@@ -257,7 +259,7 @@ public class Encryptable<T> implements Serializable {
         if ( this.encrypted ) {
             return this;
         }
-        
+
         Preconditions.checkNotNull( this.data );
         Preconditions.checkNotNull( this.className );
         Preconditions.checkState( this.encryptedData == null );
@@ -358,7 +360,7 @@ public class Encryptable<T> implements Serializable {
         }
     }
 
-    protected CryptoService getCryptoService( CryptoServiceLoader loader ) throws SecurityConfigurationException {
+    protected Optional<CryptoService> getCryptoService( CryptoServiceLoader loader ) throws SecurityConfigurationException {
         if ( loader == null ) {
             throw new SecurityConfigurationException( "No CryptoServiceLoader was found" );
         }
@@ -366,7 +368,7 @@ public class Encryptable<T> implements Serializable {
         try {
             return loader.get( cryptoServiceId );
         } catch ( NullPointerException | ExecutionException e ) {
-            logger.error( "Something went wrong with the crypto service loader." , e );
+            logger.error( "Something went wrong with the crypto service loader.", e );
             wrapSecurityConfigurationException( e );
         }
         return null;

@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 
 import retrofit.RetrofitError;
 
+import com.google.common.base.Optional;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
@@ -101,8 +102,8 @@ public class DefaultCryptoServiceLoader implements CryptoServiceLoader {
     }
 
     @Override
-    public CryptoService get( String id ) throws ExecutionException {
-        return keyCache.get( id );
+    public Optional<CryptoService> get( String id ) throws ExecutionException {
+        return Optional.fromNullable( keyCache.get( id ) );
     }
 
     @Override

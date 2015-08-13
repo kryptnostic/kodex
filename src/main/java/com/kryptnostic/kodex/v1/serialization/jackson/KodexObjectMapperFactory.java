@@ -59,6 +59,12 @@ public final class KodexObjectMapperFactory {
         return mapper;
     }
 
+    private static void configureCryptoOnSerialization( ObjectMapper mapper , CryptoServiceLoader loader ) {
+        Std injectableValues = new Std();
+        injectableValues.addValue( CryptoServiceLoaderHolder.class, CryptoServiceLoaderHolder.fromLoader( loader ) );
+        mapper.setInjectableValues( injectableValues );
+    }
+    
     public static ObjectMapper getSmileMapper( CryptoServiceLoader loader ) {
         ObjectMapper mapper = new ObjectMapper( new SmileFactory() );
         configureMapperInjectables(
