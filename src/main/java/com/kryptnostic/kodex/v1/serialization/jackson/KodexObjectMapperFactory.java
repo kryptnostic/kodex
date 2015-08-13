@@ -40,10 +40,11 @@ public final class KodexObjectMapperFactory {
     }
 
     public static ObjectMapper getObjectMapper( CryptoServiceLoader loader ) {
-        ObjectMapper mapper = getBaseMapper();
+        ObjectMapper mapper = new ObjectMapper();
         configureMapperInjectables(
                 mapper,
                 Preconditions.checkNotNull( loader, "Crypto service loader cannot be null." ) );
+        configureMapper( mapper );
         return mapper;
     }
 
@@ -52,8 +53,9 @@ public final class KodexObjectMapperFactory {
             return globalMapper;
         }
 
-        ObjectMapper mapper = getBaseMapper();
+        ObjectMapper mapper = new ObjectMapper();
         configureMapperInjectables( mapper, null );
+        configureMapper( mapper );
         return mapper;
     }
 
@@ -70,12 +72,6 @@ public final class KodexObjectMapperFactory {
         ObjectMapper mapper = new ObjectMapper( new SmileFactory() );
         configureMapper( mapper );
         configureMapperInjectables( mapper, null );
-        return mapper;
-    }
-
-    private static ObjectMapper getBaseMapper() {
-        ObjectMapper mapper = new ObjectMapper();
-        configureMapper( mapper );
         return mapper;
     }
 
