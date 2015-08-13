@@ -8,9 +8,8 @@ import retrofit.http.POST;
 import com.kryptnostic.registration.v1.models.UserCreationRequest;
 
 public interface RegistrationApi {
-    public static final String CONTROLLER = "/registration";
-    public static final String USER       = "/user";
-    public static final String DEVELOPERS = "/developers";
+    String CONTROLLER = "/registration";
+    String USER       = "/user";
 
     /**
      * Registers a normal user using the domain of their e-mail as their domain.
