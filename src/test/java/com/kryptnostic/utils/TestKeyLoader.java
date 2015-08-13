@@ -4,6 +4,7 @@ import java.security.InvalidAlgorithmParameterException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ExecutionException;
 
 import com.google.common.collect.Maps;
@@ -13,7 +14,7 @@ import com.kryptnostic.kodex.v1.crypto.ciphers.Cypher;
 import com.kryptnostic.kodex.v1.crypto.keys.CryptoServiceLoader;
 
 public class TestKeyLoader implements CryptoServiceLoader {
-    private Map<String, CryptoService> services = Maps.newHashMap();
+    private ConcurrentMap<String, CryptoService> services = Maps.newConcurrentMap();
 
     @Override
     public void put( String id, CryptoService service ) {
@@ -29,7 +30,11 @@ public class TestKeyLoader implements CryptoServiceLoader {
             } catch ( NoSuchAlgorithmException | InvalidAlgorithmParameterException e ) {
                 throw new ExecutionException( e );
             }
-            services.put( id, s );
+
+            CryptoService maybe = services.putIfAbsent( id, s );
+            if ( maybe != null ) {
+                s = maybe;
+            }
         }
         return s;
     }
