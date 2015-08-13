@@ -59,10 +59,10 @@ public final class KodexObjectMapperFactory {
 
     public static ObjectMapper getSmileMapper( CryptoServiceLoader loader ) {
         ObjectMapper mapper = new ObjectMapper( new SmileFactory() );
-        configureMapper( mapper );
         configureMapperInjectables(
                 mapper,
                 Preconditions.checkNotNull( loader, "Crypto service loader cannot be null." ) );
+        configureMapper( mapper );
         return mapper;
     }
 

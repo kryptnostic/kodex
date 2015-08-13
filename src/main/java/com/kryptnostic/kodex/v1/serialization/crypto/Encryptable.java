@@ -9,6 +9,8 @@ import java.util.concurrent.ExecutionException;
 
 import org.apache.commons.codec.binary.StringUtils;
 import org.joda.time.DateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.annotation.JacksonInject;
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -82,6 +84,7 @@ import com.kryptnostic.storage.v1.models.EncryptableBlock;
  */
 public class Encryptable<T> implements Serializable {
     private static final long          serialVersionUID = 5128167833341065251L;
+    private static final Logger logger  = LoggerFactory.getLogger( Encryptable.class );
     /**
      * This hash function is used to validate block integrity
      */
@@ -260,7 +263,7 @@ public class Encryptable<T> implements Serializable {
         Preconditions.checkState( this.encryptedData == null );
         Preconditions.checkState( this.encryptedClassName == null );
 
-        CryptoService crypto = getCryptoService( Preconditions.checkNotNull( loader , "Crypto service loader cannot be null." ) );
+        CryptoService crypto = getCryptoService( loader );
 
         return encryptWith( crypto );
     }
@@ -363,9 +366,9 @@ public class Encryptable<T> implements Serializable {
         try {
             return loader.get( cryptoServiceId );
         } catch ( NullPointerException | ExecutionException e ) {
+            logger.error( "Something went wrong with the crypto service loader." , e );
             wrapSecurityConfigurationException( e );
         }
-        wrapSecurityConfigurationException( new Exception( "Invalid loader" ) );
         return null;
     }
 
