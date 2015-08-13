@@ -21,6 +21,7 @@ import com.fasterxml.jackson.dataformat.smile.SmileFactory;
 import com.fasterxml.jackson.datatype.guava.GuavaModule;
 import com.fasterxml.jackson.datatype.joda.JodaModule;
 import com.fasterxml.jackson.module.afterburner.AfterburnerModule;
+import com.google.common.base.Preconditions;
 import com.kryptnostic.crypto.padding.ZeroPaddingStrategy;
 import com.kryptnostic.kodex.v1.crypto.keys.CryptoServiceLoader;
 import com.kryptnostic.kodex.v1.models.KryptnosticUser;
@@ -40,7 +41,9 @@ public final class KodexObjectMapperFactory {
 
     public static ObjectMapper getObjectMapper( CryptoServiceLoader loader ) {
         ObjectMapper mapper = getBaseMapper();
-        configureMapperInjectables( mapper, loader );
+        configureMapperInjectables(
+                mapper,
+                Preconditions.checkNotNull( loader, "Crypto service loader cannot be null." ) );
         return mapper;
     }
 
@@ -48,18 +51,26 @@ public final class KodexObjectMapperFactory {
         if ( globalMapper != null ) {
             return globalMapper;
         }
-        return getObjectMapper( null );
+
+        ObjectMapper mapper = getBaseMapper();
+        configureMapperInjectables( mapper, null );
+        return mapper;
     }
 
     public static ObjectMapper getSmileMapper( CryptoServiceLoader loader ) {
         ObjectMapper mapper = new ObjectMapper( new SmileFactory() );
         configureMapper( mapper );
-        configureMapperInjectables( mapper, loader );
+        configureMapperInjectables(
+                mapper,
+                Preconditions.checkNotNull( loader, "Crypto service loader cannot be null." ) );
         return mapper;
     }
 
     public static ObjectMapper getSmileMapper() {
-        return getSmileMapper( null );
+        ObjectMapper mapper = new ObjectMapper( new SmileFactory() );
+        configureMapper( mapper );
+        configureMapperInjectables( mapper, null );
+        return mapper;
     }
 
     private static ObjectMapper getBaseMapper() {

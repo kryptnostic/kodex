@@ -16,6 +16,7 @@ import com.kryptnostic.kodex.v1.serialization.crypto.Encryptable;
 
 /**
  * @author sinaiman
+ * @author Matthew Tamayo-Rios &lt;matthew@kryptnostic.com&gt; 
  *
  */
 @SuppressWarnings( "rawtypes" )
@@ -28,7 +29,7 @@ public class EncryptableSerializer extends JsonSerializer<Encryptable> {
      * @param loader
      */
     public EncryptableSerializer( CryptoServiceLoader loader ) {
-        this.loader = Preconditions.checkNotNull( loader , "Cryptoservice null cannot be null when constructing encryptable serializer." );
+        this.loader = loader;
     }
 
     @Override

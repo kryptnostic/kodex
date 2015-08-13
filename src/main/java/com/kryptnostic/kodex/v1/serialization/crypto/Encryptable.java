@@ -255,7 +255,6 @@ public class Encryptable<T> implements Serializable {
             return this;
         }
         
-        
         Preconditions.checkNotNull( this.data );
         Preconditions.checkNotNull( this.className );
         Preconditions.checkState( this.encryptedData == null );
