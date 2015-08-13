@@ -5,6 +5,8 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
 
+import javax.annotation.Nonnull;
+
 import retrofit.converter.ConversionException;
 import retrofit.converter.Converter;
 import retrofit.mime.TypedByteArray;
@@ -25,64 +27,88 @@ import com.google.common.base.Preconditions;
 import com.kryptnostic.crypto.padding.ZeroPaddingStrategy;
 import com.kryptnostic.kodex.v1.crypto.keys.CryptoServiceLoader;
 import com.kryptnostic.kodex.v1.models.KryptnosticUser;
+import com.kryptnostic.kodex.v1.serialization.crypto.Encryptable;
+import com.kryptnostic.multivariate.gf2.SimplePolynomialFunction;
 import com.kryptnostic.multivariate.polynomial.BasePolynomialFunction;
 import com.kryptnostic.multivariate.polynomial.CompoundPolynomialFunctionGF2;
 import com.kryptnostic.multivariate.polynomial.OptimizedPolynomialFunctionGF2;
 import com.kryptnostic.multivariate.polynomial.ParameterizedPolynomialFunctionGF2;
 
+/**
+ * @author Matthew Tamayo-Rios &lt;matthew@kryptnostic.com&gt;
+ *
+ */
 public final class KodexObjectMapperFactory {
-    private static ObjectMapper globalMapper = null;
+    private final static ObjectMapper globalJsonMapper;
+    private final static ObjectMapper globalSmileMapper;
+    
+    static {
+        globalJsonMapper = newJsonMapper();
+        configureNoCryptoOnSerialization( globalJsonMapper );
+
+        globalSmileMapper = newSmileMapper();
+        configureNoCryptoOnSerialization( globalSmileMapper );
+    }
 
     private KodexObjectMapperFactory() {};
 
-    public static void setGlobalObjectMapper( ObjectMapper mapper ) {
-        globalMapper = mapper;
-    }
-
-    public static ObjectMapper getObjectMapper( CryptoServiceLoader loader ) {
-        ObjectMapper mapper = new ObjectMapper();
-        configureMapperInjectables(
-                mapper,
-                Preconditions.checkNotNull( loader, "Crypto service loader cannot be null." ) );
-        configureMapper( mapper );
-        return mapper;
-    }
-
+    /**
+     * Returns a global regular json jackson object mapper capable of serializing {@link CompoundPolynomialFunctionGF2},
+     * {@link SimplePolynomialFunction}, {@link BasePolynomialFunction}, {@link ParameterizedPolynomialFunctionGF2},
+     * {@link ZeroPaddingStrategy}, {@link KryptnosticUser}, and {@link Encryptable}. This object mapper will not
+     * decrypt on deserialization.
+     * 
+     * @return
+     */
     public static ObjectMapper getObjectMapper() {
-        if ( globalMapper != null ) {
-            return globalMapper;
-        }
-
-        ObjectMapper mapper = new ObjectMapper();
-        configureMapperInjectables( mapper, null );
-        configureMapper( mapper );
-        return mapper;
+        return globalJsonMapper;
     }
 
-    public static ObjectMapper getSmileMapper( CryptoServiceLoader loader ) {
-        ObjectMapper mapper = new ObjectMapper( new SmileFactory() );
-        configureMapperInjectables(
-                mapper,
-                Preconditions.checkNotNull( loader, "Crypto service loader cannot be null." ) );
-        configureMapper( mapper );
-        return mapper;
-    }
-
+    /**
+     * Returns a global binary smile jackson object mapper capable of serializing {@link CompoundPolynomialFunctionGF2},
+     * {@link SimplePolynomialFunction}, {@link BasePolynomialFunction}, {@link ParameterizedPolynomialFunctionGF2},
+     * {@link ZeroPaddingStrategy}, {@link KryptnosticUser}, and {@link Encryptable}. This object mapper will not
+     * decrypt on deserialization.
+     * 
+     * @return
+     */
     public static ObjectMapper getSmileMapper() {
-        ObjectMapper mapper = new ObjectMapper( new SmileFactory() );
-        configureMapper( mapper );
-        configureMapperInjectables( mapper, null );
+        return globalSmileMapper;
+    }
+
+    public static ObjectMapper getObjectMapper( @Nonnull CryptoServiceLoader loader ) {
+        ObjectMapper mapper = newJsonMapper();
+        configureCryptoOnSerialization(
+                mapper,
+                Preconditions.checkNotNull( loader, "CryptoServiceLoader cannot be null." ) );
         return mapper;
     }
 
-    private static void configureMapperInjectables( ObjectMapper mapper, CryptoServiceLoader loader ) {
-        Std injectableValues = new Std();
-        injectableValues.addValue( CryptoServiceLoader.class, loader );
-        mapper.setInjectableValues( injectableValues );
-        mapper.registerModule( new KodexModule( loader ) );
+    public static ObjectMapper getSmileMapper( @Nonnull CryptoServiceLoader loader ) {
+        ObjectMapper mapper = newSmileMapper();
+        configureCryptoOnSerialization(
+                mapper,
+                Preconditions.checkNotNull( loader, "CryptoServiceLoader cannot be null." ) );
+        return mapper;
     }
 
-    private static void configureMapper( ObjectMapper mapper ) {
+    private static void configureNoCryptoOnSerialization( @Nonnull ObjectMapper mapper ) {
+        Std injectableValues = new Std();
+        injectableValues.addValue( CryptoServiceLoaderHolder.class, CryptoServiceLoaderHolder.getEmptyHolder() );
+        mapper.setInjectableValues( injectableValues );
+        mapper.registerModule( new KryptoModule() );
+    }
+
+    private static void configureCryptoOnSerialization(
+            @Nonnull ObjectMapper mapper,
+            @Nonnull CryptoServiceLoader loader ) {
+        Std injectableValues = new Std();
+        injectableValues.addValue( CryptoServiceLoaderHolder.class, CryptoServiceLoaderHolder.fromLoader( loader ) );
+        mapper.setInjectableValues( injectableValues );
+        mapper.registerModule( new KryptoModule( loader ) );
+    }
+
+    private static void configureMapper( @Nonnull ObjectMapper mapper ) {
         mapper.registerModule( new KodexModule() );
         mapper.registerModule( new GuavaModule() );
         mapper.registerModule( new JodaModule() );
@@ -96,6 +122,19 @@ public final class KodexObjectMapperFactory {
                 KryptnosticUser.class );
     }
 
+    private static ObjectMapper newJsonMapper() {
+        ObjectMapper mapper = new ObjectMapper();
+        configureMapper( mapper );
+        return mapper;
+    }
+
+    private static ObjectMapper newSmileMapper() {
+        ObjectMapper mapper = new ObjectMapper( new SmileFactory() );
+        configureMapper( mapper );
+        return mapper;
+    }
+
+    // TODO: Get rid of this
     public static Converter getRetrofitConverter() {
         return new Converter() {
             private static final String MIME_TYPE    = "application/json; charset=UTF-8";
