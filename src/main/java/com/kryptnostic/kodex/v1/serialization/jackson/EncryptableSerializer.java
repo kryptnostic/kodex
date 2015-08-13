@@ -8,6 +8,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.jsontype.TypeSerializer;
+import com.google.common.base.Preconditions;
 import com.kryptnostic.kodex.v1.constants.Names;
 import com.kryptnostic.kodex.v1.crypto.keys.CryptoServiceLoader;
 import com.kryptnostic.kodex.v1.exceptions.types.SecurityConfigurationException;
@@ -27,7 +28,7 @@ public class EncryptableSerializer extends JsonSerializer<Encryptable> {
      * @param loader
      */
     public EncryptableSerializer( CryptoServiceLoader loader ) {
-        this.loader = loader;
+        this.loader = Preconditions.checkNotNull( loader , "Cryptoservice null cannot be null when constructing encryptable serializer." );
     }
 
     @Override

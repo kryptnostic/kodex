@@ -254,13 +254,14 @@ public class Encryptable<T> implements Serializable {
         if ( this.encrypted ) {
             return this;
         }
-
+        
+        
         Preconditions.checkNotNull( this.data );
         Preconditions.checkNotNull( this.className );
         Preconditions.checkState( this.encryptedData == null );
         Preconditions.checkState( this.encryptedClassName == null );
 
-        CryptoService crypto = getCryptoService( loader );
+        CryptoService crypto = getCryptoService( Preconditions.checkNotNull( loader , "Crypto service loader cannot be null." ) );
 
         return encryptWith( crypto );
     }
