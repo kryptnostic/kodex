@@ -162,7 +162,7 @@ public class Encryptable<T> implements Serializable {
             ChunkingStrategy chunkingStrategy ) throws ClassNotFoundException,
             SecurityConfigurationException,
             IOException {
-        this( ciphertext, className, cryptoServiceId, null, chunkingStrategy );
+        this( ciphertext, className, cryptoServiceId, CryptoServiceLoaderHolder.getEmptyHolder(), chunkingStrategy );
     }
 
     /**
@@ -177,7 +177,12 @@ public class Encryptable<T> implements Serializable {
     public Encryptable( EncryptableBlock[] ciphertext, BlockCiphertext className, String cryptoServiceId ) throws ClassNotFoundException,
             SecurityConfigurationException,
             IOException {
-        this( ciphertext, className, cryptoServiceId, null, new DefaultChunkingStrategy() );
+        this(
+                ciphertext,
+                className,
+                cryptoServiceId,
+                CryptoServiceLoaderHolder.getEmptyHolder(),
+                new DefaultChunkingStrategy() );
     }
 
     /**
@@ -199,24 +204,25 @@ public class Encryptable<T> implements Serializable {
             ChunkingStrategy chunkingStrategy ) throws SecurityConfigurationException,
             ClassNotFoundException,
             IOException {
+        Preconditions.checkNotNull( loader, "CryptoServiceLoaderHolder must be present." );
         this.cryptoServiceId = cryptoServiceId;
         this.chunkingStrategy = chunkingStrategy;
         Optional<CryptoService> crypto;
         if ( loader.isPresent() ) {
-            try {
-                crypto = getCryptoService( loader.get() );
-            } catch ( SecurityConfigurationException e ) {}
-        }
-
-        if ( crypto != null ) {
-            Encryptable<T> encrypted = new Encryptable<T>( ciphertext, className, cryptoServiceId );
-            Encryptable<T> decrypted;
-            decrypted = encrypted.decryptWith( crypto );
-            this.encrypted = false;
-            this.data = decrypted.getData();
-            this.className = decrypted.getClassName();
-            this.encryptedData = null;
-            this.encryptedClassName = null;
+            // Crypto on serialization is enabled so let's try and get a CryptoService.
+            crypto = getCryptoService( loader.get() );
+            if ( crypto.isPresent() ) {
+                Encryptable<T> encrypted = new Encryptable<T>( ciphertext, className, cryptoServiceId );
+                Encryptable<T> decrypted;
+                decrypted = encrypted.decryptWith( crypto.get() );
+                this.encrypted = false;
+                this.data = decrypted.getData();
+                this.className = decrypted.getClassName();
+                this.encryptedData = null;
+                this.encryptedClassName = null;
+            } else {
+                throw new SecurityConfigurationException( "Unable to decrypt because no crypto service was loadable." );
+            }
         } else {
             this.encrypted = true;
             this.data = null;
@@ -265,9 +271,12 @@ public class Encryptable<T> implements Serializable {
         Preconditions.checkState( this.encryptedData == null );
         Preconditions.checkState( this.encryptedClassName == null );
 
-        CryptoService crypto = getCryptoService( loader );
-
-        return encryptWith( crypto );
+        Optional<CryptoService> crypto = getCryptoService( loader );
+        if ( crypto.isPresent() ) {
+            return encryptWith( crypto.get() );
+        } else {
+            throw new SecurityConfigurationException( "Unable to encrypt because no crypto service was loadable." );
+        }
     }
 
     protected Encryptable<T> encryptWith( CryptoService crypto ) throws SecurityConfigurationException, IOException,
@@ -318,9 +327,12 @@ public class Encryptable<T> implements Serializable {
         Preconditions.checkNotNull( this.encryptedData );
         Preconditions.checkNotNull( this.encryptedClassName );
 
-        CryptoService crypto = getCryptoService( loader );
-
-        return decryptWith( crypto );
+        Optional<CryptoService> crypto = getCryptoService( loader );
+        if ( crypto.isPresent() ) {
+            return decryptWith( crypto.get() );
+        } else {
+            throw new SecurityConfigurationException( "Unable to decrypt because no crypto service was loadable." );
+        }
     }
 
     @SuppressWarnings( "unchecked" )
@@ -341,6 +353,7 @@ public class Encryptable<T> implements Serializable {
      * @throws JsonProcessingException If anything goes wrong writing bytes to figure out how many blocks there are TODO
      *             this method is undefined if the object is in an encrypted state, add safeguards for this case
      */
+    @JsonIgnore
     public int getBlockCount() throws JsonProcessingException {
         if ( encrypted ) {
             return encryptedData.length;
@@ -360,22 +373,16 @@ public class Encryptable<T> implements Serializable {
         }
     }
 
-    protected Optional<CryptoService> getCryptoService( CryptoServiceLoader loader ) throws SecurityConfigurationException {
-        if ( loader == null ) {
-            throw new SecurityConfigurationException( "No CryptoServiceLoader was found" );
-        }
+    protected Optional<CryptoService> getCryptoService( CryptoServiceLoader loader )
+            throws SecurityConfigurationException {
+        Preconditions.checkNotNull( loader, "CryptoServiceLoader cannot be null." );
 
         try {
             return loader.get( cryptoServiceId );
-        } catch ( NullPointerException | ExecutionException e ) {
+        } catch ( ExecutionException e ) {
             logger.error( "Something went wrong with the crypto service loader.", e );
-            wrapSecurityConfigurationException( e );
+            return Optional.absent();
         }
-        return null;
-    }
-
-    private void wrapSecurityConfigurationException( Exception e ) throws SecurityConfigurationException {
-        throw new SecurityConfigurationException( "Error occurred while trying to encrypt or decrypt data.", e );
     }
 
     /**

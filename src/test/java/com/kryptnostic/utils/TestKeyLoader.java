@@ -7,6 +7,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ExecutionException;
 
+import com.google.common.base.Optional;
 import com.google.common.collect.Maps;
 import com.kryptnostic.kodex.v1.crypto.ciphers.AesCryptoService;
 import com.kryptnostic.kodex.v1.crypto.ciphers.CryptoService;
@@ -22,7 +23,7 @@ public class TestKeyLoader implements CryptoServiceLoader {
     }
 
     @Override
-    public CryptoService get( String id ) throws ExecutionException {
+    public Optional<CryptoService> get( String id ) throws ExecutionException {
         CryptoService s = services.get( id );
         if ( s == null ) {
             try {
@@ -36,7 +37,7 @@ public class TestKeyLoader implements CryptoServiceLoader {
                 s = maybe;
             }
         }
-        return s;
+        return Optional.of( s );
     }
 
     @Override
