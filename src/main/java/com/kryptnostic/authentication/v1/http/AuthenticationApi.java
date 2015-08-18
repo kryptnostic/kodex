@@ -31,10 +31,10 @@ public interface AuthenticationApi {
      * @param request AuthenticationRequest
      * @return The handle
      */
-    @POST( UUID )
+    @POST( CONTROLLER + UUID )
     Optional<String> authenticate( @Body AuthenticationRequest request );
 
-    @POST( EMAIL )
+    @POST( CONTROLLER + EMAIL )
     Optional<UUID> authenticate( @Body EmailAuthenticationRequest request );
 
 }
