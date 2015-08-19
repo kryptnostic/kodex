@@ -30,15 +30,16 @@ public interface DirectoryApi {
     String NOTIFICATION_KEY = "/notifications";
     String SALT_KEY         = "/salt";
     String RESOLUTION_KEY   = "/resolve";
+    String INITIALIZED      = "/initialized";
 
     public static final class PARAM {
         private PARAM() {}
 
-        public static final String REALM         = "/{" + Names.REALM_FIELD + "}";
-        public static final String USER          = "/{" + Names.USER_FIELD + "}";
-        public static final String ID            = "/{" + Names.ID_FIELD + "}";
-        public static final String USER_WITH_DOT = "/{" + Names.USER_FIELD + ":.+}";
-        public static final String REALM_WITH_DOT         = "/{" + Names.REALM_FIELD + ":.+}";
+        public static final String REALM          = "/{" + Names.REALM_FIELD + "}";
+        public static final String USER           = "/{" + Names.USER_FIELD + "}";
+        public static final String ID             = "/{" + Names.ID_FIELD + "}";
+        public static final String USER_WITH_DOT  = "/{" + Names.USER_FIELD + ":.+}";
+        public static final String REALM_WITH_DOT = "/{" + Names.REALM_FIELD + ":.+}";
     }
 
     /**
@@ -56,7 +57,7 @@ public interface DirectoryApi {
 
     /**
      * Retrieves the password encrypted salt for authentication from the server.
-     * 
+     *
      * @param id The id of the user whose encrypted salt shall be retrieved.
      * @return A ciphertext of the password encrypted for the user.
      */
@@ -112,7 +113,11 @@ public interface DirectoryApi {
     @GET( CONTROLLER + PARAM.REALM )
     Set<UUID> listUserInRealm( @Path( Names.REALM_FIELD ) String realm );
 
+    @GET( CONTROLLER + INITIALIZED + PARAM.REALM )
+    Set<UUID> listInitializedUserInRealm( @Path( Names.REALM_FIELD ) String realm );
+
     @Timed
     @GET( CONTROLLER + PARAM.REALM + PARAM.USER )
     Optional<UUID> getUUIDFromEmail( @Path( Names.USER_FIELD ) String email );
+
 }
