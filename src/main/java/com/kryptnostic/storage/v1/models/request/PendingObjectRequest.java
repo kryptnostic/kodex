@@ -10,7 +10,7 @@ import com.kryptnostic.kodex.v1.constants.Names;
 import com.kryptnostic.storage.v1.models.ObjectMetadata;
 
 public class PendingObjectRequest {
-    private static final boolean   INHERIT_OWNERSHIP_DEFAULT = false;
+    private static final boolean   INHERIT_OWNERSHIP_DEFAULT = true;
     private final String           type;
     private final @Nullable String parentObjectId;
     private final boolean          inheritOwnership;
