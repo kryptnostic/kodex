@@ -45,7 +45,7 @@ public interface UserDirectoryApi {
      * @param userId String form of reserved {@link UUID}
      * @return The user
      */
-    @GET( CONTROLLER + USERS + ID_PATH )
+    @GET( USERS + ID_PATH )
     Optional<User> getUser( @Path( ID ) UUID userId ); // developer
 
     /**
@@ -55,7 +55,7 @@ public interface UserDirectoryApi {
      * @return the UUID of the user deleted if any.
      * @throws RealmMismatchException
      */
-    @DELETE( CONTROLLER + USERS + ID_PATH )
+    @DELETE( USERS + ID_PATH )
     Optional<UUID> deleteUser( @Path( ID ) UUID userId ) throws RealmMismatchException; // developer
 
     /**
@@ -64,7 +64,7 @@ public interface UserDirectoryApi {
      * @param email
      * @return
      */
-    @GET( CONTROLLER + USERS + EMAIL_PATH )
+    @GET( USERS + EMAIL_PATH )
     Optional<UUID> resolve( @Path( EMAIL ) String email );
 
     /**
@@ -75,7 +75,7 @@ public interface UserDirectoryApi {
      * @return The UUID for the user.
      */
     @Deprecated
-    @GET( CONTROLLER + USERS + REALM_PATH + USERNAME_PATH )
+    @GET( USERS + REALM_PATH + USERNAME_PATH )
     Optional<UUID> resolve( @Path( REALM ) String realm, @Path( USERNAME ) String username );
 
     /**
@@ -89,7 +89,7 @@ public interface UserDirectoryApi {
      * @throws BadRequestException
      * @throws MailException
      */
-    @PUT( CONTROLLER + USERS + ID_PATH )
+    @PUT( USERS + ID_PATH )
     Optional<UUID> resetPassword( @Path( ID ) UUID userKey, @Body String newPassword ) throws UserUpdateException,
             ReservationTakenException, BadRequestException, MailException;
 
