@@ -17,7 +17,7 @@ public interface RegistrationApi {
      * @param request
      * @return
      */
-    @POST( USER )
+    @POST( CONTROLLER + USER )
     UUID register( @Body UserCreationRequest request );
 
 }
