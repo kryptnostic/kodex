@@ -8,7 +8,7 @@ import com.kryptnostic.kodex.v1.models.response.BasicResponse;
 import com.kryptnostic.storage.v1.models.request.MetadataDeleteRequest;
 import com.kryptnostic.storage.v1.models.request.MetadataRequest;
 
-public interface MetadataApi {
+public interface MetadataStorageApi {
     public static final String METADATA = "/metadata";
     public static final String DELETE   = "/delete";
 
