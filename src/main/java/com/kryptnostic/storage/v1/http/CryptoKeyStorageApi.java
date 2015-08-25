@@ -15,32 +15,31 @@ public interface CryptoKeyStorageApi {
     final String CONTROLLER         = "/keys";
     final String PRIVATE            = "/private";
     final String PUBLIC             = "/public";
-    final String HASH               = "/public";
+    final String HASH               = "/hash";
     final String ID                 = "id";
 
     public static final class PARAM {
         private PARAM() {}
 
-        public static final String USER           = "/{" + Names.USER_FIELD + "}";
         public static final String ID             = "/{" + Names.ID_FIELD + "}";
     }
 
-    @PUT( CONTROLLER + PRIVATE + PARAM.USER )
-    BasicResponse<String> addFHEPrivateKeyForUser( @Path( Names.USER_FIELD ) UUID id, @Body byte[] key ) throws BadRequestException;
+    @PUT( CONTROLLER + PRIVATE + PARAM.ID )
+    BasicResponse<String> addFHEPrivateKeyForUser( @Path( Names.ID_FIELD ) UUID id, @Body byte[] key ) throws BadRequestException;
 
-    @GET( CONTROLLER + PRIVATE + PARAM.USER )
-    byte[] getFHEPrivateKeyForUser( @Path( Names.USER_FIELD ) UUID id ) throws BadRequestException;
+    @GET( CONTROLLER + PRIVATE + PARAM.ID )
+    byte[] getFHEPrivateKeyForUser( @Path( Names.ID_FIELD ) UUID id ) throws BadRequestException;
 
-    @PUT( CONTROLLER + PUBLIC + PARAM.USER )
-    BasicResponse<String> addFHEPublicKeyForUser( @Path( Names.USER_FIELD ) UUID id, @Body byte[] key ) throws BadRequestException;
+    @PUT( CONTROLLER + PUBLIC + PARAM.ID )
+    BasicResponse<String> addFHEPublicKeyForUser( @Path( Names.ID_FIELD ) UUID id, @Body byte[] key ) throws BadRequestException;
 
-    @GET( CONTROLLER + PUBLIC + PARAM.USER )
-    byte[] getFHEPublicKeyForUser( @Path( Names.USER_FIELD ) UUID id ) throws BadRequestException;
+    @GET( CONTROLLER + PUBLIC + PARAM.ID )
+    byte[] getFHEPublicKeyForUser( @Path( Names.ID_FIELD ) UUID id ) throws BadRequestException;
 
-    @PUT( CONTROLLER + PUBLIC + PARAM.USER )
-    BasicResponse<String> addHashFunctionForUser( @Path( Names.USER_FIELD ) UUID id, @Body byte[] key ) throws BadRequestException;
+    @PUT( CONTROLLER + HASH + PARAM.ID )
+    BasicResponse<String> addHashFunctionForUser( @Path( Names.ID_FIELD ) UUID id, @Body byte[] key ) throws BadRequestException;
 
-    @GET( CONTROLLER + PUBLIC + PARAM.USER )
-    byte[] getHashFunctionForUser( @Path( Names.USER_FIELD ) UUID id ) throws BadRequestException;
+    @GET( CONTROLLER + HASH + PARAM.ID )
+    byte[] getHashFunctionForUser( @Path( Names.ID_FIELD ) UUID id ) throws BadRequestException;
 
 }
