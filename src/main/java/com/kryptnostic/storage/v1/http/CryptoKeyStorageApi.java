@@ -25,19 +25,19 @@ public interface CryptoKeyStorageApi {
     }
 
     @PUT( CONTROLLER + PRIVATE + PARAM.ID )
-    BasicResponse<String> addFHEPrivateKeyForUser( @Path( Names.ID_FIELD ) UUID id, @Body byte[] key ) throws BadRequestException;
+    BasicResponse<String> setFHEPrivateKeyForUser( @Path( Names.ID_FIELD ) UUID id, @Body byte[] key ) throws BadRequestException;
 
     @GET( CONTROLLER + PRIVATE + PARAM.ID )
     byte[] getFHEPrivateKeyForUser( @Path( Names.ID_FIELD ) UUID id ) throws BadRequestException;
 
     @PUT( CONTROLLER + PUBLIC + PARAM.ID )
-    BasicResponse<String> addFHEPublicKeyForUser( @Path( Names.ID_FIELD ) UUID id, @Body byte[] key ) throws BadRequestException;
+    BasicResponse<String> setFHEPublicKeyForUser( @Path( Names.ID_FIELD ) UUID id, @Body byte[] key ) throws BadRequestException;
 
     @GET( CONTROLLER + PUBLIC + PARAM.ID )
     byte[] getFHEPublicKeyForUser( @Path( Names.ID_FIELD ) UUID id ) throws BadRequestException;
 
     @PUT( CONTROLLER + HASH + PARAM.ID )
-    BasicResponse<String> addHashFunctionForUser( @Path( Names.ID_FIELD ) UUID id, @Body byte[] key ) throws BadRequestException;
+    BasicResponse<String> setHashFunctionForUser( @Path( Names.ID_FIELD ) UUID id, @Body byte[] key ) throws BadRequestException;
 
     @GET( CONTROLLER + HASH + PARAM.ID )
     byte[] getHashFunctionForUser( @Path( Names.ID_FIELD ) UUID id ) throws BadRequestException;
