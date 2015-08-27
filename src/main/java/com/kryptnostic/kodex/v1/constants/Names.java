@@ -16,7 +16,7 @@ public final class Names {
     public static final String DOCUMENT_FIELD                = "document";
     public static final String DOCUMENT_KEY_FIELD            = "documentKey";
     public static final String EMAIL_FIELD                   = "email";
-    public static final String NAME_FIELD                    = "name";
+    public static final String USERNAME_FIELD                = "name";
     public static final String GIVEN_NAME_FIELD              = "givenName";
     public static final String FAMILY_NAME_FIELD             = "familyName";
     public static final String METADATA_FIELD                = "metadata";
@@ -30,7 +30,7 @@ public final class Names {
     public static final String ID_FIELD                      = "id";
     public static final String CSRF_TOKEN                    = "csrfToken";
     public static final String PASSWORD_FIELD                = "password";
-    public static final String CERTIFICATE_PROPERTY          = "certificate";
+    public static final String CERTIFICATE_FIELD             = "certificate";
     public static final String GROUP_PROPERTY                = "group";
     public static final String GROUPS_PROPERTY               = "groups";
     public static final String USER_FIELD                    = "user";
@@ -70,5 +70,10 @@ public final class Names {
     public static final String CHILD_OBJECT_COUNT_FIELD      = "childObjectCount";
     public static final String RESET_TOKEN_FIELD             = "resetToken";
     public static final String REGISTRAR_USER_SUFFIX         = "_registrar";
+    public static final String CONFIRMATION_FIELD            = "confirmationEmailNeeded";
+    public static final String NAME_FIELD                    = "name";
+    public static final String ROLES_FIELD                   = "roles";
     public static final String SIZE_FIELD                    = "size";
+    public static final String INHERIT_OWNERSHIP_FIELD       = "inhertitOwnership";
+    public static final String CREATOR_FIELD                 = "creator";
 }

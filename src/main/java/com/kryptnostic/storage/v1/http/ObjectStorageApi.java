@@ -20,7 +20,7 @@ import com.kryptnostic.storage.v1.models.KryptnosticObject;
 import com.kryptnostic.storage.v1.models.ObjectMetadata;
 import com.kryptnostic.storage.v1.models.request.PendingObjectRequest;
 
-public interface ObjectApi {
+public interface ObjectStorageApi {
     final String CONTROLLER             = "/object";
     final String ID                     = "id";
     final String REALM                  = "realm";

@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.module.SimpleDeserializers;
 import com.fasterxml.jackson.databind.module.SimpleKeyDeserializers;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.module.SimpleSerializers;
+import com.google.common.base.Optional;
 import com.kryptnostic.kodex.v1.crypto.keys.CryptoServiceLoader;
 import com.kryptnostic.kodex.v1.serialization.crypto.Encryptable;
 import com.kryptnostic.multivariate.gf2.Monomial;
@@ -14,24 +15,16 @@ import com.kryptnostic.multivariate.gf2.Monomial;
 @SuppressWarnings( "serial" )
 public class KodexModule extends SimpleModule {
     // TODO: I'd like to read this version info from one place or not have it here at all
-    public static final Version         KODEX_JACKSON_MODULE_VERSION = new Version(
-                                                                             0,
-                                                                             0,
-                                                                             1,
-                                                                             "SNAPSHOT",
-                                                                             "com.kryptnostic",
-                                                                             "kodex" );
-    protected final CryptoServiceLoader loader;
+    public static final Version KODEX_JACKSON_MODULE_VERSION = new Version(
+                                                                     0,
+                                                                     0,
+                                                                     1,
+                                                                     "SNAPSHOT",
+                                                                     "com.kryptnostic",
+                                                                     "kodex" );
 
     public KodexModule() {
         super( "KodexModule", KODEX_JACKSON_MODULE_VERSION );
-        this.loader = null;
-    }
-
-    public KodexModule( CryptoServiceLoader loader ) {
-        super( "KodexModule", KODEX_JACKSON_MODULE_VERSION );
-
-        this.loader = loader;
     }
 
     @Override
@@ -44,7 +37,6 @@ public class KodexModule extends SimpleModule {
         SimpleSerializers serializers = new SimpleSerializers();
         serializers.addSerializer( BitVector.class, new BitVectorSerializer() );
         serializers.addSerializer( Monomial.class, new MonomialSerializer() );
-        serializers.addSerializer( Encryptable.class, new EncryptableSerializer( loader ) );
 
         SimpleDeserializers deserializers = new SimpleDeserializers();
         deserializers.addDeserializer( BitVector.class, new BitVectorDeserializer() );

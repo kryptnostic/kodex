@@ -19,7 +19,7 @@ public class ReserveUserRequest {
     @JsonCreator
     public ReserveUserRequest(
             @JsonProperty( Names.REALM_FIELD ) String realm,
-            @JsonProperty( Names.NAME_FIELD ) String username,
+            @JsonProperty( Names.USERNAME_FIELD ) String username,
             @JsonProperty( Names.EMAIL_FIELD ) String email,
             @JsonProperty( Names.GIVEN_NAME_FIELD ) String givenName ) {
         this.realm = realm;
@@ -33,7 +33,7 @@ public class ReserveUserRequest {
         return realm;
     }
 
-    @JsonProperty( Names.NAME_FIELD )
+    @JsonProperty( Names.USERNAME_FIELD )
     public String getUsername() {
         return username;
     }

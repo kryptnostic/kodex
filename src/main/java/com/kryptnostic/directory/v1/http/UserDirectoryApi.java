@@ -1,138 +1,96 @@
 package com.kryptnostic.directory.v1.http;
 
+import java.util.UUID;
+
 import retrofit.http.Body;
 import retrofit.http.DELETE;
 import retrofit.http.GET;
-import retrofit.http.POST;
+import retrofit.http.PUT;
 import retrofit.http.Path;
 
-import com.kryptnostic.directory.v1.exception.ActiveReservationException;
-import com.kryptnostic.directory.v1.exception.AddUserException;
+import com.google.common.base.Optional;
 import com.kryptnostic.directory.v1.exception.MailException;
 import com.kryptnostic.directory.v1.exception.RealmMismatchException;
 import com.kryptnostic.directory.v1.exception.ReservationTakenException;
-import com.kryptnostic.directory.v1.exception.ReservationTokenMismatchException;
 import com.kryptnostic.directory.v1.exception.UserUpdateException;
-import com.kryptnostic.directory.v1.model.Reservation;
-import com.kryptnostic.directory.v1.model.request.ActivateUserRequest;
-import com.kryptnostic.directory.v1.model.request.ReserveUserRequest;
-import com.kryptnostic.directory.v1.model.request.UpdateUserRequest;
-import com.kryptnostic.directory.v1.model.response.ActivateUserResponse;
-import com.kryptnostic.directory.v1.model.response.ReserveUserResponse;
-import com.kryptnostic.directory.v1.model.response.UserResponse;
-import com.kryptnostic.directory.v1.principal.UserKey;
+import com.kryptnostic.directory.v1.principal.User;
 import com.kryptnostic.kodex.v1.exceptions.types.BadRequestException;
-import com.kryptnostic.kodex.v1.exceptions.types.ResourceNotFoundException;
 
 /**
  * RESTful API for adding, modifying, and removing users on the Kryptnostic platform.
  *
  * @author Nick Hewitt
+ * @author Matthew Tamayo-Rios &lt;matthew@kryptnostic.com&gt;
  *
  */
 public interface UserDirectoryApi {
-    public static final String ID           = "id";
-    public static final String CONTROLLER   = "/directory";
-    public static final String USERS        = "/users";
-    public static final String RESERVATIONS = "/reservations";
-    public static final String RESET     = "/reset";
-    public static final String ID_PATH      = "/{" + ID + "}";
-    public static final String ID_WITH_DOT  = "/{" + ID + ":.+}";
-
-    /**
-     * Reserve an account for a user with specified Realm and Username.
-     *
-     * @param request {@link ReserveUserRequest}
-     * @return {@link ReserveUserResponse}
-     * @throws ReservationTakenException
-     * @throws BadRequestException
-     */
-    @POST( RESERVATIONS )
-    ReserveUserResponse reserve( @Body ReserveUserRequest request ) throws ReservationTakenException,
-            BadRequestException; // developer
-
-    /**
-     * Get the reservation corresponding to the reservation ID.
-     *
-     * @param userId String form of reserved {@link UserKey}: {@code [ realm ].[ username ] }
-     * @return {@link Reservation}
-     */
-    @GET( RESERVATIONS + ID_PATH )
-    Reservation getReservation( @Path( ID ) String userId ); // developer
-
-    /**
-     * Delete the reservation corresponding to the reservation ID. If the reservation is already active, it cannot be
-     * deleted. You must first delete the user account, then may delete the reservation.
-     *
-     * @param userId String form of reserved {@link UserKey}: {@code [ realm ].[ username ] }
-     * @return {@link Reservation}
-     * @throws BadRequestException
-     * @throws RealmMismatchException
-     */
-    @DELETE( RESERVATIONS + ID_PATH )
-    Reservation deleteReservation( @Path( ID ) String userId ) throws BadRequestException, RealmMismatchException; // developer
-
-    /**
-     * Activate a user account, using the one-time user reservation token to create an account with a password. This is
-     * intended to be called from the client device so that developer and user creds can be kept on separate devices.
-     *
-     * @param request {@link ActivateUserRequest}
-     * @return {@link ActivateUserResponse}
-     * @throws AddUserException
-     * @throws ReservationTokenMismatchException
-     * @throws ActiveReservationException
-     * @throws ResourceNotFoundException
-     */
-    @POST( USERS )
-    ActivateUserResponse activate( @Body ActivateUserRequest request ) throws AddUserException,
-            ResourceNotFoundException, ActiveReservationException, ReservationTokenMismatchException; // public
-
-    /**
-     * Update and existing user account details, including username and password. If the username is changed, then that
-     * username will become available for other users in the realm to reserve.
-     *
-     * @param userId String form of reserved {@link UserKey}: {@code [ realm ].[ username ] }
-     * @param request {@link UpdateUserRequest}
-     * @return {@link UserResponse}
-     * @throws UserUpdateException
-     * @throws ReservationTakenException
-     * @throws BadRequestException
-     * @throws MailException
-     */
-    @POST( USERS + ID_PATH )
-    UserResponse update( @Path( ID ) String userId, @Body UpdateUserRequest request ) throws UserUpdateException,
-            ReservationTakenException, BadRequestException, MailException; // user
+    public static final String CONTROLLER          = "/directory";
+    public static final String ID                  = "id";
+    public static final String EMAIL               = "email";
+    public static final String REALM               = "realm";
+    public static final String USERNAME            = "username";
+    public static final String USERS               = "/users";
+    public static final String RESET               = "/reset";
+    public static final String ID_PATH             = "/{" + ID + "}";
+    public static final String ID_WITH_DOT         = "/{" + ID + ":.+}";
+    public static final String REALM_PATH          = "/{" + REALM + "}";
+    public static final String USERNAME_PATH       = "/{" + USERNAME + "}";
+    public static final String EMAIL_PATH          = "/" + EMAIL + "/{" + EMAIL + "}";   // +EMAIL needed to
+                                                                                          // disambiguate from get user
+    public static final String EMAIL_PATH_WITH_DOT = "/" + EMAIL + "/{" + EMAIL + ":.+}";
 
     /**
      * Get the account details for a given user.
      *
-     * @param userId String form of reserved {@link UserKey}: {@code [ realm ].[ username ] }
-     * @return {@link UserResponse}
+     * @param userId String form of reserved {@link UUID}
+     * @return The user
      */
-    @GET( USERS + ID_PATH )
-    UserResponse getUser( @Path( ID ) String userId ); // developer
+    @GET( CONTROLLER + USERS + ID_PATH )
+    Optional<User> getUser( @Path( ID ) UUID userId ); // developer
 
     /**
-     * Delete a specific user, removing it from the active directory.
+     * Delete a specific user, removing it from the directory.
      *
-     * @param userId String form of reserved {@link UserKey}: {@code [ realm ].[ username ] }
-     * @return {@link UserResponse}
+     * @param userId the user id of the user to be deleted.
+     * @return the UUID of the user deleted if any.
      * @throws RealmMismatchException
      */
-    @DELETE( USERS + ID_PATH )
-    UserResponse deleteUser( @Path( ID ) String userId ) throws RealmMismatchException; // developer
+    @DELETE( CONTROLLER + USERS + ID_PATH )
+    Optional<UUID> deleteUser( @Path( ID ) UUID userId ) throws RealmMismatchException; // developer
 
     /**
-     * Reset a users password given a reset token
-     * @param userId
-     * @param request
+     * Allows resolving an e-mail to a UUID. This is an open API.
+     *
+     * @param email
+     * @return
+     */
+    @GET( CONTROLLER + USERS + EMAIL_PATH )
+    Optional<UUID> resolve( @Path( EMAIL ) String email );
+
+    /**
+     * Deprecated API. Will be removed in next version.
+     *
+     * @param realm The realm in which to look for the user.
+     * @param username The username to perform map to a UUID.
+     * @return The UUID for the user.
+     */
+    @Deprecated
+    @GET( CONTROLLER + USERS + REALM_PATH + USERNAME_PATH )
+    Optional<UUID> resolve( @Path( REALM ) String realm, @Path( USERNAME ) String username );
+
+    /**
+     * This API resets the users authenticator. It does not impact key information.
+     *
+     * @param userKey
+     * @param newPassword
      * @return
      * @throws UserUpdateException
      * @throws ReservationTakenException
      * @throws BadRequestException
      * @throws MailException
      */
-    @POST( USERS + RESET + ID_PATH )
-    UserResponse resetPassword( @Path( ID ) String userId, @Body UpdateUserRequest request) throws UserUpdateException, ReservationTakenException,
-            BadRequestException, MailException;
+    @PUT( CONTROLLER + USERS + ID_PATH )
+    Optional<UUID> resetPassword( @Path( ID ) UUID userKey, @Body String newPassword ) throws UserUpdateException,
+            ReservationTakenException, BadRequestException, MailException;
+
 }

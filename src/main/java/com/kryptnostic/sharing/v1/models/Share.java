@@ -1,11 +1,11 @@
 package com.kryptnostic.sharing.v1.models;
 
 import java.io.Serializable;
+import java.util.UUID;
 
 import org.joda.time.DateTime;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.kryptnostic.directory.v1.principal.UserKey;
 import com.kryptnostic.kodex.v1.constants.Names;
 import com.kryptnostic.sharing.v1.models.request.SharingRequest;
 
@@ -53,7 +53,7 @@ public class Share implements Serializable {
         return creationTime;
     }
 
-    public static Share fromSharingRequest( UserKey user, SharingRequest request ) {
+    public static Share fromSharingRequest( UUID user, SharingRequest request ) {
         Share share = new Share( request.getObjectId(), request.getEncryptedSharingKey(), request.getUserKeys().get(
                 user ), DateTime.now() );
         return share;

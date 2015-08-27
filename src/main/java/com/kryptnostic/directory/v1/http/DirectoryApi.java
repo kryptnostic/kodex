@@ -2,6 +2,7 @@ package com.kryptnostic.directory.v1.http;
 
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 import retrofit.http.Body;
 import retrofit.http.GET;
@@ -10,9 +11,9 @@ import retrofit.http.PUT;
 import retrofit.http.Path;
 
 import com.codahale.metrics.annotation.Timed;
+import com.google.common.base.Optional;
 import com.kryptnostic.directory.v1.model.ByteArrayEnvelope;
 import com.kryptnostic.directory.v1.model.response.PublicKeyEnvelope;
-import com.kryptnostic.directory.v1.principal.UserKey;
 import com.kryptnostic.kodex.v1.constants.Names;
 import com.kryptnostic.kodex.v1.crypto.ciphers.BlockCiphertext;
 import com.kryptnostic.kodex.v1.crypto.keys.Kodex;
@@ -28,24 +29,27 @@ public interface DirectoryApi {
     String OBJECT_KEY       = "/object";
     String NOTIFICATION_KEY = "/notifications";
     String SALT_KEY         = "/salt";
+    String RESOLUTION_KEY   = "/resolve";
+    String INITIALIZED      = "/initialized";
 
     public static final class PARAM {
         private PARAM() {}
 
-        public static final String REALM         = "/{" + Names.REALM_FIELD + "}";
-        public static final String USER          = "/{" + Names.USER_FIELD + "}";
-        public static final String ID            = "/{" + Names.ID_FIELD + "}";
-        public static final String USER_WITH_DOT = "/{" + Names.USER_FIELD + ":.+}";
+        public static final String REALM          = "/{" + Names.REALM_FIELD + "}";
+        public static final String USER           = "/{" + Names.USER_FIELD + "}";
+        public static final String ID             = "/{" + Names.ID_FIELD + "}";
+        public static final String USER_WITH_DOT  = "/{" + Names.USER_FIELD + ":.+}";
+        public static final String REALM_WITH_DOT = "/{" + Names.REALM_FIELD + ":.+}";
     }
 
     /**
-     * @param username
+     * @param id The id of the user whose public key shall be retrieved.
      * @return Specified user's public key
      * @throws ResourceNotFoundException
      */
     @Timed
     @GET( CONTROLLER + PUBLIC_KEY + PARAM.USER )
-    PublicKeyEnvelope getPublicKey( @Path( Names.USER_FIELD ) String username ) throws ResourceNotFoundException;
+    PublicKeyEnvelope getPublicKey( @Path( Names.USER_FIELD ) UUID id ) throws ResourceNotFoundException;
 
     @Timed
     @PUT( CONTROLLER + PUBLIC_KEY )
@@ -53,13 +57,13 @@ public interface DirectoryApi {
 
     /**
      * Retrieves the password encrypted salt for authentication from the server.
-     * 
+     *
+     * @param id The id of the user whose encrypted salt shall be retrieved.
      * @return A ciphertext of the password encrypted for the user.
      */
     @Timed
-    @GET( CONTROLLER + SALT_KEY + PARAM.REALM + PARAM.USER )
-    BlockCiphertext getSalt( @Path( Names.REALM_FIELD ) String realm, @Path( Names.USER_FIELD ) String username )
-            throws ResourceNotFoundException;
+    @GET( CONTROLLER + SALT_KEY + PARAM.USER )
+    BlockCiphertext getSalt( @Path( Names.USER_FIELD ) UUID id ) throws ResourceNotFoundException;
 
     @Timed
     @PUT( CONTROLLER + SALT_KEY )
@@ -107,5 +111,13 @@ public interface DirectoryApi {
 
     @Timed
     @GET( CONTROLLER + PARAM.REALM )
-    Set<UserKey> listUserInRealm( @Path( Names.REALM_FIELD ) String realm );
+    Set<UUID> listUserInRealm( @Path( Names.REALM_FIELD ) String realm );
+
+    @GET( CONTROLLER + INITIALIZED + PARAM.REALM )
+    Set<UUID> listInitializedUserInRealm( @Path( Names.REALM_FIELD ) String realm );
+
+    @Timed
+    @GET( CONTROLLER + PARAM.REALM + PARAM.USER )
+    Optional<UUID> getUUIDFromEmail( @Path( Names.USER_FIELD ) String email );
+
 }

@@ -102,7 +102,7 @@ public class EncryptableTests extends SecurityConfigurationTestUtils {
         String key = "myKey";
         Encryptable<String> plainString = new Encryptable<String>( plain, key );
 
-        loader.put( key, loader.get( PasswordCryptoService.class.getCanonicalName() ) );
+        loader.put( key, loader.get( PasswordCryptoService.class.getCanonicalName() ).get() );
 
         Encryptable<String> cipherString = plainString.encrypt( loader );
 

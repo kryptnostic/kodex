@@ -9,6 +9,8 @@ import java.util.concurrent.ExecutionException;
 
 import org.apache.commons.codec.binary.StringUtils;
 import org.joda.time.DateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.annotation.JacksonInject;
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -16,6 +18,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
@@ -28,6 +31,7 @@ import com.kryptnostic.kodex.v1.crypto.ciphers.PasswordCryptoService;
 import com.kryptnostic.kodex.v1.crypto.keys.CryptoServiceLoader;
 import com.kryptnostic.kodex.v1.exceptions.types.SecurityConfigurationException;
 import com.kryptnostic.kodex.v1.models.blocks.ChunkingStrategy;
+import com.kryptnostic.kodex.v1.serialization.jackson.CryptoServiceLoaderHolder;
 import com.kryptnostic.kodex.v1.serialization.jackson.KodexObjectMapperFactory;
 import com.kryptnostic.storage.v1.models.EncryptableBlock;
 
@@ -82,6 +86,7 @@ import com.kryptnostic.storage.v1.models.EncryptableBlock;
  */
 public class Encryptable<T> implements Serializable {
     private static final long          serialVersionUID = 5128167833341065251L;
+    private static final Logger        logger           = LoggerFactory.getLogger( Encryptable.class );
     /**
      * This hash function is used to validate block integrity
      */
@@ -96,7 +101,7 @@ public class Encryptable<T> implements Serializable {
     private transient final String     className;
     @JsonProperty( Names.DATA_FIELD )
     protected final EncryptableBlock[] encryptedData;
-    @JsonProperty( Names.NAME_FIELD )
+    @JsonProperty( Names.USERNAME_FIELD )
     protected final BlockCiphertext    encryptedClassName;
     @JsonProperty( Names.KEY_FIELD )
     protected final String             cryptoServiceId;
@@ -157,7 +162,7 @@ public class Encryptable<T> implements Serializable {
             ChunkingStrategy chunkingStrategy ) throws ClassNotFoundException,
             SecurityConfigurationException,
             IOException {
-        this( ciphertext, className, cryptoServiceId, null, chunkingStrategy );
+        this( ciphertext, className, cryptoServiceId, CryptoServiceLoaderHolder.getEmptyHolder(), chunkingStrategy );
     }
 
     /**
@@ -172,7 +177,12 @@ public class Encryptable<T> implements Serializable {
     public Encryptable( EncryptableBlock[] ciphertext, BlockCiphertext className, String cryptoServiceId ) throws ClassNotFoundException,
             SecurityConfigurationException,
             IOException {
-        this( ciphertext, className, cryptoServiceId, null, new DefaultChunkingStrategy() );
+        this(
+                ciphertext,
+                className,
+                cryptoServiceId,
+                CryptoServiceLoaderHolder.getEmptyHolder(),
+                new DefaultChunkingStrategy() );
     }
 
     /**
@@ -190,28 +200,29 @@ public class Encryptable<T> implements Serializable {
             EncryptableBlock[] ciphertext,
             BlockCiphertext className,
             String cryptoServiceId,
-            CryptoServiceLoader loader,
+            CryptoServiceLoaderHolder loader,
             ChunkingStrategy chunkingStrategy ) throws SecurityConfigurationException,
             ClassNotFoundException,
             IOException {
+        Preconditions.checkNotNull( loader, "CryptoServiceLoaderHolder must be present." );
         this.cryptoServiceId = cryptoServiceId;
         this.chunkingStrategy = chunkingStrategy;
-
-        CryptoService crypto = null;
-
-        try {
-            crypto = getCryptoService( loader );
-        } catch ( SecurityConfigurationException e ) {}
-
-        if ( crypto != null ) {
-            Encryptable<T> encrypted = new Encryptable<T>( ciphertext, className, cryptoServiceId );
-            Encryptable<T> decrypted;
-            decrypted = encrypted.decryptWith( crypto );
-            this.encrypted = false;
-            this.data = decrypted.getData();
-            this.className = decrypted.getClassName();
-            this.encryptedData = null;
-            this.encryptedClassName = null;
+        Optional<CryptoService> crypto;
+        if ( loader.isPresent() ) {
+            // Crypto on serialization is enabled so let's try and get a CryptoService.
+            crypto = getCryptoService( loader.get() );
+            if ( crypto.isPresent() ) {
+                Encryptable<T> encrypted = new Encryptable<T>( ciphertext, className, cryptoServiceId );
+                Encryptable<T> decrypted;
+                decrypted = encrypted.decryptWith( crypto.get() );
+                this.encrypted = false;
+                this.data = decrypted.getData();
+                this.className = decrypted.getClassName();
+                this.encryptedData = null;
+                this.encryptedClassName = null;
+            } else {
+                throw new SecurityConfigurationException( "Unable to decrypt because no crypto service was loadable." );
+            }
         } else {
             this.encrypted = true;
             this.data = null;
@@ -234,9 +245,9 @@ public class Encryptable<T> implements Serializable {
     @JsonCreator
     public Encryptable(
             @JsonProperty( Names.DATA_FIELD ) EncryptableBlock[] ciphertext,
-            @JsonProperty( Names.NAME_FIELD ) BlockCiphertext className,
+            @JsonProperty( Names.USERNAME_FIELD ) BlockCiphertext className,
             @JsonProperty( Names.KEY_FIELD ) String cryptoServiceId,
-            @JacksonInject CryptoServiceLoader loader ) throws SecurityConfigurationException,
+            @JacksonInject CryptoServiceLoaderHolder loader ) throws SecurityConfigurationException,
             ClassNotFoundException,
             IOException {
         this( ciphertext, className, cryptoServiceId, loader, new DefaultChunkingStrategy() );
@@ -260,9 +271,12 @@ public class Encryptable<T> implements Serializable {
         Preconditions.checkState( this.encryptedData == null );
         Preconditions.checkState( this.encryptedClassName == null );
 
-        CryptoService crypto = getCryptoService( loader );
-
-        return encryptWith( crypto );
+        Optional<CryptoService> crypto = getCryptoService( loader );
+        if ( crypto.isPresent() ) {
+            return encryptWith( crypto.get() );
+        } else {
+            throw new SecurityConfigurationException( "Unable to encrypt because no crypto service was loadable." );
+        }
     }
 
     protected Encryptable<T> encryptWith( CryptoService crypto ) throws SecurityConfigurationException, IOException,
@@ -313,9 +327,12 @@ public class Encryptable<T> implements Serializable {
         Preconditions.checkNotNull( this.encryptedData );
         Preconditions.checkNotNull( this.encryptedClassName );
 
-        CryptoService crypto = getCryptoService( loader );
-
-        return decryptWith( crypto );
+        Optional<CryptoService> crypto = getCryptoService( loader );
+        if ( crypto.isPresent() ) {
+            return decryptWith( crypto.get() );
+        } else {
+            throw new SecurityConfigurationException( "Unable to decrypt because no crypto service was loadable." );
+        }
     }
 
     @SuppressWarnings( "unchecked" )
@@ -336,6 +353,7 @@ public class Encryptable<T> implements Serializable {
      * @throws JsonProcessingException If anything goes wrong writing bytes to figure out how many blocks there are TODO
      *             this method is undefined if the object is in an encrypted state, add safeguards for this case
      */
+    @JsonIgnore
     public int getBlockCount() throws JsonProcessingException {
         if ( encrypted ) {
             return encryptedData.length;
@@ -355,22 +373,16 @@ public class Encryptable<T> implements Serializable {
         }
     }
 
-    protected CryptoService getCryptoService( CryptoServiceLoader loader ) throws SecurityConfigurationException {
-        if ( loader == null ) {
-            throw new SecurityConfigurationException( "No CryptoServiceLoader was found" );
-        }
+    protected Optional<CryptoService> getCryptoService( CryptoServiceLoader loader )
+            throws SecurityConfigurationException {
+        Preconditions.checkNotNull( loader, "CryptoServiceLoader cannot be null." );
 
         try {
             return loader.get( cryptoServiceId );
-        } catch ( NullPointerException | ExecutionException e ) {
-            wrapSecurityConfigurationException( e );
+        } catch ( ExecutionException e ) {
+            logger.error( "Something went wrong with the crypto service loader.", e );
+            return Optional.absent();
         }
-        wrapSecurityConfigurationException( new Exception( "Invalid loader" ) );
-        return null;
-    }
-
-    private void wrapSecurityConfigurationException( Exception e ) throws SecurityConfigurationException {
-        throw new SecurityConfigurationException( "Error occurred while trying to encrypt or decrypt data.", e );
     }
 
     /**
@@ -403,7 +415,7 @@ public class Encryptable<T> implements Serializable {
      * @return Encrypted representation of target class for data payload. If the Encryptable is in a decrypted state,
      *         this returns null
      */
-    @JsonProperty( Names.NAME_FIELD )
+    @JsonProperty( Names.USERNAME_FIELD )
     public BlockCiphertext getEncryptedClassName() {
         return encryptedClassName;
     }

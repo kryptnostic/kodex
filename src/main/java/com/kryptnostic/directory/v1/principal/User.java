@@ -1,11 +1,15 @@
 package com.kryptnostic.directory.v1.principal;
 
-import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.google.common.base.Optional;
+import com.kryptnostic.kodex.v1.models.UserAttributes;
 
 /**
  * Interface for user principals
@@ -17,26 +21,32 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
     include = JsonTypeInfo.As.PROPERTY,
     property = "@class" )
 public interface User extends Principal {
-    String getId();
+    String getName();
 
-    @Nullable
-    String getGivenName();
+    @Deprecated
+    String getRealm();
 
-    @Nullable
-    String getFamilyName();
-
-    @Nullable
+    @Nonnull
     String getEmail();
 
-    @Nullable
-    String getPassword();
-
-    @Nullable
+    @Nonnull
     byte[] getCertificate();
 
-    Set<GroupKey> getGroups();
+    @Nonnull
+    Set<String> getRoles();
 
-    Map<String, String> getAttributes();
+    @Nonnull
+    Set<UUID> getGroups();
 
-    String getAttribute( String key );
+    @Nullable
+    @JsonIgnore
+    Optional<String> getGivenName();
+
+    @Nullable
+    @JsonIgnore
+    Optional<String> getFamilyName();
+
+    UserAttributes getAttributes();
+
+    Optional<String> getAttribute( String key );
 }

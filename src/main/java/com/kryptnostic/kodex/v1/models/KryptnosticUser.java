@@ -1,30 +1,29 @@
 package com.kryptnostic.kodex.v1.models;
 
 import static com.kryptnostic.kodex.v1.constants.Names.ATTRIBUTES_FIELD;
-import static com.kryptnostic.kodex.v1.constants.Names.CERTIFICATE_PROPERTY;
+import static com.kryptnostic.kodex.v1.constants.Names.CERTIFICATE_FIELD;
 import static com.kryptnostic.kodex.v1.constants.Names.EMAIL_FIELD;
 import static com.kryptnostic.kodex.v1.constants.Names.FAMILY_NAME_FIELD;
 import static com.kryptnostic.kodex.v1.constants.Names.GIVEN_NAME_FIELD;
 import static com.kryptnostic.kodex.v1.constants.Names.GROUPS_PROPERTY;
-import static com.kryptnostic.kodex.v1.constants.Names.NAME_FIELD;
-import static com.kryptnostic.kodex.v1.constants.Names.PASSWORD_FIELD;
+import static com.kryptnostic.kodex.v1.constants.Names.ID_FIELD;
 import static com.kryptnostic.kodex.v1.constants.Names.REALM_FIELD;
+import static com.kryptnostic.kodex.v1.constants.Names.ROLES_FIELD;
+import static com.kryptnostic.kodex.v1.constants.Names.USERNAME_FIELD;
 
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import com.kryptnostic.directory.v1.principal.GroupKey;
 import com.kryptnostic.directory.v1.principal.User;
-import com.kryptnostic.directory.v1.principal.UserKey;
 import com.kryptnostic.kodex.v1.crypto.ciphers.BlockCiphertext;
 
 /**
@@ -33,52 +32,40 @@ import com.kryptnostic.kodex.v1.crypto.ciphers.BlockCiphertext;
  * @author Nick Hewitt
  *
  */
-public final class KryptnosticUser extends UserKey implements User, Serializable {
-    private static final long         serialVersionUID = 3581755283203968675L;
-    private final String              email;
-    private final String              givenName;
-    private final String              familyName;
-    private final String              password;
-    private final byte[]              certificate;
-    private final Set<GroupKey>       groups           = Sets.newConcurrentHashSet();
-    private final Map<String, String> attributes       = Maps.newConcurrentMap();
+public final class KryptnosticUser implements User, Serializable {
+    private static final long    serialVersionUID = 3581755283203968675L;
+    private final UUID           id;
+    private final String         email;
+    private final String         realm;
+    private final String         username;
+    private final byte[]         certificate;
+    private final Set<UUID>      groups           = Sets.newHashSet();
+    private final Set<String>    roles            = Sets.newHashSet();
+    private final UserAttributes attributes       = new UserAttributes( Maps.<String, String> newConcurrentMap() );
 
     @JsonCreator
     public KryptnosticUser(
+            @JsonProperty( ID_FIELD ) UUID id,
             @JsonProperty( REALM_FIELD ) String realm,
-            @JsonProperty( NAME_FIELD ) String name,
-            @JsonProperty( GIVEN_NAME_FIELD ) String givenName,
-            @JsonProperty( FAMILY_NAME_FIELD ) String familyName,
+            @JsonProperty( USERNAME_FIELD ) String username,
             @JsonProperty( EMAIL_FIELD ) String email,
-            @JsonProperty( PASSWORD_FIELD ) String password,
-            @JsonProperty( CERTIFICATE_PROPERTY ) Optional<byte[]> certificate,
-            @JsonProperty( GROUPS_PROPERTY ) Set<GroupKey> groups,
-            @JsonProperty( ATTRIBUTES_FIELD ) Map<String, String> attributes ) {
-        super( realm, name );
+            @JsonProperty( CERTIFICATE_FIELD ) Optional<byte[]> certificate,
+            @JsonProperty( GROUPS_PROPERTY ) Set<UUID> groups,
+            @JsonProperty( ROLES_FIELD ) Set<String> roles,
+            @JsonProperty( ATTRIBUTES_FIELD ) UserAttributes attributes ) {
+        this.id = id;
+        this.realm = realm;
+        this.username = username;
         this.groups.addAll( groups );
         this.attributes.putAll( attributes );
-        this.password = password;
+        this.roles.addAll( roles );
         this.certificate = certificate.or( new byte[ 0 ] );
         this.email = email;
-        this.givenName = givenName;
-        this.familyName = familyName;
-    }
-
-    private KryptnosticUser( HeraclesUserBuilder builder ) {
-        super( builder.realm, builder.username );
-        this.password = builder.password;
-        this.certificate = builder.certificate;
-        this.givenName = builder.givenName;
-        this.familyName = builder.familyName;
-        this.email = builder.email;
-        this.groups.addAll( builder.groups );
-        this.attributes.putAll( builder.attributes );
     }
 
     @Override
-    @JsonIgnore
-    public String getId() {
-        return UserKey.buildFqn( realm, name );
+    public UUID getId() {
+        return id;
     }
 
     @Override
@@ -89,79 +76,88 @@ public final class KryptnosticUser extends UserKey implements User, Serializable
 
     @Override
     @JsonProperty( GIVEN_NAME_FIELD )
-    public String getGivenName() {
-        return givenName;
+    public Optional<String> getGivenName() {
+        return Optional.fromNullable( attributes.get( GIVEN_NAME_FIELD ) );
     }
 
     @Override
     @JsonProperty( FAMILY_NAME_FIELD )
-    public String getFamilyName() {
-        return familyName;
+    public Optional<String> getFamilyName() {
+        return Optional.fromNullable( attributes.get( FAMILY_NAME_FIELD ) );
     }
 
     @Override
-    @JsonProperty( PASSWORD_FIELD )
-    public String getPassword() {
-        return password;
-    }
-
-    @Override
-    @JsonProperty( CERTIFICATE_PROPERTY )
+    @JsonProperty( CERTIFICATE_FIELD )
     public byte[] getCertificate() {
         return certificate;
     }
 
     @Override
     @JsonProperty( ATTRIBUTES_FIELD )
-    public Map<String, String> getAttributes() {
+    public UserAttributes getAttributes() {
         return attributes;
     }
 
     @Override
     @JsonProperty( GROUPS_PROPERTY )
-    public Set<GroupKey> getGroups() {
+    public Set<UUID> getGroups() {
         return groups;
     }
 
     @Override
-    public String getAttribute( String key ) {
-        return attributes.get( key );
+    @JsonProperty( USERNAME_FIELD )
+    public String getName() {
+        return this.username;
+    }
+
+    @Override
+    @JsonProperty( REALM_FIELD )
+    public String getRealm() {
+        return this.realm;
+    }
+
+    @Override
+    public Optional<String> getAttribute( String key ) {
+        return Optional.fromNullable( attributes.get( key ) );
+    }
+
+    @Override
+    public Set<String> getRoles() {
+        return roles;
     }
 
     @Override
     public String toString() {
-        return "HeraclesUser [password=" + password + ", certificate=" + Arrays.toString( certificate ) + ", groups="
-                + groups + ", attributes=" + attributes + "]";
+        return "HeraclesUser [id=" + id + ",username=" + username + ", certificate=" + Arrays.toString( certificate )
+                + ", groups=" + groups + ", attributes=" + attributes + "]";
     }
 
     public static class HeraclesUserBuilder {
-        public String              realm;
-        public String              username;
-        public String              email;
-        public String              givenName;
-        public String              familyName;
-        public String              password;
-        public BlockCiphertext     encryptedSalt = null;
-        public byte[]              certificate;
-        public Set<GroupKey>       groups;
-        public Map<String, String> attributes;
+        public UUID            id;
+        public String          realm;
+        public String          username;
+        public String          email;
+        public String          givenName;
+        public String          familyName;
+        public BlockCiphertext encryptedSalt = null;
+        public byte[]          certificate;
+        public Set<UUID>       groups;
+        public Set<String>     roles;
+        public UserAttributes  attributes;
 
-        // TODO add created and update dates
-
-        public HeraclesUserBuilder( String realm, String username ) {
-            this.realm = realm;
-            this.username = username;
+        public HeraclesUserBuilder( String email ) {
+            this.email = email;
+            this.username = email;
+            this.givenName = "";
+            this.familyName = "";
+            this.certificate = new byte[ 0 ];
             this.groups = Sets.newConcurrentHashSet();
-            this.attributes = Maps.newConcurrentMap();
+            this.attributes = new UserAttributes( Maps.<String,String>newConcurrentMap() );
+            this.roles = Sets.newConcurrentHashSet();
         }
 
-        public HeraclesUserBuilder withPassword( String password ) {
-            this.password = password;
-            return this;
-        }
-
-        public HeraclesUserBuilder withEmptyPassword() {
-            this.password = new String();
+        public HeraclesUserBuilder withRealm( String realm ) {
+            this.realm = realm;
             return this;
         }
 
@@ -190,33 +186,39 @@ public final class KryptnosticUser extends UserKey implements User, Serializable
             return this;
         }
 
+        public HeraclesUserBuilder withId( UUID id ) {
+            this.id = id;
+            return this;
+        }
+
         public HeraclesUserBuilder asUser() {
-            addGroup( SecurityGroups.USER );
+            addRoles( SecurityRoles.USER );
             return this;
         }
 
         public HeraclesUserBuilder asDeveloper() {
-            addGroup( SecurityGroups.DEVELOPER );
+            addRoles( SecurityRoles.DEVELOPER );
             return this;
         }
 
         public HeraclesUserBuilder asAdmin() {
-            addGroup( SecurityGroups.ADMIN );
+            addRoles( SecurityRoles.ADMIN );
             return this;
         }
 
         public HeraclesUserBuilder asRegistrar() {
-            addGroup( SecurityGroups.REGISTRAR);
+            addRoles( SecurityRoles.REGISTRAR );
             return this;
         }
 
-        public HeraclesUserBuilder withGroups( Set<GroupKey> groups ) {
+        public HeraclesUserBuilder withGroups( Set<UUID> groups ) {
+            Preconditions.checkNotNull( groups, "Groups cannot be null." );
             this.groups.addAll( groups );
             return this;
         }
 
-        private void addGroup( String groupName ) {
-            this.groups.add( new GroupKey( this.realm, groupName ) );
+        private void addRoles( String role ) {
+            this.roles.add( role );
         }
 
         public HeraclesUserBuilder withAttributes( Map<String, String> attributes ) {
@@ -227,9 +229,18 @@ public final class KryptnosticUser extends UserKey implements User, Serializable
         public KryptnosticUser build() {
             Preconditions.checkNotNull( this.realm );
             Preconditions.checkNotNull( this.username );
-            Preconditions.checkNotNull( this.password );
-            Preconditions.checkState( !this.groups.isEmpty(), "User must be assigned to at least one group." );
-            return new KryptnosticUser( this );
+            Preconditions.checkState( !this.roles.isEmpty(), "User must be assigned to at least one role." );
+
+            return new KryptnosticUser(
+                    id,
+                    realm,
+                    username,
+                    email,
+                    Optional.of( certificate ),
+                    groups,
+                    roles,
+                    attributes );
         }
     }
+
 }
