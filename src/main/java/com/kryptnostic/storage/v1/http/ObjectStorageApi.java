@@ -50,10 +50,11 @@ public interface ObjectStorageApi {
      * @return
      * @throws ResourceLockedException if the object is currently pending
      * @throws ResourceNotFoundException the object doesnt exist
+     * @throws BadRequestException if the user lacks permissions to change the object
      */
     @PUT( CONTROLLER + OBJECT_ID_PATH )
     BasicResponse<String> createPendingObjectFromExisting( @Path( ID ) String id ) throws ResourceLockedException,
-            ResourceNotFoundException;
+            ResourceNotFoundException, BadRequestException;
 
     /**
      * Update a object using an EncryptableBlock
