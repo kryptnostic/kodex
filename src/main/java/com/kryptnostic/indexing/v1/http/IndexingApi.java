@@ -38,10 +38,10 @@ public interface IndexingApi {
     @GET( CONTROLLER + SHARING + OBJECT_ID_PATH )
     byte[] getSharingPair( @Path( ID ) UUID documentId );
 
-    @POST( CONTROLLER + SHARING + OBJECT_ID_PATH )
+    @POST( CONTROLLER + INDEX_PAIR + OBJECT_ID_PATH )
     Optional<String> storeIndexPair( @Path( ID ) UUID documentId, @Body byte[] indexPair );
 
-    @GET( CONTROLLER + SHARING + OBJECT_ID_PATH )
+    @GET( CONTROLLER + INDEX_PAIR + OBJECT_ID_PATH )
     byte[] getIndexPair( @Path( ID ) UUID documentId );
 
     @POST( CONTROLLER + METADATA )
