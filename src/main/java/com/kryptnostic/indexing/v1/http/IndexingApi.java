@@ -15,7 +15,7 @@ public interface IndexingApi {
     public static final String CONTROLLER     = "/indexing";
     public static final String INDEX_PAIR     = "/indexPair";
     public static final String ADDRESS        = "/address";
-    public static final String SHARING        = "/share";
+    public static final String SHARING_PAIR   = "/sharingPair";
     public static final String METADATA       = "/metadata";
     public static final String ID             = "id";
     public static final String OBJECT_ID_PATH = "/{" + ID + "}";
@@ -32,10 +32,10 @@ public interface IndexingApi {
     @GET( CONTROLLER + ADDRESS + OBJECT_ID_PATH )
     byte[] getObjectAddrMatrix( @Path( ID ) UUID documentId );
 
-    @POST( CONTROLLER + SHARING + OBJECT_ID_PATH )
+    @POST( CONTROLLER + SHARING_PAIR + OBJECT_ID_PATH )
     Optional<String> storeSharingPair( @Path( ID ) UUID documentId, @Body byte[] sharingPair );
 
-    @GET( CONTROLLER + SHARING + OBJECT_ID_PATH )
+    @GET( CONTROLLER + SHARING_PAIR + OBJECT_ID_PATH )
     byte[] getSharingPair( @Path( ID ) UUID documentId );
 
     @POST( CONTROLLER + INDEX_PAIR + OBJECT_ID_PATH )
