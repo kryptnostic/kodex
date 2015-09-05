@@ -42,6 +42,7 @@ public interface DirectoryApi {
         public static final String REALM_WITH_DOT = "/{" + Names.REALM_FIELD + ":.+}";
     }
 
+
     /**
      * @param id The id of the user whose public key shall be retrieved.
      * @return Specified user's public key
@@ -51,6 +52,16 @@ public interface DirectoryApi {
     @GET( CONTROLLER + PUBLIC_KEY + PARAM.USER )
     PublicKeyEnvelope getPublicKey( @Path( Names.USER_FIELD ) UUID id ) throws ResourceNotFoundException;
 
+    /**
+     * @param userIds The id of the user whose public key shall be retrieved.
+     * @return Specified user's public key
+     * @throws ResourceNotFoundException
+     */
+    @Timed
+    @POST( CONTROLLER + PUBLIC_KEY )
+    Map<UUID, PublicKeyEnvelope> getPublicKeys( @Path( Names.USERS_FIELD ) Set<UUID> userIds )
+            throws ResourceNotFoundException;
+    
     @Timed
     @PUT( CONTROLLER + PUBLIC_KEY )
     BasicResponse<String> setPublicKey( @Body PublicKeyEnvelope publicKey );
