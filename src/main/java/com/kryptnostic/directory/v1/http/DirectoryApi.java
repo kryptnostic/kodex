@@ -43,6 +43,16 @@ public interface DirectoryApi {
     }
 
     /**
+     * @param userIds The id of the user whose public key shall be retrieved.
+     * @return Specified user's public key
+     * @throws ResourceNotFoundException
+     */
+    @Timed
+    @POST( CONTROLLER + PUBLIC_KEY )
+    Map<UUID, PublicKeyEnvelope> getPublicKey( @Path( Names.USERS_FIELD ) Set<UUID> userIds )
+            throws ResourceNotFoundException;
+
+    /**
      * @param id The id of the user whose public key shall be retrieved.
      * @return Specified user's public key
      * @throws ResourceNotFoundException
