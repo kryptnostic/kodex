@@ -1,45 +1,47 @@
 package com.kryptnostic.storage.v1.http;
 
-import java.util.UUID;
-
-import com.kryptnostic.kodex.v1.constants.Names;
+import com.google.common.base.Optional;
 import com.kryptnostic.kodex.v1.exceptions.types.BadRequestException;
-import com.kryptnostic.kodex.v1.models.response.BasicResponse;
-
 import retrofit.http.Body;
 import retrofit.http.GET;
-import retrofit.http.PUT;
-import retrofit.http.Path;
+import retrofit.http.POST;
 
 public interface CryptoKeyStorageApi {
     final String CONTROLLER         = "/keys";
     final String PRIVATE            = "/private";
-    final String PUBLIC             = "/public";
+    final String SEARCH_PRIVATE     = "/searchprivate";
     final String HASH               = "/hash";
+    final String RSA_PUB            = "/rsapublic";
     final String ID                 = "id";
+    final String ID_PATH            = "/{" + ID + "}";
 
-    public static final class PARAM {
-        private PARAM() {}
+    @POST( CONTROLLER + PRIVATE )
+    Optional<String> setFHEPrivateKeyForCurrentUser( @Body byte[] key ) throws BadRequestException;
 
-        public static final String ID             = "/{" + Names.ID_FIELD + "}";
-    }
+    @GET( CONTROLLER + PRIVATE )
+    byte[] getFHEPrivateKeyForCurrentUser() throws BadRequestException;
 
-    @PUT( CONTROLLER + PRIVATE + PARAM.ID )
-    BasicResponse<String> setFHEPrivateKeyForUser( @Path( Names.ID_FIELD ) UUID id, @Body byte[] key ) throws BadRequestException;
+    @POST( CONTROLLER + SEARCH_PRIVATE )
+    Optional<String> setFHESearchPrivateKeyForCurrentUser( @Body byte[] key ) throws BadRequestException;
 
-    @GET( CONTROLLER + PRIVATE + PARAM.ID )
-    byte[] getFHEPrivateKeyForUser( @Path( Names.ID_FIELD ) UUID id ) throws BadRequestException;
+    @GET( CONTROLLER + SEARCH_PRIVATE )
+    byte[] getFHESearchPriatveKeyForUser() throws BadRequestException;
 
-    @PUT( CONTROLLER + PUBLIC + PARAM.ID )
-    BasicResponse<String> setFHEPublicKeyForUser( @Path( Names.ID_FIELD ) UUID id, @Body byte[] key ) throws BadRequestException;
+    @POST( CONTROLLER + HASH )
+    Optional<String> setHashFunctionForCurrentUser( @Body byte[] key ) throws BadRequestException;
 
-    @GET( CONTROLLER + PUBLIC + PARAM.ID )
-    byte[] getFHEPublicKeyForUser( @Path( Names.ID_FIELD ) UUID id ) throws BadRequestException;
+    @GET( CONTROLLER + HASH )
+    byte[] getHashFunctionForCurrentUser() throws BadRequestException;
 
-    @PUT( CONTROLLER + HASH + PARAM.ID )
-    BasicResponse<String> setHashFunctionForUser( @Path( Names.ID_FIELD ) UUID id, @Body byte[] key ) throws BadRequestException;
-
-    @GET( CONTROLLER + HASH + PARAM.ID )
-    byte[] getHashFunctionForUser( @Path( Names.ID_FIELD ) UUID id ) throws BadRequestException;
-
+//
+//    For future use!
+//
+//    @GET( CONTROLLER + RSA_PUB )
+//    byte[] getRsaPublicKeyForUser( @Path( ID ) UUID userId ) throws BadRequestException;
+//
+//    @POST( CONTROLLER + RSA_PUB )
+//    BasicResponse<String> setRsaPublicKey( @Body byte[] key ) throws BadRequestException;
+//
+//    @GET( CONTROLLER + RSA_PUB )
+//    byte[] getRsaPublicKeyForCurrentUser() throws BadRequestException;
 }
