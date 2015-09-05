@@ -1,11 +1,14 @@
 package com.kryptnostic.storage.v1.http;
 
+import java.util.UUID;
+
 import com.kryptnostic.kodex.v1.exceptions.types.BadRequestException;
 import com.kryptnostic.kodex.v1.models.response.BasicResponse;
 
 import retrofit.http.Body;
 import retrofit.http.GET;
 import retrofit.http.PUT;
+import retrofit.http.Path;
 
 public interface CryptoKeyStorageApi {
     final String CONTROLLER         = "/keys";
@@ -14,6 +17,7 @@ public interface CryptoKeyStorageApi {
     final String HASH               = "/hash";
     final String RSA_PUB            = "/rsapublic";
     final String ID                 = "id";
+    final String ID_PATH            = "/{" + ID + "}";
 
     @PUT( CONTROLLER + PRIVATE )
     BasicResponse<String> setFHEPrivateKeyForCurrentUser( @Body byte[] key ) throws BadRequestException;
@@ -32,6 +36,9 @@ public interface CryptoKeyStorageApi {
 
     @GET( CONTROLLER + HASH )
     byte[] getHashFunctionForCurrentUser() throws BadRequestException;
+
+    @GET( CONTROLLER + RSA_PUB )
+    byte[] getRsaPublicKeyForUser( @Path( ID ) UUID userId ) throws BadRequestException;
 
     @PUT( CONTROLLER + RSA_PUB )
     BasicResponse<String> setRsaPublicKey( @Body byte[] key ) throws BadRequestException;
