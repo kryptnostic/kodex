@@ -7,7 +7,7 @@ import com.kryptnostic.kodex.v1.models.response.BasicResponse;
 
 import retrofit.http.Body;
 import retrofit.http.GET;
-import retrofit.http.PUT;
+import retrofit.http.POST;
 import retrofit.http.Path;
 
 public interface CryptoKeyStorageApi {
@@ -19,19 +19,19 @@ public interface CryptoKeyStorageApi {
     final String ID                 = "id";
     final String ID_PATH            = "/{" + ID + "}";
 
-    @PUT( CONTROLLER + PRIVATE )
+    @POST( CONTROLLER + PRIVATE )
     BasicResponse<String> setFHEPrivateKeyForCurrentUser( @Body byte[] key ) throws BadRequestException;
 
     @GET( CONTROLLER + PRIVATE )
     byte[] getFHEPrivateKeyForCurrentUser() throws BadRequestException;
 
-    @PUT( CONTROLLER + SEARCH_PRIVATE )
+    @POST( CONTROLLER + SEARCH_PRIVATE )
     BasicResponse<String> setFHESearchPrivateKeyForCurrentUser( @Body byte[] key ) throws BadRequestException;
 
     @GET( CONTROLLER + SEARCH_PRIVATE )
     byte[] getFHESearchPriatveKeyForUser() throws BadRequestException;
 
-    @PUT( CONTROLLER + HASH )
+    @POST( CONTROLLER + HASH )
     BasicResponse<String> setHashFunctionForCurrentUser( @Body byte[] key ) throws BadRequestException;
 
     @GET( CONTROLLER + HASH )
@@ -40,7 +40,7 @@ public interface CryptoKeyStorageApi {
     @GET( CONTROLLER + RSA_PUB )
     byte[] getRsaPublicKeyForUser( @Path( ID ) UUID userId ) throws BadRequestException;
 
-    @PUT( CONTROLLER + RSA_PUB )
+    @POST( CONTROLLER + RSA_PUB )
     BasicResponse<String> setRsaPublicKey( @Body byte[] key ) throws BadRequestException;
 
     @GET( CONTROLLER + RSA_PUB )
