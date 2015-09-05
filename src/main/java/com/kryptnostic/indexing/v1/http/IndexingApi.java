@@ -21,28 +21,28 @@ public interface IndexingApi {
     public static final String OBJECT_ID_PATH = "/{" + ID + "}";
 
     @POST( CONTROLLER + OBJECT_ID_PATH )
-    Optional<String> storeObjectMetadata( @Path( ID ) UUID documentId, @Body byte[] metadata );
+    Optional<String> storeObjectMetadata( @Path( ID ) UUID objectId, @Body byte[] metadata );
 
     @GET( CONTROLLER + OBJECT_ID_PATH )
-    Set<byte[]> getObjectMetadata( @Path( ID ) UUID documentId );
+    Set<byte[]> getObjectMetadata( @Path( ID ) UUID objectId );
 
     @POST( CONTROLLER + ADDRESS + OBJECT_ID_PATH )
-    Optional<String> storeObjectAddrMatrix( @Path( ID ) UUID documentId, @Body byte[] objAddrMatrix );
+    Optional<String> storeObjectAddrMatrix( @Path( ID ) UUID objectId, @Body byte[] objAddrMatrix );
 
     @GET( CONTROLLER + ADDRESS + OBJECT_ID_PATH )
-    byte[] getObjectAddrMatrix( @Path( ID ) UUID documentId );
+    byte[] getObjectAddrMatrix( @Path( ID ) UUID objectId );
 
     @POST( CONTROLLER + SHARING_PAIR + OBJECT_ID_PATH )
-    Optional<String> storeSharingPair( @Path( ID ) UUID documentId, @Body byte[] sharingPair );
+    Optional<String> storeSharingPair( @Path( ID ) UUID objectId, @Body byte[] sharingPair );
 
     @GET( CONTROLLER + SHARING_PAIR + OBJECT_ID_PATH )
-    byte[] getSharingPair( @Path( ID ) UUID documentId );
+    byte[] getSharingPair( @Path( ID ) UUID objectId );
 
     @POST( CONTROLLER + INDEX_PAIR + OBJECT_ID_PATH )
-    Optional<String> storeIndexPair( @Path( ID ) UUID documentId, @Body byte[] indexPair );
+    Optional<String> storeIndexPair( @Path( ID ) UUID objectId, @Body byte[] indexPair );
 
     @GET( CONTROLLER + INDEX_PAIR + OBJECT_ID_PATH )
-    byte[] getIndexPair( @Path( ID ) UUID documentId );
+    byte[] getIndexPair( @Path( ID ) UUID objectId );
 
     @POST( CONTROLLER + METADATA )
     Optional<String> storeIndexMetadataForAddress( @Body byte[] addressMetadataPair );
