@@ -20,7 +20,9 @@ public final class Names {
     public static final String GIVEN_NAME_FIELD              = "givenName";
     public static final String FAMILY_NAME_FIELD             = "familyName";
     public static final String METADATA_FIELD                = "metadata";
+    @Deprecated
     public static final String REALM_FIELD                   = "realm";
+    public static final String DOMAIN_FIELD                  = "domain";
     public static final String STATE_FIELD                   = "state";
     public static final String ORGANIZATION_FIELD            = "organization";
     public static final String ORGANIZATION_SIZE_FIELD       = "organizationSize";
@@ -76,4 +78,6 @@ public final class Names {
     public static final String SIZE_FIELD                    = "size";
     public static final String INHERIT_OWNERSHIP_FIELD       = "inhertitOwnership";
     public static final String CREATOR_FIELD                 = "creator";
+    public static final String PAGE_FIELD                    = "page";
+    public static final String SCROLL_INSTANCE_FIELD                 = "scrollInstance";
 }
