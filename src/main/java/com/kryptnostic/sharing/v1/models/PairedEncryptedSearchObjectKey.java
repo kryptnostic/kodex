@@ -13,12 +13,12 @@ public class PairedEncryptedSearchObjectKey implements Serializable {
 
     public PairedEncryptedSearchObjectKey(
             @JsonProperty( Names.ID_FIELD ) String objectId,
-            @JsonProperty( Names.DOCUMENT_SHARING_KEY_FIELD ) final EncryptedSearchObjectKey searchObjectKey ) {
+            @JsonProperty( Names.OBJECT_SHARING_PAIR_FIELD ) final EncryptedSearchObjectKey searchObjectKey ) {
         this.objectId = objectId;
         this.searchObjectKey = searchObjectKey;
     }
 
-    @JsonProperty( Names.DOCUMENT_SHARING_KEY_FIELD )
+    @JsonProperty( Names.OBJECT_SHARING_PAIR_FIELD )
     public EncryptedSearchObjectKey getSearchObjectKey() {
         return searchObjectKey;
     }

@@ -18,7 +18,7 @@ public final class SharingRequest implements Serializable {
     public SharingRequest(
             @JsonProperty( Names.ID_FIELD ) String objectId,
             @JsonProperty( Names.USERS_FIELD ) Map<UUID, byte[]> userKey,
-            @JsonProperty( Names.DOCUMENT_SHARING_KEY_FIELD ) byte[] encryptedSharingKey ) {
+            @JsonProperty( Names.OBJECT_SHARING_PAIR_FIELD ) byte[] encryptedSharingKey ) {
         this.objectId = objectId;
         this.userKeys = userKey;
         this.encryptedSharingKey = encryptedSharingKey;
@@ -34,7 +34,7 @@ public final class SharingRequest implements Serializable {
         return userKeys;
     }
 
-    @JsonProperty( Names.DOCUMENT_SHARING_KEY_FIELD )
+    @JsonProperty( Names.OBJECT_SHARING_PAIR_FIELD )
     public byte[] getEncryptedSharingKey() {
         return encryptedSharingKey;
     }
