@@ -19,7 +19,6 @@ import org.junit.Test;
 import com.google.common.hash.HashCode;
 import com.google.common.hash.HashFunction;
 import com.kryptnostic.kodex.v1.crypto.ciphers.BlockCiphertext;
-import com.kryptnostic.kodex.v1.crypto.keys.Kodex.SealedKodexException;
 import com.kryptnostic.kodex.v1.exceptions.types.SecurityConfigurationException;
 import com.kryptnostic.kodex.v1.serialization.crypto.Encryptable;
 import com.kryptnostic.utils.SecurityConfigurationTestUtils;
@@ -31,7 +30,7 @@ public class KryptnosticObjectTests extends SecurityConfigurationTestUtils {
     public void testEquals() throws SecurityConfigurationException, IOException, ClassNotFoundException,
             InvalidKeyException, NoSuchAlgorithmException, InvalidAlgorithmParameterException,
             IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, InvalidKeySpecException,
-            InvalidParameterSpecException, SealedKodexException, SignatureException, Exception {
+            InvalidParameterSpecException, SignatureException, Exception {
         loader.put( "test", crypto );
         loader.put( "test2", crypto );
 
@@ -58,7 +57,7 @@ public class KryptnosticObjectTests extends SecurityConfigurationTestUtils {
     public void testDocumentSerialization() throws SecurityConfigurationException, IOException, ClassNotFoundException,
             InvalidKeyException, NoSuchAlgorithmException, InvalidAlgorithmParameterException,
             IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, InvalidKeySpecException,
-            InvalidParameterSpecException, SealedKodexException, SignatureException, Exception {
+            InvalidParameterSpecException, SignatureException, Exception {
         loader.put( "test", crypto );
 
         KryptnosticObject doc = new KryptnosticObject( new ObjectMetadata( "test", null ), "this is a test" );
@@ -72,7 +71,7 @@ public class KryptnosticObjectTests extends SecurityConfigurationTestUtils {
     public void testDocumentBlockSerialization() throws SecurityConfigurationException, IOException,
             ClassNotFoundException, InvalidKeyException, NoSuchAlgorithmException, InvalidAlgorithmParameterException,
             IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, InvalidKeySpecException,
-            InvalidParameterSpecException, SealedKodexException, SignatureException, Exception {
+            InvalidParameterSpecException, SignatureException, Exception {
         loader.put( "test", crypto );
 
         KryptnosticObject doc = new KryptnosticObject( new ObjectMetadata( "test", null ), "this is a test" )
@@ -87,7 +86,7 @@ public class KryptnosticObjectTests extends SecurityConfigurationTestUtils {
     public void testDocumentVerification() throws SecurityConfigurationException, IOException, ClassNotFoundException,
             InvalidKeyException, NoSuchAlgorithmException, InvalidAlgorithmParameterException,
             IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, InvalidKeySpecException,
-            InvalidParameterSpecException, SealedKodexException, SignatureException, Exception {
+            InvalidParameterSpecException, SignatureException, Exception {
         HashFunction hashFunction = Encryptable.hashFunction;
 
         loader.put( "test", crypto );

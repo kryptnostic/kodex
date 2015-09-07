@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.kryptnostic.crypto.EncryptedSearchPrivateKey;
@@ -17,6 +18,8 @@ import com.kryptnostic.utils.SerializationTestUtils;
 public class QueryHasherPairRequestTests extends SerializationTestUtils {
 
     @Test
+    @Ignore
+    //TODO: Delete this.
     public void deserializeTest() throws IOException, SingularMatrixException {
         SimplePolynomialFunction globalHash = SimplePolynomialFunctions.denseRandomMultivariateQuadratic( 128, 64 );
         PrivateKey fhePrivateKey = new PrivateKey( 128, 64 );

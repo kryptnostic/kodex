@@ -24,8 +24,6 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.google.common.collect.Lists;
 import com.kryptnostic.kodex.v1.crypto.ciphers.PasswordCryptoService;
-import com.kryptnostic.kodex.v1.crypto.keys.Kodex.CorruptKodexException;
-import com.kryptnostic.kodex.v1.crypto.keys.Kodex.SealedKodexException;
 import com.kryptnostic.kodex.v1.exceptions.types.KodexException;
 import com.kryptnostic.kodex.v1.exceptions.types.SecurityConfigurationException;
 import com.kryptnostic.kodex.v1.indexing.metadata.Metadata;
@@ -39,8 +37,8 @@ public class EncryptableTests extends SecurityConfigurationTestUtils {
     @Before
     public void initAll() throws InvalidKeyException, InvalidKeySpecException, NoSuchAlgorithmException,
             NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, InvalidParameterSpecException,
-            SealedKodexException, IOException, InvalidAlgorithmParameterException, SignatureException,
-            CorruptKodexException, SecurityConfigurationException, KodexException {
+            IOException, InvalidAlgorithmParameterException, SignatureException,
+            SecurityConfigurationException, KodexException {
         // do we need all this init stuff?
         // ObjectMapper mapper = KodexObjectMapperFactory.getObjectMapper();
         // pair = Keys.generateRsaKeyPair( 1024 );
@@ -167,7 +165,7 @@ public class EncryptableTests extends SecurityConfigurationTestUtils {
     public void encryptableCollectionTest() throws JsonParseException, JsonMappingException, IOException,
             ClassNotFoundException, SecurityConfigurationException, InvalidKeyException, InvalidKeySpecException,
             NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException,
-            InvalidParameterSpecException, SignatureException, SealedKodexException, CorruptKodexException,
+            InvalidParameterSpecException, SignatureException,
             KodexException, InvalidAlgorithmParameterException {
 
         Metadata m1 = new Metadata( "ABC", "ABC", Arrays.asList( 1, 2, 3 ) );
