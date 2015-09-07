@@ -11,7 +11,7 @@ import com.kryptnostic.kodex.v1.constants.Names;
 
 public class Domain {
     public static final String        PUBLICLY_LISTABLE_FIELD         = "publiclyListable";
-    public static final String        DOMAIN_SHARING_POLICY_FIELD     = "publiclyListable";
+    public static final String        DOMAIN_SHARING_POLICY_FIELD     = "domainSharingPolicy";
 
     public static final boolean       CONFIRMATION_EMAIL_NOT_REQUIRED = false;
     public static final boolean       CONFIRMATION_EMAIL_REQUIRED     = true;
