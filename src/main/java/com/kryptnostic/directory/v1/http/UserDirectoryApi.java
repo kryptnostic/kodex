@@ -5,10 +5,13 @@ import java.util.UUID;
 import retrofit.http.Body;
 import retrofit.http.DELETE;
 import retrofit.http.GET;
+import retrofit.http.POST;
 import retrofit.http.PUT;
 import retrofit.http.Path;
 
 import com.google.common.base.Optional;
+import com.kryptnostic.directory.v1.ContactDiscoveryRequest;
+import com.kryptnostic.directory.v1.ContactDiscoveryResponse;
 import com.kryptnostic.directory.v1.exception.MailException;
 import com.kryptnostic.directory.v1.exception.RealmMismatchException;
 import com.kryptnostic.directory.v1.exception.ReservationTakenException;
@@ -29,6 +32,7 @@ public interface UserDirectoryApi {
     public static final String EMAIL               = "email";
     public static final String REALM               = "realm";
     public static final String USERNAME            = "username";
+    public static final String DISCOVERY           = "/discovery";
     public static final String USERS               = "/users";
     public static final String RESET               = "/reset";
     public static final String ID_PATH             = "/{" + ID + "}";
@@ -68,17 +72,6 @@ public interface UserDirectoryApi {
     Optional<UUID> resolve( @Path( EMAIL ) String email );
 
     /**
-     * Deprecated API. Will be removed in next version.
-     *
-     * @param realm The realm in which to look for the user.
-     * @param username The username to perform map to a UUID.
-     * @return The UUID for the user.
-     */
-    @Deprecated
-    @GET( CONTROLLER + USERS + REALM_PATH + USERNAME_PATH )
-    Optional<UUID> resolve( @Path( REALM ) String realm, @Path( USERNAME ) String username );
-
-    /**
      * This API resets the users authenticator. It does not impact key information.
      *
      * @param userKey
@@ -93,4 +86,12 @@ public interface UserDirectoryApi {
     Optional<UUID> resetPassword( @Path( ID ) UUID userKey, @Body String newPassword ) throws UserUpdateException,
             ReservationTakenException, BadRequestException, MailException;
 
+    /**
+     * Allows discovering contacts by e-mail or name search.
+     * 
+     * @param request E-mail and name search terms.
+     * @return Scored soundex, metaphone, and exact match search results on name and e-mail as specified in the request.
+     */
+    @POST( CONTROLLER + DISCOVERY )
+    ContactDiscoveryResponse discover( ContactDiscoveryRequest request );
 }
