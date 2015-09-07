@@ -8,8 +8,6 @@ import com.kryptnostic.crypto.PublicKey;
 import com.kryptnostic.kodex.v1.crypto.ciphers.ICryptoService;
 import com.kryptnostic.kodex.v1.crypto.ciphers.RsaCompressingCryptoService;
 import com.kryptnostic.kodex.v1.crypto.keys.CryptoServiceLoader;
-import com.kryptnostic.kodex.v1.crypto.keys.Kodex;
-import com.kryptnostic.kodex.v1.exceptions.types.IrisException;
 import com.kryptnostic.kodex.v1.exceptions.types.SecurityConfigurationException;
 import com.kryptnostic.kodex.v1.storage.DataStore;
 
@@ -26,11 +24,7 @@ public interface KryptnosticConnection {
     /**
      * @return The search kodex containing {@link ICryptoService}s for decrypting shared objects.
      */
-    Kodex<String> getKodex();
-
     boolean isKodexReady();
-
-    Kodex<String> loadKodex() throws IrisException;
 
     CryptoServiceLoader getCryptoServiceLoader();
 
