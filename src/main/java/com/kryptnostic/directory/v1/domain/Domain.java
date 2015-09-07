@@ -1,6 +1,7 @@
 package com.kryptnostic.directory.v1.domain;
 
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -24,7 +25,7 @@ public class Domain {
                                                                                             // domain
     private final DomainSharingPolicy domainSharingPolicy;
     private final boolean             confirmationEmailRequired;
-    private final boolean             publiclyListable;
+    private final AtomicBoolean             publiclyListable;
 
     @JsonCreator
     public Domain(
@@ -39,7 +40,7 @@ public class Domain {
         this.size = new AtomicInteger( size );
         this.domainSharingPolicy = domainSharingPolicy;
         this.confirmationEmailRequired = confirmationEmailRequired.or( CONFIRMATION_EMAIL_NOT_REQUIRED );
-        this.publiclyListable = publiclyListable.or( PUBLICLY_LISTABLE );
+        this.publiclyListable = new AtomicBoolean( publiclyListable.or( PUBLICLY_LISTABLE ) );
     }
 
     public Domain( UUID id, String name, int size ) {
@@ -74,7 +75,7 @@ public class Domain {
 
     @JsonProperty( PUBLICLY_LISTABLE_FIELD )
     public boolean isPubliclyListable() {
-        return publiclyListable;
+        return publiclyListable.get();
     }
 
     @JsonIgnore
@@ -82,7 +83,19 @@ public class Domain {
         size.incrementAndGet();
         return this;
     }
-
+    
+    @JsonIgnore
+    public Domain makePubliclyListable() {
+        publiclyListable.set( true );
+        return this;
+    }
+    
+    @JsonIgnore
+    public Domain makePrivate() {
+        publiclyListable.set( false );
+        return this;
+    }
+    
     @Override
     public String toString() {
         return "Domain [id=" + id + ", name=" + name + ", size=" + size + ", domainSharingPolicy="
