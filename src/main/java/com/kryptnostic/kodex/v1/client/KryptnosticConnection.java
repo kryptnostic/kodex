@@ -2,10 +2,6 @@ package com.kryptnostic.kodex.v1.client;
 
 import java.util.UUID;
 
-import com.kryptnostic.crypto.EncryptedSearchPrivateKey;
-import com.kryptnostic.crypto.PrivateKey;
-import com.kryptnostic.crypto.PublicKey;
-import com.kryptnostic.kodex.v1.crypto.ciphers.ICryptoService;
 import com.kryptnostic.kodex.v1.crypto.ciphers.RsaCompressingCryptoService;
 import com.kryptnostic.kodex.v1.crypto.keys.CryptoServiceLoader;
 import com.kryptnostic.kodex.v1.exceptions.types.SecurityConfigurationException;
@@ -21,18 +17,9 @@ import com.kryptnostic.kodex.v1.storage.DataStore;
  *
  */
 public interface KryptnosticConnection {
-    /**
-     * @return The search kodex containing {@link ICryptoService}s for decrypting shared objects.
-     */
-    boolean isKodexReady();
-
     CryptoServiceLoader getCryptoServiceLoader();
 
     RsaCompressingCryptoService getRsaCryptoService() throws SecurityConfigurationException;
-
-    PrivateKey getFhePrivateKey();
-
-    PublicKey getFhePublicKey();
 
     String getUserCredential();
 
@@ -45,6 +32,4 @@ public interface KryptnosticConnection {
     String getUrl();
 
     DataStore getDataStore();
-
-    EncryptedSearchPrivateKey getEncryptedSearchPrivateKey();
 }
