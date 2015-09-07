@@ -68,17 +68,6 @@ public interface UserDirectoryApi {
     Optional<UUID> resolve( @Path( EMAIL ) String email );
 
     /**
-     * Deprecated API. Will be removed in next version.
-     *
-     * @param realm The realm in which to look for the user.
-     * @param username The username to perform map to a UUID.
-     * @return The UUID for the user.
-     */
-    @Deprecated
-    @GET( CONTROLLER + USERS + REALM_PATH + USERNAME_PATH )
-    Optional<UUID> resolve( @Path( REALM ) String realm, @Path( USERNAME ) String username );
-
-    /**
      * This API resets the users authenticator. It does not impact key information.
      *
      * @param userKey
