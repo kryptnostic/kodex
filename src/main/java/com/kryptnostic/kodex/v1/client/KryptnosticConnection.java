@@ -6,6 +6,7 @@ import com.kryptnostic.kodex.v1.crypto.ciphers.RsaCompressingCryptoService;
 import com.kryptnostic.kodex.v1.crypto.keys.CryptoServiceLoader;
 import com.kryptnostic.kodex.v1.exceptions.types.SecurityConfigurationException;
 import com.kryptnostic.kodex.v1.storage.DataStore;
+import com.kryptnostic.krypto.engine.KryptnosticEngine;
 
 /**
  * The KryptnosticConnection abstracts out persistence, key generation, and server connection information for down
@@ -32,4 +33,6 @@ public interface KryptnosticConnection {
     String getUrl();
 
     DataStore getDataStore();
+
+    KryptnosticEngine getKryptnosticEngine();
 }
