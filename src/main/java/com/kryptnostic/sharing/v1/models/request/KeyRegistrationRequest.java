@@ -10,11 +10,11 @@ public final class KeyRegistrationRequest {
     private final Set<EncryptedSearchObjectKey> searchKeys;
 
     public KeyRegistrationRequest(
-            @JsonProperty( Names.OBJECT_SHARING_PAIR_FIELD + "s" ) final Set<EncryptedSearchObjectKey> searchKeys ) {
+            @JsonProperty( Names.OBJECT_SHARING_PAIRS_FIELD ) final Set<EncryptedSearchObjectKey> searchKeys ) {
         this.searchKeys = searchKeys;
     }
 
-    @JsonProperty( Names.OBJECT_SHARING_PAIR_FIELD + "s" )
+    @JsonProperty( Names.OBJECT_SHARING_PAIRS_FIELD )
     public Set<EncryptedSearchObjectKey> getSearchKeys() {
         return searchKeys;
     }
