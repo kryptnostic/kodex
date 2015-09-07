@@ -10,7 +10,6 @@ import org.slf4j.LoggerFactory;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-;
 public enum DomainSharingPolicy {
     AllDomains( ALL_DOMAINS ), TrustedDomains( TRUSTED_DOMAINS ), InternalOnly( INTERNAL_ONLY );
 
