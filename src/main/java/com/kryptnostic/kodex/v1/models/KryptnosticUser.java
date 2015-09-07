@@ -2,6 +2,7 @@ package com.kryptnostic.kodex.v1.models;
 
 import static com.kryptnostic.kodex.v1.constants.Names.ATTRIBUTES_FIELD;
 import static com.kryptnostic.kodex.v1.constants.Names.CERTIFICATE_FIELD;
+import static com.kryptnostic.kodex.v1.constants.Names.DOMAIN_FIELD;
 import static com.kryptnostic.kodex.v1.constants.Names.EMAIL_FIELD;
 import static com.kryptnostic.kodex.v1.constants.Names.FAMILY_NAME_FIELD;
 import static com.kryptnostic.kodex.v1.constants.Names.GIVEN_NAME_FIELD;
@@ -36,17 +37,31 @@ public final class KryptnosticUser implements User, Serializable {
     private static final long    serialVersionUID = 3581755283203968675L;
     private final UUID           id;
     private final String         email;
-    private final String         realm;
+    private final String         domain;
     private final String         username;
     private final byte[]         certificate;
     private final Set<UUID>      groups           = Sets.newHashSet();
     private final Set<String>    roles            = Sets.newHashSet();
     private final UserAttributes attributes       = new UserAttributes( Maps.<String, String> newConcurrentMap() );
 
+    /**
+     * Either the realm or domain must be specified. If both are specified the realm takes precedence until it is removed as a field.
+     * 
+     * @param id
+     * @param realm
+     * @param domain
+     * @param username
+     * @param email
+     * @param certificate
+     * @param groups
+     * @param roles
+     * @param attributes
+     */
     @JsonCreator
     public KryptnosticUser(
             @JsonProperty( ID_FIELD ) UUID id,
-            @JsonProperty( REALM_FIELD ) String realm,
+            @JsonProperty( REALM_FIELD ) Optional<String> realm,
+            @JsonProperty( DOMAIN_FIELD) Optional<String> domain,
             @JsonProperty( USERNAME_FIELD ) String username,
             @JsonProperty( EMAIL_FIELD ) String email,
             @JsonProperty( CERTIFICATE_FIELD ) Optional<byte[]> certificate,
@@ -54,7 +69,7 @@ public final class KryptnosticUser implements User, Serializable {
             @JsonProperty( ROLES_FIELD ) Set<String> roles,
             @JsonProperty( ATTRIBUTES_FIELD ) UserAttributes attributes ) {
         this.id = id;
-        this.realm = realm;
+        this.domain = realm.or( domain.get() );
         this.username = username;
         this.groups.addAll( groups );
         this.attributes.putAll( attributes );
@@ -113,8 +128,14 @@ public final class KryptnosticUser implements User, Serializable {
     @Override
     @JsonProperty( REALM_FIELD )
     public String getRealm() {
-        return this.realm;
+        return getDomain();
     }
+    
+    @Override
+    @JsonProperty( DOMAIN_FIELD )
+    public String getDomain() {
+        return this.domain;
+    } 
 
     @Override
     public Optional<String> getAttribute( String key ) {
@@ -134,7 +155,7 @@ public final class KryptnosticUser implements User, Serializable {
 
     public static class HeraclesUserBuilder {
         public UUID            id;
-        public String          realm;
+        public String          domain;
         public String          username;
         public String          email;
         public String          givenName;
@@ -156,10 +177,17 @@ public final class KryptnosticUser implements User, Serializable {
             this.roles = Sets.newConcurrentHashSet();
         }
 
+        @Deprecated
         public HeraclesUserBuilder withRealm( String realm ) {
-            this.realm = realm;
+            this.domain = realm;
             return this;
         }
+        
+        public HeraclesUserBuilder withDomain( String domain ) {
+            this.domain = domain;
+            return this;
+        }
+
 
         public HeraclesUserBuilder withCertificate( byte[] certificate ) {
             this.certificate = certificate;
@@ -227,13 +255,14 @@ public final class KryptnosticUser implements User, Serializable {
         }
 
         public KryptnosticUser build() {
-            Preconditions.checkNotNull( this.realm );
+            Preconditions.checkNotNull( this.domain );
             Preconditions.checkNotNull( this.username );
             Preconditions.checkState( !this.roles.isEmpty(), "User must be assigned to at least one role." );
 
             return new KryptnosticUser(
                     id,
-                    realm,
+                    Optional.of( domain ),
+                    Optional.of( domain ),
                     username,
                     email,
                     Optional.of( certificate ),

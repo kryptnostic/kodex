@@ -25,6 +25,8 @@ public interface User extends Principal {
 
     @Deprecated
     String getRealm();
+    
+    String getDomain();
 
     @Nonnull
     String getEmail();
