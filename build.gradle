@@ -50,7 +50,7 @@ repositories {
 
 }
 
-ext.jackson_version='2.5.1'
+ext.jackson_version='2.6.1'
 ext.fhe_core_version='0.1.2-SNAPSHOT'
 ext.retrofit_version='1.9.0'
 ext.krypto_version="0.0.1-SNAPSHOT"
@@ -74,7 +74,7 @@ dependencies {
     /*
      JODA TIME - A better datetime class.
      */
-    compile 'joda-time:joda-time:2.3'
+    compile 'joda-time:joda-time:2.8.2'
     
     compile "com.fasterxml.jackson.core:jackson-databind:${jackson_version}"
     compile "com.fasterxml.jackson.datatype:jackson-datatype-guava:${jackson_version}"
