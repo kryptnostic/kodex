@@ -1,6 +1,5 @@
 package com.kryptnostic.indexing.v1.http;
 
-import java.util.Set;
 import java.util.UUID;
 
 import retrofit.http.Body;
@@ -20,14 +19,8 @@ public interface IndexingApi {
     public static final String ID             = "id";
     public static final String OBJECT_ID_PATH = "/{" + ID + "}";
 
-    @POST( CONTROLLER + OBJECT_ID_PATH )
-    Optional<String> storeObjectMetadata( @Path( ID ) UUID objectId, @Body byte[] metadata );
-
-    @GET( CONTROLLER + OBJECT_ID_PATH )
-    Set<byte[]> getObjectMetadata( @Path( ID ) UUID objectId );
-
     @POST( CONTROLLER + ADDRESS + OBJECT_ID_PATH )
-    Optional<String> storeObjectAddrMatrix( @Path( ID ) UUID objectId, @Body byte[] objAddrMatrix );
+    Optional<String> storeEncryptedObjectAddrMatrix( @Path( ID ) UUID objectId, @Body byte[] objAddrMatrix );
 
     @GET( CONTROLLER + ADDRESS + OBJECT_ID_PATH )
     byte[] getObjectAddrMatrix( @Path( ID ) UUID objectId );
@@ -46,8 +39,5 @@ public interface IndexingApi {
 
     @POST( CONTROLLER + METADATA )
     Optional<String> storeIndexMetadataForAddress( @Body byte[] addressMetadataPair );
-
-    @GET( CONTROLLER + METADATA )
-    byte[] getIndexMetadataForAddress( byte[] address );
 
 }

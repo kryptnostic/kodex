@@ -20,12 +20,11 @@ import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import com.kryptnostic.authentication.v1.model.EmailAuthenticationRequest;
 import com.kryptnostic.directory.v1.principal.User;
 import com.kryptnostic.kodex.v1.crypto.ciphers.BlockCiphertext;
 
@@ -36,10 +35,6 @@ import com.kryptnostic.kodex.v1.crypto.ciphers.BlockCiphertext;
  * @author Matthew Tamayo-Rios &lt;matthew@kryptnostic.com&gt;
  *
  */
-@JsonTypeInfo(
-    use = JsonTypeInfo.Id.NAME,
-    include = JsonTypeInfo.As.PROPERTY,
-    property = "@class" )
 public final class KryptnosticUser implements User, Serializable {
     private static final long    serialVersionUID = 3581755283203968675L;
     private final UUID           id;
@@ -80,7 +75,7 @@ public final class KryptnosticUser implements User, Serializable {
         this.domain = realm.or( domain.get() );
         this.username = username;
         this.groups.addAll( groups );
-        this.attributes.putAll( attributes );
+        this.attributes.putAll( (attributes == null )?  ImmutableMap.<String,String>of() : attributes );
         this.roles.addAll( roles );
         this.certificate = certificate.or( new byte[ 0 ] );
         this.email = email;
