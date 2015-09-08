@@ -1,7 +1,5 @@
 package com.kryptnostic.storage.v1.models;
 
-import cern.colt.bitvector.BitVector;
-
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.kryptnostic.kodex.v1.constants.Names;
@@ -9,13 +7,13 @@ import com.kryptnostic.kodex.v1.indexing.metadata.Metadata;
 import com.kryptnostic.kodex.v1.serialization.crypto.Encryptable;
 
 public class IndexedMetadata {
-    private final BitVector             key;
+    private final byte[]                key;
     private final Encryptable<Metadata> data;
     private final String                id;
 
     @JsonCreator
     public IndexedMetadata(
-            @JsonProperty( Names.KEY_FIELD ) BitVector key,
+            @JsonProperty( Names.KEY_FIELD ) byte[] key,
             @JsonProperty( Names.DATA_FIELD ) Encryptable<Metadata> data,
             @JsonProperty( Names.ID_FIELD ) String id ) {
         this.key = key;
@@ -24,7 +22,7 @@ public class IndexedMetadata {
     }
 
     @JsonProperty( Names.KEY_FIELD )
-    public BitVector getKey() {
+    public byte[] getKey() {
         return key;
     }
 

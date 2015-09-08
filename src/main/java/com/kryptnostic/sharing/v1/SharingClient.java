@@ -11,11 +11,11 @@ import com.kryptnostic.storage.v1.models.EncryptedSearchObjectKey;
 public interface SharingClient {
     void unshareObjectWithUsers( String objectId, Set<UUID> users );
 
-    void shareObjectWithUsers( String uuid, Set<UUID> users ) throws ResourceNotFoundException;
-
     int processIncomingShares() throws IOException, SecurityConfigurationException;
 
     int getIncomingSharesCount();
 
     EncryptedSearchObjectKey getObjectKey( String objectId ) throws ResourceNotFoundException;
+
+    void shareObjectWithUsers( String objectId, Set<UUID> users, byte[] sharingPair ) throws ResourceNotFoundException;
 }

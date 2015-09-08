@@ -15,6 +15,4 @@ public interface SearchClient {
 
     public SearchResultResponse search( SearchRequest request );
 
-    public SearchResultResponse nextPage( SearchResultResponse request );
-
 }
