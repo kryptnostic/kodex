@@ -30,7 +30,7 @@ apply plugin: "maven-publish"
 sourceCompatibility=JavaVersion.VERSION_1_7
 
 repositories {
-  mavenCentral()  
+  mavenCentral()
   mavenLocal()
   maven {
     url "https://build.shibboleth.net/nexus/content/groups/public/"
@@ -50,14 +50,14 @@ repositories {
 
 }
 
-ext.jackson_version='2.5.1'
+ext.jackson_version='2.6.1'
 ext.fhe_core_version='0.1.2-SNAPSHOT'
 ext.retrofit_version='1.9.0'
 ext.krypto_version="0.0.1-SNAPSHOT"
 dependencies {
     /*
      * SL4J + LOG4J
-     * Currently use Log4J through sl4j. 
+     * Currently use Log4J through sl4j.
      * TODO: Switch to logback
      */
     compile group: 'org.slf4j', name: 'slf4j-log4j12', version:'1.7.6'
@@ -66,7 +66,7 @@ dependencies {
     compile "log4j:log4j:1.2.17"
 
     /*
-     * GUAVA 
+     * GUAVA
      * EventBus, FluentIterables, ListenableFutures and more
      */
     compile 'com.google.guava:guava:18.0'
@@ -74,8 +74,8 @@ dependencies {
     /*
      JODA TIME - A better datetime class.
      */
-    compile 'joda-time:joda-time:2.3'
-    
+    compile 'joda-time:joda-time:2.8.2'
+
     compile "com.fasterxml.jackson.core:jackson-databind:${jackson_version}"
     compile "com.fasterxml.jackson.datatype:jackson-datatype-guava:${jackson_version}"
     compile "com.fasterxml.jackson.module:jackson-module-jaxb-annotations:${jackson_version}"
@@ -83,7 +83,7 @@ dependencies {
     compile "com.fasterxml.jackson.dataformat:jackson-dataformat-smile:${jackson_version}"
     compile "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:${jackson_version}"
     compile "com.fasterxml.jackson.datatype:jackson-datatype-joda:${jackson_version}"
-     
+
     /*
      * APACHE COMMONS
      * Logging, StringUtils, RandomStringUtils, IOUtils, and more
@@ -104,7 +104,7 @@ dependencies {
    	 	compile "com.kryptnostic:kryptnostic-core:${fhe_core_version}"
         compile "com.kryptnostic:krypto-api:${krypto_version}"
     }
-    
+
     compile "com.squareup.retrofit:retrofit:${retrofit_version}"
     compile "com.squareup.okhttp:okhttp-urlconnection:2.3.0"
     compile "com.squareup.okhttp:okhttp:2.3.0"
@@ -133,7 +133,7 @@ task testJar(type: Jar, dependsOn: testClasses) {
 
 configurations {
     tests
-      published.extendsFrom tests, archives 
+      published.extendsFrom tests, archives
 }
 
 artifacts {
@@ -143,9 +143,9 @@ artifacts {
 	tests testJar
 }
 
-install { 
-	configuration = configurations.published 
-} 
+install {
+	configuration = configurations.published
+}
 
 eclipse {
     ext.downloadSources = true
