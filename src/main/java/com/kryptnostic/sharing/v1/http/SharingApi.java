@@ -24,12 +24,13 @@ public interface SharingApi {
     String REVOKE      = "/revoke";
     String KEYS        = "/keys";
     String OBJECT_KEYS = "/objectKeys";
+    String ID          = "id";
 
     @GET( SHARE + OBJECT )
     IncomingShares getIncomingShares();
 
-    @POST( SHARE + OBJECT + "/{id}" )
-    BasicResponse<String> removeIncomingShares( @Path( "id" ) String uuid );
+    @POST( SHARE + OBJECT + "/{" + ID + "}" )
+    BasicResponse<String> removeIncomingShares( @Path( ID ) String uuid );
 
     @POST( SHARE + OBJECT + SHARE )
     BasicResponse<String> share( @Body SharingRequest request );
@@ -46,6 +47,6 @@ public interface SharingApi {
     @DELETE( SHARE + KEYS )
     KeyUpdateResponse removeKeys( @Body Set<String> uuids );
 
-    @GET( SHARE + OBJECT + "/{id}" + OBJECT_KEYS )
-    EncryptedSearchObjectKey getEncryptedSearchObjectKey( @Path( "id" ) String id ) throws ResourceNotFoundException;
+    @GET( SHARE + OBJECT + "/{" + ID + "}" + OBJECT_KEYS )
+    EncryptedSearchObjectKey getEncryptedSearchObjectKey( @Path( ID ) String id ) throws ResourceNotFoundException;
 }

@@ -46,9 +46,6 @@ public interface KryptnosticContext {
 
     void submitBridgeKeyWithSearchNonce( String objectId, EncryptedSearchSharingKey sharingKey ) throws IrisException;
 
-    BitVector generateIndexForToken( String token, EncryptedSearchSharingKey sharingKey )
-            throws ResourceNotFoundException;
-
     byte[] prepareSearchToken( String token );
 
     Map<UUID, RsaCompressingEncryptionService> getEncryptionServiceForUsers( Set<UUID> users );
@@ -56,4 +53,6 @@ public interface KryptnosticContext {
     RsaCompressingCryptoService getRsaCryptoService() throws SecurityConfigurationException;
 
     EncryptedSearchBridgeKey fromSharingKey( EncryptedSearchSharingKey sharingKey ) throws IrisException;
+
+    byte[] generateIndexForToken( String token, byte[] objectSearchKey, byte[] ObjectAddressMatrix );
 }
