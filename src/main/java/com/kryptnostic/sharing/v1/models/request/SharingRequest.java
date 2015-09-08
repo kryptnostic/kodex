@@ -35,7 +35,7 @@ public final class SharingRequest implements Serializable {
     }
 
     @JsonProperty( Names.OBJECT_SHARING_PAIR_FIELD )
-    public byte[] getEncryptedSharingKey() {
+    public byte[] getEncryptedSharingPair() {
         return encryptedSharingPair;
     }
 }

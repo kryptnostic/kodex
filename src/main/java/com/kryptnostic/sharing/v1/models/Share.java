@@ -54,7 +54,7 @@ public class Share implements Serializable {
     }
 
     public static Share fromSharingRequest( UUID user, SharingRequest request ) {
-        Share share = new Share( request.getObjectId(), request.getEncryptedSharingKey(), request.getUserKeys().get(
+        Share share = new Share( request.getObjectId(), request.getEncryptedSharingPair(), request.getUserKeys().get(
                 user ), DateTime.now() );
         return share;
     }
