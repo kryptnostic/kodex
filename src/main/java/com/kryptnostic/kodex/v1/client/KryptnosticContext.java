@@ -49,7 +49,7 @@ public interface KryptnosticContext {
     BitVector generateIndexForToken( String token, EncryptedSearchSharingKey sharingKey )
             throws ResourceNotFoundException;
 
-    BitVector prepareSearchToken( String token );
+    byte[] prepareSearchToken( String token );
 
     Map<UUID, RsaCompressingEncryptionService> getEncryptionServiceForUsers( Set<UUID> users );
 

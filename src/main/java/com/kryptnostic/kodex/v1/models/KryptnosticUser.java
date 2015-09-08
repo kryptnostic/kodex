@@ -20,19 +20,26 @@ import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import com.kryptnostic.authentication.v1.model.EmailAuthenticationRequest;
 import com.kryptnostic.directory.v1.principal.User;
 import com.kryptnostic.kodex.v1.crypto.ciphers.BlockCiphertext;
 
 /**
  * Model for a Heracles user.
- *
+ * 
  * @author Nick Hewitt
+ * @author Matthew Tamayo-Rios &lt;matthew@kryptnostic.com&gt;
  *
  */
+@JsonTypeInfo(
+    use = JsonTypeInfo.Id.NAME,
+    include = JsonTypeInfo.As.PROPERTY,
+    property = "@class" )
 public final class KryptnosticUser implements User, Serializable {
     private static final long    serialVersionUID = 3581755283203968675L;
     private final UUID           id;
@@ -45,7 +52,8 @@ public final class KryptnosticUser implements User, Serializable {
     private final UserAttributes attributes       = new UserAttributes( Maps.<String, String> newConcurrentMap() );
 
     /**
-     * Either the realm or domain must be specified. If both are specified the realm takes precedence until it is removed as a field.
+     * Either the realm or domain must be specified. If both are specified the realm takes precedence until it is
+     * removed as a field.
      * 
      * @param id
      * @param realm
@@ -61,7 +69,7 @@ public final class KryptnosticUser implements User, Serializable {
     public KryptnosticUser(
             @JsonProperty( ID_FIELD ) UUID id,
             @JsonProperty( REALM_FIELD ) Optional<String> realm,
-            @JsonProperty( DOMAIN_FIELD) Optional<String> domain,
+            @JsonProperty( DOMAIN_FIELD ) Optional<String> domain,
             @JsonProperty( USERNAME_FIELD ) String username,
             @JsonProperty( EMAIL_FIELD ) String email,
             @JsonProperty( CERTIFICATE_FIELD ) Optional<byte[]> certificate,
@@ -130,12 +138,12 @@ public final class KryptnosticUser implements User, Serializable {
     public String getRealm() {
         return getDomain();
     }
-    
+
     @Override
     @JsonProperty( DOMAIN_FIELD )
     public String getDomain() {
         return this.domain;
-    } 
+    }
 
     @Override
     public Optional<String> getAttribute( String key ) {
@@ -149,9 +157,94 @@ public final class KryptnosticUser implements User, Serializable {
 
     @Override
     public String toString() {
-        return "HeraclesUser [id=" + id + ",username=" + username + ", certificate=" + Arrays.toString( certificate )
-                + ", groups=" + groups + ", attributes=" + attributes + "]";
+        return "KryptnosticUser [id=" + id + ", email=" + email + ", domain=" + domain + ", username=" + username
+                + ", certificate=" + Arrays.toString( certificate ) + ", groups=" + groups + ", roles=" + roles
+                + ", attributes=" + attributes + "]";
     }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ( ( attributes == null ) ? 0 : attributes.hashCode() );
+        result = prime * result + Arrays.hashCode( certificate );
+        result = prime * result + ( ( domain == null ) ? 0 : domain.hashCode() );
+        result = prime * result + ( ( email == null ) ? 0 : email.hashCode() );
+        result = prime * result + ( ( groups == null ) ? 0 : groups.hashCode() );
+        result = prime * result + ( ( id == null ) ? 0 : id.hashCode() );
+        result = prime * result + ( ( roles == null ) ? 0 : roles.hashCode() );
+        result = prime * result + ( ( username == null ) ? 0 : username.hashCode() );
+        return result;
+    }
+
+    @Override
+    public boolean equals( Object obj ) {
+        if ( this == obj ) {
+            return true;
+        }
+        if ( obj == null ) {
+            return false;
+        }
+        if ( !( obj instanceof KryptnosticUser ) ) {
+            return false;
+        }
+        KryptnosticUser other = (KryptnosticUser) obj;
+        if ( attributes == null ) {
+            if ( other.attributes != null ) {
+                return false;
+            }
+        } else if ( !attributes.equals( other.attributes ) ) {
+            return false;
+        }
+        if ( !Arrays.equals( certificate, other.certificate ) ) {
+            return false;
+        }
+        if ( domain == null ) {
+            if ( other.domain != null ) {
+                return false;
+            }
+        } else if ( !domain.equals( other.domain ) ) {
+            return false;
+        }
+        if ( email == null ) {
+            if ( other.email != null ) {
+                return false;
+            }
+        } else if ( !email.equals( other.email ) ) {
+            return false;
+        }
+        if ( groups == null ) {
+            if ( other.groups != null ) {
+                return false;
+            }
+        } else if ( !groups.equals( other.groups ) ) {
+            return false;
+        }
+        if ( id == null ) {
+            if ( other.id != null ) {
+                return false;
+            }
+        } else if ( !id.equals( other.id ) ) {
+            return false;
+        }
+        if ( roles == null ) {
+            if ( other.roles != null ) {
+                return false;
+            }
+        } else if ( !roles.equals( other.roles ) ) {
+            return false;
+        }
+        if ( username == null ) {
+            if ( other.username != null ) {
+                return false;
+            }
+        } else if ( !username.equals( other.username ) ) {
+            return false;
+        }
+        return true;
+    }
+
+
 
     public static class HeraclesUserBuilder {
         public UUID            id;
@@ -173,7 +266,7 @@ public final class KryptnosticUser implements User, Serializable {
             this.familyName = "";
             this.certificate = new byte[ 0 ];
             this.groups = Sets.newConcurrentHashSet();
-            this.attributes = new UserAttributes( Maps.<String,String>newConcurrentMap() );
+            this.attributes = new UserAttributes( Maps.<String, String> newConcurrentMap() );
             this.roles = Sets.newConcurrentHashSet();
         }
 
@@ -182,12 +275,11 @@ public final class KryptnosticUser implements User, Serializable {
             this.domain = realm;
             return this;
         }
-        
+
         public HeraclesUserBuilder withDomain( String domain ) {
             this.domain = domain;
             return this;
         }
-
 
         public HeraclesUserBuilder withCertificate( byte[] certificate ) {
             this.certificate = certificate;
