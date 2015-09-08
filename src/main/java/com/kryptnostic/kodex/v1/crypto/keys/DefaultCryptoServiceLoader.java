@@ -3,6 +3,7 @@ package com.kryptnostic.kodex.v1.crypto.keys;
 import java.io.IOException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.NoSuchAlgorithmException;
+import java.util.EnumSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
@@ -37,7 +38,7 @@ public class DefaultCryptoServiceLoader implements CryptoServiceLoader {
      * JacksonKodexMarshaller<PrivateKey>( PrivateKey.class, mapper );
      */
 
-    private final LoadingCache<String, CryptoService> keyCache;
+    private final LoadingCache<KeyLoadRequest, CryptoService> keyCache;
     private DirectoryApi                              directoryApi;
     private KryptnosticConnection                     connection;
     private Cypher                                    cypher;
@@ -50,13 +51,13 @@ public class DefaultCryptoServiceLoader implements CryptoServiceLoader {
         this.connection = connection;
         this.cypher = cypher;
         keyCache = CacheBuilder.newBuilder().maximumSize( 1000 ).expireAfterWrite( 10, TimeUnit.MINUTES )
-                .build( new CacheLoader<String, CryptoService>() {
+                .build( new CacheLoader<KeyLoadRequest, CryptoService>() {
                     @Override
-                    public Map<String, CryptoService> loadAll( Iterable<? extends String> keys ) throws IOException,
+                    public Map<KeyLoadRequest, CryptoService> loadAll( Iterable<? extends KeyLoadRequest> keys ) throws IOException,
                             SecurityConfigurationException {
 
                         Set<String> ids = Sets.newLinkedHashSet();
-                        for ( String k : keys ) {
+                        for ( KeyLoadRequest k : keys ) {
                             ids.add( k );
                         }
 
@@ -77,14 +78,14 @@ public class DefaultCryptoServiceLoader implements CryptoServiceLoader {
                     }
 
                     @Override
-                    public CryptoService load( String key ) throws IOException, SecurityConfigurationException {
+                    public CryptoService load( KeyLoadRequest key ) throws IOException, SecurityConfigurationException {
                         byte[] crypto = null;
                         try {
-                            crypto = directoryApi.getObjectCryptoService( key ).getData();
+                            crypto = directoryApi.getObjectCryptoService( key.getId() ).getData();
                         } catch ( ResourceNotFoundException e ) {} catch ( RetrofitError e ) {
                             throw new IOException( e );
                         }
-                        if ( crypto == null ) {
+                        if ( (crypto == null) && key.getOptions().contains( Options.CREATE_IF_NOT_EXISTS ) ) {
                             try {
                                 CryptoService cs = new AesCryptoService( DefaultCryptoServiceLoader.this.cypher );
                                 put( key, cs );
@@ -107,11 +108,11 @@ public class DefaultCryptoServiceLoader implements CryptoServiceLoader {
     }
 
     @Override
-    public void put( String id, CryptoService service ) throws ExecutionException {
-        keyCache.put( id, service );
+    public void put( KeyLoadRequest request, CryptoService service ) throws ExecutionException {
+        keyCache.put( request.getId(), service );
         try {
             byte[] cs = connection.getRsaCryptoService().encrypt( service );
-            directoryApi.setObjectCryptoService( id, new ByteArrayEnvelope( cs ) );
+            directoryApi.setObjectCryptoService( request.getId(), new ByteArrayEnvelope( cs ) );
         } catch ( SecurityConfigurationException | IOException e ) {
             throw new ExecutionException( e );
         }
@@ -119,11 +120,50 @@ public class DefaultCryptoServiceLoader implements CryptoServiceLoader {
 
     @Override
     public Map<String, CryptoService> getAll( Set<String> ids ) throws ExecutionException {
+        Set<KeyLoadRequest> requests = Sets.newHashSetWithExpectedSize( ids.size() );
+        for( String id : ids ) {
+            requests.add( new KeyLoadRequest() )
+        }
         return keyCache.getAll( ids );
     }
 
     @Override
     public void clear() {
         keyCache.cleanUp();
+    }
+
+    public static class KeyLoadRequest {
+        private final Set<Options> options;
+        private final String       id;
+
+        public KeyLoadRequest( String id ) {
+            this( id, EnumSet.of( Options.CREATE_IF_NOT_EXISTS ) );
+        }
+
+        public KeyLoadRequest( String id, Set<Options> options ) {
+            this.id = id;
+            this.options = options;
+        }
+
+        public Set<Options> getOptions() {
+            return options;
+        }
+
+        public String getId() {
+            return id;
+        }
+        
+        public static KeyLoadRequest createIfNotExists( String id ) {
+            
+        }
+
+        public static KeyLoadRequest forExisting( String id ) {
+            return new KeyLoadRequest( id, EnumSet.of( Options.FAIL_IF_NOT_EXISTS ) );
+        }
+    }
+
+    public static enum Options {
+        CREATE_IF_NOT_EXISTS,
+        FAIL_IF_NOT_EXISTS
     }
 }

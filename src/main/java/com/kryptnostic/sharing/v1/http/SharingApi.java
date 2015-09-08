@@ -17,7 +17,6 @@ import com.kryptnostic.sharing.v1.models.IncomingShares;
 import com.kryptnostic.sharing.v1.models.request.RevocationRequest;
 import com.kryptnostic.sharing.v1.models.request.SharingRequest;
 import com.kryptnostic.sharing.v1.models.response.KeyUpdateResponse;
-import com.kryptnostic.storage.v1.models.EncryptedSearchObjectKey;
 
 public interface SharingApi {
     String SHARE       = "/share";
