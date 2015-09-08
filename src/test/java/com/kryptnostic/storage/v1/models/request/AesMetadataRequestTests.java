@@ -2,19 +2,18 @@ package com.kryptnostic.storage.v1.models.request;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Random;
 import java.util.concurrent.ExecutionException;
 
+import org.apache.commons.codec.binary.Base64;
 import org.hamcrest.CoreMatchers;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import cern.colt.bitvector.BitVector;
-
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.kryptnostic.bitwise.BitVectors;
 import com.kryptnostic.kodex.v1.crypto.ciphers.CryptoService;
 import com.kryptnostic.kodex.v1.crypto.ciphers.Cypher;
 import com.kryptnostic.kodex.v1.crypto.ciphers.PasswordCryptoService;
@@ -40,7 +39,8 @@ public class AesMetadataRequestTests extends SecurityConfigurationTestUtils {
     public void testImplicitDeserialization() throws SecurityConfigurationException, IOException,
             ClassNotFoundException {
 
-        BitVector key = BitVectors.randomVector( INDEX_LENGTH );
+        byte[] key = new byte[ INDEX_LENGTH >>>3 ];
+        new Random().nextBytes( key );
         String documentId = "TEST";
         Metadata metadatum = new Metadata( documentId, "test", Arrays.asList( 1, 2, 3 ) );
         Encryptable<Metadata> data = new Encryptable<Metadata>( metadatum );
@@ -76,7 +76,8 @@ public class AesMetadataRequestTests extends SecurityConfigurationTestUtils {
     public void testImplicitDeserializationKeyless() throws SecurityConfigurationException, IOException,
             ClassNotFoundException {
 
-        BitVector key = BitVectors.randomVector( INDEX_LENGTH );
+        byte[] key = new byte[ INDEX_LENGTH >>>3 ];
+        new Random().nextBytes( key );
         String documentId = "TEST";
         Metadata metadatum = new Metadata( documentId, "test", Arrays.asList( 1, 2, 3 ) );
         Encryptable<Metadata> data = new Encryptable<Metadata>( metadatum );
@@ -113,7 +114,8 @@ public class AesMetadataRequestTests extends SecurityConfigurationTestUtils {
     @Ignore
     public void testSerializationWithImplicitEncryption() throws JsonGenerationException, JsonMappingException,
             IOException {
-        BitVector key = BitVectors.randomVector( INDEX_LENGTH );
+        byte[] key = new byte[ INDEX_LENGTH >>>3 ];
+        new Random().nextBytes( key );
         Metadata metadatum = new Metadata( "TEST", "test", Arrays.asList( 1, 2, 3 ) );
         Encryptable<Metadata> data = new Encryptable<Metadata>( metadatum );
 
@@ -124,7 +126,7 @@ public class AesMetadataRequestTests extends SecurityConfigurationTestUtils {
 
         String actual = serialize( req );
 
-        String expectedSubstring = "{\"metadata\":[{\"key\":" + wrapQuotes( BitVectors.marshalBitvector( key ) );
+        String expectedSubstring = "{\"metadata\":[{\"key\":" + wrapQuotes( Base64.encodeBase64String( key ) );
 
         // weak substring assertion that does not test ciphertext validity
         // ciphertext validity is covered in serializationDeserializationTest
@@ -141,7 +143,8 @@ public class AesMetadataRequestTests extends SecurityConfigurationTestUtils {
      */
     public void testSerializationWithExplicitEncryption() throws ClassNotFoundException,
             SecurityConfigurationException, IOException, ExecutionException {
-        BitVector key = BitVectors.randomVector( INDEX_LENGTH );
+        byte[] key = new byte[ INDEX_LENGTH >>>3 ];
+        new Random().nextBytes( key );
         Metadata metadatum = new Metadata( "TEST", "test", Arrays.asList( 1, 2, 3 ) );
         Encryptable<Metadata> data = new Encryptable<Metadata>( metadatum );
 
