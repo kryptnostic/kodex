@@ -25,7 +25,7 @@ public interface CryptoKeyStorageApi {
     Optional<String> setFHESearchPrivateKeyForCurrentUser( @Body byte[] key ) throws BadRequestException;
 
     @GET( CONTROLLER + SEARCH_PRIVATE )
-    byte[] getFHESearchPriatveKeyForUser() throws BadRequestException;
+    byte[] getFHESearchPrivateKeyForUser() throws BadRequestException;
 
     @POST( CONTROLLER + HASH )
     Optional<String> setHashFunctionForCurrentUser( @Body byte[] key ) throws BadRequestException;
