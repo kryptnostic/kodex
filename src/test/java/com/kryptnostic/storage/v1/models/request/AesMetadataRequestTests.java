@@ -57,7 +57,7 @@ public class AesMetadataRequestTests extends SecurityConfigurationTestUtils {
         IndexedMetadata meta = deserialized.getMetadata().iterator().next();
 
         // Ensure the key matches
-        Assert.assertEquals( key, meta.getKey() );
+        Assert.assertArrayEquals( key, meta.getKey() );
         // Ensure we decrypted the metadata successfully
         Assert.assertFalse( meta.getData().isEncrypted() );
         Assert.assertNull( meta.getData().getEncryptedClassName() );
@@ -92,7 +92,7 @@ public class AesMetadataRequestTests extends SecurityConfigurationTestUtils {
         IndexedMetadata meta = deserialized.getMetadata().iterator().next();
 
         // ensure nothing was decrypted
-        Assert.assertEquals( key, meta.getKey() );
+        Assert.assertArrayEquals( key, meta.getKey() );
         Assert.assertNull( meta.getData().getClassName() );
         Assert.assertNull( meta.getData().getData() );
 

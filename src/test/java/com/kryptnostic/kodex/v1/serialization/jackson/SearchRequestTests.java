@@ -28,12 +28,18 @@ public class SearchRequestTests extends SerializationTestUtils {
         SearchRequest out1 = deserialize( serialize( req1 ), SearchRequest.class );
         SearchRequest out2 = deserialize( serialize( req2 ), SearchRequest.class );
 
-        Assert.assertEquals( req1.getSearchToken(), out1.getSearchToken() );
+        int i = 0;
+        for ( byte[] bytes : req1.getSearchToken() ) {
+            Assert.assertArrayEquals( bytes, out1.getSearchToken().get( i++ ) );
+        }
         Assert.assertEquals( req1.getMaxResults(), out1.getMaxResults() );
         Assert.assertEquals( req1.getOffset(), out1.getOffset() );
         Assert.assertEquals( req1, out1 );
 
-        Assert.assertEquals( req2.getSearchToken(), out2.getSearchToken() );
+        i = 0;
+        for ( byte[] bytes : req2.getSearchToken() ) {
+            Assert.assertArrayEquals( bytes, out2.getSearchToken().get( i++ ) );
+        }
         Assert.assertEquals( req2.getMaxResults(), out2.getMaxResults() );
         Assert.assertEquals( req2.getOffset(), out2.getOffset() );
         Assert.assertEquals( req2, out2 );
