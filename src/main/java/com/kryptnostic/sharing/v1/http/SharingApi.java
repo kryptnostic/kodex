@@ -42,7 +42,7 @@ public interface SharingApi {
     KeyUpdateResponse registerKeys( @Body KeyRegistrationRequest request );
 
     @PUT( SHARE + KEYS )
-    KeyUpdateResponse registerKeys( @Body Set<EncryptedSearchObjectKey> request );
+    KeyUpdateResponse addSharingPairs( @Body Set<byte[]> indexPairs );
 
     @DELETE( SHARE + KEYS )
     KeyUpdateResponse removeKeys( @Body Set<String> uuids );
