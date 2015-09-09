@@ -19,7 +19,7 @@ public class BlockCiphertext extends Ciphertext {
     private static final long      serialVersionUID       = 5566319942401654333L;
     private static final String    FIELD_IV               = "iv";
     private static final String    FIELD_SALT             = "salt";
-    private static final String    FIELD_TAG              = "salt";
+    private static final String    FIELD_TAG              = "tag";
     private static final String    FIELD_ENCRYPTED_LENGTH = "length";
 
     private final byte[]           iv;
