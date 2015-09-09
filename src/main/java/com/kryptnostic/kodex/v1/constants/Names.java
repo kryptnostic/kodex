@@ -80,5 +80,6 @@ public final class Names {
     public static final String INHERIT_OWNERSHIP_FIELD       = "inhertitOwnership";
     public static final String CREATOR_FIELD                 = "creator";
     public static final String PAGE_FIELD                    = "page";
-    public static final String SCROLL_INSTANCE_FIELD                 = "scrollInstance";
+    public static final String SCROLL_INSTANCE_FIELD         = "scrollInstance";
+    public static final String SHARING_KEY                   = "sharingKey";
 }
