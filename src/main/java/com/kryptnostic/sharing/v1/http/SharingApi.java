@@ -37,6 +37,7 @@ public interface SharingApi {
     @POST( SHARE + OBJECT + REVOKE )
     BasicResponse<String> revokeAccess( @Body RevocationRequest request );
 
+    //TODO: Consider creating objects here.
     @PUT( SHARE + KEYS )
     KeyUpdateResponse addIndexPairs( @Body Map<String, byte[]> indexPairs );
 

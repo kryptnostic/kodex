@@ -33,6 +33,6 @@ public interface KryptnosticContext {
 
     RsaCompressingCryptoService getRsaCryptoService() throws SecurityConfigurationException;
 
-    byte[] generateIndexForToken( String token, byte[] objectSearchKey, byte[] ObjectAddressMatrix );
+    byte[] generateIndexForToken( String token, byte[] objectSearchKey, byte[] objectAddressMatrix );
 
 }

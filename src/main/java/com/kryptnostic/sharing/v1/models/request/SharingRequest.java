@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.base.Optional;
 import com.kryptnostic.kodex.v1.constants.Names;
 import com.kryptnostic.kodex.v1.crypto.ciphers.BlockCiphertext;
 
@@ -13,13 +14,13 @@ public final class SharingRequest implements Serializable {
     private static final long       serialVersionUID = 8493560981719181963L;
     private final Map<UUID, byte[]> rsaEncryptedCryptoServices;
     private final String            objectId;
-    private final BlockCiphertext   encryptedSharingPair;
+    private final Optional<BlockCiphertext>   encryptedSharingPair;
 
     @JsonCreator
     public SharingRequest(
             @JsonProperty( Names.ID_FIELD ) String objectId,
             @JsonProperty( Names.USERS_FIELD ) Map<UUID, byte[]> rsaEncryptedCryptoServices,
-            @JsonProperty( Names.OBJECT_SHARING_PAIR_FIELD ) BlockCiphertext encryptedSharingPair ) {
+            @JsonProperty( Names.OBJECT_SHARING_PAIR_FIELD ) Optional<BlockCiphertext> encryptedSharingPair ) {
         this.objectId = objectId;
         this.rsaEncryptedCryptoServices = rsaEncryptedCryptoServices;
         this.encryptedSharingPair = encryptedSharingPair;
@@ -36,7 +37,7 @@ public final class SharingRequest implements Serializable {
     }
 
     @JsonProperty( Names.OBJECT_SHARING_PAIR_FIELD )
-    public BlockCiphertext getEncryptedSharingPair() {
+    public Optional<BlockCiphertext> getEncryptedSharingPair() {
         return encryptedSharingPair;
     }
 }
