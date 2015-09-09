@@ -17,8 +17,8 @@ import com.google.common.base.Optional;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 import com.kryptnostic.directory.v1.http.DirectoryApi;
 import com.kryptnostic.directory.v1.model.ByteArrayEnvelope;
 import com.kryptnostic.kodex.v1.client.KryptnosticConnection;
@@ -29,13 +29,13 @@ import com.kryptnostic.kodex.v1.exceptions.types.ResourceNotFoundException;
 import com.kryptnostic.kodex.v1.exceptions.types.SecurityConfigurationException;
 
 public class DefaultCryptoServiceLoader implements CryptoServiceLoader {
-    private static final Logger                               logger = LoggerFactory
-                                                                             .getLogger( DefaultCryptoServiceLoader.class );
+    private static final Logger                       logger = LoggerFactory
+                                                                     .getLogger( DefaultCryptoServiceLoader.class );
 
     private final LoadingCache<String, CryptoService> keyCache;
-    private DirectoryApi                                      directoryApi;
-    private KryptnosticConnection                             connection;
-    private Cypher                                            cypher;
+    private DirectoryApi                              directoryApi;
+    private KryptnosticConnection                     connection;
+    private Cypher                                    cypher;
 
     public DefaultCryptoServiceLoader(
             final KryptnosticConnection connection,
@@ -50,13 +50,12 @@ public class DefaultCryptoServiceLoader implements CryptoServiceLoader {
                     public Map<String, CryptoService> loadAll( Iterable<? extends String> keys ) throws IOException,
                             SecurityConfigurationException {
 
-                        Set<String> ids = Sets.newLinkedHashSet();
-                        for ( String k : keys ) {
-                            ids.add( k );
-                        }
+                        Set<String> ids = ImmutableSet.copyOf( keys );
 
                         Map<String, byte[]> data = directoryApi.getObjectCryptoServices( ids );
-
+                        if ( data.size() != ids.size() ) {
+                            throw new InvalidCacheLoadException( "Unable to retrieve all keys." );
+                        }
                         Map<String, CryptoService> processedData = Maps.newHashMap();
 
                         for ( Map.Entry<String, byte[]> entry : data.entrySet() ) {
@@ -89,7 +88,8 @@ public class DefaultCryptoServiceLoader implements CryptoServiceLoader {
                                     NoSuchAlgorithmException
                                     | InvalidAlgorithmParameterException
                                     | ExecutionException e ) {
-                                logger.error( "Failed while trying to create new crypto service for object id: {} " , key );
+                                logger.error( "Failed while trying to create new crypto service for object id: {} ",
+                                        key );
                             }
                         }
                         return connection.getRsaCryptoService().decrypt( crypto, AesCryptoService.class );

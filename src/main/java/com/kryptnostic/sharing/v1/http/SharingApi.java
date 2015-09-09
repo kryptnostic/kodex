@@ -11,6 +11,7 @@ import retrofit.http.PUT;
 import retrofit.http.Path;
 
 import com.google.common.base.Optional;
+import com.kryptnostic.indexing.v1.ServerIndexPair;
 import com.kryptnostic.kodex.v1.models.response.BasicResponse;
 import com.kryptnostic.sharing.v1.models.IncomingShares;
 import com.kryptnostic.sharing.v1.models.request.RevocationRequest;
@@ -37,13 +38,14 @@ public interface SharingApi {
     @POST( SHARE + OBJECT + REVOKE )
     BasicResponse<String> revokeAccess( @Body RevocationRequest request );
 
-    //TODO: Consider creating objects here.
+    // TODO: Consider creating objects here.
     @PUT( SHARE + KEYS )
-    KeyUpdateResponse addIndexPairs( @Body Map<String, byte[]> indexPairs );
+    KeyUpdateResponse addIndexPairs( @Body Map<String, ServerIndexPair> indexPairs );
 
     @DELETE( SHARE + KEYS )
     KeyUpdateResponse removeKeys( @Body Set<String> uuids );
 
     @GET( SHARE + OBJECT + "/{" + ID + "}" + OBJECT_KEYS )
     Optional<byte[]> getIndexPair( @Path( ID ) String id );
+
 }

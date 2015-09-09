@@ -4,6 +4,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
+import com.kryptnostic.indexing.v1.ServerIndexPair;
 import com.kryptnostic.kodex.v1.crypto.ciphers.RsaCompressingCryptoService;
 import com.kryptnostic.kodex.v1.crypto.ciphers.RsaCompressingEncryptionService;
 import com.kryptnostic.kodex.v1.exceptions.types.SecurityConfigurationException;
@@ -23,9 +24,9 @@ public interface KryptnosticContext {
 
     byte[] rsaEncrypt( byte[] plaintext ) throws SecurityConfigurationException;
 
-    void addIndexPair( String objectId, byte[] indexPair );
+    void addIndexPair( String objectId, ServerIndexPair indexPair );
 
-    void addIndexPairs( Map<String, byte[]> indexPairs );
+    void addIndexPairs( Map<String, ServerIndexPair> indexPairs );
 
     byte[] prepareSearchToken( String token );
 
