@@ -11,7 +11,6 @@ import retrofit.http.PUT;
 import retrofit.http.Path;
 
 import com.google.common.base.Optional;
-import com.kryptnostic.kodex.v1.exceptions.types.ResourceNotFoundException;
 import com.kryptnostic.kodex.v1.models.response.BasicResponse;
 import com.kryptnostic.sharing.v1.models.IncomingShares;
 import com.kryptnostic.sharing.v1.models.request.RevocationRequest;
@@ -45,5 +44,5 @@ public interface SharingApi {
     KeyUpdateResponse removeKeys( @Body Set<String> uuids );
 
     @GET( SHARE + OBJECT + "/{" + ID + "}" + OBJECT_KEYS )
-    Optional<byte[]> getIndexPair( @Path( ID ) String id ) throws ResourceNotFoundException;
+    Optional<byte[]> getIndexPair( @Path( ID ) String id );
 }
