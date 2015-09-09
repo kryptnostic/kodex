@@ -29,18 +29,13 @@ import com.kryptnostic.kodex.v1.exceptions.types.ResourceNotFoundException;
 import com.kryptnostic.kodex.v1.exceptions.types.SecurityConfigurationException;
 
 public class DefaultCryptoServiceLoader implements CryptoServiceLoader {
-    private static final Logger                       logger = LoggerFactory
-                                                                     .getLogger( DefaultCryptoServiceLoader.class );
-    /*
-     * private static JacksonKodexMarshaller<PublicKey> publicKeyKodexFactory = new JacksonKodexMarshaller<PublicKey>(
-     * PublicKey.class, mapper ); private static JacksonKodexMarshaller<PrivateKey> privateKeyKodexFactory = new
-     * JacksonKodexMarshaller<PrivateKey>( PrivateKey.class, mapper );
-     */
+    private static final Logger                               logger = LoggerFactory
+                                                                             .getLogger( DefaultCryptoServiceLoader.class );
 
     private final LoadingCache<String, CryptoService> keyCache;
-    private DirectoryApi                              directoryApi;
-    private KryptnosticConnection                     connection;
-    private Cypher                                    cypher;
+    private DirectoryApi                                      directoryApi;
+    private KryptnosticConnection                             connection;
+    private Cypher                                            cypher;
 
     public DefaultCryptoServiceLoader(
             final KryptnosticConnection connection,
@@ -82,9 +77,10 @@ public class DefaultCryptoServiceLoader implements CryptoServiceLoader {
                         try {
                             crypto = directoryApi.getObjectCryptoService( key ).getData();
                         } catch ( ResourceNotFoundException e ) {} catch ( RetrofitError e ) {
+                            logger.error( "Failed to load crypto service from backend for id {} ", key );
                             throw new IOException( e );
                         }
-                        if ( crypto == null ) {
+                        if ( ( crypto == null ) ) {
                             try {
                                 CryptoService cs = new AesCryptoService( DefaultCryptoServiceLoader.this.cypher );
                                 put( key, cs );
@@ -93,7 +89,7 @@ public class DefaultCryptoServiceLoader implements CryptoServiceLoader {
                                     NoSuchAlgorithmException
                                     | InvalidAlgorithmParameterException
                                     | ExecutionException e ) {
-
+                                logger.error( "Failed while trying to create new crypto service for object id: {} " , key );
                             }
                         }
                         return connection.getRsaCryptoService().decrypt( crypto, AesCryptoService.class );
@@ -119,11 +115,12 @@ public class DefaultCryptoServiceLoader implements CryptoServiceLoader {
 
     @Override
     public Map<String, CryptoService> getAll( Set<String> ids ) throws ExecutionException {
-        return keyCache.getAll( ids );
+        return keyCache.getAllPresent( ids );
     }
 
     @Override
     public void clear() {
+        keyCache.invalidateAll();
         keyCache.cleanUp();
     }
 }

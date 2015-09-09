@@ -11,13 +11,11 @@ import retrofit.http.PUT;
 import retrofit.http.Path;
 
 import com.google.common.base.Optional;
-import com.kryptnostic.kodex.v1.exceptions.types.ResourceNotFoundException;
 import com.kryptnostic.kodex.v1.models.response.BasicResponse;
 import com.kryptnostic.sharing.v1.models.IncomingShares;
 import com.kryptnostic.sharing.v1.models.request.RevocationRequest;
 import com.kryptnostic.sharing.v1.models.request.SharingRequest;
 import com.kryptnostic.sharing.v1.models.response.KeyUpdateResponse;
-import com.kryptnostic.storage.v1.models.EncryptedSearchObjectKey;
 
 public interface SharingApi {
     String SHARE       = "/share";
@@ -40,11 +38,11 @@ public interface SharingApi {
     BasicResponse<String> revokeAccess( @Body RevocationRequest request );
 
     @PUT( SHARE + KEYS )
-    KeyUpdateResponse addSharingPairs( @Body Map<String, byte[]> indexPairs );
+    KeyUpdateResponse addIndexPairs( @Body Map<String, byte[]> indexPairs );
 
     @DELETE( SHARE + KEYS )
     KeyUpdateResponse removeKeys( @Body Set<String> uuids );
 
     @GET( SHARE + OBJECT + "/{" + ID + "}" + OBJECT_KEYS )
-    Optional<byte[]> getIndexPair( @Path( ID ) String id ) throws ResourceNotFoundException;
+    Optional<byte[]> getIndexPair( @Path( ID ) String id );
 }

@@ -13,7 +13,7 @@ import com.kryptnostic.kodex.v1.exceptions.types.SecurityConfigurationException;
  * services.
  * 
  * @author Nick Hewitt &lt;nick@kryptnostic.com&gt;
- *
+ * @author Matthew Tamayo-Rios &lt;matthew@kryptnostic.com&gt;
  */
 public interface KryptnosticContext {
 
@@ -23,7 +23,9 @@ public interface KryptnosticContext {
 
     byte[] rsaEncrypt( byte[] plaintext ) throws SecurityConfigurationException;
 
-    void addSharingPair( String objectId, byte[] sharingPair );
+    void addIndexPair( String objectId, byte[] indexPair );
+
+    void addIndexPairs( Map<String, byte[]> indexPairs );
 
     byte[] prepareSearchToken( String token );
 

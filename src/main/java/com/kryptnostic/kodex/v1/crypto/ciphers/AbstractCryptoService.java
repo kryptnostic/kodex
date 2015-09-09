@@ -28,7 +28,8 @@ public abstract class AbstractCryptoService implements CryptoService {
         this.cypher = cypher;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see com.kryptnostic.kodex.v1.crypto.ciphers.CryptoService#encrypt(byte[])
      */
     @Override
@@ -36,7 +37,8 @@ public abstract class AbstractCryptoService implements CryptoService {
         return encrypt( bytes, new byte[ 0 ] );
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see com.kryptnostic.kodex.v1.crypto.ciphers.CryptoService#encrypt(byte[], byte[])
      */
     @Override
@@ -59,7 +61,7 @@ public abstract class AbstractCryptoService implements CryptoService {
             }
 
             byte[] encryptedBytes = cipher.doFinal( bytes );
-            return new BlockCiphertext( iv, salt, encryptedBytes, null );
+            return new BlockCiphertext( iv, salt, encryptedBytes );
         } catch ( NoSuchAlgorithmException e ) {
             throw new SecurityConfigurationException( e );
         } catch ( InvalidKeySpecException e ) {
@@ -77,8 +79,10 @@ public abstract class AbstractCryptoService implements CryptoService {
         }
     }
 
-    /* (non-Javadoc)
-     * @see com.kryptnostic.kodex.v1.crypto.ciphers.CryptoService#decryptBytes(com.kryptnostic.kodex.v1.crypto.ciphers.BlockCiphertext)
+    /*
+     * (non-Javadoc)
+     * @see com.kryptnostic.kodex.v1.crypto.ciphers.CryptoService#decryptBytes(com.kryptnostic.kodex.v1.crypto.ciphers.
+     * BlockCiphertext)
      */
     @Override
     public byte[] decryptBytes( BlockCiphertext ciphertext ) throws SecurityConfigurationException {
@@ -105,7 +109,8 @@ public abstract class AbstractCryptoService implements CryptoService {
         }
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see com.kryptnostic.kodex.v1.crypto.ciphers.CryptoService#getCypher()
      */
     @Override
