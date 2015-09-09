@@ -11,7 +11,7 @@ import com.kryptnostic.kodex.v1.exceptions.types.SecurityConfigurationException;
 public interface SharingClient {
     void unshareObjectWithUsers( String objectId, Set<UUID> users );
 
-    int processIncomingShares() throws IOException, SecurityConfigurationException;
+    Set<String> processIncomingShares() throws IOException, SecurityConfigurationException;
 
     int getIncomingSharesCount();
 
