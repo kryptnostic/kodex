@@ -4,8 +4,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
+import com.google.common.base.Optional;
 import com.kryptnostic.kodex.v1.crypto.ciphers.RsaCompressingCryptoService;
 import com.kryptnostic.kodex.v1.crypto.ciphers.RsaCompressingEncryptionService;
+import com.kryptnostic.kodex.v1.exceptions.types.ResourceNotFoundException;
 import com.kryptnostic.kodex.v1.exceptions.types.SecurityConfigurationException;
 
 /**
@@ -18,13 +20,14 @@ import com.kryptnostic.kodex.v1.exceptions.types.SecurityConfigurationException;
 public interface KryptnosticContext {
 
     KryptnosticConnection getConnection();
-
+    
     byte[] rsaDecrypt( byte[] ciphertext ) throws SecurityConfigurationException;
-
     byte[] rsaEncrypt( byte[] plaintext ) throws SecurityConfigurationException;
 
-    void addSharingPair( String objectId, byte[] sharingPair );
-
+    void addIndexPair( String objectId, byte[] indexPair );
+    void addIndexPairs( Map<String, byte[]> indexPairs );
+    
+    Optional<byte[]> getSharingPair( String objectId ) throws ResourceNotFoundException;
     byte[] prepareSearchToken( String token );
 
     Map<UUID, RsaCompressingEncryptionService> getEncryptionServiceForUsers( Set<UUID> users );
