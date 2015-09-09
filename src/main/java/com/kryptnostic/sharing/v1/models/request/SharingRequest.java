@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Optional;
 import com.kryptnostic.kodex.v1.constants.Names;
@@ -17,6 +18,7 @@ public final class SharingRequest implements Serializable {
     private final Optional<BlockCiphertext>   encryptedSharingPair;
 
     @JsonCreator
+    @JsonIgnoreProperties(ignoreUnknown=true)
     public SharingRequest(
             @JsonProperty( Names.ID_FIELD ) String objectId,
             @JsonProperty( Names.USERS_FIELD ) Map<UUID, byte[]> rsaEncryptedCryptoServices,
