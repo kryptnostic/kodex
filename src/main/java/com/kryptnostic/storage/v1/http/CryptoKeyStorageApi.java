@@ -27,8 +27,12 @@ public interface CryptoKeyStorageApi {
     Optional<BlockCiphertext> getFHESearchPrivateKeyForUser() throws BadRequestException;
 
     @POST( CONTROLLER + HASH )
-    Optional<String> setHashFunctionForCurrentUser( @Body BlockCiphertext key ) throws BadRequestException;
+    Optional<String> setHashFunctionForCurrentUser( @Body byte[] key ) throws BadRequestException;
 
+    /**
+     * @return The byte level representation of the ClientHashFunction.
+     * @throws BadRequestException
+     */
     @GET( CONTROLLER + HASH )
-    Optional<BlockCiphertext> getHashFunctionForCurrentUser() throws BadRequestException;
+    Optional<byte[]> getHashFunctionForCurrentUser() throws BadRequestException;
 }

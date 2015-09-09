@@ -39,7 +39,7 @@ public interface SharingApi {
     BasicResponse<String> revokeAccess( @Body RevocationRequest request );
 
     @PUT( SHARE + KEYS )
-    KeyUpdateResponse addSharingPairs( @Body Map<String, byte[]> indexPairs );
+    KeyUpdateResponse addIndexPairs( @Body Map<String, byte[]> indexPairs );
 
     @DELETE( SHARE + KEYS )
     KeyUpdateResponse removeKeys( @Body Set<String> uuids );
