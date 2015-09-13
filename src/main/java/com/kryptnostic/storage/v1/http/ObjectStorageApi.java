@@ -39,9 +39,10 @@ public interface ObjectStorageApi {
      *
      * @return The ID of the newly created object
      * @throws BadRequestException Request was invalid
+     * @throws ResourceNotFoundException 
      */
     @PUT( CONTROLLER )
-    BasicResponse<String> createPendingObject( @Body PendingObjectRequest request ) throws BadRequestException;
+    BasicResponse<String> createPendingObject( @Body PendingObjectRequest request ) throws BadRequestException, ResourceNotFoundException;
 
     /**
      * Request an existing object be put into a pending state
