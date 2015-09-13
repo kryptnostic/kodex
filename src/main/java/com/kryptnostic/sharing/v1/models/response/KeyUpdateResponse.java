@@ -16,4 +16,36 @@ public final class KeyUpdateResponse  {
     public Set<String> getIds() {
         return ids;
     }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ( ( ids == null ) ? 0 : ids.hashCode() );
+        return result;
+    }
+
+    @Override
+    public boolean equals( Object obj ) {
+        if ( this == obj ) {
+            return true;
+        }
+        if ( obj == null ) {
+            return false;
+        }
+        if ( !( obj instanceof KeyUpdateResponse ) ) {
+            return false;
+        }
+        KeyUpdateResponse other = (KeyUpdateResponse) obj;
+        if ( ids == null ) {
+            if ( other.ids != null ) {
+                return false;
+            }
+        } else if ( !ids.equals( other.ids ) ) {
+            return false;
+        }
+        return true;
+    }
+    
+    
 }
