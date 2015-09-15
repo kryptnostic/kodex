@@ -1,5 +1,6 @@
 package com.kryptnostic.directory.v1.http;
 
+import java.util.Set;
 import java.util.UUID;
 
 import retrofit.http.Body;
@@ -33,6 +34,7 @@ public interface UserDirectoryApi {
     public static final String REALM               = "realm";
     public static final String USERNAME            = "username";
     public static final String DISCOVERY           = "/discovery";
+    public static final String USER                = "/user";
     public static final String USERS               = "/users";
     public static final String RESET               = "/reset";
     public static final String ID_PATH             = "/{" + ID + "}";
@@ -49,8 +51,17 @@ public interface UserDirectoryApi {
      * @param userId String form of reserved {@link UUID}
      * @return The user
      */
-    @GET( CONTROLLER + USERS + ID_PATH )
+    @GET( CONTROLLER + USER + ID_PATH )
     Optional<User> getUser( @Path( ID ) UUID userId ); // developer
+
+    /**
+     * Get the account details for a set of users.
+     *
+     * @param userIds Set of UUIDs
+     * @return The users
+     */
+    @POST( CONTROLLER + USERS )
+    Optional<Set<User>> getUsers( @Body Set<UUID> userIds ); // developer
 
     /**
      * Delete a specific user, removing it from the directory.
@@ -59,7 +70,7 @@ public interface UserDirectoryApi {
      * @return the UUID of the user deleted if any.
      * @throws RealmMismatchException
      */
-    @DELETE( CONTROLLER + USERS + ID_PATH )
+    @DELETE( CONTROLLER + USER + ID_PATH )
     Optional<UUID> deleteUser( @Path( ID ) UUID userId ) throws RealmMismatchException; // developer
 
     /**
@@ -68,7 +79,7 @@ public interface UserDirectoryApi {
      * @param email
      * @return
      */
-    @GET( CONTROLLER + USERS + EMAIL_PATH )
+    @GET( CONTROLLER + USER + EMAIL_PATH )
     Optional<UUID> resolve( @Path( EMAIL ) String email );
 
     /**
@@ -82,13 +93,13 @@ public interface UserDirectoryApi {
      * @throws BadRequestException
      * @throws MailException
      */
-    @PUT( CONTROLLER + USERS + ID_PATH )
+    @PUT( CONTROLLER + USER + ID_PATH )
     Optional<UUID> resetPassword( @Path( ID ) UUID userKey, @Body String newPassword ) throws UserUpdateException,
             ReservationTakenException, BadRequestException, MailException;
 
     /**
      * Allows discovering contacts by e-mail or name search.
-     * 
+     *
      * @param request E-mail and name search terms.
      * @return Scored soundex, metaphone, and exact match search results on name and e-mail as specified in the request.
      */
