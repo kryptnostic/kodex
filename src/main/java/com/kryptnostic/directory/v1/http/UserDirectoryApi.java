@@ -61,7 +61,7 @@ public interface UserDirectoryApi {
      * @return The users
      */
     @POST( CONTROLLER + USERS )
-    Optional<Set<User>> getUsers( @Body Set<UUID> userIds ); // developer
+    Set<User> getUsers( @Body Set<UUID> userIds ); // developer
 
     /**
      * Delete a specific user, removing it from the directory.
