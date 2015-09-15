@@ -55,12 +55,12 @@ public interface UserDirectoryApi {
     Optional<User> getUser( @Path( ID ) UUID userId ); // developer
 
     /**
-     * Get the account details for a given user.
+     * Get the account details for a set of users.
      *
-     * @param userId String form of reserved {@link UUID}
-     * @return The user
+     * @param userIds Set of UUIDs
+     * @return The users
      */
-    @GET( CONTROLLER + USERS )
+    @POST( CONTROLLER + USERS )
     Optional<Set<User>> getUsers( @Body Set<UUID> userIds ); // developer
 
     /**
