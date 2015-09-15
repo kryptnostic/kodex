@@ -107,7 +107,7 @@ dependencies {
     compile "com.squareup.retrofit:retrofit:${retrofit_version}"
     compile "com.squareup.okhttp:okhttp-urlconnection:2.3.0"
     compile "com.squareup.okhttp:okhttp:2.3.0"
-	compile "com.squareup.retrofit:retrofit-converters:1.9.0"
+    compile "com.squareup.retrofit:retrofit-converters:1.9.0"
 
     /*
      * TESTING

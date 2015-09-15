@@ -120,4 +120,5 @@ public interface ObjectStorageApi {
     BasicResponse<String> appendObject( @Path( ID ) String objectId, @Body EncryptableBlock blockToAppend )
             throws ResourceNotFoundException;
 
+    
 }

@@ -12,13 +12,21 @@ import com.kryptnostic.kodex.v1.constants.Names;
 import com.kryptnostic.kodex.v1.crypto.ciphers.BlockCiphertext;
 
 public final class SharingRequest implements Serializable {
-    private static final long       serialVersionUID = 8493560981719181963L;
-    private final Map<UUID, byte[]> rsaEncryptedCryptoServices;
-    private final String            objectId;
-    private final Optional<BlockCiphertext>   encryptedSharingPair;
+    private static final long               serialVersionUID = 8493560981719181963L;
+    private final Map<UUID, byte[]>         rsaEncryptedCryptoServices;
+    private final String                    objectId;
+    private final Optional<BlockCiphertext> encryptedSharingPair;
+
+    public SharingRequest(
+            String objectId,
+            Map<UUID, byte[]> rsaEncryptedCryptoServices,
+            Optional<BlockCiphertext> encryptedSharingPair ) {
+        this( objectId, Optional.<String> absent(), rsaEncryptedCryptoServices, encryptedSharingPair );
+    }
 
     @JsonCreator
-    @JsonIgnoreProperties(ignoreUnknown=true)
+    @JsonIgnoreProperties(
+        ignoreUnknown = true )
     public SharingRequest(
             @JsonProperty( Names.ID_FIELD ) String objectId,
             @JsonProperty( Names.SHARING_KEY ) Optional<String> sharingKey,
