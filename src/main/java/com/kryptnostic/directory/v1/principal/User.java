@@ -28,35 +28,36 @@ import com.kryptnostic.kodex.v1.models.UserAttributes;
  * 
  * @author Matthew Tamayo-Rios &lt;matthew@kryptnostic.com&gt;
  */
-@JsonDeserialize(as=KryptnosticUser.class)
-@JsonSerialize(as=User.class)
+@JsonDeserialize(
+    as = KryptnosticUser.class )
+@JsonSerialize(as = User.class)
 public interface User extends Principal {
-    @JsonProperty( USERNAME_FIELD ) 
+    @JsonProperty( USERNAME_FIELD )
     String getName();
 
     @Deprecated
-    @JsonProperty( REALM_FIELD ) 
+    @JsonProperty( REALM_FIELD )
     String getRealm();
-    
-    @JsonProperty( DOMAIN_FIELD ) 
+
+    @JsonProperty( DOMAIN_FIELD )
     String getDomain();
 
     @Nonnull
-    @JsonProperty( EMAIL_FIELD ) 
+    @JsonProperty( EMAIL_FIELD )
     String getEmail();
 
     @Nonnull
-    @JsonProperty( CERTIFICATE_FIELD ) 
+    @JsonProperty( CERTIFICATE_FIELD )
     byte[] getCertificate();
 
     @Nonnull
-    @JsonProperty( ROLES_FIELD ) 
+    @JsonProperty( ROLES_FIELD )
     Set<String> getRoles();
 
     @Nonnull
-    @JsonProperty( GROUPS_PROPERTY ) 
+    @JsonProperty( GROUPS_PROPERTY )
     Set<UUID> getGroups();
-    
+
     @JsonProperty( ATTRIBUTES_FIELD )
     UserAttributes getAttributes();
 
@@ -67,7 +68,6 @@ public interface User extends Principal {
     @Nullable
     @JsonIgnore
     Optional<String> getFamilyName();
-
 
     Optional<String> getAttribute( String key );
 }
