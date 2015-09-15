@@ -21,6 +21,7 @@ public final class SharingRequest implements Serializable {
     @JsonIgnoreProperties(ignoreUnknown=true)
     public SharingRequest(
             @JsonProperty( Names.ID_FIELD ) String objectId,
+            @JsonProperty( Names.SHARING_KEY ) Optional<String> sharingKey,
             @JsonProperty( Names.USERS_FIELD ) Map<UUID, byte[]> rsaEncryptedCryptoServices,
             @JsonProperty( Names.OBJECT_SHARING_PAIR_FIELD ) Optional<BlockCiphertext> encryptedSharingPair ) {
         this.objectId = objectId;
