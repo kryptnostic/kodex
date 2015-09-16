@@ -33,6 +33,12 @@ repositories {
   mavenCentral()
   mavenLocal()
   maven {
+    url 'http://artifactory.krypt.int/artifactory/libs-snapshot/'
+  }
+  maven {
+    url 'http://artifactory.krypt.int/artifactory/remote-repos/'
+  }
+  maven {
     url "https://build.shibboleth.net/nexus/content/groups/public/"
   }
   maven {
