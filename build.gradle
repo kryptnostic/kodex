@@ -59,7 +59,7 @@ repositories {
 ext.jackson_version='2.4.4'
 ext.fhe_core_version='0.1.2-SNAPSHOT'
 ext.retrofit_version='1.9.0'
-ext.krypto_version="0.1.1-SNAPSHOT"
+ext.krypto_version="0.0.1-SNAPSHOT"
 dependencies {
     /*
      * SL4J + LOG4J
