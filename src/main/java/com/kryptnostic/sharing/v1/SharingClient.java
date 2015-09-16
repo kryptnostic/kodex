@@ -4,18 +4,23 @@ import java.io.IOException;
 import java.util.Set;
 import java.util.UUID;
 
+import com.google.common.base.Optional;
 import com.kryptnostic.kodex.v1.exceptions.types.ResourceNotFoundException;
 import com.kryptnostic.kodex.v1.exceptions.types.SecurityConfigurationException;
-import com.kryptnostic.storage.v1.models.EncryptedSearchObjectKey;
 
 public interface SharingClient {
     void unshareObjectWithUsers( String objectId, Set<UUID> users );
 
-    void shareObjectWithUsers( String uuid, Set<UUID> users ) throws ResourceNotFoundException;
-
-    int processIncomingShares() throws IOException, SecurityConfigurationException;
+    Set<String> processIncomingShares() throws IOException, SecurityConfigurationException;
 
     int getIncomingSharesCount();
 
-    EncryptedSearchObjectKey getObjectKey( String objectId ) throws ResourceNotFoundException;
+    void shareObjectWithUsers( String objectId, Set<UUID> users ) throws ResourceNotFoundException;
+
+    Optional<byte[]> getIndexPair( String objectId ) throws ResourceNotFoundException;
+
+    Optional<byte[]> getSharingPair( String objectId ) throws ResourceNotFoundException;
+
+    void shareObjectWithUsers( String objectId, Set<UUID> users, Optional<byte[]> sharingPair )
+            throws ResourceNotFoundException;
 }

@@ -71,17 +71,4 @@ public interface StorageClient {
     Collection<String> getObjectIdsByType( String type, int offset, int pageSize );
 
     ObjectMetadata getObjectMetadata( String id ) throws ResourceNotFoundException;
-
-    /**
-     * @param objectMetadata
-     * @param body
-     * @return objectId
-     * @throws SecurityConfigurationException
-     * @throws ExecutionException
-     * @throws ResourceNotFoundException
-     * @throws IrisException
-     * @throws BadRequestException
-     */
-    String appendObject( ObjectMetadata objectMetadata, String body ) throws SecurityConfigurationException,
-            ExecutionException, ResourceNotFoundException, IrisException, BadRequestException;
 }

@@ -16,7 +16,6 @@ import com.kryptnostic.directory.v1.model.ByteArrayEnvelope;
 import com.kryptnostic.directory.v1.model.response.PublicKeyEnvelope;
 import com.kryptnostic.kodex.v1.constants.Names;
 import com.kryptnostic.kodex.v1.crypto.ciphers.BlockCiphertext;
-import com.kryptnostic.kodex.v1.crypto.keys.Kodex;
 import com.kryptnostic.kodex.v1.exceptions.types.ResourceNotFoundException;
 import com.kryptnostic.kodex.v1.models.response.BasicResponse;
 import com.kryptnostic.sharing.v1.models.NotificationPreference;
@@ -51,6 +50,16 @@ public interface DirectoryApi {
     @GET( CONTROLLER + PUBLIC_KEY + PARAM.USER )
     PublicKeyEnvelope getPublicKey( @Path( Names.USER_FIELD ) UUID id ) throws ResourceNotFoundException;
 
+    /**
+     * @param userIds The id of the user whose public key shall be retrieved.
+     * @return Specified user's public key
+     * @throws ResourceNotFoundException
+     */
+    @Timed
+    @POST( CONTROLLER + PUBLIC_KEY )
+    Map<UUID, PublicKeyEnvelope> getPublicKeys( @Body Set<UUID> userIds )
+            throws ResourceNotFoundException;
+
     @Timed
     @PUT( CONTROLLER + PUBLIC_KEY )
     BasicResponse<String> setPublicKey( @Body PublicKeyEnvelope publicKey );
@@ -79,14 +88,6 @@ public interface DirectoryApi {
     @Timed
     @PUT( CONTROLLER + PRIVATE_KEY )
     BasicResponse<String> setPrivateKey( @Body BlockCiphertext encryptedPrivateKey );
-
-    @Timed
-    @GET( CONTROLLER + KODEX )
-    Kodex<String> getKodex() throws ResourceNotFoundException;
-
-    @Timed
-    @PUT( CONTROLLER + KODEX )
-    BasicResponse<String> setKodex( @Body Kodex<String> kodex );
 
     @Timed
     @GET( CONTROLLER + OBJECT_KEY + PARAM.ID )

@@ -17,8 +17,8 @@ import com.google.common.base.Optional;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 import com.kryptnostic.directory.v1.http.DirectoryApi;
 import com.kryptnostic.directory.v1.model.ByteArrayEnvelope;
 import com.kryptnostic.kodex.v1.client.KryptnosticConnection;
@@ -31,11 +31,6 @@ import com.kryptnostic.kodex.v1.exceptions.types.SecurityConfigurationException;
 public class DefaultCryptoServiceLoader implements CryptoServiceLoader {
     private static final Logger                       logger = LoggerFactory
                                                                      .getLogger( DefaultCryptoServiceLoader.class );
-    /*
-     * private static JacksonKodexMarshaller<PublicKey> publicKeyKodexFactory = new JacksonKodexMarshaller<PublicKey>(
-     * PublicKey.class, mapper ); private static JacksonKodexMarshaller<PrivateKey> privateKeyKodexFactory = new
-     * JacksonKodexMarshaller<PrivateKey>( PrivateKey.class, mapper );
-     */
 
     private final LoadingCache<String, CryptoService> keyCache;
     private DirectoryApi                              directoryApi;
@@ -55,13 +50,12 @@ public class DefaultCryptoServiceLoader implements CryptoServiceLoader {
                     public Map<String, CryptoService> loadAll( Iterable<? extends String> keys ) throws IOException,
                             SecurityConfigurationException {
 
-                        Set<String> ids = Sets.newLinkedHashSet();
-                        for ( String k : keys ) {
-                            ids.add( k );
-                        }
+                        Set<String> ids = ImmutableSet.copyOf( keys );
 
                         Map<String, byte[]> data = directoryApi.getObjectCryptoServices( ids );
-
+                        if ( data.size() != ids.size() ) {
+                            throw new InvalidCacheLoadException( "Unable to retrieve all keys." );
+                        }
                         Map<String, CryptoService> processedData = Maps.newHashMap();
 
                         for ( Map.Entry<String, byte[]> entry : data.entrySet() ) {
@@ -82,9 +76,10 @@ public class DefaultCryptoServiceLoader implements CryptoServiceLoader {
                         try {
                             crypto = directoryApi.getObjectCryptoService( key ).getData();
                         } catch ( ResourceNotFoundException e ) {} catch ( RetrofitError e ) {
+                            logger.error( "Failed to load crypto service from backend for id {} ", key );
                             throw new IOException( e );
                         }
-                        if ( crypto == null ) {
+                        if ( ( crypto == null ) ) {
                             try {
                                 CryptoService cs = new AesCryptoService( DefaultCryptoServiceLoader.this.cypher );
                                 put( key, cs );
@@ -93,7 +88,8 @@ public class DefaultCryptoServiceLoader implements CryptoServiceLoader {
                                     NoSuchAlgorithmException
                                     | InvalidAlgorithmParameterException
                                     | ExecutionException e ) {
-
+                                logger.error( "Failed while trying to create new crypto service for object id: {} ",
+                                        key );
                             }
                         }
                         return connection.getRsaCryptoService().decrypt( crypto, AesCryptoService.class );
@@ -119,11 +115,12 @@ public class DefaultCryptoServiceLoader implements CryptoServiceLoader {
 
     @Override
     public Map<String, CryptoService> getAll( Set<String> ids ) throws ExecutionException {
-        return keyCache.getAll( ids );
+        return keyCache.getAllPresent( ids );
     }
 
     @Override
     public void clear() {
+        keyCache.invalidateAll();
         keyCache.cleanUp();
     }
 }

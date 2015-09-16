@@ -1,45 +1,39 @@
 package com.kryptnostic.storage.v1.http;
 
-import java.util.UUID;
-
-import com.kryptnostic.kodex.v1.constants.Names;
-import com.kryptnostic.kodex.v1.exceptions.types.BadRequestException;
-import com.kryptnostic.kodex.v1.models.response.BasicResponse;
-
 import retrofit.http.Body;
 import retrofit.http.GET;
-import retrofit.http.PUT;
-import retrofit.http.Path;
+import retrofit.http.POST;
+
+import com.google.common.base.Optional;
+import com.kryptnostic.directory.v1.model.ByteArrayEnvelope;
+import com.kryptnostic.kodex.v1.crypto.ciphers.BlockCiphertext;
+import com.kryptnostic.kodex.v1.exceptions.types.BadRequestException;
 
 public interface CryptoKeyStorageApi {
-    final String CONTROLLER         = "/keys";
-    final String PRIVATE            = "/private";
-    final String PUBLIC             = "/public";
-    final String HASH               = "/hash";
-    final String ID                 = "id";
+    String CONTROLLER     = "/keys";
+    String PRIVATE        = "/private";
+    String SEARCH_PRIVATE = "/searchprivate";
+    String HASH           = "/hash";
 
-    public static final class PARAM {
-        private PARAM() {}
+    @POST( CONTROLLER + PRIVATE )
+    Optional<String> setFHEPrivateKeyForCurrentUser( @Body BlockCiphertext key ) throws BadRequestException;
 
-        public static final String ID             = "/{" + Names.ID_FIELD + "}";
-    }
+    @GET( CONTROLLER + PRIVATE )
+    Optional<BlockCiphertext> getFHEPrivateKeyForCurrentUser() throws BadRequestException;
 
-    @PUT( CONTROLLER + PRIVATE + PARAM.ID )
-    BasicResponse<String> setFHEPrivateKeyForUser( @Path( Names.ID_FIELD ) UUID id, @Body byte[] key ) throws BadRequestException;
+    @POST( CONTROLLER + SEARCH_PRIVATE )
+    Optional<String> setFHESearchPrivateKeyForCurrentUser( @Body BlockCiphertext key ) throws BadRequestException;
 
-    @GET( CONTROLLER + PRIVATE + PARAM.ID )
-    byte[] getFHEPrivateKeyForUser( @Path( Names.ID_FIELD ) UUID id ) throws BadRequestException;
+    @GET( CONTROLLER + SEARCH_PRIVATE )
+    Optional<BlockCiphertext> getFHESearchPrivateKeyForUser() throws BadRequestException;
 
-    @PUT( CONTROLLER + PUBLIC + PARAM.ID )
-    BasicResponse<String> setFHEPublicKeyForUser( @Path( Names.ID_FIELD ) UUID id, @Body byte[] key ) throws BadRequestException;
+    @POST( CONTROLLER + HASH )
+    Optional<String> setHashFunctionForCurrentUser( @Body ByteArrayEnvelope key ) throws BadRequestException;
 
-    @GET( CONTROLLER + PUBLIC + PARAM.ID )
-    byte[] getFHEPublicKeyForUser( @Path( Names.ID_FIELD ) UUID id ) throws BadRequestException;
-
-    @PUT( CONTROLLER + HASH + PARAM.ID )
-    BasicResponse<String> setHashFunctionForUser( @Path( Names.ID_FIELD ) UUID id, @Body byte[] key ) throws BadRequestException;
-
-    @GET( CONTROLLER + HASH + PARAM.ID )
-    byte[] getHashFunctionForUser( @Path( Names.ID_FIELD ) UUID id ) throws BadRequestException;
-
+    /**
+     * @return The byte level representation of the ClientHashFunction.
+     * @throws BadRequestException
+     */
+    @GET( CONTROLLER + HASH )
+    Optional<ByteArrayEnvelope> getHashFunctionForCurrentUser() throws BadRequestException;
 }

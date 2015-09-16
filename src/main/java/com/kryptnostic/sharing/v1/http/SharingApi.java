@@ -1,5 +1,6 @@
 package com.kryptnostic.sharing.v1.http;
 
+import java.util.Map;
 import java.util.Set;
 
 import retrofit.http.Body;
@@ -9,14 +10,13 @@ import retrofit.http.POST;
 import retrofit.http.PUT;
 import retrofit.http.Path;
 
-import com.kryptnostic.kodex.v1.exceptions.types.ResourceNotFoundException;
+import com.google.common.base.Optional;
+import com.kryptnostic.indexing.v1.ServerIndexPair;
 import com.kryptnostic.kodex.v1.models.response.BasicResponse;
 import com.kryptnostic.sharing.v1.models.IncomingShares;
-import com.kryptnostic.sharing.v1.models.request.KeyRegistrationRequest;
 import com.kryptnostic.sharing.v1.models.request.RevocationRequest;
 import com.kryptnostic.sharing.v1.models.request.SharingRequest;
 import com.kryptnostic.sharing.v1.models.response.KeyUpdateResponse;
-import com.kryptnostic.storage.v1.models.EncryptedSearchObjectKey;
 
 public interface SharingApi {
     String SHARE       = "/share";
@@ -24,12 +24,13 @@ public interface SharingApi {
     String REVOKE      = "/revoke";
     String KEYS        = "/keys";
     String OBJECT_KEYS = "/objectKeys";
+    String ID          = "id";
 
     @GET( SHARE + OBJECT )
     IncomingShares getIncomingShares();
 
-    @POST( SHARE + OBJECT + "/{id}" )
-    BasicResponse<String> removeIncomingShares( @Path( "id" ) String uuid );
+    @POST( SHARE + OBJECT + "/{" + ID + "}" )
+    BasicResponse<String> removeIncomingShares( @Path( ID ) String uuid );
 
     @POST( SHARE + OBJECT + SHARE )
     BasicResponse<String> share( @Body SharingRequest request );
@@ -37,15 +38,14 @@ public interface SharingApi {
     @POST( SHARE + OBJECT + REVOKE )
     BasicResponse<String> revokeAccess( @Body RevocationRequest request );
 
-    @POST( SHARE + KEYS )
-    KeyUpdateResponse registerKeys( @Body KeyRegistrationRequest request );
-
+    // TODO: Consider creating objects here.
     @PUT( SHARE + KEYS )
-    KeyUpdateResponse registerKeys( @Body Set<EncryptedSearchObjectKey> request );
+    KeyUpdateResponse addIndexPairs( @Body Map<String, ServerIndexPair> indexPairs );
 
     @DELETE( SHARE + KEYS )
     KeyUpdateResponse removeKeys( @Body Set<String> uuids );
 
-    @GET( SHARE + OBJECT + "/{id}" + OBJECT_KEYS )
-    EncryptedSearchObjectKey getEncryptedSearchObjectKey( @Path( "id" ) String id ) throws ResourceNotFoundException;
+    @GET( SHARE + OBJECT + "/{" + ID + "}" + OBJECT_KEYS )
+    Optional<byte[]> getIndexPair( @Path( ID ) String id );
+
 }

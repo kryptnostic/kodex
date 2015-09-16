@@ -20,7 +20,9 @@ public final class Names {
     public static final String GIVEN_NAME_FIELD              = "givenName";
     public static final String FAMILY_NAME_FIELD             = "familyName";
     public static final String METADATA_FIELD                = "metadata";
+    @Deprecated
     public static final String REALM_FIELD                   = "realm";
+    public static final String DOMAIN_FIELD                  = "domain";
     public static final String STATE_FIELD                   = "state";
     public static final String ORGANIZATION_FIELD            = "organization";
     public static final String ORGANIZATION_SIZE_FIELD       = "organizationSize";
@@ -42,7 +44,8 @@ public final class Names {
     public static final String TIER_FIELD                    = "tier";
     public static final String ZIPCODE_FIELD                 = "zipcode";
     public static final String SUCCESS_FIELD                 = "success";
-    public static final String DOCUMENT_SHARING_KEY_FIELD    = "sharingKey";
+    public static final String OBJECT_SHARING_PAIR_FIELD     = "sharingPair";
+    public static final String OBJECT_SHARING_PAIRS_FIELD    = "sharingPairs";
     public static final String SHARES_FIELD                  = "shares";
     public static final String DATA_FIELD                    = "data";
     public static final String STRATEGY_FIELD                = "strategy";
@@ -76,4 +79,7 @@ public final class Names {
     public static final String SIZE_FIELD                    = "size";
     public static final String INHERIT_OWNERSHIP_FIELD       = "inhertitOwnership";
     public static final String CREATOR_FIELD                 = "creator";
+    public static final String PAGE_FIELD                    = "page";
+    public static final String SCROLL_INSTANCE_FIELD         = "scrollInstance";
+    public static final String SHARING_KEY                   = "sharingKey";
 }

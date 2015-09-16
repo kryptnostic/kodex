@@ -6,7 +6,9 @@ import java.util.UUID;
 import org.joda.time.DateTime;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.base.Optional;
 import com.kryptnostic.kodex.v1.constants.Names;
+import com.kryptnostic.kodex.v1.crypto.ciphers.BlockCiphertext;
 import com.kryptnostic.sharing.v1.models.request.SharingRequest;
 
 /**
@@ -18,17 +20,17 @@ import com.kryptnostic.sharing.v1.models.request.SharingRequest;
 public class Share implements Serializable {
     private static final long serialVersionUID = 1145823070022684715L;
     private final String      objectId;
-    private final byte[]      encryptedSharingKey;
+    private final Optional<BlockCiphertext>      encryptedSharingPair;
     private final byte[]      seal;
     private DateTime          creationTime;
 
     public Share(
             @JsonProperty( Names.ID_FIELD ) String objectId,
-            @JsonProperty( Names.DOCUMENT_SHARING_KEY_FIELD ) byte[] encryptedSharingKey,
+            @JsonProperty( Names.OBJECT_SHARING_PAIR_FIELD ) Optional<BlockCiphertext> encryptedSharingPair,
             @JsonProperty( Names.PASSWORD_FIELD ) byte[] seal,
             @JsonProperty( Names.TIME_FIELD ) DateTime createdTime ) {
         this.objectId = objectId;
-        this.encryptedSharingKey = encryptedSharingKey;
+        this.encryptedSharingPair = encryptedSharingPair;
         this.seal = seal;
         this.creationTime = createdTime;
     }
@@ -38,9 +40,9 @@ public class Share implements Serializable {
         return objectId;
     }
 
-    @JsonProperty( Names.DOCUMENT_SHARING_KEY_FIELD )
-    public byte[] getEncryptedSharingKey() {
-        return encryptedSharingKey;
+    @JsonProperty( Names.OBJECT_SHARING_PAIR_FIELD )
+    public Optional<BlockCiphertext> getEncryptedSharingPair() {
+        return encryptedSharingPair;
     }
 
     @JsonProperty( Names.PASSWORD_FIELD )
@@ -54,7 +56,7 @@ public class Share implements Serializable {
     }
 
     public static Share fromSharingRequest( UUID user, SharingRequest request ) {
-        Share share = new Share( request.getObjectId(), request.getEncryptedSharingKey(), request.getUserKeys().get(
+        Share share = new Share( request.getObjectId(), request.getEncryptedSharingPair(), request.getUserKeys().get(
                 user ), DateTime.now() );
         return share;
     }
