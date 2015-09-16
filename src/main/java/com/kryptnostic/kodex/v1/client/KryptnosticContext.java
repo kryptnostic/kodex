@@ -12,7 +12,7 @@ import com.kryptnostic.kodex.v1.exceptions.types.SecurityConfigurationException;
 /**
  * KryptnosticContext is responsible for maintaining shared state between the KryptnosticClient and Kryptnostic
  * services.
- * 
+ *
  * @author Nick Hewitt &lt;nick@kryptnostic.com&gt;
  * @author Matthew Tamayo-Rios &lt;matthew@kryptnostic.com&gt;
  */
@@ -34,6 +34,6 @@ public interface KryptnosticContext {
 
     RsaCompressingCryptoService getRsaCryptoService() throws SecurityConfigurationException;
 
-    byte[] generateIndexForToken( String token, byte[] objectSearchKey, byte[] objectAddressMatrix );
+    byte[] generateIndexForToken( String token, byte[] objectIndexPair );
 
 }
