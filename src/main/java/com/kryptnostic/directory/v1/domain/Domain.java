@@ -21,11 +21,12 @@ public class Domain {
 
     private final UUID                id;
     private final String              name;
-    private final AtomicInteger       size;                                                // Total number of users in
-                                                                                            // domain
+    private final AtomicInteger       size;                                                   // Total number of users
+                                                                                               // in
+                                                                                               // domain
     private final DomainSharingPolicy domainSharingPolicy;
     private final boolean             confirmationEmailRequired;
-    private final AtomicBoolean             publiclyListable;
+    private final AtomicBoolean       publiclyListable;
 
     @JsonCreator
     public Domain(
@@ -83,23 +84,85 @@ public class Domain {
         size.incrementAndGet();
         return this;
     }
-    
+
     @JsonIgnore
     public Domain makePubliclyListable() {
         publiclyListable.set( true );
         return this;
     }
-    
+
     @JsonIgnore
     public Domain makePrivate() {
         publiclyListable.set( false );
         return this;
     }
-    
+
     @Override
     public String toString() {
         return "Domain [id=" + id + ", name=" + name + ", size=" + size + ", domainSharingPolicy="
                 + domainSharingPolicy.toString() + ", confirmationEmailRequired=" + confirmationEmailRequired + "]";
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ( confirmationEmailRequired ? 1231 : 1237 );
+        result = prime * result + ( ( domainSharingPolicy == null ) ? 0 : domainSharingPolicy.hashCode() );
+        result = prime * result + ( ( id == null ) ? 0 : id.hashCode() );
+        result = prime * result + ( ( name == null ) ? 0 : name.hashCode() );
+        result = prime * result + ( ( publiclyListable == null ) ? 0 : publiclyListable.hashCode() );
+        result = prime * result + ( ( size == null ) ? 0 : size.hashCode() );
+        return result;
+    }
+
+    @Override
+    public boolean equals( Object obj ) {
+        if ( this == obj ) {
+            return true;
+        }
+        if ( obj == null ) {
+            return false;
+        }
+        if ( !( obj instanceof Domain ) ) {
+            return false;
+        }
+        Domain other = (Domain) obj;
+        if ( confirmationEmailRequired != other.confirmationEmailRequired ) {
+            return false;
+        }
+        if ( domainSharingPolicy != other.domainSharingPolicy ) {
+            return false;
+        }
+        if ( id == null ) {
+            if ( other.id != null ) {
+                return false;
+            }
+        } else if ( !id.equals( other.id ) ) {
+            return false;
+        }
+        if ( name == null ) {
+            if ( other.name != null ) {
+                return false;
+            }
+        } else if ( !name.equals( other.name ) ) {
+            return false;
+        }
+        if ( publiclyListable == null ) {
+            if ( other.publiclyListable != null ) {
+                return false;
+            }
+        } else if ( !publiclyListable.equals( other.publiclyListable ) ) {
+            return false;
+        }
+        if ( size == null ) {
+            if ( other.size != null ) {
+                return false;
+            }
+        } else if ( !size.equals( other.size ) ) {
+            return false;
+        }
+        return true;
     }
 
 }
