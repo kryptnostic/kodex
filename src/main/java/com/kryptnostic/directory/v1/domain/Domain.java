@@ -148,21 +148,28 @@ public class Domain {
         } else if ( !name.equals( other.name ) ) {
             return false;
         }
-        if ( publiclyListable == null ) {
-            if ( other.publiclyListable != null ) {
-                return false;
+        synchronized ( publiclyListable ) {
+            synchronized ( other.publiclyListable ) {
+                if ( publiclyListable == null ) {
+                    if ( other.publiclyListable != null ) {
+                        return false;
+                    }
+                } else if ( publiclyListable.get() != other.publiclyListable.get() ) {
+                    return false;
+                }
             }
-        } else if ( !publiclyListable.equals( other.publiclyListable ) ) {
-            return false;
         }
-        if ( size == null ) {
-            if ( other.size != null ) {
-                return false;
+        synchronized ( size ) {
+            synchronized ( other.size ) {
+                if ( size == null ) {
+                    if ( other.size != null ) {
+                        return false;
+                    }
+                } else if ( size.get() != other.size.get() ) {
+                    return false;
+                }
             }
-        } else if ( !size.equals( other.size ) ) {
-            return false;
         }
         return true;
     }
-
 }
