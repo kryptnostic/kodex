@@ -17,7 +17,7 @@ public interface SharingClient {
 
     void shareObjectWithUsers( String objectId, Set<UUID> users ) throws ResourceNotFoundException;
 
-    Optional<byte[]> getIndexPair( String objectId ) throws ResourceNotFoundException;
+    Optional<byte[]> getSearchPair( String objectId ) throws ResourceNotFoundException;
 
     Optional<byte[]> getSharingPair( String objectId ) throws ResourceNotFoundException;
 
