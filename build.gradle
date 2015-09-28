@@ -62,7 +62,7 @@ repositories {
 ext.jackson_version='2.4.4'
 ext.fhe_core_version='0.1.2-SNAPSHOT'
 ext.retrofit_version='1.9.0'
-ext.krypto_version='0.1.2-SNAPSHOT'
+ext.krypto_version='0.1.3-SNAPSHOT'
 dependencies {
     /*
      * SL4J + LOG4J
@@ -109,7 +109,7 @@ dependencies {
     } else {
         logger.quiet("$project.name is using jar dependencies.")
         compile "com.kryptnostic:kryptnostic-api:${fhe_core_version}"
-   	 	compile "com.kryptnostic:kryptnostic-core:${fhe_core_version}"
+   	 	  compile "com.kryptnostic:kryptnostic-core:${fhe_core_version}"
         compile "com.kryptnostic:krypto-api:${krypto_version}"
     }
 
