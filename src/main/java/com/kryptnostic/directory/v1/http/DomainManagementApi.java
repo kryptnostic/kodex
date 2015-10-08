@@ -1,10 +1,14 @@
 package com.kryptnostic.directory.v1.http;
 
+import java.util.UUID;
+
+import retrofit.client.Response;
+import retrofit.http.GET;
 import retrofit.http.POST;
 
 import com.codahale.metrics.annotation.Timed;
+import com.google.common.base.Optional;
 import com.kryptnostic.directory.v1.model.DomainUpdate;
-import com.kryptnostic.kodex.v1.models.response.BasicResponse;
 
 /**
  * {@code Domain} management functionality.
@@ -13,7 +17,9 @@ import com.kryptnostic.kodex.v1.models.response.BasicResponse;
  *
  */
 public interface DomainManagementApi {
-    String DOMAIN = "/domain";
+    public static final String DOMAIN        = "/domain";
+    public static final String NAME          = "name";
+    public static final String NAME_WITH_DOT = "/{" + NAME + ":.+}";
 
     /**
      * Update domain settings.
@@ -23,6 +29,10 @@ public interface DomainManagementApi {
      */
     @Timed
     @POST( DOMAIN )
-    BasicResponse<String> updateSharingPolicy( DomainUpdate request );
+    Response updateSharingPolicy( DomainUpdate request );
+
+    @Timed
+    @GET( DOMAIN )
+    Optional<UUID> getDomainId( String domainName );
 
 }
