@@ -29,7 +29,7 @@ public interface DomainManagementApi {
      */
     @Timed
     @POST( DOMAIN )
-    Response updateSharingPolicy( DomainUpdate request );
+    Response updateDomain( DomainUpdate request );
 
     @Timed
     @GET( DOMAIN )
