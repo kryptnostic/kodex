@@ -82,4 +82,6 @@ public final class Names {
     public static final String PAGE_FIELD                    = "page";
     public static final String SCROLL_INSTANCE_FIELD         = "scrollInstance";
     public static final String SHARING_KEY                   = "sharingKey";
+    public static final String SHARING_POLICY                = "sharingPolicy";
+    public static final String PUBLIC                        = "public";
 }

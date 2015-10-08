@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Optional;
+import com.google.common.base.Preconditions;
 import com.kryptnostic.kodex.v1.constants.Names;
 
 public class Domain {
@@ -47,6 +48,15 @@ public class Domain {
     public Domain( UUID id, String name, int size ) {
         this( id, name, size, DomainSharingPolicy.AllDomains, Optional.of( CONFIRMATION_EMAIL_NOT_REQUIRED ), Optional
                 .of( PUBLICLY_LISTABLE ) );
+    }
+
+    public Domain( DomainBuilder domainBuilder ) {
+        this.id = domainBuilder.id;
+        this.name = domainBuilder.name;
+        this.size = domainBuilder.size;
+        this.domainSharingPolicy = domainBuilder.domainSharingPolicy;
+        this.confirmationEmailRequired = domainBuilder.confirmationEmailRequired;
+        this.publiclyListable = domainBuilder.publiclyListable;
     }
 
     @JsonProperty( Names.ID_FIELD )
@@ -171,5 +181,48 @@ public class Domain {
             }
         }
         return true;
+    }
+
+    public static class DomainBuilder {
+        private UUID                id;
+        private String              name;
+        private AtomicInteger       size;
+        private DomainSharingPolicy domainSharingPolicy;
+        private boolean             confirmationEmailRequired;
+        private AtomicBoolean       publiclyListable;
+
+        public DomainBuilder( UUID id, String name ) {
+            this.id = id;
+            this.name = name;
+        }
+
+        public DomainBuilder withSize( Integer size ) {
+            this.size = new AtomicInteger( size );
+            return this;
+        }
+
+        public DomainBuilder withSharingPolicy( DomainSharingPolicy sharingPolicy ) {
+            this.domainSharingPolicy = sharingPolicy;
+            return this;
+        }
+
+        public DomainBuilder emailConfirmationRequiredIs( boolean isRequired ) {
+            this.confirmationEmailRequired = isRequired;
+            return this;
+        }
+
+        public DomainBuilder publiclyListableIs( Boolean publiclyListable ) {
+            this.publiclyListable = new AtomicBoolean( publiclyListable );
+            return this;
+        }
+
+        public Domain build() {
+            Preconditions.checkNotNull( this.size );
+            Preconditions.checkNotNull( this.domainSharingPolicy );
+            Preconditions.checkNotNull( this.confirmationEmailRequired );
+            Preconditions.checkNotNull( this.publiclyListable );
+            return new Domain( this );
+        }
+
     }
 }
