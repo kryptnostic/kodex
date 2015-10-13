@@ -12,6 +12,7 @@ import com.kryptnostic.kodex.v1.crypto.ciphers.BlockCiphertext;
 import com.kryptnostic.kodex.v1.models.blocks.ChunkingStrategy;
 
 public class EncryptableBlock implements Serializable {
+    private static final long serialVersionUID = 5948930904539070084L;
     private final BlockCiphertext  block;
     private final byte[]           verify;
     private final int              index;
@@ -36,6 +37,35 @@ public class EncryptableBlock implements Serializable {
         this.encryptedClassName = encryptedClassName;
         this.chunkingStrategy = chunkingStrategy;
         this.creationTime = createdTime;
+    }
+
+    /**
+     * Copy constructor
+     * @param originalBlock
+     */
+    public EncryptableBlock( EncryptableBlock originalBlock ) {
+        this.block = originalBlock.getBlock();
+        this.verify = originalBlock.getVerify();
+        this.index = originalBlock.getIndex();
+        this.isLast = originalBlock.isLast();
+        this.encryptedClassName = originalBlock.getEncryptedClassName();
+        this.chunkingStrategy = originalBlock.getChunkingStrategy();
+        this.creationTime = originalBlock.getCreationTime();
+    }
+
+    /**
+     * Copy constructor that discards the original block's date and uses the supplied date
+     * @param originalBlock
+     * @param date
+     */
+    public EncryptableBlock( EncryptableBlock originalBlock, DateTime date ) {
+        this.block = originalBlock.getBlock();
+        this.verify = originalBlock.getVerify();
+        this.index = originalBlock.getIndex();
+        this.isLast = originalBlock.isLast();
+        this.encryptedClassName = originalBlock.getEncryptedClassName();
+        this.chunkingStrategy = originalBlock.getChunkingStrategy();
+        this.creationTime = date;
     }
 
     @JsonProperty( Names.BLOCK_FIELD )
