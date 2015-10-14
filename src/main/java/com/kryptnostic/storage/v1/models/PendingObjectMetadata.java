@@ -78,7 +78,7 @@ public class PendingObjectMetadata extends ObjectMetadata {
                 createdTime,
                 receivedBlocks );
     }
-    
+
     public PendingObjectMetadata(
             String id,
             int version,
@@ -106,6 +106,48 @@ public class PendingObjectMetadata extends ObjectMetadata {
                 type,
                 createdTime,
                 receivedBlocks );
+    }
+
+    public PendingObjectMetadata(
+            String newObjectId,
+            String type,
+            UUID creator,
+            Set<UUID> owners,
+            // TODO: figure out a way to fix this useless Optional passthrough.
+            //      Doing Optional.absent() in this() doesn't get typed correctly
+            //      so the compiler complains that it cant find the correct constructor
+            Optional<Integer> crap ) {
+        this( newObjectId,
+                -1,
+                -1,
+                -1,
+                null,
+                null,
+                creator,
+                owners,
+                crap,
+                type,
+                DateTime.now() );
+    }
+
+    /**
+     * Converts this PendingObjectMetadata to an ObjectMetadata and increments the document version
+     * @return
+     */
+    public ObjectMetadata toNewObjectMetadata() {
+        return new ObjectMetadata(
+                id,
+                version + 1,
+                numBlocks,
+                size,
+                childObjectCount,
+                encryptedClassName,
+                chunkingStrategy,
+                creator,
+                owners,
+                readers,
+                writers,
+                type );
     }
 
     @JsonProperty( Names.BLOCKS_FIELD )
