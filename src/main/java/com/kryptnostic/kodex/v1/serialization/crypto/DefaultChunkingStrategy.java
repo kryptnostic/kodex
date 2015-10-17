@@ -30,7 +30,7 @@ public class DefaultChunkingStrategy implements ChunkingStrategy {
     /**
      * This strategy will subdivide byte data into blocks of this length
      */
-    public static final int BLOCK_LENGTH_IN_BYTES = 4096;
+    public static final int BLOCK_LENGTH_IN_BYTES = 1_048_576; // 1 MB
 
     @Override
     @JsonIgnore

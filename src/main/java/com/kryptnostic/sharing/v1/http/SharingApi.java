@@ -10,8 +10,7 @@ import retrofit.http.POST;
 import retrofit.http.PUT;
 import retrofit.http.Path;
 
-import com.google.common.base.Optional;
-import com.kryptnostic.indexing.v1.ServerIndexPair;
+import com.kryptnostic.indexing.v1.ObjectSearchPair;
 import com.kryptnostic.kodex.v1.models.response.BasicResponse;
 import com.kryptnostic.sharing.v1.models.IncomingShares;
 import com.kryptnostic.sharing.v1.models.request.RevocationRequest;
@@ -40,12 +39,12 @@ public interface SharingApi {
 
     // TODO: Consider creating objects here.
     @PUT( SHARE + KEYS )
-    KeyUpdateResponse addIndexPairs( @Body Map<String, ServerIndexPair> indexPairs );
+    KeyUpdateResponse addSearchPairs( @Body Map<String, ObjectSearchPair> indexPairs );
 
     @DELETE( SHARE + KEYS )
     KeyUpdateResponse removeKeys( @Body Set<String> uuids );
 
     @GET( SHARE + OBJECT + "/{" + ID + "}" + OBJECT_KEYS )
-    Optional<byte[]> getIndexPair( @Path( ID ) String id );
+    byte[] getSearchPair( @Path( ID ) String id );
 
 }

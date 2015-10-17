@@ -6,6 +6,7 @@ import java.util.Set;
 import com.kryptnostic.indexing.v1.PaddedMetadata;
 import com.kryptnostic.kodex.v1.exceptions.types.IrisException;
 import com.kryptnostic.kodex.v1.indexing.metadata.Metadata;
+
 /**
  * MetadataMapper handles mapping tokens and nonces to lookup keys.
  * 
@@ -14,7 +15,5 @@ import com.kryptnostic.kodex.v1.indexing.metadata.Metadata;
  */
 public interface MetadataMapper {
 
-    Collection<PaddedMetadata> mapTokensToKeys(
-            Set<Metadata> metadata,
-            byte[] objectSearchKey, byte[] objectAddressMatrix ) throws IrisException;
+    Collection<PaddedMetadata> mapTokensToKeys( Set<Metadata> metadata, byte[] objectIndexPair ) throws IrisException;
 }
