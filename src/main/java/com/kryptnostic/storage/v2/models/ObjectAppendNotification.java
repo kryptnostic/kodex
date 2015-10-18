@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.kryptnostic.directory.v1.models.notification.Notification;
 import com.kryptnostic.kodex.v1.constants.Names;
 
 public class ObjectAppendNotification extends Notification {
