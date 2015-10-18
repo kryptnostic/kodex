@@ -18,7 +18,8 @@ public interface ObjectListingApi {
     String PAGE_SIZE              = "pageSize";
 
     String OBJECT_LIST_PAGED_PATH = "/{" + OFFSET + "}/{" + PAGE_SIZE + "}";
-    String TYPE_PATH              = "/type/{" + TYPE + "}";
+    String TYPE_PATH              = "/type";
+    String TYPE_ID_PATH           = TYPE_PATH + "/{" + TYPE + "}";
 
     /**
      *
@@ -27,13 +28,16 @@ public interface ObjectListingApi {
     @GET( CONTROLLER )
     Set<UUID> getObjectIds();
 
+    @GET( CONTROLLER + TYPE_PATH )
+    Set<UUID> getTypes();
+
     @GET( CONTROLLER + OBJECT_LIST_PAGED_PATH )
     Set<UUID> getObjectIds( @Path( OFFSET ) Integer offset, @Path( PAGE_SIZE ) Integer pageSize );
 
-    @GET( CONTROLLER + TYPE_PATH + OBJECT_LIST_PAGED_PATH )
+    @GET( CONTROLLER + TYPE_ID_PATH + OBJECT_LIST_PAGED_PATH )
     Set<UUID> getObjectIdsByType( @Path( TYPE ) UUID type );
 
-    @GET( CONTROLLER + TYPE_PATH + OBJECT_LIST_PAGED_PATH )
+    @GET( CONTROLLER + TYPE_ID_PATH + OBJECT_LIST_PAGED_PATH )
     Set<UUID> getObjectIdsByTypePaged(
             @Path( TYPE ) UUID type,
             @Path( OFFSET ) Integer offset,
