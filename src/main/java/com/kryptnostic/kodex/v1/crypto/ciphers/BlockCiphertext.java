@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Optional;
 import com.kryptnostic.crypto.Ciphertext;
+import com.kryptnostic.kodex.v1.constants.Names;
 
 /**
  * Holds the output of performing an AES encryption with {@link PasswordCryptoService}
@@ -16,11 +17,7 @@ import com.kryptnostic.crypto.Ciphertext;
  */
 @JsonInclude( Include.NON_NULL )
 public class BlockCiphertext extends Ciphertext {
-    private static final long      serialVersionUID       = 5566319942401654333L;
-    private static final String    FIELD_IV               = "iv";
-    private static final String    FIELD_SALT             = "salt";
-    private static final String    FIELD_TAG              = "tag";
-    private static final String    FIELD_ENCRYPTED_LENGTH = "length";
+    private static final long      serialVersionUID = 5566319942401654333L;
 
     private final byte[]           iv;
     private final byte[]           salt;
@@ -34,11 +31,11 @@ public class BlockCiphertext extends Ciphertext {
 
     @JsonCreator
     public BlockCiphertext(
-            @JsonProperty( FIELD_IV ) byte[] iv,
-            @JsonProperty( FIELD_SALT ) byte[] salt,
-            @JsonProperty( FIELD_CONTENTS ) byte[] contents,
-            @JsonProperty( FIELD_ENCRYPTED_LENGTH ) Optional<byte[]> encryptedLength,
-            @JsonProperty( FIELD_TAG ) Optional<byte[]> tag ) {
+            @JsonProperty( Names.IV ) byte[] iv,
+            @JsonProperty( Names.SALT ) byte[] salt,
+            @JsonProperty( Names.CONTENTS ) byte[] contents,
+            @JsonProperty( Names.ENCRYPTED_LENGTH ) Optional<byte[]> encryptedLength,
+            @JsonProperty( Names.TAG ) Optional<byte[]> tag ) {
         super( contents, null );
         this.iv = iv;
         this.salt = salt;
@@ -46,22 +43,22 @@ public class BlockCiphertext extends Ciphertext {
         this.tag = tag;
     }
 
-    @JsonProperty( FIELD_IV )
+    @JsonProperty( Names.IV )
     public byte[] getIv() {
         return iv;
     }
 
-    @JsonProperty( FIELD_SALT )
+    @JsonProperty( Names.SALT )
     public byte[] getSalt() {
         return salt;
     }
 
-    @JsonProperty( FIELD_ENCRYPTED_LENGTH )
+    @JsonProperty( Names.ENCRYPTED_LENGTH )
     public Optional<byte[]> getEncryptedLength() {
         return encryptedLength;
     }
 
-    @JsonProperty( FIELD_TAG )
+    @JsonProperty( Names.TAG )
     public Optional<byte[]> getTag() {
         return tag;
     }

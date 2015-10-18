@@ -84,4 +84,10 @@ public final class Names {
     public static final String SHARING_KEY                   = "sharingKey";
     public static final String SHARING_POLICY                = "sharingPolicy";
     public static final String PUBLIC                        = "public";
+    public static final String IV                            = "iv";
+    public static final String SALT                          = "salt";
+    public static final String TAG                           = "tag";
+    public static final String ENCRYPTED_LENGTH              = "encryptedLength";
+    public static final String CONTENTS                      = "contents";
+    public static final String LENGTH                        = "length";
 }
