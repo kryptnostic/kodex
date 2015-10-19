@@ -91,8 +91,7 @@ public interface DirectoryApi {
 
     @Timed
     @GET( CONTROLLER + OBJECT_KEY + PARAM.ID )
-    BasicResponse<byte[]> getObjectCryptoService( @Path( Names.ID_FIELD ) String objectId )
-            throws ResourceNotFoundException;
+    BasicResponse<byte[]> getObjectCryptoService( @Path( Names.ID_FIELD ) String objectId );
 
     @Timed
     @POST( CONTROLLER + OBJECT_KEY )
