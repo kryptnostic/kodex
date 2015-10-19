@@ -25,7 +25,6 @@ import com.kryptnostic.kodex.v1.client.KryptnosticConnection;
 import com.kryptnostic.kodex.v1.crypto.ciphers.AesCryptoService;
 import com.kryptnostic.kodex.v1.crypto.ciphers.CryptoService;
 import com.kryptnostic.kodex.v1.crypto.ciphers.Cypher;
-import com.kryptnostic.kodex.v1.exceptions.types.ResourceNotFoundException;
 import com.kryptnostic.kodex.v1.exceptions.types.SecurityConfigurationException;
 
 public class DefaultCryptoServiceLoader implements CryptoServiceLoader {
@@ -75,8 +74,8 @@ public class DefaultCryptoServiceLoader implements CryptoServiceLoader {
                         byte[] crypto = null;
                         try {
                             crypto = directoryApi.getObjectCryptoService( key ).getData();
-                        } catch ( ResourceNotFoundException e ) {} catch ( RetrofitError e ) {
-                            logger.error( "Failed to load crypto service from backend for id {} ", key );
+                        } catch ( RetrofitError e ) {
+                            logger.error( "Failed to load crypto service from backend for id {} ", key, e );
                             throw new IOException( e );
                         }
                         if ( ( crypto == null ) ) {
