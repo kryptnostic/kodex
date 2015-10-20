@@ -13,12 +13,14 @@ import com.kryptnostic.kodex.v1.constants.Names;
 
 public class Domain {
     public static final String        PUBLICLY_LISTABLE_FIELD         = "publiclyListable";
-    public static final String        DOMAIN_SHARING_POLICY_FIELD     = "domainSharingPolicy";
+    private static final String        DOMAIN_SHARING_POLICY_FIELD     = "domainSharingPolicy";
+    private static final String        OPEN_REGISTRATION_ENABLED_FIELD = "openRegistrationEnabled";
 
     public static final boolean       CONFIRMATION_EMAIL_NOT_REQUIRED = false;
     public static final boolean       CONFIRMATION_EMAIL_REQUIRED     = true;
     public static final boolean       NOT_PUBLICLY_LISTABLE           = true;
     public static final boolean       PUBLICLY_LISTABLE               = true;
+    public static final boolean       OPEN_REGISTRATION_ENABLED       = true;
 
     private final UUID                id;
     private final String              name;
@@ -86,6 +88,11 @@ public class Domain {
 
     @JsonProperty( PUBLICLY_LISTABLE_FIELD )
     public boolean isPubliclyListable() {
+        return publiclyListable.get();
+    }
+
+    @JsonProperty( OPEN_REGISTRATION_ENABLED_FIELD )
+    public boolean isOpenRegistrationEnabled() {
         return publiclyListable.get();
     }
 
@@ -190,6 +197,7 @@ public class Domain {
         private DomainSharingPolicy domainSharingPolicy;
         private boolean             confirmationEmailRequired;
         private AtomicBoolean       publiclyListable;
+        private boolean             openRegistrationRequired;
 
         public DomainBuilder( UUID id, String name ) {
             this.id = id;
@@ -208,6 +216,11 @@ public class Domain {
 
         public DomainBuilder emailConfirmationRequiredIs( boolean isRequired ) {
             this.confirmationEmailRequired = isRequired;
+            return this;
+        }
+
+        public DomainBuilder openRegistrationEnabled( boolean openReg ) {
+            this.openRegistrationRequired = openReg;
             return this;
         }
 
