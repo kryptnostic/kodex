@@ -13,12 +13,14 @@ import com.kryptnostic.kodex.v1.constants.Names;
 
 public class Domain {
     public static final String        PUBLICLY_LISTABLE_FIELD         = "publiclyListable";
-    public static final String        DOMAIN_SHARING_POLICY_FIELD     = "domainSharingPolicy";
+    private static final String        DOMAIN_SHARING_POLICY_FIELD     = "domainSharingPolicy";
+    private static final String        OPEN_REGISTRATION_ENABLED_FIELD = "openRegistrationEnabled";
 
-    public static final boolean       CONFIRMATION_EMAIL_NOT_REQUIRED = false;
-    public static final boolean       CONFIRMATION_EMAIL_REQUIRED     = true;
-    public static final boolean       NOT_PUBLICLY_LISTABLE           = true;
-    public static final boolean       PUBLICLY_LISTABLE               = true;
+    private static final boolean       CONFIRMATION_EMAIL_NOT_REQUIRED_DEFAULT = false;
+    private static final boolean       CONFIRMATION_EMAIL_REQUIRED_DEFAULT     = true;
+    private static final boolean       NOT_PUBLICLY_LISTABLE_DEFAULT           = true;
+    private static final boolean       PUBLICLY_LISTABLE_DEFAULT               = true;
+    private static final boolean       OPEN_REGISTRATION_ENABLED_DEFAULT       = true;
 
     private final UUID                id;
     private final String              name;
@@ -28,6 +30,7 @@ public class Domain {
     private final DomainSharingPolicy domainSharingPolicy;
     private final boolean             confirmationEmailRequired;
     private final AtomicBoolean       publiclyListable;
+    private final Boolean             openRegistrationEnabled;
 
     @JsonCreator
     public Domain(
@@ -36,18 +39,23 @@ public class Domain {
             @JsonProperty( Names.SIZE_FIELD ) int size,
             @JsonProperty( DOMAIN_SHARING_POLICY_FIELD ) DomainSharingPolicy domainSharingPolicy,
             @JsonProperty( Names.CONFIRMATION_FIELD ) Optional<Boolean> confirmationEmailRequired,
+            @JsonProperty( Names.OPEN_REGISTRATION_ALLOWED ) Optional<Boolean> openRegistrationEnabled,
             @JsonProperty( PUBLICLY_LISTABLE_FIELD ) Optional<Boolean> publiclyListable ) {
         this.id = id;
         this.name = name;
         this.size = new AtomicInteger( size );
         this.domainSharingPolicy = domainSharingPolicy;
-        this.confirmationEmailRequired = confirmationEmailRequired.or( CONFIRMATION_EMAIL_NOT_REQUIRED );
-        this.publiclyListable = new AtomicBoolean( publiclyListable.or( PUBLICLY_LISTABLE ) );
+        this.openRegistrationEnabled = openRegistrationEnabled.or( CONFIRMATION_EMAIL_NOT_REQUIRED_DEFAULT );
+        this.confirmationEmailRequired = confirmationEmailRequired.or( CONFIRMATION_EMAIL_NOT_REQUIRED_DEFAULT );
+        this.publiclyListable = new AtomicBoolean( publiclyListable.or( PUBLICLY_LISTABLE_DEFAULT ) );
     }
 
     public Domain( UUID id, String name, int size ) {
-        this( id, name, size, DomainSharingPolicy.AllDomains, Optional.of( CONFIRMATION_EMAIL_NOT_REQUIRED ), Optional
-                .of( PUBLICLY_LISTABLE ) );
+        this( id, name, size,
+                DomainSharingPolicy.AllDomains,
+                Optional.of( CONFIRMATION_EMAIL_NOT_REQUIRED_DEFAULT ),
+                Optional.of( OPEN_REGISTRATION_ENABLED_DEFAULT ),
+                Optional.of( PUBLICLY_LISTABLE_DEFAULT ) );
     }
 
     public Domain( DomainBuilder domainBuilder ) {
@@ -56,6 +64,7 @@ public class Domain {
         this.size = domainBuilder.size;
         this.domainSharingPolicy = domainBuilder.domainSharingPolicy;
         this.confirmationEmailRequired = domainBuilder.confirmationEmailRequired;
+        this.openRegistrationEnabled = domainBuilder.openRegistrationRequired;
         this.publiclyListable = domainBuilder.publiclyListable;
     }
 
@@ -87,6 +96,11 @@ public class Domain {
     @JsonProperty( PUBLICLY_LISTABLE_FIELD )
     public boolean isPubliclyListable() {
         return publiclyListable.get();
+    }
+
+    @JsonProperty( OPEN_REGISTRATION_ENABLED_FIELD )
+    public boolean isOpenRegistrationEnabled() {
+        return openRegistrationEnabled;
     }
 
     @JsonIgnore
@@ -184,12 +198,13 @@ public class Domain {
     }
 
     public static class DomainBuilder {
-        private UUID                id;
-        private String              name;
-        private AtomicInteger       size;
-        private DomainSharingPolicy domainSharingPolicy;
-        private boolean             confirmationEmailRequired;
-        private AtomicBoolean       publiclyListable;
+        UUID                id;
+        String              name;
+        AtomicInteger       size;
+        DomainSharingPolicy domainSharingPolicy;
+        boolean             confirmationEmailRequired;
+        AtomicBoolean       publiclyListable;
+        boolean             openRegistrationRequired;
 
         public DomainBuilder( UUID id, String name ) {
             this.id = id;
@@ -211,6 +226,11 @@ public class Domain {
             return this;
         }
 
+        public DomainBuilder openRegistrationEnabled( boolean openReg ) {
+            this.openRegistrationRequired = openReg;
+            return this;
+        }
+
         public DomainBuilder publiclyListableIs( Boolean publiclyListable ) {
             this.publiclyListable = new AtomicBoolean( publiclyListable );
             return this;
@@ -221,6 +241,7 @@ public class Domain {
             Preconditions.checkNotNull( this.domainSharingPolicy );
             Preconditions.checkNotNull( this.confirmationEmailRequired );
             Preconditions.checkNotNull( this.publiclyListable );
+            Preconditions.checkNotNull( this.openRegistrationRequired );
             return new Domain( this );
         }
 
