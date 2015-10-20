@@ -12,14 +12,17 @@ public class DomainUpdate {
     private final UUID                          domainId;
     private final Optional<DomainSharingPolicy> sharingPolicy;
     private final Optional<Boolean>             publiclyListable;
+    private final Boolean                       openRegistrationEnabled;
 
     @JsonCreator
     public DomainUpdate(
             @JsonProperty( Names.DOMAIN_FIELD ) UUID domainId,
             @JsonProperty( Names.SHARING_POLICY ) Optional<DomainSharingPolicy> sharingPolicy,
+            @JsonProperty( Names.OPEN_REGISTRATION_ALLOWED ) Optional<Boolean> openRegistrationEnabled,
             @JsonProperty( Names.PUBLIC ) Optional<Boolean> publiclyListable ) {
         this.domainId = domainId;
         this.sharingPolicy = sharingPolicy;
+        this.openRegistrationEnabled = openRegistrationEnabled.or( true );
         this.publiclyListable = publiclyListable;
     }
 
@@ -36,6 +39,11 @@ public class DomainUpdate {
     @JsonProperty( Names.PUBLIC )
     public Optional<Boolean> getPubliclyListable() {
         return publiclyListable;
+    }
+
+    @JsonProperty( Names.OPEN_REGISTRATION_ALLOWED )
+    public Boolean getOpenRegistrationEnabled() {
+        return openRegistrationEnabled;
     }
 
     @Override
@@ -63,6 +71,9 @@ public class DomainUpdate {
         if ( sharingPolicy == null ) {
             if ( other.sharingPolicy != null ) return false;
         } else if ( !sharingPolicy.equals( other.sharingPolicy ) ) return false;
+        if ( openRegistrationEnabled == null ) {
+            if ( other.openRegistrationEnabled != null ) return false;
+        } else if ( !openRegistrationEnabled.equals( other.openRegistrationEnabled ) ) return false;
         return true;
     }
 
