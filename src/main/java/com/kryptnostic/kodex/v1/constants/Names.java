@@ -84,4 +84,5 @@ public final class Names {
     public static final String SHARING_KEY                   = "sharingKey";
     public static final String SHARING_POLICY                = "sharingPolicy";
     public static final String PUBLIC                        = "public";
+    public static final String OPEN_REGISTRATION_ALLOWED     = "openRegistrationAllowed";
 }
