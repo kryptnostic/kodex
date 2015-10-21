@@ -1,10 +1,15 @@
 package com.kryptnostic.storage.v2.http;
 
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
 import retrofit.http.GET;
+import retrofit.http.POST;
 import retrofit.http.Path;
+
+import com.kryptnostic.kodex.v1.constants.Names;
+import com.kryptnostic.storage.v2.models.ObjectMetadataNode;
 
 /**
  * 
@@ -12,34 +17,56 @@ import retrofit.http.Path;
  *
  */
 public interface ObjectListingApi {
-    String CONTROLLER             = "/objects";
-    String TYPE                   = "type";
-    String OFFSET                 = "offset";
-    String PAGE_SIZE              = "pageSize";
+    String CONTROLLER     = "/objects";
+    String TYPE           = "type";
+    String PAGE         = Names.PAGE_FIELD;
+    String PAGE_SIZE      = Names.SIZE_FIELD;
+    String ID             = Names.ID_FIELD;
 
-    String OBJECT_LIST_PAGED_PATH = "/{" + OFFSET + "}/{" + PAGE_SIZE + "}";
-    String TYPE_PATH              = "/type";
-    String TYPE_ID_PATH           = TYPE_PATH + "/{" + TYPE + "}";
+    String LATEST_PATH    = "/latest";
+    String USER_ID_PATH   = "/{" + ID + "}";
+    String TYPE_ID_PATH   = "/{" + TYPE + "}";
+    String PAGE_SIZE_PATH = "/{" + PAGE_SIZE + "}";
+    String PAGE_PATH    = "/{" + PAGE + "}";
 
-    /**
-     *
-     * @return Collection of object ids
-     */
     @GET( CONTROLLER )
     Set<UUID> getObjectIds();
 
-    @GET( CONTROLLER + TYPE_PATH )
-    Set<UUID> getTypes();
-
-    @GET( CONTROLLER + OBJECT_LIST_PAGED_PATH )
-    Set<UUID> getObjectIds( @Path( OFFSET ) Integer offset, @Path( PAGE_SIZE ) Integer pageSize );
-
-    @GET( CONTROLLER + TYPE_ID_PATH + OBJECT_LIST_PAGED_PATH )
-    Set<UUID> getObjectIdsByType( @Path( TYPE ) UUID type );
-
-    @GET( CONTROLLER + TYPE_ID_PATH + OBJECT_LIST_PAGED_PATH )
-    Set<UUID> getObjectIdsByTypePaged(
-            @Path( TYPE ) UUID type,
-            @Path( OFFSET ) Integer offset,
+    @GET( CONTROLLER + USER_ID_PATH + PAGE_SIZE_PATH )
+    Set<UUID> getLatestUnfinishedPageOfObjectIds(
+            @Path( ID ) UUID userId,
             @Path( PAGE_SIZE ) Integer pageSize );
+
+    @GET( CONTROLLER + USER_ID_PATH + TYPE_ID_PATH + PAGE_SIZE_PATH )
+    Set<UUID> getLatestUnfinishedPageOfObjectIdsByType(
+            @Path( ID ) UUID userId,
+            @Path( TYPE ) UUID typeId,
+            @Path( PAGE_SIZE ) Integer pageSize );
+
+    /**
+     * Retrieves all objects owned by a given a user. This is a slow call / uncached call.
+     * @param userId The userId for which to return the list of paged objects. 
+     * @return The UUID of all objects owned by the user.
+     */
+    @GET( CONTROLLER + USER_ID_PATH )
+    Set<UUID> getAllObjectIds( @Path( ID ) UUID userId );
+
+    @GET( CONTROLLER + USER_ID_PATH + PAGE_SIZE_PATH + PAGE_PATH )
+    Set<UUID> getAllObjectIdsPaged(
+            @Path( ID ) UUID userId,
+            @Path( PAGE ) Integer offset,
+            @Path( PAGE_SIZE ) Integer pageSize );
+
+    @GET( CONTROLLER + USER_ID_PATH + TYPE_ID_PATH )
+    Set<UUID> getObjectIdsByType( @Path( ID ) UUID userId, @Path( TYPE ) UUID type );
+
+    @GET( CONTROLLER + USER_ID_PATH + TYPE_ID_PATH + PAGE_SIZE_PATH + PAGE_PATH )
+    Set<UUID> getObjectIdsByTypePaged(
+            @Path( ID ) UUID userId,
+            @Path( ID ) UUID typeId,
+            @Path( PAGE ) Integer offset,
+            @Path( PAGE_SIZE ) Integer pageSize );
+
+    @POST( CONTROLLER )
+    Map<UUID, ObjectMetadataNode> getObjectMetadataTrees( Set<UUID> objectIds );
 }

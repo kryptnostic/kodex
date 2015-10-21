@@ -21,10 +21,10 @@ public class ObjectMetadata {
     protected final UUID             type;
     protected final int              version;
     protected final int              numBlocks;
+    protected final int              size;
 
     protected final UUID             creator;
     protected final DateTime         createdTime;
-    protected final int              size;
 
     @JsonCreator
     public ObjectMetadata(
