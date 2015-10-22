@@ -1,6 +1,5 @@
 package com.kryptnostic.storage.v2.http;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -70,7 +69,7 @@ public interface ObjectStorageApi {
      * @return
      */
     @POST( CONTROLLER + BULK_PATH )
-    Map<UUID, List<BlockCiphertext>> getObjects( @Body Set<UUID> objectIds );
+    Map<UUID, BlockCiphertext> getObjects( @Body Set<UUID> objectIds );
 
     /**
      * Lazy Person API for writing base64 encoded block ciphertexts. Objects written via this API will be available
