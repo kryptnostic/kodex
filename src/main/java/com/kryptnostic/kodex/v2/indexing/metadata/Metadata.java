@@ -6,7 +6,7 @@ import java.util.UUID;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.collect.ImmutableList;
-import com.kryptnostic.v2.kodex.constants.Names;
+import com.kryptnostic.v2.constants.Names;
 
 /**
  * @author Matthew Tamayo-Rios &lt;matthew@kryptnostic.com&gt; 

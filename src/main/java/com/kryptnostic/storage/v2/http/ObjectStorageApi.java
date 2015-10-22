@@ -18,7 +18,7 @@ import com.kryptnostic.kodex.v1.exceptions.types.BadRequestException;
 import com.kryptnostic.kodex.v1.exceptions.types.ResourceNotFoundException;
 import com.kryptnostic.storage.v2.models.CreateObjectRequest;
 import com.kryptnostic.storage.v2.models.ObjectMetadata;
-import com.kryptnostic.v2.kodex.constants.Names;
+import com.kryptnostic.v2.constants.Names;
 
 /**
  * @author Matthew Tamayo-Rios &lt;matthew@kryptnostic.com&gt;
@@ -140,5 +140,4 @@ public interface ObjectStorageApi {
     @DELETE( CONTROLLER )
     Set<UUID> deleteObjectTrees( @Body Set<UUID> objectTrees );
 
-    //
 }

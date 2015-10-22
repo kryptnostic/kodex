@@ -23,3 +23,4 @@ public interface MetadataStorageApi {
     @DELETE( CONTROLLER + OBJECT_ID_PATH )
     Response createMetadataEntry( @Path( OBJECT_ID ) UUID objectId );
 }
+ 

@@ -1,4 +1,4 @@
-package com.kryptnostic.v2.kodex.constants;
+package com.kryptnostic.v2.constants;
 
 public final class Names {
     private Names() {}

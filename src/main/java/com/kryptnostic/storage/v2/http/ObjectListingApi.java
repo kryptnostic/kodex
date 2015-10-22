@@ -9,7 +9,7 @@ import retrofit.http.POST;
 import retrofit.http.Path;
 
 import com.kryptnostic.storage.v2.models.ObjectMetadataNode;
-import com.kryptnostic.v2.kodex.constants.Names;
+import com.kryptnostic.v2.constants.Names;
 
 /**
  * 

@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.kryptnostic.v2.kodex.constants.Names;
+import com.kryptnostic.v2.constants.Names;
 
 public class PaddedMetadataObjectIds {
     private final byte[]     key;
