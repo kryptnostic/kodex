@@ -8,7 +8,7 @@ import javax.annotation.concurrent.Immutable;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.kryptnostic.kodex.v1.constants.Names;
+import com.kryptnostic.v2.constants.Names;
 
 @Immutable
 public class ObjectTreeLoadRequest {
