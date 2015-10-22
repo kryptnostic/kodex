@@ -1,4 +1,4 @@
-package com.kryptnostic.kodex.v2.indexing.metadata;
+package com.kryptnostic.v2.indexing.metadata;
 
 import java.util.List;
 import java.util.UUID;
