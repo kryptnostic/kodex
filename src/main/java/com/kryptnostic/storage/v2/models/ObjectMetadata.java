@@ -17,29 +17,26 @@ import com.kryptnostic.kodex.v1.constants.Names;
  */
 @Immutable
 public class ObjectMetadata {
-    protected final UUID             id;
-    protected final UUID             type;
-    protected final int              version;
-    protected final int              numBlocks;
-    protected final int              size;
+    protected final UUID     id;
+    protected final UUID     type;
+    protected final long     version;
+    protected final long     size;
 
-    protected final UUID             creator;
-    protected final DateTime         createdTime;
+    protected final UUID     creator;
+    protected final DateTime createdTime;
 
     @JsonCreator
     public ObjectMetadata(
             @JsonProperty( Names.ID_FIELD ) UUID id,
-            @JsonProperty( Names.VERSION_FIELD ) int version,
-            @JsonProperty( Names.TOTAL_FIELD ) int numBlocks,
-            @JsonProperty( Names.SIZE_FIELD ) int size,
+            @JsonProperty( Names.VERSION_FIELD ) long version,
+            @JsonProperty( Names.SIZE_FIELD ) long size,
             @JsonProperty( Names.TYPE_FIELD ) UUID type,
             @JsonProperty( Names.CREATOR_FIELD ) UUID creator,
             @JsonProperty( Names.CREATED_TIME ) DateTime createdTime ) {
         this.id = id;
         this.version = version;
-        this.numBlocks = numBlocks;
         this.type = type;
-        
+
         this.creator = creator;
 
         this.createdTime = createdTime;
@@ -135,9 +132,6 @@ public class ObjectMetadata {
                 return false;
             }
         } else if ( !id.equals( other.id ) ) {
-            return false;
-        }
-        if ( numBlocks != other.numBlocks ) {
             return false;
         }
         if ( size != other.size ) {
