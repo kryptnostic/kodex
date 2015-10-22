@@ -46,7 +46,7 @@ public interface ObjectStorageApi {
     String IV_PATH              = "/iv";
     String SALT_PATH            = "/salt";
     String TAG_PATH             = "/tag";
-    String LEVELS               = "/levels";
+    String LEVELS_PATH          = "/levels";
     String TYPE                 = "type";
     String TYPE_PATH            = "/type/{" + TYPE + "}";
     String OBJECT_APPEND_PATH   = "/append";
@@ -81,10 +81,7 @@ public interface ObjectStorageApi {
      * @return
      */
     @PUT( CONTROLLER + OBJECT_ID_PATH + VERSION_PATH + BLOCK_PATH )
-    Response setObjectBlockCiphertext(
-            @Path( ID ) UUID objectId,
-            @Path( VERSION ) long version,
-            @Body BlockCiphertext ciphertext );
+    Response setObjectBlockCiphertext( @Path( ID ) UUID objectId, @Path( VERSION ) long version, @Body BlockCiphertext ciphertext );
 
     /**
      * Cached Lazy Person API for reading base64 encoded block ciphertexts. Objects readable by this API will be
@@ -109,10 +106,7 @@ public interface ObjectStorageApi {
     Response setObjectBlockCiphertextIv( @Path( ID ) UUID objectId, @Path( VERSION ) long version, @Body byte[] iv );
 
     @PUT( CONTROLLER + OBJECT_ID_PATH + VERSION_PATH + CONTENTS_PATH )
-    Response setObjectBlockCiphertextContent(
-            @Path( ID ) UUID objectId,
-            @Path( VERSION ) long version,
-            @Body byte[] content );
+    Response setObjectBlockCiphertextContent( @Path( ID ) UUID objectId, @Path( VERSION ) long version, @Body byte[] content );
 
     @PUT( CONTROLLER + OBJECT_ID_PATH + VERSION_PATH + SALT_PATH )
     Response setObjectBlockCiphertextSalt( @Path( ID ) UUID objectId, @Path( VERSION ) long version, @Body byte[] salt );
@@ -121,19 +115,16 @@ public interface ObjectStorageApi {
     Response setObjectBlockCiphertextTag( @Path( ID ) UUID objectId, @Path( VERSION ) long version, @Body byte[] tag );
 
     @GET( CONTROLLER + OBJECT_ID_PATH + VERSION_PATH + CONTENTS_PATH )
-    byte[] getObjectBlockCiphertextContent(
-            @Path( ID ) UUID objectId,
-            @Path( VERSION ) long version,
-            @Body byte[] content );
+    byte[] getObjectBlockCiphertextContent( @Path( ID ) UUID objectId, @Path( VERSION ) long version );
 
     @GET( CONTROLLER + OBJECT_ID_PATH + VERSION_PATH + IV_PATH )
-    byte[] getObjectIV( @Path( ID ) UUID objectId, @Path( VERSION ) long version, @Body byte[] iv );
+    byte[] getObjectIV( @Path( ID ) UUID objectId, @Path( VERSION ) long version );
 
     @GET( CONTROLLER + OBJECT_ID_PATH + VERSION_PATH + SALT_PATH )
-    byte[] getObjectBlockCiphertextSalt( @Path( ID ) UUID objectId, @Path( VERSION ) long version, @Body byte[] salt );
+    byte[] getObjectBlockCiphertextSalt( @Path( ID ) UUID objectId, @Path( VERSION ) long version );
 
     @GET( CONTROLLER + OBJECT_ID_PATH + VERSION_PATH + TAG_PATH )
-    byte[] getObjectBlockCiphertextTag( @Path( ID ) UUID objectId, @Path( VERSION ) long version, @Body byte[] tag );
+    byte[] getObjectBlockCiphertextTag( @Path( ID ) UUID objectId, @Path( VERSION ) long version );
 
     @GET( CONTROLLER + OBJECT_ID_PATH + OBJECT_METADATA_PATH )
     ObjectMetadata getObjectMetadata( @Path( ID ) UUID id );
@@ -144,6 +135,6 @@ public interface ObjectStorageApi {
     @DELETE( CONTROLLER )
     Set<UUID> deleteObjectTrees( @Body Set<UUID> objectTrees );
 
-    @POST( CONTROLLER + LEVELS )
-    Map<UUID, ObjectMetadataNode> getObjectsByTypeAndLoadLevel( ObjectTreeLoadRequest request );
+    @POST( CONTROLLER + LEVELS_PATH )
+    Map<UUID, ObjectMetadataNode> getObjectsByTypeAndLoadLevel( @Body ObjectTreeLoadRequest request );
 }
