@@ -9,8 +9,14 @@ import com.kryptnostic.storage.v1.models.request.MetadataDeleteRequest;
 import com.kryptnostic.storage.v1.models.request.MetadataRequest;
 
 public interface MetadataStorageApi {
-    public static final String METADATA = "/metadata";
-    public static final String DELETE   = "/delete";
+    String CONTROLLER = "/metadata";
+    String OBJECT_ID = "objectId";
+    String METADATA_ID = "metadataId";
+    String DELETE   = "/delete";
+    
+    String OBJECT_ID_PATH = "/{" + OBJECT_ID + "}";
+    String METADATA_ID_PATH = "/{" + METADATA_ID + "}";
+    
 
     /**
      * Upload damn metaz
@@ -18,9 +24,12 @@ public interface MetadataStorageApi {
      * @param metadata
      * @return BasicResponse with empty body
      */
-    @POST( METADATA )
+    @POST( CONTROLLER )
     BasicResponse<String> uploadMetadata( @Body MetadataRequest metadata ) throws BadRequestException;
 
-    @POST( METADATA + DELETE )
+    @PUT( CONTROLLER +)
+    
+    
+    @POST( CONTROLLER + DELETE )
     BasicResponse<String> deleteAll( @Body MetadataDeleteRequest request );
 }

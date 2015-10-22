@@ -117,14 +117,14 @@ public interface ObjectStorageApi {
     @PUT( CONTROLLER + OBJECT_ID_PATH + VERSION_PATH + TAG_PATH )
     Response setObjectBlockCiphertextTag( @Path( ID ) UUID objectId, @Path( VERSION ) long version, @Body byte[] tag );
 
-    @GET( CONTROLLER + OBJECT_ID_PATH + VERSION_PATH + IV_PATH )
-    byte[] getObjectIV( @Path( ID ) UUID objectId, @Path( VERSION ) long version, @Body byte[] iv );
-
     @GET( CONTROLLER + OBJECT_ID_PATH + VERSION_PATH + CONTENTS_PATH )
     byte[] getObjectBlockCiphertextContent(
             @Path( ID ) UUID objectId,
             @Path( VERSION ) long version,
             @Body byte[] content );
+
+    @GET( CONTROLLER + OBJECT_ID_PATH + VERSION_PATH + IV_PATH )
+    byte[] getObjectIV( @Path( ID ) UUID objectId, @Path( VERSION ) long version, @Body byte[] iv );
 
     @GET( CONTROLLER + OBJECT_ID_PATH + VERSION_PATH + SALT_PATH )
     byte[] getObjectBlockCiphertextSalt( @Path( ID ) UUID objectId, @Path( VERSION ) long version, @Body byte[] salt );

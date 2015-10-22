@@ -55,16 +55,8 @@ public class ObjectMetadata {
      * @return Version of document
      */
     @JsonProperty( Names.VERSION_FIELD )
-    public int getVersion() {
+    public long getVersion() {
         return version;
-    }
-
-    /**
-     * @return Number of blocks associated with the document
-     */
-    @JsonProperty( Names.TOTAL_FIELD )
-    public int getNumBlocks() {
-        return numBlocks;
     }
 
     @JsonProperty( Names.CREATOR_FIELD )
@@ -83,7 +75,7 @@ public class ObjectMetadata {
     }
 
     @JsonProperty( Names.SIZE_FIELD )
-    public int getSize() {
+    public long getSize() {
         return size;
     }
 
@@ -94,10 +86,9 @@ public class ObjectMetadata {
         result = prime * result + ( ( createdTime == null ) ? 0 : createdTime.hashCode() );
         result = prime * result + ( ( creator == null ) ? 0 : creator.hashCode() );
         result = prime * result + ( ( id == null ) ? 0 : id.hashCode() );
-        result = prime * result + numBlocks;
-        result = prime * result + size;
+        result = prime * result + (int) ( size ^ ( size >>> 32 ) );
         result = prime * result + ( ( type == null ) ? 0 : type.hashCode() );
-        result = prime * result + version;
+        result = prime * result + (int) ( version ^ ( version >>> 32 ) );
         return result;
     }
 
