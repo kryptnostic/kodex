@@ -60,7 +60,7 @@ public interface ObjectStorageApi {
      * @throws ResourceNotFoundException
      */
     @POST( CONTROLLER )
-    UUID createObject( @Body CreateObjectRequest request );
+    ObjectMetadata createObject( @Body CreateObjectRequest request );
 
     /**
      * Lazy Person API for writing base64 encoded block ciphertexts in bulk.
