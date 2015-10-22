@@ -8,8 +8,8 @@ import retrofit.http.GET;
 import retrofit.http.POST;
 import retrofit.http.Path;
 
-import com.kryptnostic.kodex.v1.constants.Names;
 import com.kryptnostic.storage.v2.models.ObjectMetadataNode;
+import com.kryptnostic.v2.kodex.constants.Names;
 
 /**
  * 

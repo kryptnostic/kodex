@@ -1,35 +1,23 @@
 package com.kryptnostic.storage.v2.http;
 
-import retrofit.http.Body;
-import retrofit.http.POST;
+import java.util.Set;
+import java.util.UUID;
 
-import com.kryptnostic.kodex.v1.exceptions.types.BadRequestException;
-import com.kryptnostic.kodex.v1.models.response.BasicResponse;
-import com.kryptnostic.storage.v1.models.request.MetadataDeleteRequest;
-import com.kryptnostic.storage.v1.models.request.MetadataRequest;
+import retrofit.client.Response;
+import retrofit.http.POST;
+import retrofit.http.Path;
+
+import com.kryptnostic.storage.v2.models.PaddedMetadataObjectIds;
 
 public interface MetadataStorageApi {
-    String CONTROLLER = "/metadata";
-    String OBJECT_ID = "objectId";
-    String METADATA_ID = "metadataId";
-    String DELETE   = "/delete";
-    
-    String OBJECT_ID_PATH = "/{" + OBJECT_ID + "}";
+    String CONTROLLER       = "/metadata";
+    String OBJECT_ID        = "objectId";
+    String METADATA_ID      = "metadataId";
+    String DELETE           = "/delete";
+
+    String OBJECT_ID_PATH   = "/{" + OBJECT_ID + "}";
     String METADATA_ID_PATH = "/{" + METADATA_ID + "}";
-    
 
-    /**
-     * Upload damn metaz
-     * 
-     * @param metadata
-     * @return BasicResponse with empty body
-     */
-    @POST( CONTROLLER )
-    BasicResponse<String> uploadMetadata( @Body MetadataRequest metadata ) throws BadRequestException;
-
-    @PUT( CONTROLLER +)
-    
-    
-    @POST( CONTROLLER + DELETE )
-    BasicResponse<String> deleteAll( @Body MetadataDeleteRequest request );
+    @POST( CONTROLLER + OBJECT_ID_PATH )
+    Response createMetadataEntry( @Path( OBJECT_ID ) UUID objectId, Set<PaddedMetadataObjectIds> paddedMetadataObjectIds );
 }

@@ -13,12 +13,12 @@ import retrofit.http.POST;
 import retrofit.http.PUT;
 import retrofit.http.Path;
 
-import com.kryptnostic.kodex.v1.constants.Names;
 import com.kryptnostic.kodex.v1.crypto.ciphers.BlockCiphertext;
 import com.kryptnostic.kodex.v1.exceptions.types.BadRequestException;
 import com.kryptnostic.kodex.v1.exceptions.types.ResourceNotFoundException;
 import com.kryptnostic.storage.v2.models.CreateObjectRequest;
 import com.kryptnostic.storage.v2.models.ObjectMetadata;
+import com.kryptnostic.v2.kodex.constants.Names;
 
 /**
  * @author Matthew Tamayo-Rios &lt;matthew@kryptnostic.com&gt;
@@ -26,7 +26,6 @@ import com.kryptnostic.storage.v2.models.ObjectMetadata;
  */
 public interface ObjectStorageApi {
     String CONTROLLER           = "/object";
-
     // Parameter names
     String ID                   = Names.ID_FIELD;
     String VERSION              = "version";
@@ -140,4 +139,6 @@ public interface ObjectStorageApi {
 
     @DELETE( CONTROLLER )
     Set<UUID> deleteObjectTrees( @Body Set<UUID> objectTrees );
+
+    //
 }
