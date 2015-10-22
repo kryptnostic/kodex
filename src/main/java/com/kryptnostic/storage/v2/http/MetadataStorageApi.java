@@ -4,6 +4,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import retrofit.client.Response;
+import retrofit.http.Body;
 import retrofit.http.DELETE;
 import retrofit.http.POST;
 import retrofit.http.Path;
@@ -18,9 +19,8 @@ public interface MetadataStorageApi {
     String OBJECT_ID_PATH = "/{" + OBJECT_ID + "}";
 
     @POST( CONTROLLER + OBJECT_ID_PATH )
-    Response createMetadataEntry( @Path( OBJECT_ID ) UUID objectId, Set<PaddedMetadataObjectIds> paddedMetadataObjectIds );
+    Response createMetadataEntry( @Path( OBJECT_ID ) UUID objectId, @Body Set<PaddedMetadataObjectIds> paddedMetadataObjectIds );
 
     @DELETE( CONTROLLER + OBJECT_ID_PATH )
     Response createMetadataEntry( @Path( OBJECT_ID ) UUID objectId );
 }
- 
