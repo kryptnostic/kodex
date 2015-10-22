@@ -18,6 +18,8 @@ import com.kryptnostic.kodex.v1.exceptions.types.BadRequestException;
 import com.kryptnostic.kodex.v1.exceptions.types.ResourceNotFoundException;
 import com.kryptnostic.storage.v2.models.CreateObjectRequest;
 import com.kryptnostic.storage.v2.models.ObjectMetadata;
+import com.kryptnostic.storage.v2.models.ObjectMetadataNode;
+import com.kryptnostic.storage.v2.models.ObjectTreeLoadRequest;
 import com.kryptnostic.v2.constants.Names;
 
 /**
@@ -43,6 +45,7 @@ public interface ObjectStorageApi {
     String IV_PATH              = "/iv";
     String SALT_PATH            = "/salt";
     String TAG_PATH             = "/tag";
+    String LEVELS               = "/levels";
     String TYPE                 = "type";
     String TYPE_PATH            = "/type/{" + TYPE + "}";
     String OBJECT_APPEND_PATH   = "/append";
@@ -140,4 +143,6 @@ public interface ObjectStorageApi {
     @DELETE( CONTROLLER )
     Set<UUID> deleteObjectTrees( @Body Set<UUID> objectTrees );
 
+    @POST( CONTROLLER + LEVELS )
+    Map<UUID, ObjectMetadataNode> getObjectsByTypeAndLoadLevel( ObjectTreeLoadRequest request );
 }

@@ -19,7 +19,7 @@ import com.kryptnostic.v2.constants.Names;
 public interface ObjectListingApi {
     String CONTROLLER     = "/objects";
     String TYPE           = "type";
-    String PAGE         = Names.PAGE_FIELD;
+    String PAGE           = Names.PAGE_FIELD;
     String PAGE_SIZE      = Names.SIZE_FIELD;
     String ID             = Names.ID_FIELD;
 
@@ -27,7 +27,7 @@ public interface ObjectListingApi {
     String USER_ID_PATH   = "/{" + ID + "}";
     String TYPE_ID_PATH   = "/{" + TYPE + "}";
     String PAGE_SIZE_PATH = "/{" + PAGE_SIZE + "}";
-    String PAGE_PATH    = "/{" + PAGE + "}";
+    String PAGE_PATH      = "/{" + PAGE + "}";
 
     @GET( CONTROLLER )
     Set<UUID> getObjectIds();
@@ -45,7 +45,8 @@ public interface ObjectListingApi {
 
     /**
      * Retrieves all objects owned by a given a user. This is a slow call / uncached call.
-     * @param userId The userId for which to return the list of paged objects. 
+     * 
+     * @param userId The userId for which to return the list of paged objects.
      * @return The UUID of all objects owned by the user.
      */
     @GET( CONTROLLER + USER_ID_PATH )
@@ -69,4 +70,5 @@ public interface ObjectListingApi {
 
     @POST( CONTROLLER )
     Map<UUID, ObjectMetadataNode> getObjectMetadataTrees( Set<UUID> objectIds );
+
 }
