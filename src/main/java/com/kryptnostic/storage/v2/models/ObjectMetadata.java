@@ -9,9 +9,10 @@ import org.joda.time.DateTime;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.kryptnostic.kodex.v1.constants.Names;
+import com.kryptnostic.storage.v2.types.TypeUUIDs;
 
 /**
- * 
+ *
  * @author Matthew Tamayo-Rios &lt;matthew@kryptnostic.com&gt;
  *
  */
@@ -41,6 +42,19 @@ public class ObjectMetadata {
 
         this.createdTime = createdTime;
         this.size = size;
+    }
+
+    public static ObjectMetadata newObject(
+             UUID id,
+             UUID creator ) {
+        return new ObjectMetadata( id, 0, 0, TypeUUIDs.DEFAULT, creator, DateTime.now() );
+    }
+
+    public static ObjectMetadata newObject(
+             UUID id,
+             UUID creator,
+             long version ) {
+        return new ObjectMetadata( id, version, 0, TypeUUIDs.DEFAULT, creator, DateTime.now() );
     }
 
     /**
@@ -140,4 +154,6 @@ public class ObjectMetadata {
         }
         return true;
     }
+
+
 }

@@ -20,6 +20,7 @@ import com.kryptnostic.storage.v2.models.CreateObjectRequest;
 import com.kryptnostic.storage.v2.models.ObjectMetadata;
 import com.kryptnostic.storage.v2.models.ObjectMetadataNode;
 import com.kryptnostic.storage.v2.models.ObjectTreeLoadRequest;
+import com.kryptnostic.storage.v2.models.VersionedObjectKey;
 import com.kryptnostic.v2.constants.Names;
 
 /**
@@ -60,11 +61,11 @@ public interface ObjectStorageApi {
      * @throws ResourceNotFoundException
      */
     @POST( CONTROLLER )
-    UUID createObject( @Body CreateObjectRequest request );
+    VersionedObjectKey createObject( @Body CreateObjectRequest request );
 
     /**
      * Lazy Person API for writing base64 encoded block ciphertexts in bulk.
-     * 
+     *
      * @param objectIds
      * @return
      */
@@ -74,7 +75,7 @@ public interface ObjectStorageApi {
     /**
      * Lazy Person API for writing base64 encoded block ciphertexts. Objects written via this API will be available
      * through the more efficient byte level APIs.
-     * 
+     *
      * @param objectId
      * @param ciphertext
      * @return
@@ -88,7 +89,7 @@ public interface ObjectStorageApi {
     /**
      * Cached Lazy Person API for reading base64 encoded block ciphertexts. Objects readable by this API will be
      * available through the more efficient byte level APIs.
-     * 
+     *
      * @param objectId
      * @param block
      * @return
@@ -98,7 +99,7 @@ public interface ObjectStorageApi {
 
     /**
      * Sets the IV for an object block
-     * 
+     *
      * @param objectId
      * @param block
      * @param iv
