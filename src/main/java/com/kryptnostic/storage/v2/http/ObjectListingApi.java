@@ -12,7 +12,7 @@ import com.kryptnostic.storage.v2.models.ObjectMetadataNode;
 import com.kryptnostic.v2.constants.Names;
 
 /**
- * 
+ *
  * @author Matthew Tamayo-Rios &lt;matthew@kryptnostic.com&gt;
  *
  */
@@ -45,7 +45,7 @@ public interface ObjectListingApi {
 
     /**
      * Retrieves all objects owned by a given a user. This is a slow call / uncached call.
-     * 
+     *
      * @param userId The userId for which to return the list of paged objects.
      * @return The UUID of all objects owned by the user.
      */
@@ -64,7 +64,7 @@ public interface ObjectListingApi {
     @GET( CONTROLLER + USER_ID_PATH + TYPE_ID_PATH + PAGE_SIZE_PATH + PAGE_PATH )
     Set<UUID> getObjectIdsByTypePaged(
             @Path( ID ) UUID userId,
-            @Path( ID ) UUID typeId,
+            @Path( TYPE ) UUID typeId,
             @Path( PAGE ) Integer offset,
             @Path( PAGE_SIZE ) Integer pageSize );
 
