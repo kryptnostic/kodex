@@ -15,7 +15,7 @@ public class ObjectSearchPair {
     }
 
     @JsonProperty( INDEX_PAIR_FIELD )
-    public byte[] getIndexPair() {
+    public byte[] getSearchPair() {
         return objectSearchPair;
     }
 }
