@@ -36,7 +36,7 @@ public interface ObjectStorageApi {
     String USER                 = "user";
 
     // Paths
-    String OBJECT_ID_PATH       = "/{" + ID + "}";
+    String OBJECT_ID_PATH       = "/id/{" + ID + "}";
     String VERSION_PATH         = "/{" + VERSION + "}";
     String BLOCK_PATH           = "/{" + BLOCK + "}";
     String USER_ID_PATH         = "/{" + ID + "}";
