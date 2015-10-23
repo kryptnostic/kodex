@@ -15,10 +15,12 @@ import retrofit.http.Path;
 import com.kryptnostic.kodex.v1.crypto.ciphers.BlockCiphertext;
 import com.kryptnostic.kodex.v1.exceptions.types.BadRequestException;
 import com.kryptnostic.kodex.v1.exceptions.types.ResourceNotFoundException;
+import com.kryptnostic.storage.v2.models.CreateMetadataObjectRequest;
 import com.kryptnostic.storage.v2.models.CreateObjectRequest;
 import com.kryptnostic.storage.v2.models.ObjectMetadata;
 import com.kryptnostic.storage.v2.models.ObjectMetadataNode;
 import com.kryptnostic.storage.v2.models.ObjectTreeLoadRequest;
+import com.kryptnostic.storage.v2.models.PaddedMetadataObjectIds;
 import com.kryptnostic.storage.v2.models.VersionedObjectKey;
 import com.kryptnostic.v2.constants.Names;
 
@@ -80,7 +82,10 @@ public interface ObjectStorageApi {
      * @return
      */
     @PUT( CONTROLLER + OBJECT_ID_PATH + VERSION_PATH + BLOCK_PATH )
-    Response setObjectBlockCiphertext( @Path( ID ) UUID objectId, @Path( VERSION ) long version, @Body BlockCiphertext ciphertext );
+    Response setObjectBlockCiphertext(
+            @Path( ID ) UUID objectId,
+            @Path( VERSION ) long version,
+            @Body BlockCiphertext ciphertext );
 
     /**
      * Cached Lazy Person API for reading base64 encoded block ciphertexts. Objects readable by this API will be
@@ -105,7 +110,10 @@ public interface ObjectStorageApi {
     Response setObjectBlockCiphertextIv( @Path( ID ) UUID objectId, @Path( VERSION ) long version, @Body byte[] iv );
 
     @PUT( CONTROLLER + OBJECT_ID_PATH + VERSION_PATH + CONTENTS_PATH )
-    Response setObjectBlockCiphertextContent( @Path( ID ) UUID objectId, @Path( VERSION ) long version, @Body byte[] content );
+    Response setObjectBlockCiphertextContent(
+            @Path( ID ) UUID objectId,
+            @Path( VERSION ) long version,
+            @Body byte[] content );
 
     @PUT( CONTROLLER + OBJECT_ID_PATH + VERSION_PATH + SALT_PATH )
     Response setObjectBlockCiphertextSalt( @Path( ID ) UUID objectId, @Path( VERSION ) long version, @Body byte[] salt );
@@ -136,4 +144,24 @@ public interface ObjectStorageApi {
 
     @POST( CONTROLLER + LEVELS_PATH )
     Map<UUID, ObjectMetadataNode> getObjectsByTypeAndLoadLevel( @Body ObjectTreeLoadRequest request );
+
+    // METADATA APIs
+
+    /**
+     * Request a new object be created in a pending state
+     *
+     * @return The ID of the newly created object
+     * @throws BadRequestException Request was invalid
+     * @throws ResourceNotFoundException
+     */
+    @POST( CONTROLLER + OBJECT_METADATA_PATH )
+    VersionedObjectKey createMetadataObject( @Body CreateMetadataObjectRequest request );
+
+    @POST( CONTROLLER + OBJECT_METADATA_PATH + OBJECT_ID_PATH )
+    Response createMetadataEntry(
+            @Path( ID ) UUID objectId,
+            @Body Set<PaddedMetadataObjectIds> paddedMetadataObjectIds );
+
+    @DELETE( CONTROLLER + OBJECT_METADATA_PATH + OBJECT_ID_PATH )
+    Response createMetadataEntry( @Path( ID ) UUID objectId );
 }

@@ -9,22 +9,24 @@ import com.google.common.collect.ImmutableList;
 import com.kryptnostic.v2.constants.Names;
 
 /**
- * @author Matthew Tamayo-Rios &lt;matthew@kryptnostic.com&gt; 
+ * @author Matthew Tamayo-Rios &lt;matthew@kryptnostic.com&gt;
  *
  */
 public class Metadata {
     private final UUID          objectId;
     private final String        term;
+    private final int           length;
     private final List<Integer> locations;
 
     @JsonCreator
     public Metadata(
             @JsonProperty( Names.ID_FIELD ) UUID objectId,
             @JsonProperty( Names.TOKEN_PROPERTY ) String term,
+            @JsonProperty( Names.LENGTH_FIELD ) int length,
             @JsonProperty( Names.INDEX_FIELD ) List<Integer> locations ) {
         this.objectId = objectId;
         this.term = term;
-
+        this.length = length;
         this.locations = ImmutableList.copyOf( locations );
     }
 
@@ -36,6 +38,11 @@ public class Metadata {
     @JsonProperty( Names.TERM_FIELD )
     public String getTerm() {
         return term;
+    }
+
+    @JsonProperty( Names.LENGTH_FIELD )
+    public int getLength() {
+        return length;
     }
 
     @JsonProperty( Names.INDEX_FIELD )
