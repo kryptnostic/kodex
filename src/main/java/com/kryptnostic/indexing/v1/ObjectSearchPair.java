@@ -10,7 +10,7 @@ public class ObjectSearchPair {
 
     @JsonCreator
     public ObjectSearchPair( @JsonProperty( SEARCH_PAIR_FIELD ) byte[] objectSearchPair ) {
-        Preconditions.checkState( objectSearchPair.length == 2080, "Index pair must be 2080 bytes long." );
+        Preconditions.checkState( objectSearchPair.length == 2080, "Search pair must be 2080 bytes long." );
         this.objectSearchPair = objectSearchPair;
     }
 
