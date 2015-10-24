@@ -1,6 +1,6 @@
 package com.kryptnostic.directory.v1.exception;
 
-public class AddUserException extends Exception {
+public class AddUserException extends RuntimeException {
     public AddUserException( String string ) {
         super( string );
     }
