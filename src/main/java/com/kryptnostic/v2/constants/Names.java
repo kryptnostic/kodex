@@ -89,10 +89,11 @@ public final class Names {
     public static final String TAG                             = "tag";
     public static final String ENCRYPTED_LENGTH                = "encryptedLength";
     public static final String CONTENTS                        = "contents";
-    public static final String LENGTH_FIELD                          = "length";
+    public static final String LENGTH_FIELD                    = "length";
     public static final String OBJECT_IDS                      = "objectIds";
     public static final String LOAD_LEVELS                     = "loadLevels";
     public static final String INHERITING_CRYPTO_SERVICE_FIELD = "inheritCryptoService";
     public static final String LOCKED_FIELD                    = "locked";
     public static final String TERM_FIELD                      = "term";
+    public static final String OBJECT_CREATION_PROGRESS        = "objectCreationProgress";
 }

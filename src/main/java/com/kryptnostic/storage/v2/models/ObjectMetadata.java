@@ -48,6 +48,7 @@ public class ObjectMetadata {
 
         this.createdTime = createdTime;
         this.size = size;
+        this.uploadedParts = EnumSet.noneOf( CryptoMaterial.class );
     }
 
     public static ObjectMetadata newObject(
@@ -99,9 +100,17 @@ public class ObjectMetadata {
         return size;
     }
 
+    public EnumSet<CryptoMaterial> getCryptoMaterialProgress() {
+        return uploadedParts;
+    }
+
     public boolean updateUploadProgress( CryptoMaterial nextUploaded ) {
         uploadedParts.add( nextUploaded );
         return uploadedParts.containsAll( EnumSet.allOf( CryptoMaterial.class ) );
+    }
+
+    public void setUploadedParts( EnumSet<CryptoMaterial> uploadedParts ) {
+        this.uploadedParts = uploadedParts;
     }
 
     @Override
