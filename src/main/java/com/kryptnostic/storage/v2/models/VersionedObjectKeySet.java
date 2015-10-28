@@ -6,6 +6,10 @@ public class VersionedObjectKeySet extends HashSet<VersionedObjectKey>{
 
     private static final long serialVersionUID = -2280678803539884513L;
 
+    public VersionedObjectKeySet() {
+        super();
+    }
+
     public VersionedObjectKeySet( int i ) {
         super( i );
     }

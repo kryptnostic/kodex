@@ -66,4 +66,12 @@ public class VersionedObjectKey {
         return true;
     }
 
+    @Override
+    public String toString() {
+        return new StringBuilder()
+            .append( "{" )
+            .append( objectId ).append( "/" ).append( version )
+            .append( "}" )
+            .toString();
+    }
 }
