@@ -66,7 +66,7 @@ public interface ObjectListingApi {
             @Path( PAGE ) Integer offset,
             @Path( PAGE_SIZE ) Integer pageSize );
 
-    @POST( CONTROLLER )
-    Map<UUID, ObjectMetadataNode> getObjectMetadataTrees( @Body Set<UUID> objectIds );
+    @POST( CONTROLLER + USER_ID_PATH )
+    Map<UUID, ObjectMetadataNode> getObjectMetadataTrees( @Path( ID ) UUID userId, @Body Set<UUID> objectIds );
 
 }
