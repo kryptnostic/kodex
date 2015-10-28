@@ -29,7 +29,7 @@ public interface ObjectListingApi {
     String PAGE_SIZE_PATH = "/{" + PAGE_SIZE + "}";
     String PAGE_PATH      = "/{" + PAGE + "}";
 
-    @GET( CONTROLLER )
+    @GET( CONTROLLER + USER_ID_PATH )
     Set<UUID> getObjectIds();
 
     @GET( CONTROLLER + USER_ID_PATH + PAGE_SIZE_PATH )

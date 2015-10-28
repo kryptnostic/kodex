@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
 import com.kryptnostic.kodex.v1.exceptions.types.BadRequestException;
@@ -13,9 +14,9 @@ import com.kryptnostic.kodex.v1.exceptions.types.ResourceNotFoundException;
 import com.kryptnostic.kodex.v1.exceptions.types.SecurityConfigurationException;
 import com.kryptnostic.storage.v1.models.EncryptableBlock;
 import com.kryptnostic.storage.v1.models.KryptnosticObject;
-import com.kryptnostic.storage.v1.models.ObjectMetadata;
 import com.kryptnostic.storage.v1.models.request.MetadataRequest;
 import com.kryptnostic.storage.v1.models.request.StorageRequest;
+import com.kryptnostic.storage.v2.models.ObjectMetadata;
 
 /**
  * Defines a client for interacting with a Kryptnostic object storage server
@@ -32,9 +33,9 @@ public interface StorageClient {
      * @return KryptnosticObject of specified id
      * @throws ResourceNotFoundException The object with the specified ID was not found on the server
      */
-    KryptnosticObject getObject( String id ) throws ResourceNotFoundException;
+    Object getObject( UUID id ) throws ResourceNotFoundException;
 
-    List<KryptnosticObject> getObjects( List<String> ids ) throws ResourceNotFoundException;
+    List<KryptnosticObject> getObjects( List<UUID> ids ) throws ResourceNotFoundException;
 
     /**
      * Push metadata to the service
@@ -44,9 +45,9 @@ public interface StorageClient {
      */
     void uploadMetadata( List<MetadataRequest> metadata ) throws BadRequestException;
 
-    void deleteMetadata( String id );
+    void deleteMetadata( UUID id );
 
-    void deleteObject( String id );
+    void deleteObject( UUID id );
 
     /**
      * Retrieve all the objectIds the current user has access to
@@ -60,9 +61,9 @@ public interface StorageClient {
     String uploadObject( StorageRequest req ) throws BadRequestException, SecurityConfigurationException,
             IrisException, ResourceLockedException, ResourceNotFoundException;
 
-    List<EncryptableBlock> getObjectBlocks( String objectId, List<Integer> indices ) throws ResourceNotFoundException;
+    List<EncryptableBlock> getObjectBlocks( UUID objectId, List<Integer> indices ) throws ResourceNotFoundException;
 
-    Map<Integer, String> getObjectPreview( String objectId, List<Integer> locations, int wordRadius )
+    Map<Integer, String> getObjectPreview( UUID objectId, List<Integer> locations, int wordRadius )
             throws SecurityConfigurationException, ExecutionException, ResourceNotFoundException,
             ClassNotFoundException, IOException;
 
@@ -70,5 +71,5 @@ public interface StorageClient {
 
     Collection<String> getObjectIdsByType( String type, int offset, int pageSize );
 
-    ObjectMetadata getObjectMetadata( String id ) throws ResourceNotFoundException;
+    ObjectMetadata getObjectMetadata( UUID id ) throws ResourceNotFoundException;
 }

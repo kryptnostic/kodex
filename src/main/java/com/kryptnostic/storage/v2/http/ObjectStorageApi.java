@@ -64,6 +64,9 @@ public interface ObjectStorageApi {
     @POST( CONTROLLER )
     VersionedObjectKey createObject( @Body CreateObjectRequest request );
 
+    @GET( CONTROLLER + OBJECT_ID_PATH )
+    VersionedObjectKey getVersionedObjectKey( @Path( ID ) UUID id );
+
     /**
      * Lazy Person API for writing base64 encoded block ciphertexts in bulk.
      *
