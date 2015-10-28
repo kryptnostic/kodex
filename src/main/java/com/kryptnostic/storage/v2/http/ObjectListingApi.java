@@ -30,9 +30,6 @@ public interface ObjectListingApi {
     String PAGE_SIZE_PATH = "/{" + PAGE_SIZE + "}";
     String PAGE_PATH      = "/{" + PAGE + "}";
 
-    @GET( CONTROLLER + USER_ID_PATH )
-    Set<UUID> getObjectIds( @Path( ID ) UUID userId );
-
     @GET( CONTROLLER + USER_ID_PATH + PAGE_SIZE_PATH )
     Set<UUID> getLatestUnfinishedPageOfObjectIds(
             @Path( ID ) UUID userId,
