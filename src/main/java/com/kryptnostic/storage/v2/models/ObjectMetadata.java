@@ -1,5 +1,6 @@
 package com.kryptnostic.storage.v2.models;
 
+import java.util.EnumSet;
 import java.util.UUID;
 
 import javax.annotation.concurrent.Immutable;
@@ -18,13 +19,18 @@ import com.kryptnostic.v2.constants.Names;
  */
 @Immutable
 public class ObjectMetadata {
-    protected final UUID     id;
-    protected final UUID     type;
-    protected final long     version;
-    protected final long     size;
+    protected final UUID                id;
+    protected final UUID                type;
+    protected final long                version;
+    protected final long                size;
+    protected EnumSet<CryptoMaterial>   uploadedParts;
 
     protected final UUID     creator;
     protected final DateTime createdTime;
+
+    public enum CryptoMaterial {
+        IV, TAG, CONTENTS, SALT
+    }
 
     @JsonCreator
     public ObjectMetadata(
@@ -42,6 +48,7 @@ public class ObjectMetadata {
 
         this.createdTime = createdTime;
         this.size = size;
+        this.uploadedParts = EnumSet.noneOf( CryptoMaterial.class );
     }
 
     public static ObjectMetadata newObject(
@@ -91,6 +98,19 @@ public class ObjectMetadata {
     @JsonProperty( Names.SIZE_FIELD )
     public long getSize() {
         return size;
+    }
+
+    public EnumSet<CryptoMaterial> getCryptoMaterialProgress() {
+        return uploadedParts;
+    }
+
+    public boolean updateUploadProgress( CryptoMaterial nextUploaded ) {
+        uploadedParts.add( nextUploaded );
+        return uploadedParts.containsAll( EnumSet.allOf( CryptoMaterial.class ) );
+    }
+
+    public void setUploadedParts( EnumSet<CryptoMaterial> uploadedParts ) {
+        this.uploadedParts = uploadedParts;
     }
 
     @Override

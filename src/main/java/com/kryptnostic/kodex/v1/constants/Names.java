@@ -94,4 +94,5 @@ public final class Names {
     public static final String LOAD_LEVELS                     = "loadLevels";
     public static final String INHERITING_CRYPTO_SERVICE_FIELD = "inheritCryptoService";
     public static final String LOCKED_FIELD                    = "locked";
+    public static final String OPEN_REGISTRATION_ALLOWED       = "openRegistrationAllowed";
 }

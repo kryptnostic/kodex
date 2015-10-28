@@ -2,6 +2,7 @@ package com.kryptnostic.storage.v2.models;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.UUID;
 
 import com.google.common.base.Optional;
@@ -10,7 +11,7 @@ import com.kryptnostic.kodex.v1.crypto.ciphers.BlockCiphertext;
 /**
  * This class is a return only JSON data type that used to return nest object tree with objects at various load levels
  * from the server.
- * 
+ *
  * @author Matthew Tamayo-Rios &lt;matthew@kryptnostic.com&gt;
  *
  */
@@ -33,6 +34,14 @@ public class ObjectMetadataNode {
         return children;
     }
 
+    public void addChild( UUID childId, ObjectMetadataNode childNode ) {
+        children.put( childId, childNode );
+    }
+
+    public void addChildren( Map<UUID, ObjectMetadataNode> kids ) {
+        children.putAll( kids );
+    }
+
     public ObjectMetadata getMetadata() {
         return metadata;
     }
@@ -44,6 +53,24 @@ public class ObjectMetadataNode {
     @Override
     public String toString() {
         return "ObjectMetadataNode [children=" + children + ", metadata=" + metadata + ", data=" + data + "]";
+    }
+
+    public static String printMap( Map<UUID, ObjectMetadataNode> map ) {
+        StringBuilder build = new StringBuilder();
+        if ( map.isEmpty() ) {
+            return "\"empty\",\n";
+        }
+        build.append( "{\n" );
+        for ( Entry<UUID, ObjectMetadataNode> ent : map.entrySet() ) {
+            ObjectMetadataNode value = ent.getValue();
+            build.append( ent.getKey() );
+            build.append( ": " );
+            if ( value.getChildren() != null ) {
+                build.append( printMap( value.getChildren() ) );
+            }
+        }
+        build.append( "}\n" );
+        return build.toString();
     }
 
     @Override

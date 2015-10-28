@@ -5,6 +5,7 @@ import java.util.UUID;
 import retrofit.http.Body;
 import retrofit.http.POST;
 
+import com.kryptnostic.directory.v1.exception.AddUserException;
 import com.kryptnostic.registration.v1.models.UserCreationRequest;
 
 public interface RegistrationApi {
@@ -16,8 +17,9 @@ public interface RegistrationApi {
      *
      * @param request
      * @return
+     * @throws AddUserException
      */
     @POST( CONTROLLER + USER )
-    UUID register( @Body UserCreationRequest request );
+    UUID register( @Body UserCreationRequest request ) ;
 
 }

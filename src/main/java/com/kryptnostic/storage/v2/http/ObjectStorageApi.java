@@ -85,7 +85,7 @@ public interface ObjectStorageApi {
      * @return
      */
     @PUT( CONTROLLER + OBJECT_ID_PATH + VERSION_PATH + BLOCK_PATH )
-    Response setObjectBlockCiphertext(
+    Response setObjectFromBlockCiphertext(
             @Path( ID ) UUID objectId,
             @Path( VERSION ) long version,
             @Body BlockCiphertext ciphertext );
@@ -99,7 +99,7 @@ public interface ObjectStorageApi {
      * @return
      */
     @GET( CONTROLLER + OBJECT_ID_PATH + VERSION_PATH )
-    BlockCiphertext getObjectBlockCiphertext( @Path( ID ) UUID objectId, @Path( VERSION ) long version );
+    BlockCiphertext getObjectAsBlockCiphertext( @Path( ID ) UUID objectId, @Path( VERSION ) long version );
 
     /**
      * Sets the IV for an object block
@@ -110,31 +110,31 @@ public interface ObjectStorageApi {
      * @return
      */
     @PUT( CONTROLLER + OBJECT_ID_PATH + VERSION_PATH + IV_PATH )
-    Response setObjectBlockCiphertextIv( @Path( ID ) UUID objectId, @Path( VERSION ) long version, @Body byte[] iv );
+    Response setObjectIv( @Path( ID ) UUID objectId, @Path( VERSION ) long version, @Body byte[] iv );
 
     @PUT( CONTROLLER + OBJECT_ID_PATH + VERSION_PATH + CONTENTS_PATH )
-    Response setObjectBlockCiphertextContent(
+    Response setObjectContent(
             @Path( ID ) UUID objectId,
             @Path( VERSION ) long version,
             @Body byte[] content );
 
     @PUT( CONTROLLER + OBJECT_ID_PATH + VERSION_PATH + SALT_PATH )
-    Response setObjectBlockCiphertextSalt( @Path( ID ) UUID objectId, @Path( VERSION ) long version, @Body byte[] salt );
+    Response setObjectSalt( @Path( ID ) UUID objectId, @Path( VERSION ) long version, @Body byte[] salt );
 
     @PUT( CONTROLLER + OBJECT_ID_PATH + VERSION_PATH + TAG_PATH )
-    Response setObjectBlockCiphertextTag( @Path( ID ) UUID objectId, @Path( VERSION ) long version, @Body byte[] tag );
+    Response setObjectTag( @Path( ID ) UUID objectId, @Path( VERSION ) long version, @Body byte[] tag );
 
     @GET( CONTROLLER + OBJECT_ID_PATH + VERSION_PATH + CONTENTS_PATH )
-    byte[] getObjectBlockCiphertextContent( @Path( ID ) UUID objectId, @Path( VERSION ) long version );
+    byte[] getObjectContent( @Path( ID ) UUID objectId, @Path( VERSION ) long version );
 
     @GET( CONTROLLER + OBJECT_ID_PATH + VERSION_PATH + IV_PATH )
     byte[] getObjectIV( @Path( ID ) UUID objectId, @Path( VERSION ) long version );
 
     @GET( CONTROLLER + OBJECT_ID_PATH + VERSION_PATH + SALT_PATH )
-    byte[] getObjectBlockCiphertextSalt( @Path( ID ) UUID objectId, @Path( VERSION ) long version );
+    byte[] getObjectSalt( @Path( ID ) UUID objectId, @Path( VERSION ) long version );
 
     @GET( CONTROLLER + OBJECT_ID_PATH + VERSION_PATH + TAG_PATH )
-    byte[] getObjectBlockCiphertextTag( @Path( ID ) UUID objectId, @Path( VERSION ) long version );
+    byte[] getObjectTag( @Path( ID ) UUID objectId, @Path( VERSION ) long version );
 
     @GET( CONTROLLER + OBJECT_ID_PATH + OBJECT_METADATA_PATH )
     ObjectMetadata getObjectMetadata( @Path( ID ) UUID id );

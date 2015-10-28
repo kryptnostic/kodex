@@ -2,39 +2,40 @@ package com.kryptnostic.storage.v2.models;
 
 import java.util.UUID;
 
-import javax.annotation.concurrent.Immutable;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.kryptnostic.v2.constants.Names;
 
-@Immutable
-public class VersionedObjectKey {
-
+public class ObjectUserKey {
     private final UUID    objectId;
-    private final long    version;
+    private final UUID    userKey;
 
     /**
      * This is transient because it is recalculated on the first call to hashcode()
      */
     private transient int cachedHashCode;
 
-    public VersionedObjectKey( UUID objectId, long version ) {
+    @JsonCreator
+    public ObjectUserKey(
+            @JsonProperty( Names.ID_FIELD ) UUID objectId,
+            @JsonProperty( Names.USER_FIELD ) UUID userKey ) {
+        super();
         this.objectId = objectId;
-        this.version = version;
+        this.userKey = userKey;
     }
 
-    /**
-     * @return the objectId
-     */
+    @JsonProperty( Names.ID_FIELD )
     public UUID getObjectId() {
         return objectId;
     }
 
-    /**
-     * @return the version
-     */
-    public long getVersion() {
-        return version;
+    @JsonProperty( Names.USER_FIELD )
+    public UUID getUserKey() {
+        return userKey;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see java.lang.Object#hashCode()
      */
     @Override
@@ -44,13 +45,14 @@ public class VersionedObjectKey {
             final int prime = 31;
             int result = 1;
             result = prime * result + ( ( objectId == null ) ? 0 : objectId.hashCode() );
-            result = prime * result + (int) ( version ^ ( version >>> 32 ) );
-            cachedHashCode = code = result;
+            result = prime * result + ( ( userKey == null ) ? 0 : userKey.hashCode() );
+            code = result;
         }
         return code;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see java.lang.Object#equals(java.lang.Object)
      */
     @Override
@@ -58,20 +60,13 @@ public class VersionedObjectKey {
         if ( this == obj ) return true;
         if ( obj == null ) return false;
         if ( getClass() != obj.getClass() ) return false;
-        VersionedObjectKey other = (VersionedObjectKey) obj;
+        ObjectUserKey other = (ObjectUserKey) obj;
         if ( objectId == null ) {
             if ( other.objectId != null ) return false;
         } else if ( !objectId.equals( other.objectId ) ) return false;
-        if ( version != other.version ) return false;
+        if ( userKey == null ) {
+            if ( other.userKey != null ) return false;
+        } else if ( !userKey.equals( other.userKey ) ) return false;
         return true;
-    }
-
-    @Override
-    public String toString() {
-        return new StringBuilder()
-            .append( "{" )
-            .append( objectId ).append( "/" ).append( version )
-            .append( "}" )
-            .toString();
     }
 }

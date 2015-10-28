@@ -4,6 +4,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
+import retrofit.http.Body;
 import retrofit.http.GET;
 import retrofit.http.POST;
 import retrofit.http.Path;
@@ -69,6 +70,6 @@ public interface ObjectListingApi {
             @Path( PAGE_SIZE ) Integer pageSize );
 
     @POST( CONTROLLER )
-    Map<UUID, ObjectMetadataNode> getObjectMetadataTrees( Set<UUID> objectIds );
+    Map<UUID, ObjectMetadataNode> getObjectMetadataTrees( @Body Set<UUID> objectIds );
 
 }
