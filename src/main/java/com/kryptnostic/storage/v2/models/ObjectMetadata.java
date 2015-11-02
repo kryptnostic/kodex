@@ -54,14 +54,14 @@ public class ObjectMetadata {
     public static ObjectMetadata newObject(
              UUID id,
              UUID creator ) {
-        return new ObjectMetadata( id, 0, 0, TypeUUIDs.DEFAULT, creator, DateTime.now() );
+        return new ObjectMetadata( id, 0, 0, TypeUUIDs.UTF8_STRING, creator, DateTime.now() );
     }
 
     public static ObjectMetadata newObject(
              UUID id,
              UUID creator,
              long version ) {
-        return new ObjectMetadata( id, version, 0, TypeUUIDs.DEFAULT, creator, DateTime.now() );
+        return new ObjectMetadata( id, version, 0, TypeUUIDs.UTF8_STRING, creator, DateTime.now() );
     }
 
     /**
