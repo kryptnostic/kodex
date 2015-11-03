@@ -1,15 +1,11 @@
 package com.kryptnostic.storage.v2.http;
 
-import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
-import retrofit.http.Body;
 import retrofit.http.GET;
-import retrofit.http.POST;
 import retrofit.http.Path;
 
-import com.kryptnostic.storage.v2.models.ObjectMetadataNode;
 import com.kryptnostic.v2.constants.Names;
 
 /**
@@ -65,8 +61,5 @@ public interface ObjectListingApi {
             @Path( TYPE ) UUID typeId,
             @Path( PAGE ) Integer offset,
             @Path( PAGE_SIZE ) Integer pageSize );
-
-    @POST( CONTROLLER + USER_ID_PATH )
-    Map<UUID, ObjectMetadataNode> getObjectMetadataTrees( @Path( ID ) UUID userId, @Body Set<UUID> objectIds );
 
 }

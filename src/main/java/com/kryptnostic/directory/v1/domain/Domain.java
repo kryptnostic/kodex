@@ -45,7 +45,7 @@ public class Domain {
         this.name = name;
         this.size = new AtomicInteger( size );
         this.domainSharingPolicy = domainSharingPolicy;
-        this.openRegistrationEnabled = openRegistrationEnabled.or( CONFIRMATION_EMAIL_NOT_REQUIRED_DEFAULT );
+        this.openRegistrationEnabled = openRegistrationEnabled.or( OPEN_REGISTRATION_ENABLED_DEFAULT );
         this.confirmationEmailRequired = confirmationEmailRequired.or( CONFIRMATION_EMAIL_NOT_REQUIRED_DEFAULT );
         this.publiclyListable = new AtomicBoolean( publiclyListable.or( PUBLICLY_LISTABLE_DEFAULT ) );
     }

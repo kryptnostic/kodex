@@ -20,6 +20,6 @@ public interface RegistrationApi {
      * @throws AddUserException
      */
     @POST( CONTROLLER + USER )
-    UUID register( @Body UserCreationRequest request ) ;
+    UUID register( @Body UserCreationRequest request ) throws AddUserException;
 
 }
