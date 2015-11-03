@@ -12,4 +12,6 @@ public final class TypeUUIDs {
     public static final UUID UTF8_STRING    = new UUID( 0L, 1L );
     public static final UUID UTF16_STRING   = new UUID( 0L, 2L );
     public static final UUID INDEX_METADATA = new UUID( 0L, 3L );
+
+    public static final UUID DEFAULT_TYPE   = UTF8_STRING;
 }

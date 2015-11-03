@@ -22,7 +22,7 @@ public class CreateObjectRequest {
 
     public CreateObjectRequest() {
         this(
-                TypeUUIDs.UTF8_STRING,
+                TypeUUIDs.DEFAULT_TYPE,
                 Optional.<UUID> absent(),
                 Optional.<UUID> absent(),
                 Optional.<Boolean> absent(),
