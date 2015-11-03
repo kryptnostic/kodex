@@ -75,5 +75,4 @@ public class CreateObjectRequest {
     public boolean isLocked() {
         return locked;
     }
-
 }
