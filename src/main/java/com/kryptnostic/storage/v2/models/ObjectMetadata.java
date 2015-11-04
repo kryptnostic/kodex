@@ -9,8 +9,8 @@ import org.joda.time.DateTime;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.kryptnostic.storage.v2.types.TypeUUIDs;
 import com.kryptnostic.v2.constants.Names;
+import com.kryptnostic.v2.storage.types.TypeUUIDs;
 
 /**
  *

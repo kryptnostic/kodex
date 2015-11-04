@@ -5,8 +5,8 @@ import java.util.UUID;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Optional;
-import com.kryptnostic.storage.v2.types.TypeUUIDs;
 import com.kryptnostic.v2.constants.Names;
+import com.kryptnostic.v2.storage.types.TypeUUIDs;
 
 public class CreateObjectRequest {
     private static final boolean INHERITING_OWNERSHIP_DEFAULT      = true;

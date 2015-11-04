@@ -1,4 +1,4 @@
-package com.kryptnostic.storage.v2.types;
+package com.kryptnostic.v2.storage.types;
 
 import java.util.UUID;
 
