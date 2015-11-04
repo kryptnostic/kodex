@@ -9,7 +9,7 @@ import com.kryptnostic.kodex.v1.crypto.keys.CryptoServiceLoader;
 import com.kryptnostic.kodex.v1.exceptions.types.SecurityConfigurationException;
 import com.kryptnostic.kodex.v1.storage.DataStore;
 import com.kryptnostic.krypto.engine.KryptnosticEngine;
-import com.kryptnostic.storage.v1.http.CryptoKeyStorageApi;
+import com.kryptnostic.storage.v1.http.KeyStorageApi;
 
 /**
  * The KryptnosticConnection abstracts out persistence, key generation, and server connection information for down
@@ -39,7 +39,7 @@ public interface KryptnosticConnection {
 
     KryptnosticEngine getKryptnosticEngine();
 
-    CryptoKeyStorageApi getCryptoKeyStorageApi();
+    KeyStorageApi getCryptoKeyStorageApi();
 
     byte[] getClientHashFunction();
 }

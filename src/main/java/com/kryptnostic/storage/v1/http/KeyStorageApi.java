@@ -9,7 +9,7 @@ import com.google.common.base.Optional;
 import com.kryptnostic.kodex.v1.crypto.ciphers.BlockCiphertext;
 import com.kryptnostic.kodex.v1.exceptions.types.BadRequestException;
 
-public interface CryptoKeyStorageApi {
+public interface KeyStorageApi {
     String CONTROLLER     = "/keys";
     String PRIVATE        = "/private";
     String SEARCH_PRIVATE = "/searchprivate";
