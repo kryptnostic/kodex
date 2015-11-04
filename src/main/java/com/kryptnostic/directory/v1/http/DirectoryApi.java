@@ -42,7 +42,7 @@ public interface DirectoryApi {
     }
 
     /**
-     * @deprecated use {@link com.kryptnostic.storage.v1.http.KeyStorageApi#getPublicKey( UUID user ) } instead
+     * @deprecated use {@link com.kryptnostic.storage.v2.http.KeyStorageApi#getPublicKey( UUID user ) } instead
      * @param id The id of the user whose public key shall be retrieved.
      * @return Specified user's public key
      * @throws ResourceNotFoundException
@@ -53,7 +53,7 @@ public interface DirectoryApi {
     PublicKeyEnvelope getPublicKey( @Path( Names.USER_FIELD ) UUID id) throws ResourceNotFoundException;
 
     /**
-     * @deprecated use {@link com.kryptnostic.storage.v1.http.KeyStorageApi#getPublicKeys( userIds ) } instead
+     * @deprecated use {@link com.kryptnostic.storage.v2.http.KeyStorageApi#getPublicKeys( userIds ) } instead
      * @param userIds The id of the user whose public key shall be retrieved.
      * @return Specified user's public key
      * @throws ResourceNotFoundException
@@ -65,7 +65,7 @@ public interface DirectoryApi {
             throws ResourceNotFoundException;
 
     /**
-     * @deprecated use {@link com.kryptnostic.storage.v1.http.KeyStorageApi#setPublicKey( byte[] publicKey ) } instead
+     * @deprecated use {@link com.kryptnostic.storage.v2.http.KeyStorageApi#setPublicKey( byte[] publicKey ) } instead
      * @param publicKey
      * @return
      */
@@ -77,7 +77,7 @@ public interface DirectoryApi {
     /**
      * Retrieves the password encrypted salt for authentication from the server.
      *
-     * @deprecated use {@link com.kryptnostic.storage.v1.http.KeyStorageApi# } instead
+     * @deprecated use {@link com.kryptnostic.storage.v2.http.KeyStorageApi# } instead
      * @param id The id of the user whose encrypted salt shall be retrieved.
      * @return A ciphertext of the password encrypted for the user.
      */
@@ -87,7 +87,7 @@ public interface DirectoryApi {
     BlockCiphertext getSalt( @Path( Names.USER_FIELD ) UUID id) throws ResourceNotFoundException;
 
     /**
-     * @deprecated use {@link com.kryptnostic.storage.v1.http.KeyStorageApi# } instead
+     * @deprecated use {@link com.kryptnostic.storage.v2.http.KeyStorageApi# } instead
      * @param encryptedSalt
      * @return
      */
@@ -97,7 +97,7 @@ public interface DirectoryApi {
     BasicResponse<String> setSalt( @Body BlockCiphertext encryptedSalt );
 
     /**
-     * @deprecated use {@link com.kryptnostic.storage.v1.http.KeyStorageApi# } instead
+     * @deprecated use {@link com.kryptnostic.storage.v2.http.KeyStorageApi# } instead
      * @return Encrypted private key of current user
      */
     @Deprecated
@@ -106,7 +106,7 @@ public interface DirectoryApi {
     BlockCiphertext getPrivateKey() throws ResourceNotFoundException;
 
     /**
-     * @deprecated use {@link com.kryptnostic.storage.v1.http.KeyStorageApi# } instead
+     * @deprecated use {@link com.kryptnostic.storage.v2.http.KeyStorageApi# } instead
      * @param encryptedPrivateKey
      * @return
      */
@@ -116,7 +116,7 @@ public interface DirectoryApi {
     BasicResponse<String> setPrivateKey( @Body BlockCiphertext encryptedPrivateKey );
 
     /**
-     * @deprecated use {@link com.kryptnostic.storage.v1.http.KeyStorageApi# } instead
+     * @deprecated use {@link com.kryptnostic.storage.v2.http.KeyStorageApi# } instead
      * @param objectId
      * @return
      */
@@ -126,7 +126,7 @@ public interface DirectoryApi {
     BasicResponse<byte[]> getObjectCryptoService( @Path( Names.ID_FIELD ) String objectId);
 
     /**
-     * @deprecated use {@link com.kryptnostic.storage.v1.http.KeyStorageApi# } instead
+     * @deprecated use {@link com.kryptnostic.storage.v2.http.KeyStorageApi# } instead
      * @param objectIds
      * @return
      */
@@ -136,7 +136,7 @@ public interface DirectoryApi {
     Map<String, byte[]> getObjectCryptoServices( @Body Set<String> objectIds );
 
     /**
-     * @deprecated use {@link com.kryptnostic.storage.v1.http.KeyStorageApi# } instead
+     * @deprecated use {@link com.kryptnostic.storage.v2.http.KeyStorageApi# } instead
      * @param objectId
      * @param cryptoService
      * @return
