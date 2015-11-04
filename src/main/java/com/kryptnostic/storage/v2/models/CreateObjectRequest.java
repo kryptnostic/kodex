@@ -9,22 +9,22 @@ import com.kryptnostic.v2.constants.Names;
 import com.kryptnostic.v2.storage.types.TypeUUIDs;
 
 public class CreateObjectRequest {
-    private static final boolean INHERITING_OWNERSHIP_DEFAULT      = true;
-    private static final boolean INHERITING_CRYPTO_SERVICE_DEFAULT = true;
-    private static final boolean LOCKED_OBJECT_DEFAULT             = true;
+    private static final boolean               INHERITING_OWNERSHIP_DEFAULT      = true;
+    private static final boolean               INHERITING_CRYPTO_SERVICE_DEFAULT = true;
+    private static final boolean               LOCKED_OBJECT_DEFAULT             = true;
 
-    private final UUID           type;
-    private final Optional<UUID> objectId;
-    private final Optional<UUID> parentObjectId;
-    private final boolean        inheritingOwnership;
-    private final boolean        inheritingCryptoService;
-    private final boolean        locked;
+    private final UUID                         type;
+    private final Optional<VersionedObjectKey> objectId;
+    private final Optional<VersionedObjectKey> parentObjectId;
+    private final boolean                      inheritingOwnership;
+    private final boolean                      inheritingCryptoService;
+    private final boolean                      locked;
 
     public CreateObjectRequest() {
         this(
                 TypeUUIDs.DEFAULT_TYPE,
-                Optional.<UUID> absent(),
-                Optional.<UUID> absent(),
+                Optional.<VersionedObjectKey> absent(),
+                Optional.<VersionedObjectKey> absent(),
                 Optional.<Boolean> absent(),
                 Optional.<Boolean> absent(),
                 Optional.<Boolean> absent() );
@@ -33,8 +33,8 @@ public class CreateObjectRequest {
     @JsonCreator
     public CreateObjectRequest(
             @JsonProperty( Names.TYPE_FIELD ) UUID type,
-            @JsonProperty( Names.PARENT_OBJECT_ID_FIELD ) Optional<UUID> parentObjectId,
-            @JsonProperty( Names.ID_FIELD ) Optional<UUID> objectId,
+            @JsonProperty( Names.PARENT_OBJECT_ID_FIELD ) Optional<VersionedObjectKey> parentObjectId,
+            @JsonProperty( Names.ID_FIELD ) Optional<VersionedObjectKey> objectId,
             @JsonProperty( Names.INHERITING_OWNERSHIP_FIELD ) Optional<Boolean> inheritOwnership,
             @JsonProperty( Names.INHERITING_CRYPTO_SERVICE_FIELD ) Optional<Boolean> inheritCryptoService,
             @JsonProperty( Names.LOCKED_FIELD ) Optional<Boolean> locked ) {
@@ -52,12 +52,12 @@ public class CreateObjectRequest {
     }
 
     @JsonProperty( Names.ID_FIELD )
-    public Optional<UUID> getObjectId() {
+    public Optional<VersionedObjectKey> getObjectId() {
         return objectId;
     }
 
     @JsonProperty( Names.PARENT_OBJECT_ID_FIELD )
-    public Optional<UUID> getParentId() {
+    public Optional<VersionedObjectKey> getParentId() {
         return parentObjectId;
     }
 
