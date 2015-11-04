@@ -34,7 +34,12 @@ public class VersionedObjectKey {
         return version;
     }
 
-    /* (non-Javadoc)
+    public static VersionedObjectKey newRandomKey() {
+        return new VersionedObjectKey( UUID.randomUUID(), 0L );
+    }
+
+    /*
+     * (non-Javadoc)
      * @see java.lang.Object#hashCode()
      */
     @Override
