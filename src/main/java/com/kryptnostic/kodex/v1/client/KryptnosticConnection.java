@@ -8,7 +8,7 @@ import com.kryptnostic.kodex.v1.crypto.ciphers.RsaCompressingCryptoService;
 import com.kryptnostic.kodex.v1.exceptions.types.SecurityConfigurationException;
 import com.kryptnostic.kodex.v1.storage.DataStore;
 import com.kryptnostic.krypto.engine.KryptnosticEngine;
-import com.kryptnostic.storage.v1.http.KeyStorageApi;
+import com.kryptnostic.storage.v1.http.CryptoKeyStorageApi;
 import com.kryptnostic.v2.crypto.CryptoServiceLoader;
 
 /**
@@ -39,7 +39,7 @@ public interface KryptnosticConnection {
 
     KryptnosticEngine getKryptnosticEngine();
 
-    KeyStorageApi getCryptoKeyStorageApi();
+    CryptoKeyStorageApi getCryptoKeyStorageApi();
 
     byte[] getClientHashFunction();
 }
