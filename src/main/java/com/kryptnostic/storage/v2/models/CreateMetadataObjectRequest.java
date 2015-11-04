@@ -1,7 +1,5 @@
 package com.kryptnostic.storage.v2.models;
 
-import java.util.UUID;
-
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Optional;
@@ -14,8 +12,8 @@ public class CreateMetadataObjectRequest extends CreateObjectRequest {
     public CreateMetadataObjectRequest( byte[] address ) {
         super(
                 TypeUUIDs.INDEX_METADATA,
-                Optional.<UUID> absent(),
-                Optional.<UUID> absent(),
+                Optional.<VersionedObjectKey> absent(),
+                Optional.<VersionedObjectKey> absent(),
                 Optional.<Boolean> absent(),
                 Optional.<Boolean> absent(),
                 Optional.<Boolean> absent() );
@@ -25,8 +23,8 @@ public class CreateMetadataObjectRequest extends CreateObjectRequest {
     @JsonCreator
     public CreateMetadataObjectRequest(
             @JsonProperty( Names.ADDRESS_FIELD ) byte[] address,
-            @JsonProperty( Names.PARENT_OBJECT_ID_FIELD ) Optional<UUID> parentObjectId,
-            @JsonProperty( Names.ID_FIELD ) Optional<UUID> objectId,
+            @JsonProperty( Names.PARENT_OBJECT_ID_FIELD ) Optional<VersionedObjectKey> parentObjectId,
+            @JsonProperty( Names.ID_FIELD ) Optional<VersionedObjectKey> objectId,
             @JsonProperty( Names.INHERITING_OWNERSHIP_FIELD ) Optional<Boolean> inheritOwnership,
             @JsonProperty( Names.INHERITING_CRYPTO_SERVICE_FIELD ) Optional<Boolean> inheritCryptoService,
             @JsonProperty( Names.LOCKED_FIELD ) Optional<Boolean> locked ) {

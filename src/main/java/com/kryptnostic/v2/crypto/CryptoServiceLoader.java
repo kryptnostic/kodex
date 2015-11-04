@@ -2,19 +2,23 @@ package com.kryptnostic.v2.crypto;
 
 import java.util.Map;
 import java.util.Set;
-import java.util.UUID;
 import java.util.concurrent.ExecutionException;
+
+import javax.annotation.Nonnull;
 
 import com.google.common.base.Optional;
 import com.kryptnostic.kodex.v1.crypto.ciphers.CryptoService;
+import com.kryptnostic.storage.v2.models.VersionedObjectKey;
 
 public interface CryptoServiceLoader {
 
-    Optional<CryptoService> get( UUID id ) throws ExecutionException;
+    @Nonnull
+    Optional<CryptoService> get( VersionedObjectKey id ) throws ExecutionException;
 
-    void put( UUID id, CryptoService service ) throws ExecutionException;
+    void put( VersionedObjectKey id, CryptoService service ) throws ExecutionException;
 
-    Map<UUID, CryptoService> getAll( Set<UUID> ids ) throws ExecutionException;
+    @Nonnull
+    Map<VersionedObjectKey, CryptoService> getAll( Set<VersionedObjectKey> ids ) throws ExecutionException;
 
     void clear();
 }

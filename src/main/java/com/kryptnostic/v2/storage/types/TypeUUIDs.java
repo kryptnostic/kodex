@@ -13,5 +13,10 @@ public final class TypeUUIDs {
     public static final UUID UTF16_STRING   = new UUID( 0L, 2L );
     public static final UUID INDEX_METADATA = new UUID( 0L, 3L );
 
+    /**
+     * A block is a reserved type for chunking a large object into several child objects.
+     */
+    public static final UUID BLOCK          = new UUID( 0L, 4L );
+
     public static final UUID DEFAULT_TYPE   = UTF8_STRING;
 }

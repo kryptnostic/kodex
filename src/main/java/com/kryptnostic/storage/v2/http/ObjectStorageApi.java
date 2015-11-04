@@ -18,7 +18,7 @@ import com.kryptnostic.kodex.v1.exceptions.types.ResourceNotFoundException;
 import com.kryptnostic.storage.v2.models.CreateMetadataObjectRequest;
 import com.kryptnostic.storage.v2.models.CreateObjectRequest;
 import com.kryptnostic.storage.v2.models.ObjectMetadata;
-import com.kryptnostic.storage.v2.models.ObjectMetadataNode;
+import com.kryptnostic.storage.v2.models.ObjectMetadataEncryptedNode;
 import com.kryptnostic.storage.v2.models.ObjectTreeLoadRequest;
 import com.kryptnostic.storage.v2.models.PaddedMetadataObjectIds;
 import com.kryptnostic.storage.v2.models.VersionedObjectKey;
@@ -146,7 +146,7 @@ public interface ObjectStorageApi {
     Set<UUID> deleteObjectTrees( @Body Set<UUID> objectTrees );
 
     @POST( CONTROLLER + LEVELS_PATH )
-    Map<UUID, ObjectMetadataNode> getObjectsByTypeAndLoadLevel( @Body ObjectTreeLoadRequest request );
+    Map<UUID, ObjectMetadataEncryptedNode> getObjectsByTypeAndLoadLevel( @Body ObjectTreeLoadRequest request );
 
     // METADATA APIs
 
