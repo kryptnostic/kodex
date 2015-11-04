@@ -1,4 +1,4 @@
-package com.kryptnostic.storage.v2.http;
+package com.kryptnostic.storage.v1.http;
 
 import retrofit.client.Response;
 import retrofit.http.Body;
@@ -9,7 +9,7 @@ import com.google.common.base.Optional;
 import com.kryptnostic.kodex.v1.crypto.ciphers.BlockCiphertext;
 import com.kryptnostic.kodex.v1.exceptions.types.BadRequestException;
 
-public interface CryptoKeyStorageApi {
+public interface KeyStorageApi {
     String CONTROLLER     = "/keys";
     String PRIVATE        = "/private";
     String SEARCH_PRIVATE = "/searchprivate";

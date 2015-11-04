@@ -27,7 +27,7 @@ public class CreateMetadataObjectRequest extends CreateObjectRequest {
             @JsonProperty( Names.ID_FIELD ) Optional<VersionedObjectKey> objectId,
             @JsonProperty( Names.INHERITING_OWNERSHIP_FIELD ) Optional<Boolean> inheritOwnership,
             @JsonProperty( Names.INHERITING_CRYPTO_SERVICE_FIELD ) Optional<Boolean> inheritCryptoService,
-            @JsonProperty( Names.LOCKED_FIELD ) Optional<Boolean> locked ) {
+            @JsonProperty( Names.LOCKED_FIELD ) Optional<Boolean> locked) {
         super( TypeUUIDs.INDEX_METADATA, parentObjectId, objectId, inheritOwnership, inheritCryptoService, locked );
         this.address = address;
     }
