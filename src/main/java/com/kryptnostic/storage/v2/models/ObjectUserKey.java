@@ -18,7 +18,7 @@ public class ObjectUserKey {
     @JsonCreator
     public ObjectUserKey(
             @JsonProperty( Names.ID_FIELD ) UUID objectId,
-            @JsonProperty( Names.USER_FIELD ) UUID userKey ) {
+            @JsonProperty( Names.USER_FIELD ) UUID userKey) {
         super();
         this.objectId = objectId;
         this.userKey = userKey;
@@ -40,15 +40,14 @@ public class ObjectUserKey {
      */
     @Override
     public int hashCode() {
-        int code = cachedHashCode;
-        if ( code == 0 ) {
+        if ( cachedHashCode == 0 ) {
             final int prime = 31;
             int result = 1;
             result = prime * result + ( ( objectId == null ) ? 0 : objectId.hashCode() );
             result = prime * result + ( ( userKey == null ) ? 0 : userKey.hashCode() );
-            code = result;
+            cachedHashCode = result;
         }
-        return code;
+        return cachedHashCode;
     }
 
     /*
@@ -57,16 +56,30 @@ public class ObjectUserKey {
      */
     @Override
     public boolean equals( Object obj ) {
-        if ( this == obj ) return true;
-        if ( obj == null ) return false;
-        if ( getClass() != obj.getClass() ) return false;
+        if ( this == obj ) {
+            return true;
+        }
+        if ( obj == null ) {
+            return false;
+        }
+        if ( getClass() != obj.getClass() ) {
+            return false;
+        }
         ObjectUserKey other = (ObjectUserKey) obj;
         if ( objectId == null ) {
-            if ( other.objectId != null ) return false;
-        } else if ( !objectId.equals( other.objectId ) ) return false;
+            if ( other.objectId != null ) {
+                return false;
+            }
+        } else if ( !objectId.equals( other.objectId ) ) {
+            return false;
+        }
         if ( userKey == null ) {
-            if ( other.userKey != null ) return false;
-        } else if ( !userKey.equals( other.userKey ) ) return false;
+            if ( other.userKey != null ) {
+                return false;
+            }
+        } else if ( !userKey.equals( other.userKey ) ) {
+            return false;
+        }
         return true;
     }
 }

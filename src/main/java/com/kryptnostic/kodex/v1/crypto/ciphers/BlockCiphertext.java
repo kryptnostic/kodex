@@ -12,7 +12,7 @@ import com.kryptnostic.kodex.v1.constants.Names;
 
 /**
  * Holds the output of performing an AES encryption with {@link PasswordCryptoService}
- * 
+ *
  * @author Matthew Tamayo-Rios &lt;matthew@kryptnostic.com&gt;
  */
 @JsonInclude( Include.NON_NULL )
@@ -24,7 +24,9 @@ public class BlockCiphertext extends Ciphertext {
     private final Optional<byte[]> encryptedLength;
     private final Optional<byte[]> tag;
 
-    public BlockCiphertext( byte[] iv, byte[] salt,
+    public BlockCiphertext(
+            byte[] iv,
+            byte[] salt,
             byte[] contents ) {
         this( iv, salt, contents, Optional.<byte[]> absent(), Optional.<byte[]> absent() );
     }
@@ -35,7 +37,7 @@ public class BlockCiphertext extends Ciphertext {
             @JsonProperty( Names.SALT ) byte[] salt,
             @JsonProperty( Names.CONTENTS ) byte[] contents,
             @JsonProperty( Names.ENCRYPTED_LENGTH ) Optional<byte[]> encryptedLength,
-            @JsonProperty( Names.TAG ) Optional<byte[]> tag ) {
+            @JsonProperty( Names.TAG ) Optional<byte[]> tag) {
         super( contents, null );
         this.iv = iv;
         this.salt = salt;
@@ -74,11 +76,11 @@ public class BlockCiphertext extends Ciphertext {
         return result;
     }
 
+    @Override
     public boolean equals( Object obj ) {
         if ( this == obj ) {
             return true;
-        }
-        else if ( obj instanceof BlockCiphertext ) {
+        } else if ( obj instanceof BlockCiphertext ) {
             BlockCiphertext other = (BlockCiphertext) obj;
             boolean ivEquals = Arrays.equals( iv, other.iv );
             boolean saltEquals = Arrays.equals( salt, other.salt );
@@ -99,5 +101,47 @@ public class BlockCiphertext extends Ciphertext {
             return ivEquals && saltEquals && encryptedLengthEquals && tagEquals;
         }
         return false;
+    }
+
+    public static class Builder {
+        private byte[] iv;
+        private byte[] salt;
+        private byte[] contents;
+        private byte[] encryptedLength;
+        private byte[] tag;
+
+        public Builder setIv( byte[] iv ) {
+            this.iv = iv;
+            return this;
+        }
+
+        public Builder setSalt( byte[] salt ) {
+            this.salt = salt;
+            return this;
+        }
+
+        public Builder setContents( byte[] contents ) {
+            this.contents = contents;
+            return this;
+        }
+
+        public Builder setEncryptedLength( byte[] encryptedLength ) {
+            this.encryptedLength = encryptedLength;
+            return this;
+        }
+
+        public Builder setTag( byte[] tag ) {
+            this.tag = tag;
+            return this;
+        }
+
+        public BlockCiphertext createBlockCiphertext() {
+            return new BlockCiphertext(
+                    iv,
+                    salt,
+                    contents,
+                    Optional.fromNullable( encryptedLength ),
+                    Optional.fromNullable( tag ) );
+        }
     }
 }
