@@ -4,8 +4,11 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Optional;
 import com.google.common.collect.Maps;
+import com.kryptnostic.kodex.v1.constants.Names;
 import com.kryptnostic.kodex.v1.crypto.ciphers.BlockCiphertext;
 
 /**
@@ -18,16 +21,20 @@ import com.kryptnostic.kodex.v1.crypto.ciphers.BlockCiphertext;
 public class ObjectMetadataEncryptedNode {
     private final Map<UUID, ObjectMetadataEncryptedNode> children;
     private final ObjectMetadata                         metadata;
-    private final Optional<BlockCiphertext>              data;
+    private final Optional<BlockCiphertext>              ciphertext;
 
     public ObjectMetadataEncryptedNode( ObjectMetadata metadata ) {
-        this( metadata, null );
+        this( metadata, Optional.<BlockCiphertext> absent(), Maps.<UUID, ObjectMetadataEncryptedNode> newHashMap() );
     }
 
-    public ObjectMetadataEncryptedNode( ObjectMetadata metadata, BlockCiphertext ciphertext ) {
+    @JsonCreator
+    public ObjectMetadataEncryptedNode(
+            @JsonProperty( Names.METADATA_FIELD ) ObjectMetadata metadata,
+            @JsonProperty( Names.CONTENTS ) Optional<BlockCiphertext> ciphertext,
+            @JsonProperty( Names.CHILDREN_FIELD ) Map<UUID, ObjectMetadataEncryptedNode> children ) {
         this.children = Maps.newHashMap();
         this.metadata = metadata;
-        this.data = Optional.fromNullable( ciphertext );
+        this.ciphertext = ciphertext;
     }
 
     public Map<UUID, ObjectMetadataEncryptedNode> getChildren() {
@@ -47,12 +54,13 @@ public class ObjectMetadataEncryptedNode {
     }
 
     public Optional<BlockCiphertext> getData() {
-        return data;
+        return ciphertext;
     }
 
     @Override
     public String toString() {
-        return "ObjectMetadataNode [children=" + children + ", metadata=" + metadata + ", data=" + data + "]";
+        return "ObjectMetadataNode [children=" + children + ", metadata=" + metadata + ", ciphertext=" + ciphertext
+                + "]";
     }
 
     public static String printMap( Map<UUID, ObjectMetadataEncryptedNode> map ) {
@@ -78,7 +86,7 @@ public class ObjectMetadataEncryptedNode {
         final int prime = 31;
         int result = 1;
         result = prime * result + ( ( children == null ) ? 0 : children.hashCode() );
-        result = prime * result + ( ( data == null ) ? 0 : data.hashCode() );
+        result = prime * result + ( ( ciphertext == null ) ? 0 : ciphertext.hashCode() );
         result = prime * result + ( ( metadata == null ) ? 0 : metadata.hashCode() );
         return result;
     }
@@ -102,11 +110,11 @@ public class ObjectMetadataEncryptedNode {
         } else if ( !children.equals( other.children ) ) {
             return false;
         }
-        if ( data == null ) {
-            if ( other.data != null ) {
+        if ( ciphertext == null ) {
+            if ( other.ciphertext != null ) {
                 return false;
             }
-        } else if ( !data.equals( other.data ) ) {
+        } else if ( !ciphertext.equals( other.ciphertext ) ) {
             return false;
         }
         if ( metadata == null ) {

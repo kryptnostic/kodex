@@ -8,6 +8,7 @@ import com.kryptnostic.indexing.v1.ObjectSearchPair;
 import com.kryptnostic.kodex.v1.crypto.ciphers.RsaCompressingCryptoService;
 import com.kryptnostic.kodex.v1.crypto.ciphers.RsaCompressingEncryptionService;
 import com.kryptnostic.kodex.v1.exceptions.types.SecurityConfigurationException;
+import com.kryptnostic.storage.v2.models.VersionedObjectKey;
 
 /**
  * KryptnosticContext is responsible for maintaining shared state between the KryptnosticClient and Kryptnostic
@@ -24,9 +25,9 @@ public interface KryptnosticContext {
 
     byte[] rsaEncrypt( byte[] plaintext ) throws SecurityConfigurationException;
 
-    void addIndexPair( String objectId, ObjectSearchPair indexPair );
+    void addIndexPair( VersionedObjectKey objectKey, ObjectSearchPair indexPair );
 
-    void addIndexPairs( Map<String, ObjectSearchPair> indexPairs );
+    void addIndexPairs( Map<VersionedObjectKey, ObjectSearchPair> indexPairs );
 
     byte[] prepareSearchToken( String token );
 

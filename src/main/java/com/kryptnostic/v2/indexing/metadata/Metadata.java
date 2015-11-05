@@ -1,11 +1,11 @@
 package com.kryptnostic.v2.indexing.metadata;
 
 import java.util.List;
-import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.collect.ImmutableList;
+import com.kryptnostic.storage.v2.models.VersionedObjectKey;
 import com.kryptnostic.v2.constants.Names;
 
 /**
@@ -13,14 +13,14 @@ import com.kryptnostic.v2.constants.Names;
  *
  */
 public class Metadata {
-    private final UUID          objectId;
-    private final String        term;
-    private final int           length;
-    private final List<Integer> locations;
+    private final VersionedObjectKey objectId;
+    private final String             term;
+    private final int                length;
+    private final List<Integer>      locations;
 
     @JsonCreator
     public Metadata(
-            @JsonProperty( Names.ID_FIELD ) UUID objectId,
+            @JsonProperty( Names.ID_FIELD ) VersionedObjectKey objectId,
             @JsonProperty( Names.TOKEN_PROPERTY ) String term,
             @JsonProperty( Names.LENGTH_FIELD ) int length,
             @JsonProperty( Names.INDEX_FIELD ) List<Integer> locations ) {
@@ -31,7 +31,7 @@ public class Metadata {
     }
 
     @JsonProperty( Names.ID_FIELD )
-    public UUID getObjectId() {
+    public VersionedObjectKey getObjectId() {
         return objectId;
     }
 

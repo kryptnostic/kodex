@@ -95,5 +95,6 @@ public final class Names {
     public static final String INHERITING_CRYPTO_SERVICE_FIELD = "inheritCryptoService";
     public static final String LOCKED_FIELD                    = "locked";
     public static final String OPEN_REGISTRATION_ALLOWED       = "openRegistrationAllowed";
-    public static final String INHERIT_OWNERSHIP_FIELD       = "inhertitOwnership";
+    public static final String INHERIT_OWNERSHIP_FIELD         = "inhertitOwnership";
+    public static final String CHILDREN_FIELD                  = "children";
 }
