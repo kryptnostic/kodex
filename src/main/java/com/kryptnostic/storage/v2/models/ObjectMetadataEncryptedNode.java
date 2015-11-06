@@ -31,7 +31,13 @@ public class ObjectMetadataEncryptedNode {
     public ObjectMetadataEncryptedNode(
             @JsonProperty( Names.METADATA_FIELD ) ObjectMetadata metadata,
             @JsonProperty( Names.CONTENTS ) Optional<BlockCiphertext> ciphertext,
-            @JsonProperty( Names.CHILDREN_FIELD ) Map<UUID, ObjectMetadataEncryptedNode> children ) {
+            @JsonProperty( Names.CHILDREN_FIELD ) Map<UUID, ObjectMetadataEncryptedNode> children) {
+        this.children = children;
+        this.metadata = metadata;
+        this.ciphertext = ciphertext;
+    }
+
+    public ObjectMetadataEncryptedNode( ObjectMetadata metadata, Optional<BlockCiphertext> ciphertext ) {
         this.children = Maps.newHashMap();
         this.metadata = metadata;
         this.ciphertext = ciphertext;
@@ -64,20 +70,25 @@ public class ObjectMetadataEncryptedNode {
     }
 
     public static String printMap( Map<UUID, ObjectMetadataEncryptedNode> map ) {
+        return "\n" + printMap( map, "\t" );
+    }
+
+    public static String printMap( Map<UUID, ObjectMetadataEncryptedNode> map, String prefix ) {
         StringBuilder build = new StringBuilder();
         if ( map.isEmpty() ) {
-            return "\"empty\",\n";
+            return "[/]\n";
         }
         build.append( "{\n" );
         for ( Entry<UUID, ObjectMetadataEncryptedNode> ent : map.entrySet() ) {
             ObjectMetadataEncryptedNode value = ent.getValue();
+            build.append( prefix );
             build.append( ent.getKey() );
             build.append( ": " );
             if ( value.getChildren() != null ) {
-                build.append( printMap( value.getChildren() ) );
+                build.append( printMap( value.getChildren(), prefix + "\t" ) );
             }
         }
-        build.append( "}\n" );
+        build.append( prefix + "}\n" );
         return build.toString();
     }
 
