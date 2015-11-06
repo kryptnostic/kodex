@@ -5,13 +5,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.kryptnostic.kodex.v1.constants.Names;
 import com.kryptnostic.storage.v2.models.VersionedObjectKey;
 
-public class IndexedMetadata {
+public class IndexMetadata {
     private final byte[]             key;
     private final VersionedObjectKey metadataObjectKey;
     private final VersionedObjectKey objectId;
 
     @JsonCreator
-    public IndexedMetadata(
+    public IndexMetadata(
             @JsonProperty( Names.KEY_FIELD ) byte[] key,
             @JsonProperty( Names.METADATA_FIELD ) VersionedObjectKey metadataObjectKey,
             @JsonProperty( Names.ID_FIELD ) VersionedObjectKey objectId ) {

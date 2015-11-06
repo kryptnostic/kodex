@@ -13,26 +13,26 @@ import com.kryptnostic.v2.constants.Names;
  *
  */
 public class Metadata {
-    private final VersionedObjectKey objectId;
+    private final VersionedObjectKey objectKey;
     private final String             term;
     private final int                length;
     private final List<Integer>      locations;
 
     @JsonCreator
     public Metadata(
-            @JsonProperty( Names.ID_FIELD ) VersionedObjectKey objectId,
+            @JsonProperty( Names.KEY_FIELD ) VersionedObjectKey objectId,
             @JsonProperty( Names.TOKEN_PROPERTY ) String term,
             @JsonProperty( Names.LENGTH_FIELD ) int length,
             @JsonProperty( Names.INDEX_FIELD ) List<Integer> locations ) {
-        this.objectId = objectId;
+        this.objectKey = objectId;
         this.term = term;
         this.length = length;
         this.locations = ImmutableList.copyOf( locations );
     }
 
-    @JsonProperty( Names.ID_FIELD )
-    public VersionedObjectKey getObjectId() {
-        return objectId;
+    @JsonProperty( Names.KEY_FIELD )
+    public VersionedObjectKey getObjectKey() {
+        return objectKey;
     }
 
     @JsonProperty( Names.TERM_FIELD )
@@ -52,7 +52,7 @@ public class Metadata {
 
     @Override
     public String toString() {
-        return "Metadata [objectId=" + objectId + ", term=" + term + ", locations=" + locations + "]";
+        return "Metadata [objectId=" + objectKey + ", term=" + term + ", locations=" + locations + "]";
     }
 
     @Override
@@ -60,7 +60,7 @@ public class Metadata {
         final int prime = 31;
         int result = 1;
         result = prime * result + ( ( locations == null ) ? 0 : locations.hashCode() );
-        result = prime * result + ( ( objectId == null ) ? 0 : objectId.hashCode() );
+        result = prime * result + ( ( objectKey == null ) ? 0 : objectKey.hashCode() );
         result = prime * result + ( ( term == null ) ? 0 : term.hashCode() );
         return result;
     }
@@ -84,11 +84,11 @@ public class Metadata {
         } else if ( !locations.equals( other.locations ) ) {
             return false;
         }
-        if ( objectId == null ) {
-            if ( other.objectId != null ) {
+        if ( objectKey == null ) {
+            if ( other.objectKey != null ) {
                 return false;
             }
-        } else if ( !objectId.equals( other.objectId ) ) {
+        } else if ( !objectKey.equals( other.objectKey ) ) {
             return false;
         }
         if ( term == null ) {
