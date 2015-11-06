@@ -6,9 +6,11 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.kryptnostic.v2.constants.Names;
 
-public class ObjectUserKey {
+public class VersionedObjectUserKey {
+
     private final UUID    objectId;
-    private final UUID    userKey;
+    private final UUID    userId;
+    private final long    version;
 
     /**
      * This is transient because it is recalculated on the first call to hashcode()
@@ -16,12 +18,20 @@ public class ObjectUserKey {
     private transient int cachedHashCode;
 
     @JsonCreator
-    public ObjectUserKey(
+    public VersionedObjectUserKey(
             @JsonProperty( Names.ID_FIELD ) UUID objectId,
-            @JsonProperty( Names.USER_FIELD ) UUID userKey) {
+            @JsonProperty( Names.USER_FIELD ) UUID userId,
+            @JsonProperty( Names.VERSION_FIELD ) long version) {
         super();
         this.objectId = objectId;
-        this.userKey = userKey;
+        this.userId = userId;
+        this.version = version;
+    }
+
+    public VersionedObjectUserKey( VersionedObjectKey objectKey, UUID userId ) {
+        this.objectId = objectKey.getObjectId();
+        this.userId = userId;
+        this.version = objectKey.getVersion();
     }
 
     @JsonProperty( Names.ID_FIELD )
@@ -31,7 +41,15 @@ public class ObjectUserKey {
 
     @JsonProperty( Names.USER_FIELD )
     public UUID getUserKey() {
-        return userKey;
+        return userId;
+    }
+
+    public VersionedObjectKey getVersionedObjectKey() {
+        return new VersionedObjectKey( objectId, version );
+    }
+
+    public long getVersion() {
+        return version;
     }
 
     /*
@@ -42,10 +60,10 @@ public class ObjectUserKey {
     public int hashCode() {
         if ( cachedHashCode == 0 ) {
             final int prime = 31;
-            int result = 1;
-            result = prime * result + ( ( objectId == null ) ? 0 : objectId.hashCode() );
-            result = prime * result + ( ( userKey == null ) ? 0 : userKey.hashCode() );
-            cachedHashCode = result;
+            cachedHashCode = 1;
+            cachedHashCode = prime * cachedHashCode + ( ( objectId == null ) ? 0 : objectId.hashCode() );
+            cachedHashCode = prime * cachedHashCode + ( ( userId == null ) ? 0 : userId.hashCode() );
+            cachedHashCode = prime * cachedHashCode + (int) ( version ^ ( version >>> 32 ) );
         }
         return cachedHashCode;
     }
@@ -65,7 +83,7 @@ public class ObjectUserKey {
         if ( getClass() != obj.getClass() ) {
             return false;
         }
-        ObjectUserKey other = (ObjectUserKey) obj;
+        VersionedObjectUserKey other = (VersionedObjectUserKey) obj;
         if ( objectId == null ) {
             if ( other.objectId != null ) {
                 return false;
@@ -73,13 +91,17 @@ public class ObjectUserKey {
         } else if ( !objectId.equals( other.objectId ) ) {
             return false;
         }
-        if ( userKey == null ) {
-            if ( other.userKey != null ) {
+        if ( userId == null ) {
+            if ( other.userId != null ) {
                 return false;
             }
-        } else if ( !userKey.equals( other.userKey ) ) {
+        } else if ( !userId.equals( other.userId ) ) {
+            return false;
+        }
+        if ( version != other.version ) {
             return false;
         }
         return true;
     }
+
 }
