@@ -37,7 +37,7 @@ public class CreateObjectRequest {
             @JsonProperty( Names.ID_FIELD ) Optional<VersionedObjectKey> objectId,
             @JsonProperty( Names.INHERITING_OWNERSHIP_FIELD ) Optional<Boolean> inheritOwnership,
             @JsonProperty( Names.INHERITING_CRYPTO_SERVICE_FIELD ) Optional<Boolean> inheritCryptoService,
-            @JsonProperty( Names.LOCKED_FIELD ) Optional<Boolean> locked ) {
+            @JsonProperty( Names.LOCKED_FIELD ) Optional<Boolean> locked) {
         this.type = type;
         this.parentObjectId = parentObjectId;
         this.objectId = objectId;
@@ -75,4 +75,54 @@ public class CreateObjectRequest {
     public boolean isLocked() {
         return locked;
     }
+
+    public static class Builder {
+        private UUID                         type                 = TypeUUIDs.DEFAULT_TYPE;
+        private Optional<VersionedObjectKey> parentObjectkey      = Optional.<VersionedObjectKey> absent();
+        private Optional<VersionedObjectKey> objectId             = Optional.<VersionedObjectKey> absent();
+        private Optional<Boolean>            inheritOwnership     = Optional.<Boolean> absent();
+        private Optional<Boolean>            inheritCryptoService = Optional.<Boolean> absent();
+        private Optional<Boolean>            locked               = Optional.<Boolean> absent();
+
+        public Builder setType( UUID type ) {
+            this.type = type;
+            return this;
+        }
+
+        public Builder setParentObjectId( VersionedObjectKey parentObjectId ) {
+            this.parentObjectkey = Optional.<VersionedObjectKey> of( parentObjectId );
+            return this;
+        }
+
+        public Builder setObjectId( VersionedObjectKey objectId ) {
+            this.objectId = Optional.<VersionedObjectKey> of( objectId );
+            return this;
+        }
+
+        public Builder setInheritOwnership( Boolean inheritOwnership ) {
+            this.inheritOwnership = Optional.<Boolean> of( inheritOwnership );
+            return this;
+        }
+
+        public Builder setInheritCryptoService( Boolean inheritCryptoService ) {
+            this.inheritCryptoService = Optional.<Boolean> of( inheritCryptoService );
+            return this;
+        }
+
+        public Builder setLocked( Boolean locked ) {
+            this.locked = Optional.<Boolean> of( locked );
+            return this;
+        }
+
+        public CreateObjectRequest createCreateObjectRequest() {
+            return new CreateObjectRequest(
+                    type,
+                    parentObjectkey,
+                    objectId,
+                    inheritOwnership,
+                    inheritCryptoService,
+                    locked );
+        }
+    }
+
 }
