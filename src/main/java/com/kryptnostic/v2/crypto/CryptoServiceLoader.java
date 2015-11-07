@@ -2,6 +2,7 @@ package com.kryptnostic.v2.crypto;
 
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
 import javax.annotation.Nonnull;
@@ -14,6 +15,9 @@ public interface CryptoServiceLoader {
 
     @Nonnull
     Optional<CryptoService> get( VersionedObjectKey id ) throws ExecutionException;
+
+    @Nonnull
+    Optional<CryptoService> getLatest( UUID id ) throws ExecutionException;
 
     void put( VersionedObjectKey id, CryptoService service ) throws ExecutionException;
 

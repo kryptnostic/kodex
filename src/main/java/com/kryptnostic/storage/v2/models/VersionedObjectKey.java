@@ -55,7 +55,8 @@ public class VersionedObjectKey {
         return code;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see java.lang.Object#equals(java.lang.Object)
      */
     @Override
@@ -74,9 +75,13 @@ public class VersionedObjectKey {
     @Override
     public String toString() {
         return new StringBuilder()
-            .append( "{" )
-            .append( objectId ).append( "/" ).append( version )
-            .append( "}" )
-            .toString();
+                .append( "{" )
+                .append( objectId ).append( "/" ).append( version )
+                .append( "}" )
+                .toString();
+    }
+
+    public static VersionedObjectKey fromObjectMetadata( ObjectMetadata metadata ) {
+        return new VersionedObjectKey( metadata.getId(), metadata.getVersion() );
     }
 }

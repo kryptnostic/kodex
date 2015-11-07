@@ -1,5 +1,6 @@
 package com.kryptnostic.storage.v2.models;
 
+import java.util.Collection;
 import java.util.HashSet;
 
 public class VersionedObjectKeySet extends HashSet<VersionedObjectKey>{
@@ -10,6 +11,10 @@ public class VersionedObjectKeySet extends HashSet<VersionedObjectKey>{
         super();
     }
 
+    public VersionedObjectKeySet( Collection<? extends VersionedObjectKey> c ) {
+        super( c );
+    }
+    
     public VersionedObjectKeySet( int i ) {
         super( i );
     }

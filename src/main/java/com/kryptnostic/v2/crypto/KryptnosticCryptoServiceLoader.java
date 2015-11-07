@@ -5,6 +5,7 @@ import java.security.InvalidAlgorithmParameterException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
@@ -17,6 +18,8 @@ import com.google.common.base.Optional;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
+import com.google.common.collect.Collections2;
+import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
 import com.kryptnostic.directory.v1.model.ByteArrayEnvelope;
@@ -26,7 +29,9 @@ import com.kryptnostic.kodex.v1.crypto.ciphers.CryptoService;
 import com.kryptnostic.kodex.v1.crypto.ciphers.Cypher;
 import com.kryptnostic.kodex.v1.exceptions.types.SecurityConfigurationException;
 import com.kryptnostic.storage.v2.http.KeyStorageApi;
+import com.kryptnostic.storage.v2.models.ObjectIdHashSet;
 import com.kryptnostic.storage.v2.models.VersionedObjectKey;
+import com.kryptnostic.storage.v2.models.VersionedObjectKeySet;
 
 public class KryptnosticCryptoServiceLoader implements CryptoServiceLoader {
     private static final Logger                                   logger = LoggerFactory
@@ -50,8 +55,11 @@ public class KryptnosticCryptoServiceLoader implements CryptoServiceLoader {
                     public Map<VersionedObjectKey, CryptoService> loadAll( Iterable<? extends VersionedObjectKey> keys )
                             throws IOException,
                             SecurityConfigurationException {
+                        VersionedObjectKeySet ids = new VersionedObjectKeySet();
 
-                        Set<VersionedObjectKey> ids = ImmutableSet.copyOf( keys );
+                        for ( VersionedObjectKey key : keys ) {
+                            ids.add( key );
+                        }
 
                         Map<VersionedObjectKey, byte[]> data = directoryApi.getObjectCryptoServices( ids );
                         if ( data.size() != ids.size() ) {
@@ -76,7 +84,7 @@ public class KryptnosticCryptoServiceLoader implements CryptoServiceLoader {
                             SecurityConfigurationException {
                         byte[] crypto = null;
                         try {
-                            crypto = directoryApi.getObjectCryptoService( key ).getData();
+                            crypto = directoryApi.getObjectCryptoService( key.getObjectId(), key.getVersion() );
                         } catch ( RetrofitError e ) {
                             logger.error( "Failed to load crypto service from backend for id {} ", key, e );
                             throw new IOException( e );
@@ -124,5 +132,10 @@ public class KryptnosticCryptoServiceLoader implements CryptoServiceLoader {
     public void clear() {
         keyCache.invalidateAll();
         keyCache.cleanUp();
+    }
+
+    @Override
+    public Optional<CryptoService> getLatest( UUID id ) throws ExecutionException {
+        ObjectMetadata metadata = 
     }
 }
