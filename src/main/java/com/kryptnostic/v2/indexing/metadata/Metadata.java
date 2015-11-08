@@ -5,8 +5,8 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.collect.ImmutableList;
-import com.kryptnostic.storage.v2.models.VersionedObjectKey;
 import com.kryptnostic.v2.constants.Names;
+import com.kryptnostic.v2.storage.models.VersionedObjectKey;
 
 /**
  * @author Matthew Tamayo-Rios &lt;matthew@kryptnostic.com&gt;

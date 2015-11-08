@@ -18,35 +18,40 @@ import com.google.common.base.Optional;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
-import com.google.common.collect.Collections2;
-import com.google.common.collect.ImmutableCollection;
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
-import com.kryptnostic.directory.v1.model.ByteArrayEnvelope;
-import com.kryptnostic.kodex.v1.client.KryptnosticConnection;
+import com.kryptnostic.api.v1.KryptnosticConnection;
 import com.kryptnostic.kodex.v1.crypto.ciphers.AesCryptoService;
 import com.kryptnostic.kodex.v1.crypto.ciphers.CryptoService;
 import com.kryptnostic.kodex.v1.crypto.ciphers.Cypher;
 import com.kryptnostic.kodex.v1.exceptions.types.SecurityConfigurationException;
-import com.kryptnostic.storage.v2.http.KeyStorageApi;
-import com.kryptnostic.storage.v2.models.ObjectIdHashSet;
-import com.kryptnostic.storage.v2.models.VersionedObjectKey;
-import com.kryptnostic.storage.v2.models.VersionedObjectKeySet;
+import com.kryptnostic.v2.storage.api.KeyStorageApi;
+import com.kryptnostic.v2.storage.api.ObjectStorageApi;
+import com.kryptnostic.v2.storage.models.VersionedObjectKey;
+import com.kryptnostic.v2.storage.models.VersionedObjectKeySet;
 
+/**
+ * Provider class for {@link CryptoService} objects used for encrypting and decrypting objects.
+ * 
+ * @author Matthew Tamayo-Rios &lt;matthew@kryptnostic.com&gt;
+ *
+ */
 public class KryptnosticCryptoServiceLoader implements CryptoServiceLoader {
     private static final Logger                                   logger = LoggerFactory
                                                                                  .getLogger( KryptnosticCryptoServiceLoader.class );
 
     private final LoadingCache<VersionedObjectKey, CryptoService> keyCache;
     private KeyStorageApi                                         directoryApi;
+    private ObjectStorageApi                                      objectStorageApi;
     private KryptnosticConnection                                 connection;
     private Cypher                                                cypher;
 
     public KryptnosticCryptoServiceLoader(
             final KryptnosticConnection connection,
             final KeyStorageApi directoryApi,
+            ObjectStorageApi objectStorageApi,
             Cypher cypher ) {
         this.directoryApi = directoryApi;
+        this.objectStorageApi = objectStorageApi;
         this.connection = connection;
         this.cypher = cypher;
         keyCache = CacheBuilder.newBuilder().maximumSize( 1000 ).expireAfterWrite( 10, TimeUnit.MINUTES )
@@ -117,7 +122,7 @@ public class KryptnosticCryptoServiceLoader implements CryptoServiceLoader {
         keyCache.put( id, service );
         try {
             byte[] cs = connection.getRsaCryptoService().encrypt( service );
-            directoryApi.setObjectCryptoService( id, new ByteArrayEnvelope( cs ) );
+            directoryApi.setObjectCryptoService( id.getObjectId(), id.getVersion(), cs );
         } catch ( SecurityConfigurationException | IOException e ) {
             throw new ExecutionException( e );
         }
@@ -136,6 +141,6 @@ public class KryptnosticCryptoServiceLoader implements CryptoServiceLoader {
 
     @Override
     public Optional<CryptoService> getLatest( UUID id ) throws ExecutionException {
-        ObjectMetadata metadata = 
+        return get( VersionedObjectKey.fromObjectMetadata( objectStorageApi.getObjectMetadata( id ) ) );
     }
 }

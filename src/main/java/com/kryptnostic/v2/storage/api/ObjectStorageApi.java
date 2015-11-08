@@ -1,4 +1,4 @@
-package com.kryptnostic.storage.v2.http;
+package com.kryptnostic.v2.storage.api;
 
 import java.util.Map;
 import java.util.Set;
@@ -15,14 +15,14 @@ import retrofit.http.Path;
 import com.kryptnostic.kodex.v1.crypto.ciphers.BlockCiphertext;
 import com.kryptnostic.kodex.v1.exceptions.types.BadRequestException;
 import com.kryptnostic.kodex.v1.exceptions.types.ResourceNotFoundException;
-import com.kryptnostic.storage.v2.models.CreateMetadataObjectRequest;
-import com.kryptnostic.storage.v2.models.CreateObjectRequest;
-import com.kryptnostic.storage.v2.models.ObjectMetadata;
-import com.kryptnostic.storage.v2.models.ObjectMetadataEncryptedNode;
-import com.kryptnostic.storage.v2.models.ObjectTreeLoadRequest;
-import com.kryptnostic.storage.v2.models.PaddedMetadataObjectIds;
-import com.kryptnostic.storage.v2.models.VersionedObjectKey;
 import com.kryptnostic.v2.constants.Names;
+import com.kryptnostic.v2.storage.models.CreateMetadataObjectRequest;
+import com.kryptnostic.v2.storage.models.CreateObjectRequest;
+import com.kryptnostic.v2.storage.models.ObjectMetadata;
+import com.kryptnostic.v2.storage.models.ObjectMetadataEncryptedNode;
+import com.kryptnostic.v2.storage.models.ObjectTreeLoadRequest;
+import com.kryptnostic.v2.storage.models.PaddedMetadataObjectIds;
+import com.kryptnostic.v2.storage.models.VersionedObjectKey;
 
 /**
  * @author Matthew Tamayo-Rios &lt;matthew@kryptnostic.com&gt;

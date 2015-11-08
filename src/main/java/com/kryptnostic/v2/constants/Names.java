@@ -96,4 +96,6 @@ public final class Names {
     public static final String LOCKED_FIELD                    = "locked";
     public static final String TERM_FIELD                      = "term";
     public static final String OBJECT_CREATION_PROGRESS        = "objectCreationProgress";
+    public static final String FHE_PRIVATE_KEY                 = "fhePrivateKey";
+    public static final String FHE_SEARCH_PRIVATE_KEY          = "fheSearchPrivateKey";
 }

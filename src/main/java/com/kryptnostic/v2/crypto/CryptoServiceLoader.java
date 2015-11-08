@@ -9,7 +9,7 @@ import javax.annotation.Nonnull;
 
 import com.google.common.base.Optional;
 import com.kryptnostic.kodex.v1.crypto.ciphers.CryptoService;
-import com.kryptnostic.storage.v2.models.VersionedObjectKey;
+import com.kryptnostic.v2.storage.models.VersionedObjectKey;
 
 public interface CryptoServiceLoader {
 

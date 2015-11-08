@@ -1,4 +1,4 @@
-package com.kryptnostic.storage.v2.http;
+package com.kryptnostic.v2.storage.api;
 
 import java.util.Map;
 import java.util.Set;
@@ -15,8 +15,9 @@ import com.google.common.base.Optional;
 import com.kryptnostic.kodex.v1.constants.Names;
 import com.kryptnostic.kodex.v1.crypto.ciphers.BlockCiphertext;
 import com.kryptnostic.kodex.v1.exceptions.types.BadRequestException;
-import com.kryptnostic.storage.v2.models.VersionedObjectKey;
-import com.kryptnostic.storage.v2.models.VersionedObjectKeySet;
+import com.kryptnostic.v2.storage.models.VersionedObjectKey;
+import com.kryptnostic.v2.storage.models.VersionedObjectKeySet;
+import com.kryptnostic.v2.storage.models.keys.BootstrapKeyIds;
 
 public interface KeyStorageApi {
     String CONTROLLER                     = "/keys";
@@ -42,6 +43,10 @@ public interface KeyStorageApi {
     String VERSION_PATH                   = "/{" + VERSION + "}";
     String BULK_PATH                      = "/bulk";
 
+    
+    @GET( CONTROLLER ) 
+    BootstrapKeyIds getBootstrapInformation();
+    
     @POST( CONTROLLER + PUBLIC_KEY_PATH + BULK_PATH )
     Map<UUID, byte[]> getPublicKeys( @Body Set<UUID> userIds );
 

@@ -3,7 +3,7 @@ package com.kryptnostic.v2.indexing;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.kryptnostic.kodex.v1.constants.Names;
-import com.kryptnostic.storage.v2.models.VersionedObjectKey;
+import com.kryptnostic.v2.storage.models.VersionedObjectKey;
 
 public class IndexMetadata {
     private final byte[]             key;

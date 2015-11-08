@@ -1,4 +1,4 @@
-package com.kryptnostic.storage.v2.models;
+package com.kryptnostic.v2.storage.models;
 
 import java.util.Map;
 import java.util.Set;

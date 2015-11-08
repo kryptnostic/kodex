@@ -1,4 +1,4 @@
-package com.kryptnostic.storage.v2.http;
+package com.kryptnostic.v2.storage.api;
 
 import java.util.Set;
 import java.util.UUID;

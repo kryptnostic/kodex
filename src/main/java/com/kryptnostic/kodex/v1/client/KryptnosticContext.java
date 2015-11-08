@@ -8,7 +8,7 @@ import com.kryptnostic.indexing.v1.ObjectSearchPair;
 import com.kryptnostic.kodex.v1.crypto.ciphers.RsaCompressingCryptoService;
 import com.kryptnostic.kodex.v1.crypto.ciphers.RsaCompressingEncryptionService;
 import com.kryptnostic.kodex.v1.exceptions.types.SecurityConfigurationException;
-import com.kryptnostic.storage.v2.models.VersionedObjectKey;
+import com.kryptnostic.v2.storage.models.VersionedObjectKey;
 
 /**
  * KryptnosticContext is responsible for maintaining shared state between the KryptnosticClient and Kryptnostic
@@ -18,8 +18,6 @@ import com.kryptnostic.storage.v2.models.VersionedObjectKey;
  * @author Matthew Tamayo-Rios &lt;matthew@kryptnostic.com&gt;
  */
 public interface KryptnosticContext {
-
-    KryptnosticConnection getConnection();
 
     byte[] rsaDecrypt( byte[] ciphertext ) throws SecurityConfigurationException;
 
