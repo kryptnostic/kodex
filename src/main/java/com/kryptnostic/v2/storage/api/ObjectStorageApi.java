@@ -142,6 +142,9 @@ public interface ObjectStorageApi {
     @DELETE( CONTROLLER + OBJECT_ID_PATH + VERSION_PATH )
     Response delete( @Path( ID ) UUID id, @Path( VERSION ) long version );
 
+    @DELETE( CONTROLLER + OBJECT_ID_PATH )
+    Response delete( @Path( ID ) UUID id );
+
     @DELETE( CONTROLLER )
     Set<UUID> deleteObjectTrees( @Body Set<UUID> objectTrees );
 
