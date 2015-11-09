@@ -4,7 +4,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
-import retrofit.client.Response;
 import retrofit.http.Body;
 import retrofit.http.GET;
 import retrofit.http.POST;
@@ -43,45 +42,48 @@ public interface KeyStorageApi {
     String VERSION_PATH                   = "/{" + VERSION + "}";
     String BULK_PATH                      = "/bulk";
 
-    
-    @GET( CONTROLLER ) 
+
+    @GET( CONTROLLER )
     BootstrapKeyIds getBootstrapInformation();
-    
-    @POST( CONTROLLER + PUBLIC_KEY_PATH + BULK_PATH )
-    Map<UUID, byte[]> getPublicKeys( @Body Set<UUID> userIds );
+
+    @POST( CONTROLLER + PUBLIC_KEY_PATH )
+    Optional<String> setPublicKey( @Body byte[] publicKey );
 
     @GET( CONTROLLER + PUBLIC_KEY_PATH + USER_ID_PATH )
     byte[] getPublicKey( @Path( USER ) UUID user );
 
-    @POST( CONTROLLER + PUBLIC_KEY_PATH )
-    void setPublicKey( @Body byte[] publicKey );
+    @POST( CONTROLLER + PUBLIC_KEY_PATH + BULK_PATH )
+    Map<UUID, byte[]> getPublicKeys( @Body Set<UUID> userIds );
 
-    @GET( CONTROLLER + FHE_PRIVATE_PATH )
-    BlockCiphertext getPrivateKey();
-
-    @POST( CONTROLLER + FHE_PRIVATE_PATH )
-    void setPrivateKey( @Body BlockCiphertext encryptedPrivateKey );
+    @POST( CONTROLLER + SALT_PATH + USER_ID_PATH )
+    Optional<String> setEncryptedSalt( @Path( USER ) UUID user, @Body BlockCiphertext encryptedSalt );
 
     @GET( CONTROLLER + SALT_PATH + USER_ID_PATH )
     BlockCiphertext getEncryptedSalt( @Path( USER ) UUID user );
 
-    @POST( CONTROLLER + SALT_PATH + USER_ID_PATH )
-    void setEncryptedSalt( @Path( USER ) UUID user, @Body BlockCiphertext encryptedSalt );
+    @POST( CONTROLLER + CRYPTO_SERVICE_PATH + OBJECT_ID_PATH )
+    Optional<String> setObjectCryptoService( @Path( OBJECT_ID ) UUID objectId, @Body byte[] crypto );
 
     /**
      * Uncached API to retrieves the object crypto service for the latest version of the object specified by
      * {@code objectId}
-     * 
+     *
      * @param objectId The object for which to retrieve the crypto service.
      * @return The crypto service corresponding the latest version of the object specified by {@code objectId}
      */
     @GET( CONTROLLER + CRYPTO_SERVICE_PATH + OBJECT_ID_PATH )
     byte[] getObjectCryptoService( @Path( OBJECT_ID ) UUID objectId );
 
+    @PUT( CONTROLLER + CRYPTO_SERVICE_PATH + OBJECT_ID_PATH + VERSION_PATH )
+    Optional<String> setObjectCryptoService(
+            @Path( OBJECT_ID ) UUID objectId,
+            @Path( VERSION ) long version,
+            @Body byte[] crypto );
+
     /**
      * Cached API to retrieve the object crypto service for a specific version of the object specified by
      * {@code objectId}
-     * 
+     *
      * @param objectId The object for which to retrieve the crypto service.
      * @param version The version of the object for which to retrieve a crpyto service
      * @return The crypto service corresponding to the object with version specified by {@code version} and object id
@@ -90,40 +92,31 @@ public interface KeyStorageApi {
     @GET( CONTROLLER + CRYPTO_SERVICE_PATH + OBJECT_ID_PATH + VERSION_PATH )
     byte[] getObjectCryptoService( @Path( OBJECT_ID ) UUID objectId, @Path( VERSION ) long version );
 
-    @POST( CONTROLLER + VERSIONED_CRYPTO_SERVICES_PATH )
-    Map<VersionedObjectKey, byte[]> getObjectCryptoServices( @Body VersionedObjectKeySet ids );
-
     @POST( CONTROLLER + CRYPTO_SERVICES_PATH )
     Map<UUID, byte[]> getObjectCryptoServices( @Body Set<UUID> ids );
 
-    @POST( CONTROLLER + CRYPTO_SERVICE_PATH + OBJECT_ID_PATH )
-    void setObjectCryptoService( @Path( OBJECT_ID ) UUID objectId, @Body byte[] crypto );
-
-    @PUT( CONTROLLER + CRYPTO_SERVICE_PATH + OBJECT_ID_PATH + VERSION_PATH )
-    void setObjectCryptoService(
-            @Path( OBJECT_ID ) UUID objectId,
-            @Path( VERSION ) long version,
-            @Body byte[] crypto );
+    @POST( CONTROLLER + VERSIONED_CRYPTO_SERVICES_PATH )
+    Map<VersionedObjectKey, byte[]> getObjectCryptoServices( @Body VersionedObjectKeySet ids );
 
     @POST( CONTROLLER + FHE_PRIVATE_PATH )
-    Optional<String> setFHEPrivateKeyForCurrentUser( @Body BlockCiphertext key ) throws BadRequestException;
+    Optional<String> setFHEPrivateKeyForCurrentUser( @Body BlockCiphertext key );
 
     @GET( CONTROLLER + FHE_PRIVATE_PATH )
-    Optional<BlockCiphertext> getFHEPrivateKeyForCurrentUser() throws BadRequestException;
+    Optional<BlockCiphertext> getFHEPrivateKeyForCurrentUser();
 
     @POST( CONTROLLER + FHE_SEARCH_PRIVATE )
-    Optional<String> setFHESearchPrivateKeyForCurrentUser( @Body BlockCiphertext key ) throws BadRequestException;
+    Optional<String> setFHESearchPrivateKeyForCurrentUser( @Body BlockCiphertext key );
 
     @GET( CONTROLLER + FHE_SEARCH_PRIVATE )
-    Optional<BlockCiphertext> getFHESearchPrivateKeyForUser() throws BadRequestException;
+    Optional<BlockCiphertext> getFHESearchPrivateKeyForUser();
 
     @POST( CONTROLLER + FHE_HASH )
-    Response setHashFunctionForCurrentUser( @Body byte[] key ) throws BadRequestException;
+    Optional<String> setHashFunctionForCurrentUser( @Body byte[] key );
 
     /**
      * @return The byte level representation of the ClientHashFunction.
      * @throws BadRequestException
      */
     @GET( CONTROLLER + FHE_HASH )
-    byte[] getHashFunctionForCurrentUser() throws BadRequestException;
+    byte[] getHashFunctionForCurrentUser();
 }
