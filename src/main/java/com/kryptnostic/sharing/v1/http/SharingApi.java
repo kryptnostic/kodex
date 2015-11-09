@@ -16,7 +16,6 @@ import com.kryptnostic.sharing.v1.models.IncomingShares;
 import com.kryptnostic.sharing.v1.models.request.RevocationRequest;
 import com.kryptnostic.sharing.v1.models.request.SharingRequest;
 import com.kryptnostic.sharing.v1.models.response.KeyUpdateResponse;
-import com.kryptnostic.v2.storage.models.VersionedObjectKey;
 
 public interface SharingApi {
     String SHARE       = "/share";
@@ -40,7 +39,7 @@ public interface SharingApi {
 
     // TODO: Consider creating objects here.
     @PUT( SHARE + KEYS )
-    KeyUpdateResponse addSearchPairs( @Body Map<VersionedObjectKey, ObjectSearchPair> indexPairs );
+    KeyUpdateResponse addSearchPairs( @Body Map<String, ObjectSearchPair> indexPairs );
 
     @DELETE( SHARE + KEYS )
     KeyUpdateResponse removeKeys( @Body Set<String> uuids );
