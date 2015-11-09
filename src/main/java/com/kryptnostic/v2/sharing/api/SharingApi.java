@@ -32,7 +32,7 @@ public interface SharingApi {
     IncomingShares getIncomingShares();
 
     @POST( SHARE + OBJECT + "/{" + ID + "}" )
-    BasicResponse<String> removeIncomingShares( @Path( ID ) String uuid );
+    BasicResponse<String> removeIncomingShares( @Path( ID ) UUID uuid );
 
     @POST( SHARE + OBJECT + SHARE )
     BasicResponse<String> share( @Body SharingRequest request );
@@ -45,7 +45,7 @@ public interface SharingApi {
     KeyUpdateResponse addSearchPairs( @Body Map<VersionedObjectKey, ObjectSearchPair> indexPairs );
 
     @DELETE( SHARE + KEYS )
-    KeyUpdateResponse removeKeys( @Body Set<String> uuids );
+    KeyUpdateResponse removeKeys( @Body Set<UUID> uuids );
 
     @GET( SHARE + OBJECT + "/{" + ID + "}/{" + VERSION + "}" )
     byte[] getSearchPair( @Path( ID ) UUID id, @Path( VERSION ) long version );
