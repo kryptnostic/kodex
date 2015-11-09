@@ -16,4 +16,5 @@ public interface SearchApi {
      */
     @POST( CONTROLLER )
     SearchResultResponse search( @Body SearchRequest requests );
+
 }
