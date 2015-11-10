@@ -26,8 +26,10 @@ public interface KeyStorageApi {
     String FHE_SEARCH_PRIVATE             = FHE_PATH + "/searchprivate";
     String FHE_HASH                       = FHE_PATH + "/hash";
 
-    String PUBLIC_KEY_PATH                = "/public";
-    String RSA_PUBLIC                     = "/rsa";
+    String RSA_PATH                       = "/rsa";
+    String RSA_PUBLIC_KEY_PATH            = RSA_PATH + "/pub";
+    String RSA_PRIVATE_KEY_PATH           = RSA_PATH + "/private";
+
     String SALT_PATH                      = "/salt";
     String CRYPTO_SERVICE_PATH            = "/cryptoservice";
     String CRYPTO_SERVICES_PATH           = "/cryptoservices";
@@ -46,13 +48,19 @@ public interface KeyStorageApi {
     @GET( CONTROLLER )
     BootstrapKeyIds getBootstrapInformation();
 
-    @POST( CONTROLLER + PUBLIC_KEY_PATH )
+    @POST( CONTROLLER + RSA_PRIVATE_KEY_PATH )
+    Optional<String> setRSAPrivateKey( @Body BlockCiphertext encryptedPrivateKey );
+
+    @GET( CONTROLLER + RSA_PRIVATE_KEY_PATH )
+    BlockCiphertext getRSAPrivateKey();
+
+    @POST( CONTROLLER + RSA_PUBLIC_KEY_PATH )
     Optional<String> setPublicKey( @Body byte[] publicKey );
 
-    @GET( CONTROLLER + PUBLIC_KEY_PATH + USER_ID_PATH )
+    @GET( CONTROLLER + RSA_PUBLIC_KEY_PATH + USER_ID_PATH )
     byte[] getPublicKey( @Path( USER ) UUID user );
 
-    @POST( CONTROLLER + PUBLIC_KEY_PATH + BULK_PATH )
+    @POST( CONTROLLER + RSA_PUBLIC_KEY_PATH + BULK_PATH )
     Map<UUID, byte[]> getPublicKeys( @Body Set<UUID> userIds );
 
     @POST( CONTROLLER + SALT_PATH + USER_ID_PATH )
