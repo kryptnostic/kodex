@@ -4,7 +4,7 @@ import retrofit.http.Body;
 import retrofit.http.POST;
 
 import com.kryptnostic.search.v1.models.request.SearchRequest;
-import com.kryptnostic.v2.search.SearchResultResponse;
+import com.kryptnostic.search.v1.models.response.SearchResultResponse;
 
 public interface SearchApi {
     String CONTROLLER = "/search";
