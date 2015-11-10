@@ -98,4 +98,5 @@ public final class Names {
     public static final String OBJECT_CREATION_PROGRESS        = "objectCreationProgress";
     public static final String FHE_PRIVATE_KEY                 = "fhePrivateKey";
     public static final String FHE_SEARCH_PRIVATE_KEY          = "fheSearchPrivateKey";
+    public static final String CLIENT_HASH_FUNCTION            = "clientHashFunction";
 }
