@@ -42,7 +42,7 @@ public interface DirectoryApi {
     }
 
     /**
-     * @deprecated use {@link com.kryptnostic.v2.storage.api.KeyStorageApi#getPublicKey( UUID user ) } instead
+     * @deprecated use {@link com.kryptnostic.v2.storage.api.KeyStorageApi#getRSAPublicKey( UUID user ) } instead
      * @param id The id of the user whose public key shall be retrieved.
      * @return Specified user's public key
      * @throws ResourceNotFoundException
@@ -53,7 +53,7 @@ public interface DirectoryApi {
     PublicKeyEnvelope getPublicKey( @Path( Names.USER_FIELD ) UUID id) throws ResourceNotFoundException;
 
     /**
-     * @deprecated use {@link com.kryptnostic.v2.storage.api.KeyStorageApi#getPublicKeys( userIds ) } instead
+     * @deprecated use {@link com.kryptnostic.v2.storage.api.KeyStorageApi#getRSAPublicKeys( userIds ) } instead
      * @param userIds The id of the user whose public key shall be retrieved.
      * @return Specified user's public key
      * @throws ResourceNotFoundException
@@ -65,7 +65,7 @@ public interface DirectoryApi {
             throws ResourceNotFoundException;
 
     /**
-     * @deprecated use {@link com.kryptnostic.v2.storage.api.KeyStorageApi#setPublicKey( byte[] publicKey ) } instead
+     * @deprecated use {@link com.kryptnostic.v2.storage.api.KeyStorageApi#setRSAPublicKey( byte[] publicKey ) } instead
      * @param publicKey
      * @return
      */
