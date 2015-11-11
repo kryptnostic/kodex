@@ -4,6 +4,10 @@ import java.util.UUID;
 
 import javax.annotation.concurrent.Immutable;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.kryptnostic.v2.constants.Names;
+
 @Immutable
 public class VersionedObjectKey {
 
@@ -15,7 +19,10 @@ public class VersionedObjectKey {
      */
     private transient int cachedHashCode;
 
-    public VersionedObjectKey( UUID objectId, long version ) {
+    @JsonCreator
+    public VersionedObjectKey(
+            @JsonProperty( Names.OBJECT_ID_FIELD ) UUID objectId,
+            @JsonProperty( Names.VERSION_FIELD ) long version) {
         this.objectId = objectId;
         this.version = version;
     }
@@ -23,6 +30,7 @@ public class VersionedObjectKey {
     /**
      * @return the objectId
      */
+    @JsonProperty( Names.OBJECT_ID_FIELD )
     public UUID getObjectId() {
         return objectId;
     }
@@ -30,6 +38,7 @@ public class VersionedObjectKey {
     /**
      * @return the version
      */
+    @JsonProperty( Names.VERSION_FIELD )
     public long getVersion() {
         return version;
     }
