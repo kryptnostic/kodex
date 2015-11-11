@@ -28,10 +28,8 @@ public class VersionedObjectUserKey {
         this.version = version;
     }
 
-    public VersionedObjectUserKey( VersionedObjectKey objectKey, UUID userId ) {
-        this.objectId = objectKey.getObjectId();
-        this.userId = userId;
-        this.version = objectKey.getVersion();
+    public static VersionedObjectUserKey fromVersionedObjectKey( VersionedObjectKey objectKey, UUID userId ) {
+        return new VersionedObjectUserKey( objectKey.getObjectId(), userId, objectKey.getVersion() );
     }
 
     @JsonProperty( Names.ID_FIELD )
