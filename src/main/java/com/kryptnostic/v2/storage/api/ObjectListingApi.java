@@ -3,10 +3,10 @@ package com.kryptnostic.v2.storage.api;
 import java.util.Set;
 import java.util.UUID;
 
+import com.kryptnostic.v2.constants.Names;
+
 import retrofit.http.GET;
 import retrofit.http.Path;
-
-import com.kryptnostic.v2.constants.Names;
 
 /**
  *
@@ -22,7 +22,7 @@ public interface ObjectListingApi {
 
     String LATEST_PATH    = "/latest";
     String USER_ID_PATH   = "/{" + ID + "}";
-    String TYPE_ID_PATH   = "/{" + TYPE + "}";
+    String TYPE_ID_PATH   = "/type/{" + TYPE + "}";
     String PAGE_SIZE_PATH = "/{" + PAGE_SIZE + "}";
     String PAGE_PATH      = "/{" + PAGE + "}";
 
