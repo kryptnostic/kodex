@@ -56,14 +56,16 @@ public class VersionedObjectUserKey {
      */
     @Override
     public int hashCode() {
-        if ( cachedHashCode == 0 ) {
+        int code = cachedHashCode;
+        if ( cachedHashCode <= 0 ) {
             final int prime = 31;
-            cachedHashCode = 1;
-            cachedHashCode = prime * cachedHashCode + ( ( objectId == null ) ? 0 : objectId.hashCode() );
-            cachedHashCode = prime * cachedHashCode + ( ( userId == null ) ? 0 : userId.hashCode() );
-            cachedHashCode = prime * cachedHashCode + (int) ( version ^ ( version >>> 32 ) );
+            int result = 1;
+            result = prime * cachedHashCode + ( ( objectId == null ) ? 0 : objectId.hashCode() );
+            result = prime * cachedHashCode + ( ( userId == null ) ? 0 : userId.hashCode() );
+            result = prime * cachedHashCode + (int) ( version ^ ( version >>> 32 ) );
+            cachedHashCode = code = result;
         }
-        return cachedHashCode;
+        return code;
     }
 
     /*
