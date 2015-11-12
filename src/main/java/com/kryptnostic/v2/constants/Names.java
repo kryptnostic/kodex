@@ -1,5 +1,7 @@
 package com.kryptnostic.v2.constants;
 
+import java.util.UUID;
+
 public final class Names {
     private Names() {}
 
