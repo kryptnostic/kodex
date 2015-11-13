@@ -53,7 +53,7 @@ public class JacksonKodexMarshaller<T> implements KodexMarshaller<T> {
                 resultingLength == uncompressedLength,
                 "Expected length and decompressed length do not match." );
 
-        logger.debug(
+        logger.trace(
                 "[PROFILE] Inflating {} bytes to {} bytes took {} ms",
                 compressedBytes.length,
                 uncompressedLength,
@@ -63,7 +63,7 @@ public class JacksonKodexMarshaller<T> implements KodexMarshaller<T> {
 
         T obj = mapper.readValue( uncompressedBytes, clazz );
 
-        logger.debug( "[PROFILE] Unmarshalling took {} ms", watch.elapsed( TimeUnit.MILLISECONDS ) );
+        logger.trace( "[PROFILE] Unmarshalling took {} ms", watch.elapsed( TimeUnit.MILLISECONDS ) );
 
         return obj;
     }
