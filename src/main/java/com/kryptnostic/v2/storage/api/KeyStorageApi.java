@@ -83,7 +83,7 @@ public interface KeyStorageApi {
      * @throws ResourceNotFoundException
      */
     @GET( CONTROLLER + CRYPTO_SERVICE_PATH + OBJECT_ID_PATH )
-    byte[] getObjectCryptoService( @Path( OBJECT_ID ) UUID objectId) throws ResourceNotFoundException;
+    byte[] getObjectCryptoService( @Path( OBJECT_ID ) UUID objectId);
 
     @PUT( CONTROLLER + CRYPTO_SERVICE_PATH + OBJECT_ID_PATH + VERSION_PATH )
     Response setObjectCryptoService(
@@ -105,7 +105,7 @@ public interface KeyStorageApi {
     byte[] getObjectCryptoService( @Path( OBJECT_ID ) UUID objectId, @Path( VERSION ) long version);
 
     @POST( CONTROLLER + CRYPTO_SERVICES_PATH )
-    Map<UUID, byte[]> getObjectCryptoServices( @Body Set<UUID> ids ) throws ResourceNotFoundException;
+    Map<UUID, byte[]> getObjectCryptoServices( @Body Set<UUID> ids );
 
     @POST( CONTROLLER + VERSIONED_CRYPTO_SERVICES_PATH )
     Map<VersionedObjectKey, byte[]> getObjectCryptoServices( @Body VersionedObjectKeySet ids );

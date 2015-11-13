@@ -4,14 +4,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
-import retrofit.client.Response;
-import retrofit.http.Body;
-import retrofit.http.DELETE;
-import retrofit.http.GET;
-import retrofit.http.POST;
-import retrofit.http.PUT;
-import retrofit.http.Path;
-
 import com.kryptnostic.kodex.v1.crypto.ciphers.BlockCiphertext;
 import com.kryptnostic.kodex.v1.exceptions.types.BadRequestException;
 import com.kryptnostic.kodex.v1.exceptions.types.ResourceNotFoundException;
@@ -23,6 +15,14 @@ import com.kryptnostic.v2.storage.models.ObjectMetadataEncryptedNode;
 import com.kryptnostic.v2.storage.models.ObjectTreeLoadRequest;
 import com.kryptnostic.v2.storage.models.PaddedMetadataObjectIds;
 import com.kryptnostic.v2.storage.models.VersionedObjectKey;
+
+import retrofit.client.Response;
+import retrofit.http.Body;
+import retrofit.http.DELETE;
+import retrofit.http.GET;
+import retrofit.http.POST;
+import retrofit.http.PUT;
+import retrofit.http.Path;
 
 /**
  * @author Matthew Tamayo-Rios &lt;matthew@kryptnostic.com&gt;
@@ -84,7 +84,7 @@ public interface ObjectStorageApi {
      * @param ciphertext
      * @return
      */
-    @PUT( CONTROLLER + OBJECT_ID_PATH + VERSION_PATH + BLOCK_PATH )
+    @PUT( CONTROLLER + OBJECT_ID_PATH + VERSION_PATH )
     Response setObjectFromBlockCiphertext(
             @Path( ID ) UUID objectId,
             @Path( VERSION ) long version,
@@ -113,10 +113,7 @@ public interface ObjectStorageApi {
     Response setObjectIv( @Path( ID ) UUID objectId, @Path( VERSION ) long version, @Body byte[] iv );
 
     @PUT( CONTROLLER + OBJECT_ID_PATH + VERSION_PATH + CONTENTS_PATH )
-    Response setObjectContent(
-            @Path( ID ) UUID objectId,
-            @Path( VERSION ) long version,
-            @Body byte[] content );
+    Response setObjectContent( @Path( ID ) UUID objectId, @Path( VERSION ) long version, @Body byte[] content);
 
     @PUT( CONTROLLER + OBJECT_ID_PATH + VERSION_PATH + SALT_PATH )
     Response setObjectSalt( @Path( ID ) UUID objectId, @Path( VERSION ) long version, @Body byte[] salt );
