@@ -98,17 +98,17 @@ public interface KeyStorageApi {
      * @param objectId The object for which to retrieve the crypto service.
      * @param version The version of the object for which to retrieve a crpyto service
      * @return The crypto service corresponding to the object with version specified by {@code version} and object id
-     *         specified by {@code objectId}
+     *         specified by {@code objectId}. 
      * @throws ResourceNotFoundException
      */
     @GET( CONTROLLER + CRYPTO_SERVICE_PATH + OBJECT_ID_PATH + VERSION_PATH )
-    byte[] getObjectCryptoService( @Path( OBJECT_ID ) UUID objectId, @Path( VERSION ) long version) throws ResourceNotFoundException;
+    byte[] getObjectCryptoService( @Path( OBJECT_ID ) UUID objectId, @Path( VERSION ) long version);
 
     @POST( CONTROLLER + CRYPTO_SERVICES_PATH )
     Map<UUID, byte[]> getObjectCryptoServices( @Body Set<UUID> ids ) throws ResourceNotFoundException;
 
     @POST( CONTROLLER + VERSIONED_CRYPTO_SERVICES_PATH )
-    Map<VersionedObjectKey, byte[]> getObjectCryptoServices( @Body VersionedObjectKeySet ids ) throws ResourceNotFoundException;
+    Map<VersionedObjectKey, byte[]> getObjectCryptoServices( @Body VersionedObjectKeySet ids );
 
     /**
      *
