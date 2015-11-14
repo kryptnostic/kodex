@@ -9,8 +9,8 @@ import org.joda.time.DateTime;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.kryptnostic.kodex.v1.crypto.ciphers.Cypher;
 import com.kryptnostic.v2.constants.Names;
-import com.kryptnostic.v2.storage.types.TypeUUIDs;
 
 /**
  *
@@ -24,12 +24,37 @@ public class ObjectMetadata {
     protected final long                version;
     protected final long                size;
     protected EnumSet<CryptoMaterial>   uploadedParts;
+    protected EnumSet<CryptoMaterial> requiredParts;
 
     protected final UUID     creator;
     protected final DateTime createdTime;
 
     public enum CryptoMaterial {
-        IV, TAG, CONTENTS, SALT
+        IV,
+        TAG,
+        CONTENTS,
+        SALT;
+
+        public static final EnumSet<CryptoMaterial> DEFAULT_REQUIRED_CRYPTO_MATERIALS = EnumSet.of( IV, CONTENTS );
+
+        public static EnumSet<CryptoMaterial> requiredByCypher( Cypher cypher, boolean salted ) {
+            if ( cypher == null ) {
+                return EnumSet.of( IV, CONTENTS );
+            }
+            EnumSet<CryptoMaterial> required;
+            switch( cypher ) {
+                case AES_GCM_128:
+                    required = EnumSet.of( TAG, IV, CONTENTS );
+                    break;
+                default:
+                    required = DEFAULT_REQUIRED_CRYPTO_MATERIALS;
+                    break;
+            }
+            if ( salted ) {
+                required.add( SALT );
+            }
+            return required;
+        }
     }
 
     @JsonCreator
@@ -39,6 +64,7 @@ public class ObjectMetadata {
             @JsonProperty( Names.SIZE_FIELD ) long size,
             @JsonProperty( Names.TYPE_FIELD ) UUID type,
             @JsonProperty( Names.CREATOR_FIELD ) UUID creator,
+            @JsonProperty( Names.REQUIRED_CRYPTO_MATS_FIELD ) EnumSet<CryptoMaterial> requiredMaterials,
             @JsonProperty( Names.CREATED_TIME ) DateTime createdTime ) {
         this.id = id;
         this.version = version;
@@ -49,19 +75,33 @@ public class ObjectMetadata {
         this.createdTime = createdTime;
         this.size = size;
         this.uploadedParts = EnumSet.noneOf( CryptoMaterial.class );
+        this.requiredParts = requiredMaterials;
     }
 
     public static ObjectMetadata newObject(
-             UUID id,
-             UUID creator ) {
-        return new ObjectMetadata( id, 0, 0, TypeUUIDs.DEFAULT_TYPE, creator, DateTime.now() );
-    }
-
-    public static ObjectMetadata newObject(
-             UUID id,
+            CreateObjectRequest request,
+            UUID userId,
              UUID creator,
              long version ) {
-        return new ObjectMetadata( id, version, 0, TypeUUIDs.DEFAULT_TYPE, creator, DateTime.now() );
+        return new ObjectMetadata(
+                userId,
+                version,
+                0,
+                request.getType(),
+                creator,
+                request.getRequiredCryptoMaterials(),
+                DateTime.now() );
+    }
+
+    public static ObjectMetadata newObject( CreateObjectRequest request, UUID user, UUID objectId ) {
+        return new ObjectMetadata(
+                objectId,
+                0,
+                0,
+                request.getType(),
+                user,
+                request.getRequiredCryptoMaterials(),
+                DateTime.now() );
     }
 
     /**
@@ -100,13 +140,21 @@ public class ObjectMetadata {
         return size;
     }
 
+    public EnumSet<CryptoMaterial> getRequiredCryptoMaterial() {
+        return requiredParts;
+    }
+
     public EnumSet<CryptoMaterial> getCryptoMaterialProgress() {
         return uploadedParts;
     }
 
     public boolean updateUploadProgress( CryptoMaterial nextUploaded ) {
         uploadedParts.add( nextUploaded );
-        return uploadedParts.containsAll( EnumSet.allOf( CryptoMaterial.class ) );
+        return isFinalized();
+    }
+
+    public boolean isFinalized() {
+        return uploadedParts.containsAll( requiredParts );
     }
 
     public void setUploadedParts( EnumSet<CryptoMaterial> uploadedParts ) {

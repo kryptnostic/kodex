@@ -1,7 +1,5 @@
 package com.kryptnostic.v2.constants;
 
-import java.util.UUID;
-
 public final class Names {
     private Names() {}
 
@@ -102,4 +100,6 @@ public final class Names {
     public static final String FHE_SEARCH_PRIVATE_KEY          = "fheSearchPrivateKey";
     public static final String CLIENT_HASH_FUNCTION            = "clientHashFunction";
     public static final String OBJECT_ID_FIELD                 = "objectId";
+    public static final String SALTED_FIELD                    = "salted";
+    public static final String REQUIRED_CRYPTO_MATS_FIELD      = "requiredCryptoMats";
 }
