@@ -9,6 +9,7 @@ import javax.annotation.Nonnull;
 
 import com.google.common.base.Optional;
 import com.kryptnostic.kodex.v1.crypto.ciphers.CryptoService;
+import com.kryptnostic.kodex.v1.crypto.ciphers.Cypher;
 import com.kryptnostic.v2.storage.models.VersionedObjectKey;
 
 public interface CryptoServiceLoader {
@@ -25,4 +26,6 @@ public interface CryptoServiceLoader {
     Map<VersionedObjectKey, CryptoService> getAll( Set<VersionedObjectKey> ids ) throws ExecutionException;
 
     void clear();
+
+    Cypher getCypher();
 }
