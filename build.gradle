@@ -66,7 +66,7 @@ ext.jackson_version='2.4.4'
 ext.slf4j_version='1.7.12'
 ext.log4j_version='2.4.1'
 ext.retrofit_version='1.9.0'
-ext.okhttp_version='2.4.0'
+ext.okhttp_version='2.5.0'
 dependencies {
     /*
      * SL4J + LOG4J2

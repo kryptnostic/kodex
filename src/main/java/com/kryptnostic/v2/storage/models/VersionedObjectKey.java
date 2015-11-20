@@ -22,7 +22,7 @@ public class VersionedObjectKey {
     @JsonCreator
     public VersionedObjectKey(
             @JsonProperty( Names.OBJECT_ID_FIELD ) UUID objectId,
-            @JsonProperty( Names.VERSION_FIELD ) long version) {
+            @JsonProperty( Names.OBJECT_VERSION_FIELD ) long version) {
         this.objectId = objectId;
         this.version = version;
     }
@@ -38,7 +38,7 @@ public class VersionedObjectKey {
     /**
      * @return the version
      */
-    @JsonProperty( Names.VERSION_FIELD )
+    @JsonProperty( Names.OBJECT_VERSION_FIELD )
     public long getVersion() {
         return version;
     }

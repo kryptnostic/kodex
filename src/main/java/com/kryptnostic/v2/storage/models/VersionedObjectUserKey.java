@@ -3,6 +3,7 @@ package com.kryptnostic.v2.storage.models;
 import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.kryptnostic.v2.constants.Names;
 
@@ -21,7 +22,7 @@ public class VersionedObjectUserKey {
     public VersionedObjectUserKey(
             @JsonProperty( Names.ID_FIELD ) UUID objectId,
             @JsonProperty( Names.USER_FIELD ) UUID userId,
-            @JsonProperty( Names.VERSION_FIELD ) long version) {
+            @JsonProperty( Names.OBJECT_VERSION_FIELD ) long version) {
         super();
         this.objectId = objectId;
         this.userId = userId;
@@ -42,12 +43,14 @@ public class VersionedObjectUserKey {
         return userId;
     }
 
-    public VersionedObjectKey getVersionedObjectKey() {
-        return new VersionedObjectKey( objectId, version );
-    }
-
+    @JsonProperty( Names.OBJECT_VERSION_FIELD )
     public long getVersion() {
         return version;
+    }
+
+    @JsonIgnore
+    public VersionedObjectKey getVersionedObjectKey() {
+        return new VersionedObjectKey( objectId, version );
     }
 
     /*
