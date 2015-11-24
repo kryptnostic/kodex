@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.kryptnostic.v2.constants.Names;
+import com.kryptnostic.v2.sharing.models.ObjectUserKey;
 
 public class VersionedObjectUserKey {
 
@@ -51,6 +52,11 @@ public class VersionedObjectUserKey {
     @JsonIgnore
     public VersionedObjectKey getVersionedObjectKey() {
         return new VersionedObjectKey( objectId, version );
+    }
+
+    @JsonIgnore
+    public ObjectUserKey getObjectUserKey() {
+        return new ObjectUserKey( objectId, userId );
     }
 
     /*
