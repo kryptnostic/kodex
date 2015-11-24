@@ -5,8 +5,6 @@ import java.util.Set;
 import java.util.UUID;
 
 import com.kryptnostic.kodex.v1.crypto.ciphers.BlockCiphertext;
-import com.kryptnostic.kodex.v1.exceptions.types.BadRequestException;
-import com.kryptnostic.kodex.v1.exceptions.types.ResourceNotFoundException;
 import com.kryptnostic.v2.constants.Names;
 import com.kryptnostic.v2.storage.models.CreateMetadataObjectRequest;
 import com.kryptnostic.v2.storage.models.CreateObjectRequest;
@@ -58,8 +56,6 @@ public interface ObjectStorageApi {
      * Request a new object be created in a pending state
      *
      * @return The ID of the newly created object
-     * @throws BadRequestException Request was invalid
-     * @throws ResourceNotFoundException
      */
     @POST( CONTROLLER )
     VersionedObjectKey createObject( @Body CreateObjectRequest request );
@@ -154,8 +150,6 @@ public interface ObjectStorageApi {
      * Request a new object be created in a pending state
      *
      * @return The ID of the newly created object
-     * @throws BadRequestException Request was invalid
-     * @throws ResourceNotFoundException
      */
     @POST( CONTROLLER + OBJECT_METADATA_PATH )
     VersionedObjectKey createMetadataObject( @Body CreateMetadataObjectRequest request );

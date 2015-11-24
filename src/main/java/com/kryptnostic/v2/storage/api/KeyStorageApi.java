@@ -7,8 +7,6 @@ import java.util.UUID;
 import com.google.common.base.Optional;
 import com.kryptnostic.kodex.v1.constants.Names;
 import com.kryptnostic.kodex.v1.crypto.ciphers.BlockCiphertext;
-import com.kryptnostic.kodex.v1.exceptions.types.BadRequestException;
-import com.kryptnostic.kodex.v1.exceptions.types.ResourceNotFoundException;
 import com.kryptnostic.v2.storage.models.VersionedObjectKey;
 import com.kryptnostic.v2.storage.models.VersionedObjectKeySet;
 import com.kryptnostic.v2.storage.models.keys.BootstrapKeyIds;
@@ -80,7 +78,6 @@ public interface KeyStorageApi {
      *
      * @param objectId The object for which to retrieve the crypto service.
      * @return The crypto service corresponding the latest version of the object specified by {@code objectId}
-     * @throws ResourceNotFoundException
      */
     @GET( CONTROLLER + CRYPTO_SERVICE_PATH + OBJECT_ID_PATH )
     byte[] getObjectCryptoService( @Path( OBJECT_ID ) UUID objectId);
@@ -99,7 +96,6 @@ public interface KeyStorageApi {
      * @param version The version of the object for which to retrieve a crpyto service
      * @return The crypto service corresponding to the object with version specified by {@code version} and object id
      *         specified by {@code objectId}. 
-     * @throws ResourceNotFoundException
      */
     @GET( CONTROLLER + CRYPTO_SERVICE_PATH + OBJECT_ID_PATH + VERSION_PATH )
     byte[] getObjectCryptoService( @Path( OBJECT_ID ) UUID objectId, @Path( VERSION ) long version);
@@ -120,7 +116,6 @@ public interface KeyStorageApi {
     /**
      *
      * @param user
-     * @return
      */
     @GET( CONTROLLER + FHE_PUBLIC_PATH + USER_ID_PATH )
     byte[] getFHEPublicKey( @Path( USER ) UUID user);
@@ -142,7 +137,6 @@ public interface KeyStorageApi {
 
     /**
      * @return The byte level representation of the ClientHashFunction.
-     * @throws BadRequestException
      */
     @GET( CONTROLLER + FHE_HASH )
     byte[] getHashFunctionForCurrentUser();
