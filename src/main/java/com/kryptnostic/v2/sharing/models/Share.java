@@ -13,16 +13,17 @@ import com.kryptnostic.v2.storage.models.VersionedObjectKey;
 
 /**
  * Represents the information involved in securely sharing an object from on user to another.
- * 
+ *
  * @author Matthew Tamayo-Rios &lt;matthew@kryptnostic.com&gt;
  *
  */
 public class Share implements Serializable {
     private static final long               serialVersionUID = 1145823070022684715L;
+
     private final VersionedObjectKey        objectId;
     private final Optional<BlockCiphertext> encryptedSharingPair;
     private final byte[]                    seal;
-    private DateTime                        creationTime;
+    private final DateTime                        creationTime;
 
     public Share(
             @JsonProperty( Names.ID_FIELD ) VersionedObjectKey objectId,
