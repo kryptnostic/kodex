@@ -71,6 +71,10 @@ ext.log4j_version='2.4.1'
 ext.retrofit_version='1.9.0'
 ext.okhttp_version='2.5.0'
 ext.immutables_version='2.1.0'
+ext.joda_time_version='2.8.2'
+ext.guava_version='18.0'
+ext.commons_io_version='2.4'
+ext.commonslang3_version='3.4'
 
 dependencies {
 
@@ -90,12 +94,12 @@ dependencies {
      * GUAVA
      * EventBus, FluentIterables, ListenableFutures and more
      */
-    compile 'com.google.guava:guava:18.0'
+    compile "com.google.guava:guava:${guava_version}"
 
     /*
      JODA TIME - A better datetime class.
      */
-    compile 'joda-time:joda-time:2.8.2'
+    compile "joda-time:joda-time:${joda_time_version}"
 
     compile "com.fasterxml.jackson.core:jackson-databind:${jackson_version}"
     compile "com.fasterxml.jackson.datatype:jackson-datatype-guava:${jackson_version}"
@@ -109,8 +113,8 @@ dependencies {
      * APACHE COMMONS
      * Logging, StringUtils, RandomStringUtils, IOUtils, and more
      */
-    compile 'commons-io:commons-io:2.4'
-    compile 'org.apache.commons:commons-lang3:3.4'
+    compile "commons-io:commons-io:${commons_io_version}"
+    compile "org.apache.commons:commons-lang3:${commonslang3_version}"
 
     if( project.hasProperty('developmentMode') && project.developmentMode ) {
         logger.quiet("$project.name is using project dependencies.")
