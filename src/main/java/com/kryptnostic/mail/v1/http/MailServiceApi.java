@@ -12,6 +12,6 @@ public interface MailServiceApi {
   String INVITE = "/invite";
 
   @POST(INVITE)
-  BasicResponse<String> sendInvitationEmail(@Body EmailRequest request) throws IOException;
+  BasicResponse<String> sendInvitationEmail(@Body EmailRequest request);
 
 }
