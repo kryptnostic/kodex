@@ -85,4 +85,13 @@ public final class Names {
     public static final String SHARING_POLICY                = "sharingPolicy";
     public static final String PUBLIC                        = "public";
     public static final String OPEN_REGISTRATION_ALLOWED     = "openRegistrationAllowed";
+
+    /*
+     * emails
+     */
+    public static final String FROM_FIELD                    = "from";
+    public static final String TO_FIELD                      = "to";
+    public static final String CC_FIELD                      = "cc";
+    public static final String BCC_FIELD                     = "bcc";
+    public static final String SUBJECT_FIELD                 = "subject";
 }
