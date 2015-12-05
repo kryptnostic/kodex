@@ -58,19 +58,19 @@ public interface KeyStorageApi {
     Response setRSAPublicKey( @Body byte[] publicKey );
 
     @GET( CONTROLLER + RSA_PUBLIC_KEY_PATH + USER_ID_PATH )
-    byte[] getRSAPublicKey( @Path( USER ) UUID user);
+    byte[] getRSAPublicKey( @Path( USER ) UUID user );
 
     @POST( CONTROLLER + RSA_PUBLIC_KEY_PATH + BULK_PATH )
     Map<UUID, byte[]> getRSAPublicKeys( @Body Set<UUID> userIds );
 
     @POST( CONTROLLER + SALT_PATH + USER_ID_PATH )
-    Response setEncryptedSalt( @Path( USER ) UUID user, @Body BlockCiphertext encryptedSalt);
+    Response setEncryptedSalt( @Path( USER ) UUID user, @Body BlockCiphertext encryptedSalt );
 
     @GET( CONTROLLER + SALT_PATH + USER_ID_PATH )
-    BlockCiphertext getEncryptedSalt( @Path( USER ) UUID user);
+    BlockCiphertext getEncryptedSalt( @Path( USER ) UUID user );
 
     @POST( CONTROLLER + CRYPTO_SERVICE_PATH + OBJECT_ID_PATH )
-    Response setObjectCryptoService( @Path( OBJECT_ID ) UUID objectId, @Body byte[] crypto);
+    Response setObjectCryptoService( @Path( OBJECT_ID ) UUID objectId, @Body byte[] crypto );
 
     /**
      * Uncached API to retrieves the object crypto service for the latest version of the object specified by
@@ -80,13 +80,13 @@ public interface KeyStorageApi {
      * @return The crypto service corresponding the latest version of the object specified by {@code objectId}
      */
     @GET( CONTROLLER + CRYPTO_SERVICE_PATH + OBJECT_ID_PATH )
-    byte[] getObjectCryptoService( @Path( OBJECT_ID ) UUID objectId);
+    byte[] getObjectCryptoService( @Path( OBJECT_ID ) UUID objectId );
 
     @PUT( CONTROLLER + CRYPTO_SERVICE_PATH + OBJECT_ID_PATH + VERSION_PATH )
     Response setObjectCryptoService(
             @Path( OBJECT_ID ) UUID objectId,
             @Path( VERSION ) long version,
-            @Body byte[] crypto);
+            @Body byte[] crypto );
 
     /**
      * Cached API to retrieve the object crypto service for a specific version of the object specified by
@@ -95,10 +95,9 @@ public interface KeyStorageApi {
      * @param objectId The object for which to retrieve the crypto service.
      * @param version The version of the object for which to retrieve a crpyto service
      * @return The crypto service corresponding to the object with version specified by {@code version} and object id
-     *         specified by {@code objectId}. 
      */
     @GET( CONTROLLER + CRYPTO_SERVICE_PATH + OBJECT_ID_PATH + VERSION_PATH )
-    byte[] getObjectCryptoService( @Path( OBJECT_ID ) UUID objectId, @Path( VERSION ) long version);
+    byte[] getObjectCryptoService( @Path( OBJECT_ID ) UUID objectId, @Path( VERSION ) long version );
 
     @POST( CONTROLLER + CRYPTO_SERVICES_PATH )
     Map<UUID, byte[]> getObjectCryptoServices( @Body Set<UUID> ids );
@@ -118,7 +117,7 @@ public interface KeyStorageApi {
      * @param user
      */
     @GET( CONTROLLER + FHE_PUBLIC_PATH + USER_ID_PATH )
-    byte[] getFHEPublicKey( @Path( USER ) UUID user);
+    byte[] getFHEPublicKey( @Path( USER ) UUID user );
 
     @POST( CONTROLLER + FHE_PRIVATE_PATH )
     Response setFHEPrivateKeyForCurrentUser( @Body BlockCiphertext key );
