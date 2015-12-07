@@ -18,6 +18,15 @@ public class EmailRequest implements Serializable {
   private final Optional<String> subject;
   private final Optional<String> body;
 
+  public final static EmailRequest EMPTY_REQUEST = new EmailRequest(
+      Optional.<String>absent(),
+      Optional.<String[]>absent(),
+      Optional.<String[]>absent(),
+      Optional.<String[]>absent(),
+      Optional.<String>absent(),
+      Optional.<String>absent()
+  );
+
   @JsonCreator
   @JsonIgnoreProperties(ignoreUnknown = true)
   public EmailRequest(
