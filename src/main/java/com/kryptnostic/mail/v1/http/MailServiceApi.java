@@ -1,18 +1,18 @@
 package com.kryptnostic.mail.v1.http;
 
+import java.io.IOException;
+
 import com.kryptnostic.kodex.v1.models.response.BasicResponse;
 import com.kryptnostic.mail.v1.models.EmailRequest;
+
 import retrofit.http.Body;
 import retrofit.http.POST;
 
-import java.io.IOException;
-
-
 public interface MailServiceApi {
 
-  String INVITE = "invite";
+    String INVITE = "invite";
 
-  @POST(INVITE)
-  BasicResponse<String> sendInvitationEmail(@Body EmailRequest request) throws IOException;
+    @POST( INVITE )
+    BasicResponse<String> sendInvitationEmail( @Body EmailRequest request ) throws InterruptedException, IOException;
 
 }
