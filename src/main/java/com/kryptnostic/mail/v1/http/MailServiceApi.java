@@ -1,7 +1,5 @@
 package com.kryptnostic.mail.v1.http;
 
-import java.io.IOException;
-
 import com.kryptnostic.kodex.v1.models.response.BasicResponse;
 import com.kryptnostic.mail.v1.models.EmailRequest;
 
@@ -13,6 +11,6 @@ public interface MailServiceApi {
     String INVITE = "invite";
 
     @POST( INVITE )
-    BasicResponse<String> sendInvitationEmail( @Body EmailRequest request ) throws InterruptedException, IOException;
+    BasicResponse<String> sendInvitationEmail( @Body EmailRequest request );
 
 }
