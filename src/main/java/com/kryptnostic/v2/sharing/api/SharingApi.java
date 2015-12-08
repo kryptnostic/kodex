@@ -4,20 +4,19 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
+import com.kryptnostic.indexing.v1.ObjectSearchPair;
+import com.kryptnostic.kodex.v1.models.response.BasicResponse;
+import com.kryptnostic.v2.sharing.models.IncomingShares;
+import com.kryptnostic.v2.sharing.models.RevocationRequest;
+import com.kryptnostic.v2.sharing.models.SharingRequest;
+import com.kryptnostic.v2.storage.models.VersionedObjectKey;
+
 import retrofit.http.Body;
 import retrofit.http.DELETE;
 import retrofit.http.GET;
 import retrofit.http.POST;
 import retrofit.http.PUT;
 import retrofit.http.Path;
-
-import com.kryptnostic.indexing.v1.ObjectSearchPair;
-import com.kryptnostic.kodex.v1.models.response.BasicResponse;
-import com.kryptnostic.sharing.v1.models.response.KeyUpdateResponse;
-import com.kryptnostic.v2.sharing.models.IncomingShares;
-import com.kryptnostic.v2.sharing.models.RevocationRequest;
-import com.kryptnostic.v2.sharing.models.SharingRequest;
-import com.kryptnostic.v2.storage.models.VersionedObjectKey;
 
 public interface SharingApi {
     String SHARE       = "/share";
@@ -42,10 +41,10 @@ public interface SharingApi {
 
     // TODO: Consider creating objects here.
     @PUT( SHARE + KEYS )
-    KeyUpdateResponse addSearchPairs( @Body Map<VersionedObjectKey, ObjectSearchPair> indexPairs );
+    Set<UUID> addSearchPairs( @Body Map<VersionedObjectKey, ObjectSearchPair> indexPairs );
 
     @DELETE( SHARE + KEYS )
-    KeyUpdateResponse removeKeys( @Body Set<UUID> uuids );
+    Set<UUID> removeKeys( @Body Set<UUID> uuids );
 
     @GET( SHARE + OBJECT + "/{" + ID + "}/{" + VERSION + "}" )
     byte[] getSearchPair( @Path( ID ) UUID id, @Path( VERSION ) long version );
