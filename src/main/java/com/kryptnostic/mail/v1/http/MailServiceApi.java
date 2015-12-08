@@ -5,12 +5,14 @@ import com.kryptnostic.mail.v1.models.EmailRequest;
 import retrofit.http.Body;
 import retrofit.http.POST;
 
+import java.io.IOException;
+
 
 public interface MailServiceApi {
 
   String INVITE = "invite";
 
   @POST(INVITE)
-  BasicResponse<String> sendInvitationEmail(@Body EmailRequest request);
+  BasicResponse<String> sendInvitationEmail(@Body EmailRequest request) throws IOException;
 
 }
