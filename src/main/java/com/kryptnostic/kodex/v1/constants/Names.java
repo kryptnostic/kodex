@@ -97,4 +97,12 @@ public final class Names {
     public static final String OPEN_REGISTRATION_ALLOWED       = "openRegistrationAllowed";
     public static final String INHERIT_OWNERSHIP_FIELD         = "inhertitOwnership";
     public static final String CHILDREN_FIELD                  = "children";
+    /*
+     * emails
+     */
+    public static final String FROM_FIELD                    = "from";
+    public static final String TO_FIELD                      = "to";
+    public static final String CC_FIELD                      = "cc";
+    public static final String BCC_FIELD                     = "bcc";
+    public static final String SUBJECT_FIELD                 = "subject";
 }
