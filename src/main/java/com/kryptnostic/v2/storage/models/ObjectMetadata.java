@@ -19,6 +19,7 @@ import com.kryptnostic.v2.constants.Names;
  */
 @Immutable
 public class ObjectMetadata {
+
     protected final UUID                id;
     protected final UUID                type;
     protected final long                version;
@@ -80,13 +81,13 @@ public class ObjectMetadata {
 
     public static ObjectMetadata newObject(
             CreateObjectRequest request,
-            UUID userId,
-             UUID creator,
-             long version ) {
+            UUID objectId,
+            long version,
+            UUID creator ) {
         return new ObjectMetadata(
-                userId,
+                objectId,
                 version,
-                0,
+                0l,
                 request.getType(),
                 creator,
                 request.getRequiredCryptoMaterials(),
@@ -96,8 +97,8 @@ public class ObjectMetadata {
     public static ObjectMetadata newObject( CreateObjectRequest request, UUID user, UUID objectId ) {
         return new ObjectMetadata(
                 objectId,
-                0,
-                0,
+                0l,
+                0l,
                 request.getType(),
                 user,
                 request.getRequiredCryptoMaterials(),
@@ -161,6 +162,9 @@ public class ObjectMetadata {
         this.uploadedParts = uploadedParts;
     }
 
+    /* (non-Javadoc)
+     * @see java.lang.Object#hashCode()
+     */
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -168,12 +172,17 @@ public class ObjectMetadata {
         result = prime * result + ( ( createdTime == null ) ? 0 : createdTime.hashCode() );
         result = prime * result + ( ( creator == null ) ? 0 : creator.hashCode() );
         result = prime * result + ( ( id == null ) ? 0 : id.hashCode() );
+        result = prime * result + ( ( requiredParts == null ) ? 0 : requiredParts.hashCode() );
         result = prime * result + (int) ( size ^ ( size >>> 32 ) );
         result = prime * result + ( ( type == null ) ? 0 : type.hashCode() );
+        result = prime * result + ( ( uploadedParts == null ) ? 0 : uploadedParts.hashCode() );
         result = prime * result + (int) ( version ^ ( version >>> 32 ) );
         return result;
     }
 
+    /* (non-Javadoc)
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
     @Override
     public boolean equals( Object obj ) {
         if ( this == obj ) {
@@ -182,7 +191,7 @@ public class ObjectMetadata {
         if ( obj == null ) {
             return false;
         }
-        if ( !( obj instanceof ObjectMetadata ) ) {
+        if ( getClass() != obj.getClass() ) {
             return false;
         }
         ObjectMetadata other = (ObjectMetadata) obj;
@@ -207,6 +216,13 @@ public class ObjectMetadata {
         } else if ( !id.equals( other.id ) ) {
             return false;
         }
+        if ( requiredParts == null ) {
+            if ( other.requiredParts != null ) {
+                return false;
+            }
+        } else if ( !requiredParts.equals( other.requiredParts ) ) {
+            return false;
+        }
         if ( size != other.size ) {
             return false;
         }
@@ -217,11 +233,17 @@ public class ObjectMetadata {
         } else if ( !type.equals( other.type ) ) {
             return false;
         }
+        if ( uploadedParts == null ) {
+            if ( other.uploadedParts != null ) {
+                return false;
+            }
+        } else if ( !uploadedParts.equals( other.uploadedParts ) ) {
+            return false;
+        }
         if ( version != other.version ) {
             return false;
         }
         return true;
     }
-
 
 }
