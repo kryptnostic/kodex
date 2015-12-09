@@ -12,7 +12,9 @@ public interface DirectoryClient {
 
     PublicKeyEnvelope getPublicKey( UUID id ) throws ResourceNotFoundException;
 
+    @Deprecated
     NotificationPreference getNotificationPreference();
 
+    @Deprecated
     void setNotificationPreference( NotificationPreference preference );
 }
