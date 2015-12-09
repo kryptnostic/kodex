@@ -148,9 +148,11 @@ public interface DirectoryApi {
             @Path( Names.ID_FIELD ) String objectId,
             @Body ByteArrayEnvelope cryptoService);
 
+    @Deprecated
     @GET( CONTROLLER + NOTIFICATION_KEY )
     BasicResponse<NotificationPreference> getNotificationPreference();
 
+    @Deprecated
     @PUT( CONTROLLER + NOTIFICATION_KEY )
     BasicResponse<String> setNotificationPreference( @Body NotificationPreference preferences );
 
