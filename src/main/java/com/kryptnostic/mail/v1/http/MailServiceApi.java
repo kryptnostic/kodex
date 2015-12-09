@@ -10,7 +10,8 @@ public interface MailServiceApi {
     String CONTROLLER = "/mail";
     String INVITE     = "/invite";
 
-    @POST( INVITE )
+    @Deprecated
+    @POST( CONTROLLER + INVITE )
     BasicResponse<String> sendInvitationEmail( @Body EmailRequest request );
 
 }
