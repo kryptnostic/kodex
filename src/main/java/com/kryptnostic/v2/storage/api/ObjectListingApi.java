@@ -62,4 +62,6 @@ public interface ObjectListingApi {
             @Path( PAGE ) Integer offset,
             @Path( PAGE_SIZE ) Integer pageSize );
 
+    @GET( CONTROLLER + TYPE_ID_PATH )
+    UUID getTypeForName( @Path( TYPE ) String typeName);
 }
