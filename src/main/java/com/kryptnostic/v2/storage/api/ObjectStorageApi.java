@@ -46,8 +46,6 @@ public interface ObjectStorageApi {
     String SALT_PATH            = "/salt";
     String TAG_PATH             = "/tag";
     String LEVELS_PATH          = "/levels";
-    String TYPE                 = "type";
-    String TYPE_PATH            = "/type/{" + TYPE + "}";
     String OBJECT_APPEND_PATH   = "/append";
     String OBJECT_METADATA_PATH = "/metadata";
     String BULK_PATH            = "/bulk";
