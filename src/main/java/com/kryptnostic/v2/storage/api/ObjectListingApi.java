@@ -23,6 +23,7 @@ public interface ObjectListingApi {
     String LATEST_PATH    = "/latest";
     String USER_ID_PATH   = "/{" + ID + "}";
     String TYPE_ID_PATH   = "/type/{" + TYPE + "}";
+    String TYPE_NAME_PATH = "/typename/{" + TYPE + "}";
     String PAGE_SIZE_PATH = "/{" + PAGE_SIZE + "}";
     String PAGE_PATH      = "/{" + PAGE + "}";
 
@@ -62,6 +63,6 @@ public interface ObjectListingApi {
             @Path( PAGE ) Integer offset,
             @Path( PAGE_SIZE ) Integer pageSize );
 
-    @GET( CONTROLLER + TYPE_ID_PATH )
+    @GET( CONTROLLER + TYPE_NAME_PATH )
     UUID getTypeForName( @Path( TYPE ) String typeName);
 }
