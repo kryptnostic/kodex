@@ -8,9 +8,10 @@ import retrofit.http.POST;
 
 public interface MailServiceApi {
 
-    String INVITE = "invite";
+    String CONTROLLER = "invite";
+    String INVITE     = "/**";
 
-    @POST( INVITE )
+    @POST( CONTROLLER + INVITE )
     BasicResponse<String> sendInvitationEmail( @Body EmailRequest request );
 
 }
