@@ -34,7 +34,7 @@ public class EmailRequest implements Serializable {
             @JsonProperty( Names.SUBJECT_FIELD ) Optional<String> subject,
             @JsonProperty( Names.BODY_FIELD ) Optional<String> body ) {
 
-        this.from = from;
+        this.from = Preconditions.checkNotNull( from );
         this.to = ImmutableList.copyOf( Iterables.filter( Arrays.asList( Preconditions.checkNotNull( to ) ),
                 new Predicate<String>() {
 
@@ -44,10 +44,10 @@ public class EmailRequest implements Serializable {
                     }
 
                 } ) ).toArray( new String[ 0 ] );
-        this.cc = cc;
-        this.bcc = bcc;
-        this.subject = subject;
-        this.body = body;
+        this.cc = Preconditions.checkNotNull( cc );
+        this.bcc = Preconditions.checkNotNull( bcc );
+        this.subject = Preconditions.checkNotNull( subject );
+        this.body = Preconditions.checkNotNull( body );
         Preconditions.checkState( this.to.length > 0 );
     }
 
