@@ -3,11 +3,15 @@ package com.kryptnostic.mail.v1.models;
 import java.io.Serializable;
 import java.util.Arrays;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
+import com.google.common.base.Predicate;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
 import com.kryptnostic.kodex.v1.constants.Names;
 
 public class EmailRequest implements Serializable {
@@ -22,22 +26,29 @@ public class EmailRequest implements Serializable {
     private final Optional<String>   body;
 
     @JsonCreator
-    @JsonIgnoreProperties(
-        ignoreUnknown = true )
     public EmailRequest(
             @JsonProperty( Names.FROM_FIELD ) Optional<String> from,
             @JsonProperty( Names.TO_FIELD ) String[] to,
             @JsonProperty( Names.CC_FIELD ) Optional<String[]> cc,
             @JsonProperty( Names.BCC_FIELD ) Optional<String[]> bcc,
             @JsonProperty( Names.SUBJECT_FIELD ) Optional<String> subject,
-            @JsonProperty( Names.BODY_FIELD ) Optional<String> body) {
-        Preconditions.checkArgument( Preconditions.checkNotNull( to ).length > 0 );
+            @JsonProperty( Names.BODY_FIELD ) Optional<String> body ) {
+
         this.from = from;
-        this.to = to;
+        this.to = ImmutableList.copyOf( Iterables.filter( Arrays.asList( Preconditions.checkNotNull( to ) ),
+                new Predicate<String>() {
+
+                    @Override
+                    public boolean apply( String input ) {
+                        return StringUtils.isNotBlank( input );
+                    }
+
+                } ) ).toArray( new String[ 0 ] );
         this.cc = cc;
         this.bcc = bcc;
         this.subject = subject;
         this.body = body;
+        Preconditions.checkState( this.to.length > 0 );
     }
 
     @JsonProperty( Names.FROM_FIELD )
