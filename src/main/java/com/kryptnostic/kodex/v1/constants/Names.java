@@ -94,4 +94,5 @@ public final class Names {
     public static final String CC_FIELD                      = "cc";
     public static final String BCC_FIELD                     = "bcc";
     public static final String SUBJECT_FIELD                 = "subject";
+    public static final String TEMPLATE_FIELD                = "template";
 }
