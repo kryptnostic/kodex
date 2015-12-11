@@ -26,7 +26,7 @@ public class EmailRequestTest extends BaseJacksonSerializationTest<EmailRequest>
     }
 
     @Test(
-        expected = IllegalArgumentException.class )
+        expected = IllegalStateException.class )
     public void testNoTo() {
         new EmailRequest(
                 Optional.<String> absent(),

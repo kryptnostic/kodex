@@ -21,7 +21,6 @@ public class EmailRequest implements Serializable {
     private final String[]           to;
     private final Optional<String[]> cc;
     private final Optional<String[]> bcc;
-
     private final Optional<String>   subject;
     private final Optional<String>   body;
 
@@ -32,7 +31,7 @@ public class EmailRequest implements Serializable {
             @JsonProperty( Names.CC_FIELD ) Optional<String[]> cc,
             @JsonProperty( Names.BCC_FIELD ) Optional<String[]> bcc,
             @JsonProperty( Names.SUBJECT_FIELD ) Optional<String> subject,
-            @JsonProperty( Names.BODY_FIELD ) Optional<String> body ) {
+            @JsonProperty( Names.BODY_FIELD ) Optional<String> body) {
 
         this.from = Preconditions.checkNotNull( from );
         this.to = ImmutableList.copyOf( Iterables.filter( Arrays.asList( Preconditions.checkNotNull( to ) ),
