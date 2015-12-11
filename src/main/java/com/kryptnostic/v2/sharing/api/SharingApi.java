@@ -5,12 +5,12 @@ import java.util.Set;
 import java.util.UUID;
 
 import com.kryptnostic.indexing.v1.ObjectSearchPair;
-import com.kryptnostic.kodex.v1.models.response.BasicResponse;
-import com.kryptnostic.v2.sharing.models.IncomingShares;
 import com.kryptnostic.v2.sharing.models.RevocationRequest;
+import com.kryptnostic.v2.sharing.models.Share;
 import com.kryptnostic.v2.sharing.models.SharingRequest;
 import com.kryptnostic.v2.storage.models.VersionedObjectKey;
 
+import retrofit.client.Response;
 import retrofit.http.Body;
 import retrofit.http.DELETE;
 import retrofit.http.GET;
@@ -28,16 +28,16 @@ public interface SharingApi {
     String VERSION     = "version";
 
     @GET( SHARE + OBJECT )
-    IncomingShares getIncomingShares();
+    Set<Share> getIncomingShares();
 
     @POST( SHARE + OBJECT + "/{" + ID + "}" )
-    BasicResponse<String> removeIncomingShares( @Path( ID ) UUID uuid );
+    Response removeIncomingShares( @Path( ID ) UUID uuid);
 
     @POST( SHARE + OBJECT + SHARE )
-    BasicResponse<String> share( @Body SharingRequest request );
+    Response share( @Body SharingRequest request );
 
     @POST( SHARE + OBJECT + REVOKE )
-    BasicResponse<String> revokeAccess( @Body RevocationRequest request );
+    Response revokeAccess( @Body RevocationRequest request );
 
     // TODO: Consider creating objects here.
     @PUT( SHARE + KEYS )
