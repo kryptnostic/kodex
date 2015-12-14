@@ -1,6 +1,5 @@
 package com.kryptnostic.mail.v1.models;
 
-import java.io.Serializable;
 import java.util.Arrays;
 
 import org.apache.commons.lang3.StringUtils;
@@ -14,8 +13,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.kryptnostic.kodex.v1.constants.Names;
 
-public class EmailRequest implements Serializable {
-    private static final long        serialVersionUID = -1654230107574687685L;
+public class EmailRequest {
 
     private final Optional<String>   from;
     private final String[]           to;
