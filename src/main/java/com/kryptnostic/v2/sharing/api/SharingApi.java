@@ -47,6 +47,6 @@ public interface SharingApi {
     Set<UUID> removeKeys( @Body Set<UUID> uuids );
 
     @GET( SHARE + OBJECT + "/{" + ID + "}/{" + VERSION + "}" )
-    byte[] getSearchPair( @Path( ID ) UUID id, @Path( VERSION ) long version );
+    byte[] getSearchPair( @Path( ID ) UUID id, @Path( VERSION ) long version);
 
 }
