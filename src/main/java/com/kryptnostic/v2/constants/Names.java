@@ -103,4 +103,5 @@ public final class Names {
     public static final String SALTED_FIELD                    = "salted";
     public static final String REQUIRED_CRYPTO_MATS_FIELD      = "requiredCryptoMats";
     public static final String OBJECT_VERSION_FIELD            = "objectVersion";
+    public static final String DEPTH                           = "depth";
 }
