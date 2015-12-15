@@ -14,7 +14,6 @@ import com.google.common.collect.Iterables;
 import com.kryptnostic.kodex.v1.constants.Names;
 
 public class EmailRequest {
-
     private final Optional<String>   from;
     private final String[]           to;
     private final Optional<String[]> cc;
@@ -29,7 +28,7 @@ public class EmailRequest {
             @JsonProperty( Names.CC_FIELD ) Optional<String[]> cc,
             @JsonProperty( Names.BCC_FIELD ) Optional<String[]> bcc,
             @JsonProperty( Names.SUBJECT_FIELD ) Optional<String> subject,
-            @JsonProperty( Names.BODY_FIELD ) Optional<String> body) {
+            @JsonProperty( Names.BODY_FIELD ) Optional<String> body ) {
 
         this.from = Preconditions.checkNotNull( from );
         this.to = ImmutableList.copyOf( Iterables.filter( Arrays.asList( Preconditions.checkNotNull( to ) ),
