@@ -1,3 +1,17 @@
+buildscript {
+  repositories {
+    maven {
+      url 'http://artifactory.krypt.int/artifactory/libs-release/'
+    }
+    maven {
+      url 'http://artifactory.krypt.int/artifactory/libs-snapshot/'
+    }
+    maven {
+      url 'http://artifactory.krypt.int/artifactory/remote-repos/'
+    }
+  }
+}
+
 //Easy semantic version based off describe + tags
 def getVersionName = { ->
     def stdout = new ByteArrayOutputStream()
@@ -13,20 +27,6 @@ def getVersionName = { ->
     }
 
     return semVer
-}
-
-buildscript {
-  repositories {
-    maven {
-      url 'http://artifactory.krypt.int/artifactory/libs-release/'
-    }
-    maven {
-      url 'http://artifactory.krypt.int/artifactory/libs-snapshot/'
-    }
-    maven {
-      url 'http://artifactory.krypt.int/artifactory/remote-repos/'
-    }
-  }
 }
 
 description = "Kryptnostic Java client"
