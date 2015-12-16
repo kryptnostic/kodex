@@ -47,8 +47,6 @@ apply plugin: "maven-publish"
 sourceCompatibility=JavaVersion.VERSION_1_7
 
 repositories {
-  mavenCentral()
-  mavenLocal()
   maven {
     url 'http://artifactory.krypt.int/artifactory/libs-release/'
   }
@@ -58,6 +56,8 @@ repositories {
   maven {
     url 'http://artifactory.krypt.int/artifactory/remote-repos/'
   }
+  mavenCentral()
+  mavenLocal()
   maven {
     url "https://build.shibboleth.net/nexus/content/groups/public/"
   }
