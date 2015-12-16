@@ -32,7 +32,7 @@ public class DefaultErrorHandler implements ErrorHandler {
         if ( r != null && r.getStatus() == 500 ) {
             String msg = parseMsg( cause );
             if ( msg != null ) {
-                cause = RetrofitError.unexpectedError( cause.getUrl(), new KodexException( msg ) );
+                return RetrofitError.unexpectedError( cause.getUrl(), new KodexException( msg ) );
             }
         }
 
@@ -40,8 +40,13 @@ public class DefaultErrorHandler implements ErrorHandler {
     }
 
     private String parseMsg( RetrofitError cause ) {
-        Object raw = cause.getBodyAs( TypeFactory.defaultInstance().constructType(
-                new TypeReference<BasicResponse<String>>() {} ) );
+        Object raw;
+        try {
+            raw = cause.getBodyAs( TypeFactory.defaultInstance().constructType(
+                    new TypeReference<BasicResponse<String>>() {} ) );
+        } catch ( RuntimeException e ) {
+            return null;
+        }
         if ( raw instanceof BasicResponse ) {
             BasicResponse<String> msg = (BasicResponse<String>) raw;
             return msg.getData();

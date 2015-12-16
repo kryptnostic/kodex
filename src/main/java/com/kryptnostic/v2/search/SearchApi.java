@@ -1,10 +1,9 @@
-package com.kryptnostic.search.v1.http;
+package com.kryptnostic.v2.search;
 
 import retrofit.http.Body;
 import retrofit.http.POST;
 
 import com.kryptnostic.search.v1.models.request.SearchRequest;
-import com.kryptnostic.search.v1.models.response.SearchResultResponse;
 
 public interface SearchApi {
     String CONTROLLER = "/search";

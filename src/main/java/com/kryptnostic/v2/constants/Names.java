@@ -1,4 +1,4 @@
-package com.kryptnostic.kodex.v1.constants;
+package com.kryptnostic.v2.constants;
 
 public final class Names {
     private Names() {}
@@ -89,21 +89,19 @@ public final class Names {
     public static final String TAG                             = "tag";
     public static final String ENCRYPTED_LENGTH                = "encryptedLength";
     public static final String CONTENTS                        = "contents";
-    public static final String LENGTH                          = "length";
+    public static final String LENGTH_FIELD                    = "length";
     public static final String OBJECT_IDS                      = "objectIds";
     public static final String LOAD_LEVELS                     = "loadLevels";
     public static final String INHERITING_CRYPTO_SERVICE_FIELD = "inheritCryptoService";
     public static final String LOCKED_FIELD                    = "locked";
-    public static final String OPEN_REGISTRATION_ALLOWED       = "openRegistrationAllowed";
-    public static final String INHERIT_OWNERSHIP_FIELD         = "inhertitOwnership";
-    public static final String CHILDREN_FIELD                  = "children";
-    /*
-     * emails
-     */
-    public static final String FROM_FIELD                    = "from";
-    public static final String TO_FIELD                      = "to";
-    public static final String CC_FIELD                      = "cc";
-    public static final String BCC_FIELD                     = "bcc";
-    public static final String SUBJECT_FIELD                 = "subject";
-    public static final String TEMPLATE_FIELD                = "template";
+    public static final String TERM_FIELD                      = "term";
+    public static final String OBJECT_CREATION_PROGRESS        = "objectCreationProgress";
+    public static final String FHE_PRIVATE_KEY                 = "fhePrivateKey";
+    public static final String FHE_SEARCH_PRIVATE_KEY          = "fheSearchPrivateKey";
+    public static final String CLIENT_HASH_FUNCTION            = "clientHashFunction";
+    public static final String OBJECT_ID_FIELD                 = "objectId";
+    public static final String SALTED_FIELD                    = "salted";
+    public static final String REQUIRED_CRYPTO_MATS_FIELD      = "requiredCryptoMats";
+    public static final String OBJECT_VERSION_FIELD            = "objectVersion";
+    public static final String DEPTH                           = "depth";
 }

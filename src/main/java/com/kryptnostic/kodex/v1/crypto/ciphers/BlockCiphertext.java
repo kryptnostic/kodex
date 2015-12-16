@@ -8,37 +8,36 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Optional;
 import com.kryptnostic.crypto.Ciphertext;
+import com.kryptnostic.kodex.v1.constants.Names;
 
 /**
  * Holds the output of performing an AES encryption with {@link PasswordCryptoService}
- * 
+ *
  * @author Matthew Tamayo-Rios &lt;matthew@kryptnostic.com&gt;
  */
 @JsonInclude( Include.NON_NULL )
 public class BlockCiphertext extends Ciphertext {
-    private static final long      serialVersionUID       = 5566319942401654333L;
-    private static final String    FIELD_IV               = "iv";
-    private static final String    FIELD_SALT             = "salt";
-    private static final String    FIELD_TAG              = "tag";
-    private static final String    FIELD_ENCRYPTED_LENGTH = "length";
+    private static final long      serialVersionUID = 5566319942401654333L;
 
     private final byte[]           iv;
     private final byte[]           salt;
     private final Optional<byte[]> encryptedLength;
     private final Optional<byte[]> tag;
 
-    public BlockCiphertext( byte[] iv, byte[] salt,
+    public BlockCiphertext(
+            byte[] iv,
+            byte[] salt,
             byte[] contents ) {
         this( iv, salt, contents, Optional.<byte[]> absent(), Optional.<byte[]> absent() );
     }
 
     @JsonCreator
     public BlockCiphertext(
-            @JsonProperty( FIELD_IV ) byte[] iv,
-            @JsonProperty( FIELD_SALT ) byte[] salt,
-            @JsonProperty( FIELD_CONTENTS ) byte[] contents,
-            @JsonProperty( FIELD_ENCRYPTED_LENGTH ) Optional<byte[]> encryptedLength,
-            @JsonProperty( FIELD_TAG ) Optional<byte[]> tag ) {
+            @JsonProperty( Names.IV ) byte[] iv,
+            @JsonProperty( Names.SALT ) byte[] salt,
+            @JsonProperty( Names.CONTENTS ) byte[] contents,
+            @JsonProperty( Names.ENCRYPTED_LENGTH ) Optional<byte[]> encryptedLength,
+            @JsonProperty( Names.TAG ) Optional<byte[]> tag) {
         super( contents, null );
         this.iv = iv;
         this.salt = salt;
@@ -46,22 +45,22 @@ public class BlockCiphertext extends Ciphertext {
         this.tag = tag;
     }
 
-    @JsonProperty( FIELD_IV )
+    @JsonProperty( Names.IV )
     public byte[] getIv() {
         return iv;
     }
 
-    @JsonProperty( FIELD_SALT )
+    @JsonProperty( Names.SALT )
     public byte[] getSalt() {
         return salt;
     }
 
-    @JsonProperty( FIELD_ENCRYPTED_LENGTH )
+    @JsonProperty( Names.ENCRYPTED_LENGTH )
     public Optional<byte[]> getEncryptedLength() {
         return encryptedLength;
     }
 
-    @JsonProperty( FIELD_TAG )
+    @JsonProperty( Names.TAG )
     public Optional<byte[]> getTag() {
         return tag;
     }
@@ -77,11 +76,11 @@ public class BlockCiphertext extends Ciphertext {
         return result;
     }
 
+    @Override
     public boolean equals( Object obj ) {
         if ( this == obj ) {
             return true;
-        }
-        else if ( obj instanceof BlockCiphertext ) {
+        } else if ( obj instanceof BlockCiphertext ) {
             BlockCiphertext other = (BlockCiphertext) obj;
             boolean ivEquals = Arrays.equals( iv, other.iv );
             boolean saltEquals = Arrays.equals( salt, other.salt );
@@ -102,5 +101,47 @@ public class BlockCiphertext extends Ciphertext {
             return ivEquals && saltEquals && encryptedLengthEquals && tagEquals;
         }
         return false;
+    }
+
+    public static class Builder {
+        private byte[] iv;
+        private byte[] salt;
+        private byte[] contents;
+        private byte[] encryptedLength;
+        private byte[] tag;
+
+        public Builder setIv( byte[] iv ) {
+            this.iv = iv;
+            return this;
+        }
+
+        public Builder setSalt( byte[] salt ) {
+            this.salt = salt;
+            return this;
+        }
+
+        public Builder setContents( byte[] contents ) {
+            this.contents = contents;
+            return this;
+        }
+
+        public Builder setEncryptedLength( byte[] encryptedLength ) {
+            this.encryptedLength = encryptedLength;
+            return this;
+        }
+
+        public Builder setTag( byte[] tag ) {
+            this.tag = tag;
+            return this;
+        }
+
+        public BlockCiphertext createBlockCiphertext() {
+            return new BlockCiphertext(
+                    iv,
+                    salt,
+                    contents,
+                    Optional.fromNullable( encryptedLength ),
+                    Optional.fromNullable( tag ) );
+        }
     }
 }

@@ -10,3 +10,6 @@ vendor.js.map
 dontUseMe.map
 app.js.map
 app.css.map
+/.apt_generated/
+.factorypath
+/generated_src/
