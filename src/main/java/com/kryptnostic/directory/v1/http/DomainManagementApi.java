@@ -1,5 +1,6 @@
 package com.kryptnostic.directory.v1.http;
 
+import java.util.ArrayList;
 import java.util.UUID;
 
 import com.codahale.metrics.annotation.Timed;
@@ -51,13 +52,13 @@ public interface DomainManagementApi {
      */
     @Timed
     @PUT( WHITE_LIST + NAME_PATH )
-    Response addDomainWhiteList( @Path( NAME ) String domainName, @Body String[] domains);
+    Response addDomainWhiteList( @Path( NAME ) String domainName, @Body ArrayList<String> domains);
 
     @Timed
     @GET( WHITE_LIST + NAME_PATH )
-    String[] getDomainWhiteList( @Path( NAME ) String domainName);
+    ArrayList<String> getDomainWhiteList( @Path( NAME ) String domainName);
 
     @Timed
     @DELETE( WHITE_LIST + NAME_PATH )
-    Response deleteDomainWhiteList( @Path( NAME ) String domainName, @Body String[] domains);
+    Response deleteDomainWhiteList( @Path( NAME ) String domainName, @Body ArrayList<String> domains);
 }
