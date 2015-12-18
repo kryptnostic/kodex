@@ -158,10 +158,10 @@ public interface DirectoryApi {
 
     @Timed
     @GET( CONTROLLER + PARAM.REALM )
-    Set<UUID> listUserInRealm( @Path( Names.REALM_FIELD ) String realm);
+    Iterable<UUID> listUserInRealm( @Path( Names.REALM_FIELD ) String realm);
 
     @GET( CONTROLLER + INITIALIZED + PARAM.REALM )
-    Set<UUID> listInitializedUserInRealm( @Path( Names.REALM_FIELD ) String realm);
+    Iterable<UUID> listInitializedUserInRealm( @Path( Names.REALM_FIELD ) String realm);
 
     @Timed
     @GET( CONTROLLER + PARAM.REALM + PARAM.USER )
