@@ -4,6 +4,14 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
+import retrofit.client.Response;
+import retrofit.http.Body;
+import retrofit.http.DELETE;
+import retrofit.http.GET;
+import retrofit.http.POST;
+import retrofit.http.PUT;
+import retrofit.http.Path;
+
 import com.kryptnostic.kodex.v1.crypto.ciphers.BlockCiphertext;
 import com.kryptnostic.v2.constants.Names;
 import com.kryptnostic.v2.storage.models.CreateMetadataObjectRequest;
@@ -13,14 +21,6 @@ import com.kryptnostic.v2.storage.models.ObjectMetadataEncryptedNode;
 import com.kryptnostic.v2.storage.models.ObjectTreeLoadRequest;
 import com.kryptnostic.v2.storage.models.PaddedMetadataObjectIds;
 import com.kryptnostic.v2.storage.models.VersionedObjectKey;
-
-import retrofit.client.Response;
-import retrofit.http.Body;
-import retrofit.http.DELETE;
-import retrofit.http.GET;
-import retrofit.http.POST;
-import retrofit.http.PUT;
-import retrofit.http.Path;
 
 /**
  * @author Matthew Tamayo-Rios &lt;matthew@kryptnostic.com&gt;
@@ -89,7 +89,7 @@ public interface ObjectStorageApi {
      * available through the more efficient byte level APIs.
      *
      * @param objectId
-     * @param block
+     * @param version
      * @return
      */
     @GET( CONTROLLER + OBJECT_ID_PATH + VERSION_PATH )
@@ -99,7 +99,7 @@ public interface ObjectStorageApi {
      * Sets the IV for an object block
      *
      * @param objectId
-     * @param block
+     * @param version
      * @param iv
      * @return
      */
@@ -107,7 +107,7 @@ public interface ObjectStorageApi {
     Response setObjectIv( @Path( ID ) UUID objectId, @Path( VERSION ) long version, @Body byte[] iv );
 
     @PUT( CONTROLLER + OBJECT_ID_PATH + VERSION_PATH + CONTENTS_PATH )
-    Response setObjectContent( @Path( ID ) UUID objectId, @Path( VERSION ) long version, @Body byte[] content);
+    Response setObjectContent( @Path( ID ) UUID objectId, @Path( VERSION ) long version, @Body byte[] content );
 
     @PUT( CONTROLLER + OBJECT_ID_PATH + VERSION_PATH + SALT_PATH )
     Response setObjectSalt( @Path( ID ) UUID objectId, @Path( VERSION ) long version, @Body byte[] salt );

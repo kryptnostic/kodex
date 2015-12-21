@@ -4,6 +4,12 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
+import retrofit.http.Body;
+import retrofit.http.GET;
+import retrofit.http.POST;
+import retrofit.http.PUT;
+import retrofit.http.Path;
+
 import com.codahale.metrics.annotation.Timed;
 import com.google.common.base.Optional;
 import com.kryptnostic.directory.v1.model.ByteArrayEnvelope;
@@ -13,12 +19,6 @@ import com.kryptnostic.kodex.v1.crypto.ciphers.BlockCiphertext;
 import com.kryptnostic.kodex.v1.exceptions.types.ResourceNotFoundException;
 import com.kryptnostic.kodex.v1.models.response.BasicResponse;
 import com.kryptnostic.sharing.v1.models.NotificationPreference;
-
-import retrofit.http.Body;
-import retrofit.http.GET;
-import retrofit.http.POST;
-import retrofit.http.PUT;
-import retrofit.http.Path;
 
 public interface DirectoryApi {
     String CONTROLLER       = "/directory";
@@ -42,7 +42,7 @@ public interface DirectoryApi {
     }
 
     /**
-     * @deprecated use {@link com.kryptnostic.v2.storage.api.KeyStorageApi#getRSAPublicKey( UUID user ) } instead
+     * @deprecated use {@link com.kryptnostic.v2.storage.api.KeyStorageApi#getRSAPublicKey(UUID user ) } instead
      * @param id The id of the user whose public key shall be retrieved.
      * @return Specified user's public key
      * @throws ResourceNotFoundException
@@ -50,10 +50,10 @@ public interface DirectoryApi {
     @Deprecated
     @Timed
     @GET( CONTROLLER + PUBLIC_KEY + PARAM.USER )
-    PublicKeyEnvelope getPublicKey( @Path( Names.USER_FIELD ) UUID id) throws ResourceNotFoundException;
+    PublicKeyEnvelope getPublicKey( @Path( Names.USER_FIELD ) UUID id ) throws ResourceNotFoundException;
 
     /**
-     * @deprecated use {@link com.kryptnostic.v2.storage.api.KeyStorageApi#getRSAPublicKeys( userIds ) } instead
+     * @deprecated use {@link com.kryptnostic.v2.storage.api.KeyStorageApi#getRSAPublicKeys(Set userIds ) } instead
      * @param userIds The id of the user whose public key shall be retrieved.
      * @return Specified user's public key
      * @throws ResourceNotFoundException
@@ -65,7 +65,7 @@ public interface DirectoryApi {
             throws ResourceNotFoundException;
 
     /**
-     * @deprecated use {@link com.kryptnostic.v2.storage.api.KeyStorageApi#setRSAPublicKey( byte[] publicKey ) } instead
+     * @deprecated use {@link com.kryptnostic.v2.storage.api.KeyStorageApi#setRSAPublicKey(byte[] publicKey ) } instead
      * @param publicKey
      * @return
      */
@@ -77,17 +77,17 @@ public interface DirectoryApi {
     /**
      * Retrieves the password encrypted salt for authentication from the server.
      *
-     * @deprecated use {@link com.kryptnostic.storage.v2.http.KeyStorageApi# } instead
+     * @deprecated use {@link com.kryptnostic.v2.storage.api.KeyStorageApi } instead
      * @param id The id of the user whose encrypted salt shall be retrieved.
      * @return A ciphertext of the password encrypted for the user.
      */
     @Deprecated
     @Timed
     @GET( CONTROLLER + SALT_KEY + PARAM.USER )
-    BlockCiphertext getSalt( @Path( Names.USER_FIELD ) UUID id) throws ResourceNotFoundException;
+    BlockCiphertext getSalt( @Path( Names.USER_FIELD ) UUID id ) throws ResourceNotFoundException;
 
     /**
-     * @deprecated use {@link com.kryptnostic.storage.v2.http.KeyStorageApi# } instead
+     * @deprecated use {@link com.kryptnostic.v2.storage.api.KeyStorageApi } instead
      * @param encryptedSalt
      * @return
      */
@@ -97,7 +97,7 @@ public interface DirectoryApi {
     BasicResponse<String> setSalt( @Body BlockCiphertext encryptedSalt );
 
     /**
-     * @deprecated use {@link com.kryptnostic.storage.v2.http.KeyStorageApi# } instead
+     * @deprecated use {@link com.kryptnostic.v2.storage.api.KeyStorageApi } instead
      * @return Encrypted private key of current user
      */
     @Deprecated
@@ -106,7 +106,7 @@ public interface DirectoryApi {
     BlockCiphertext getPrivateKey() throws ResourceNotFoundException;
 
     /**
-     * @deprecated use {@link com.kryptnostic.storage.v2.http.KeyStorageApi# } instead
+     * @deprecated use {@link com.kryptnostic.v2.storage.api.KeyStorageApi } instead
      * @param encryptedPrivateKey
      * @return
      */
@@ -116,17 +116,17 @@ public interface DirectoryApi {
     BasicResponse<String> setPrivateKey( @Body BlockCiphertext encryptedPrivateKey );
 
     /**
-     * @deprecated use {@link com.kryptnostic.storage.v2.http.KeyStorageApi# } instead
+     * @deprecated use {@link com.kryptnostic.v2.storage.api.KeyStorageApi } instead
      * @param objectId
      * @return
      */
     @Deprecated
     @Timed
     @GET( CONTROLLER + OBJECT_KEY + PARAM.ID )
-    BasicResponse<byte[]> getObjectCryptoService( @Path( Names.ID_FIELD ) String objectId);
+    BasicResponse<byte[]> getObjectCryptoService( @Path( Names.ID_FIELD ) String objectId );
 
     /**
-     * @deprecated use {@link com.kryptnostic.storage.v2.http.KeyStorageApi# } instead
+     * @deprecated use {@link com.kryptnostic.v2.storage.api.KeyStorageApi } instead
      * @param objectIds
      * @return
      */
@@ -136,7 +136,7 @@ public interface DirectoryApi {
     Map<String, byte[]> getObjectCryptoServices( @Body Set<String> objectIds );
 
     /**
-     * @deprecated use {@link com.kryptnostic.storage.v2.http.KeyStorageApi# } instead
+     * @deprecated use {@link com.kryptnostic.v2.storage.api.KeyStorageApi } instead
      * @param objectId
      * @param cryptoService
      * @return
@@ -146,7 +146,7 @@ public interface DirectoryApi {
     @POST( CONTROLLER + OBJECT_KEY + PARAM.ID )
     BasicResponse<String> setObjectCryptoService(
             @Path( Names.ID_FIELD ) String objectId,
-            @Body ByteArrayEnvelope cryptoService);
+            @Body ByteArrayEnvelope cryptoService );
 
     @Deprecated
     @GET( CONTROLLER + NOTIFICATION_KEY )
@@ -158,13 +158,13 @@ public interface DirectoryApi {
 
     @Timed
     @GET( CONTROLLER + PARAM.REALM )
-    Iterable<UUID> listUserInRealm( @Path( Names.REALM_FIELD ) String realm);
+    Iterable<UUID> listUserInRealm( @Path( Names.REALM_FIELD ) String realm );
 
     @GET( CONTROLLER + INITIALIZED + PARAM.REALM )
-    Iterable<UUID> listInitializedUserInRealm( @Path( Names.REALM_FIELD ) String realm);
+    Iterable<UUID> listInitializedUserInRealm( @Path( Names.REALM_FIELD ) String realm );
 
     @Timed
     @GET( CONTROLLER + PARAM.REALM + PARAM.USER )
-    Optional<UUID> getUUIDFromEmail( @Path( Names.USER_FIELD ) String email);
+    Optional<UUID> getUUIDFromEmail( @Path( Names.USER_FIELD ) String email );
 
 }
