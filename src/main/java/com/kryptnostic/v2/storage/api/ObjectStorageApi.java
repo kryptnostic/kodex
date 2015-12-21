@@ -4,14 +4,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
-import retrofit.client.Response;
-import retrofit.http.Body;
-import retrofit.http.DELETE;
-import retrofit.http.GET;
-import retrofit.http.POST;
-import retrofit.http.PUT;
-import retrofit.http.Path;
-
 import com.kryptnostic.kodex.v1.crypto.ciphers.BlockCiphertext;
 import com.kryptnostic.v2.constants.Names;
 import com.kryptnostic.v2.storage.models.CreateMetadataObjectRequest;
@@ -21,6 +13,14 @@ import com.kryptnostic.v2.storage.models.ObjectMetadataEncryptedNode;
 import com.kryptnostic.v2.storage.models.ObjectTreeLoadRequest;
 import com.kryptnostic.v2.storage.models.PaddedMetadataObjectIds;
 import com.kryptnostic.v2.storage.models.VersionedObjectKey;
+
+import retrofit.client.Response;
+import retrofit.http.Body;
+import retrofit.http.DELETE;
+import retrofit.http.GET;
+import retrofit.http.POST;
+import retrofit.http.PUT;
+import retrofit.http.Path;
 
 /**
  * @author Matthew Tamayo-Rios &lt;matthew@kryptnostic.com&gt;
