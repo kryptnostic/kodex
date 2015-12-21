@@ -50,12 +50,12 @@ public interface DomainManagementApi {
      * @param domains
      * @return
      */
-    @PUT( WHITE_LIST + NAME_PATH )
-    Response addDomainWhiteList( @Path( NAME ) String domainName, @Body Set<String> domains);
+    @PUT( WHITE_LIST )
+    Response addToDomainWhiteList( @Body Set<String> domains );
 
-    @GET( WHITE_LIST + NAME_PATH )
-    Set<String> getDomainWhiteList( @Path( NAME ) String domainName);
+    @GET( WHITE_LIST )
+    Set<String> getDomainWhiteList();
 
-    @DELETE( WHITE_LIST + NAME_PATH )
-    Response deleteDomainWhiteList( @Path( NAME ) String domainName, @Body Set<String> domains);
+    @DELETE( WHITE_LIST )
+    Response removeFromDomainWhiteList( @Body Set<String> domains );
 }
