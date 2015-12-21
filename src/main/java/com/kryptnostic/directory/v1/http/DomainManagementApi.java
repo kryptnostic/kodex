@@ -51,11 +51,11 @@ public interface DomainManagementApi {
      * @return
      */
     @PUT( WHITE_LIST )
-    Response addDomainWhiteList( @Body Set<String> domains );
+    Response addToDomainWhiteList( @Body Set<String> domains );
 
     @GET( WHITE_LIST )
     Set<String> getDomainWhiteList();
 
     @DELETE( WHITE_LIST )
-    Response deleteDomainWhiteList( @Body Set<String> domains );
+    Response removeFromDomainWhiteList( @Body Set<String> domains );
 }
