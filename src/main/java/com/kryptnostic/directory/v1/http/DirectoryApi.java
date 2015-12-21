@@ -4,12 +4,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
-import retrofit.http.Body;
-import retrofit.http.GET;
-import retrofit.http.POST;
-import retrofit.http.PUT;
-import retrofit.http.Path;
-
 import com.codahale.metrics.annotation.Timed;
 import com.google.common.base.Optional;
 import com.kryptnostic.directory.v1.model.ByteArrayEnvelope;
@@ -19,6 +13,13 @@ import com.kryptnostic.kodex.v1.crypto.ciphers.BlockCiphertext;
 import com.kryptnostic.kodex.v1.exceptions.types.ResourceNotFoundException;
 import com.kryptnostic.kodex.v1.models.response.BasicResponse;
 import com.kryptnostic.sharing.v1.models.NotificationPreference;
+
+import retrofit.client.Response;
+import retrofit.http.Body;
+import retrofit.http.GET;
+import retrofit.http.POST;
+import retrofit.http.PUT;
+import retrofit.http.Path;
 
 public interface DirectoryApi {
     String CONTROLLER       = "/directory";
@@ -30,6 +31,7 @@ public interface DirectoryApi {
     String SALT_KEY         = "/salt";
     String RESOLUTION_KEY   = "/resolve";
     String INITIALIZED      = "/initialized";
+    String MASTER_KEY       = "/master";
 
     public static final class PARAM {
         private PARAM() {}
@@ -114,6 +116,19 @@ public interface DirectoryApi {
     @Timed
     @PUT( CONTROLLER + PRIVATE_KEY )
     BasicResponse<String> setPrivateKey( @Body BlockCiphertext encryptedPrivateKey );
+
+    @Deprecated
+    @Timed
+    @GET( CONTROLLER + MASTER_KEY )
+    byte[] getMasterKey();
+
+    /**
+     * @return
+     */
+    @Deprecated
+    @Timed
+    @PUT( CONTROLLER + MASTER_KEY )
+    Response setMasterKey( @Body byte[] masterKey );
 
     /**
      * @deprecated use {@link com.kryptnostic.v2.storage.api.KeyStorageApi } instead
