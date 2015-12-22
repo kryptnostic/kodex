@@ -20,12 +20,14 @@ import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.kryptnostic.directory.v1.principal.User;
+import com.kryptnostic.kodex.v1.constants.Names;
 import com.kryptnostic.kodex.v1.crypto.ciphers.BlockCiphertext;
 
 /**
@@ -35,6 +37,7 @@ import com.kryptnostic.kodex.v1.crypto.ciphers.BlockCiphertext;
  * @author Matthew Tamayo-Rios &lt;matthew@kryptnostic.com&gt;
  *
  */
+@Deprecated
 public final class KryptnosticUser implements User, Serializable {
     private static final long    serialVersionUID = 3581755283203968675L;
     private final UUID           id;
@@ -44,7 +47,7 @@ public final class KryptnosticUser implements User, Serializable {
     private final byte[]         certificate;
     private final Set<UUID>      groups           = Sets.newHashSet();
     private final Set<String>    roles            = Sets.newHashSet();
-    private final UserAttributes attributes       = new UserAttributes( Maps.<String, String> newConcurrentMap() );
+    private final UserAttributes attributes       = new UserAttributes( Maps.<String, Object> newConcurrentMap() );
 
     /**
      * Either the realm or domain must be specified. If both are specified the realm takes precedence until it is
@@ -70,12 +73,12 @@ public final class KryptnosticUser implements User, Serializable {
             @JsonProperty( CERTIFICATE_FIELD ) Optional<byte[]> certificate,
             @JsonProperty( GROUPS_PROPERTY ) Set<UUID> groups,
             @JsonProperty( ROLES_FIELD ) Set<String> roles,
-            @JsonProperty( ATTRIBUTES_FIELD ) UserAttributes attributes ) {
+            @JsonProperty( ATTRIBUTES_FIELD ) UserAttributes attributes) {
         this.id = id;
         this.domain = realm.or( domain.get() );
         this.username = username;
         this.groups.addAll( groups );
-        this.attributes.putAll( (attributes == null )?  ImmutableMap.<String,String>of() : attributes );
+        this.attributes.putAll( ( attributes == null ) ? ImmutableMap.<String, String> of() : attributes );
         this.roles.addAll( roles );
         this.certificate = certificate.or( new byte[ 0 ] );
         this.email = email;
@@ -95,13 +98,13 @@ public final class KryptnosticUser implements User, Serializable {
     @Override
     @JsonProperty( GIVEN_NAME_FIELD )
     public Optional<String> getGivenName() {
-        return Optional.fromNullable( attributes.get( GIVEN_NAME_FIELD ) );
+        return Optional.of( (String) MoreObjects.firstNonNull( attributes.get( GIVEN_NAME_FIELD ), "" ) );
     }
 
     @Override
     @JsonProperty( FAMILY_NAME_FIELD )
     public Optional<String> getFamilyName() {
-        return Optional.fromNullable( attributes.get( FAMILY_NAME_FIELD ) );
+        return Optional.of( (String) MoreObjects.firstNonNull( attributes.get( FAMILY_NAME_FIELD ), "" ) );
     }
 
     @Override
@@ -141,7 +144,7 @@ public final class KryptnosticUser implements User, Serializable {
     }
 
     @Override
-    public Optional<String> getAttribute( String key ) {
+    public Optional<Object> getAttribute( String key ) {
         return Optional.fromNullable( attributes.get( key ) );
     }
 
@@ -239,8 +242,6 @@ public final class KryptnosticUser implements User, Serializable {
         return true;
     }
 
-
-
     public static class HeraclesUserBuilder {
         public UUID            id;
         public String          domain;
@@ -261,7 +262,7 @@ public final class KryptnosticUser implements User, Serializable {
             this.familyName = "";
             this.certificate = new byte[ 0 ];
             this.groups = Sets.newConcurrentHashSet();
-            this.attributes = new UserAttributes( Maps.<String, String> newConcurrentMap() );
+            this.attributes = new UserAttributes( Maps.<String, Object> newConcurrentMap() );
             this.roles = Sets.newConcurrentHashSet();
         }
 
@@ -357,6 +358,11 @@ public final class KryptnosticUser implements User, Serializable {
                     roles,
                     attributes );
         }
+    }
+
+    @Override
+    public int getUserVersion() {
+        return (int) MoreObjects.firstNonNull( getAttribute( Names.VERSION_FIELD ), 0 );
     }
 
 }
