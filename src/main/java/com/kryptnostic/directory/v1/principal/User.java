@@ -52,7 +52,7 @@ public interface User extends Principal {
     Set<UUID> getGroups();
 
     @Nonnull
-    @JsonProperty( Names.VERSION_FIELD )
+    @JsonIgnore
     int getUserVersion();
 
     @JsonProperty( Names.ATTRIBUTES_FIELD )
