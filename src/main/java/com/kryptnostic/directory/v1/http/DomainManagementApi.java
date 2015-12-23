@@ -23,14 +23,16 @@ import retrofit.http.Path;
  *
  */
 public interface DomainManagementApi {
-    public static final String DOMAIN        = "/domain";
-    public static final String NAME          = "name";
-    public static final String NAME_PATH     = "/{" + NAME + "}";
-    public static final String NAME_WITH_DOT = "/{" + NAME + ":.+}";
+    public static final String DOMAIN         = "/domain";
 
-    public static final String WHITE_LIST    = "/whitelist";
+    public static final String WHITE_LIST     = "/whitelist";
 
-    public static final String DOMAIN_LIST   = "/domainlist";
+    public static final String DOMAIN_LIST    = "/domainlist";
+
+    public static final String NAME           = "name";
+    public static final String NAME_PATH      = "/{" + NAME + "}";
+    public static final String NAME_WITH_DOT  = "/{" + NAME + ":.+}";
+    public static final String SHARING_POLICY = "/sharingpolicy";
 
     /**
      * Update domain settings.
@@ -45,6 +47,9 @@ public interface DomainManagementApi {
     @Timed
     @GET( DOMAIN + NAME_PATH )
     Optional<UUID> getDomainId( @Path( NAME ) String domainName);
+
+    @GET( DOMAIN + SHARING_POLICY )
+    String getDomainSharingPolicy();
 
     /**
      * Update white list settings.
@@ -63,4 +68,5 @@ public interface DomainManagementApi {
 
     @GET( DOMAIN_LIST )
     Set<String> getListableDomainsForWhiteList();
+
 }
