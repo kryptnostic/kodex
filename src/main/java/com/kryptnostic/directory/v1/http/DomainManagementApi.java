@@ -30,6 +30,8 @@ public interface DomainManagementApi {
 
     public static final String WHITE_LIST    = "/whitelist";
 
+    public static final String DOMAIN_LIST   = "/domainlist";
+
     /**
      * Update domain settings.
      * 
@@ -58,4 +60,7 @@ public interface DomainManagementApi {
 
     @DELETE( WHITE_LIST )
     Response removeFromDomainWhiteList( @Body Set<String> domains );
+
+    @GET( DOMAIN_LIST )
+    Set<String> getListableDomainsForWhiteList();
 }
