@@ -22,25 +22,34 @@ public class ObjectMetadataEncryptedNode {
     private final Map<UUID, ObjectMetadataEncryptedNode> children;
     private final ObjectMetadata                         metadata;
     private final Optional<BlockCiphertext>              ciphertext;
+    private final Optional<BlockCiphertext>              encryptedCryptoService;
 
     public ObjectMetadataEncryptedNode( ObjectMetadata metadata ) {
-        this( metadata, Optional.<BlockCiphertext> absent(), Maps.<UUID, ObjectMetadataEncryptedNode> newHashMap() );
+        this(
+                metadata,
+                Optional.<BlockCiphertext> absent(),
+                Optional.<BlockCiphertext> absent(),
+                Maps.<UUID, ObjectMetadataEncryptedNode> newHashMap() );
     }
 
     @JsonCreator
     public ObjectMetadataEncryptedNode(
             @JsonProperty( Names.METADATA_FIELD ) ObjectMetadata metadata,
             @JsonProperty( Names.CONTENTS ) Optional<BlockCiphertext> ciphertext,
+            @JsonProperty( Names.KEY_FIELD ) Optional<BlockCiphertext> encryptedCryptoService,
             @JsonProperty( Names.CHILDREN_FIELD ) Map<UUID, ObjectMetadataEncryptedNode> children) {
-        this.children = children;
         this.metadata = metadata;
         this.ciphertext = ciphertext;
+        this.encryptedCryptoService = encryptedCryptoService;
+        this.children = children;
     }
 
     public ObjectMetadataEncryptedNode( ObjectMetadata metadata, Optional<BlockCiphertext> ciphertext ) {
-        this.children = Maps.newHashMap();
-        this.metadata = metadata;
-        this.ciphertext = ciphertext;
+        this(
+                metadata,
+                ciphertext,
+                Optional.<BlockCiphertext> absent(),
+                Maps.<UUID, ObjectMetadataEncryptedNode> newHashMap() );
     }
 
     public Map<UUID, ObjectMetadataEncryptedNode> getChildren() {
@@ -61,6 +70,10 @@ public class ObjectMetadataEncryptedNode {
 
     public Optional<BlockCiphertext> getData() {
         return ciphertext;
+    }
+
+    public Optional<BlockCiphertext> getEncryptedCryptoService() {
+        return encryptedCryptoService;
     }
 
     @Override
