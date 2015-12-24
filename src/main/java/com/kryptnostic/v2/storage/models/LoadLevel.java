@@ -4,5 +4,5 @@ public enum LoadLevel {
     ID,
     METADATA,
     CRYPTO,
-    FULL
+    CIPHERTEXT
 }
