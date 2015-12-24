@@ -95,7 +95,7 @@ public interface KeyStorageApi {
     Response setAesEncryptedObjectCryptoService(
             @Path( OBJECT_ID ) UUID objectId,
             @Path( VERSION ) long version,
-            @Body byte[] crypto);
+            @Body BlockCiphertext crypto);
     /**
      * Cached API to retrieve the object crypto service for a specific version of the object specified by
      * {@code objectId}
