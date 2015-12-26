@@ -19,33 +19,34 @@ import retrofit.http.PUT;
 import retrofit.http.Path;
 
 public interface KeyStorageApi {
-    String CONTROLLER                     = "/keys";
+    String CONTROLLER                         = "/keys";
     // FHE
-    String FHE_PATH                       = "/fhe";
-    String FHE_PUBLIC_PATH                = FHE_PATH + "/public";
-    String FHE_PRIVATE_PATH               = FHE_PATH + "/private";
-    String FHE_SEARCH_PRIVATE             = FHE_PATH + "/searchprivate";
-    String FHE_HASH                       = FHE_PATH + "/hash";
+    String FHE_PATH                           = "/fhe";
+    String FHE_PUBLIC_PATH                    = FHE_PATH + "/public";
+    String FHE_PRIVATE_PATH                   = FHE_PATH + "/private";
+    String FHE_SEARCH_PRIVATE                 = FHE_PATH + "/searchprivate";
+    String FHE_HASH                           = FHE_PATH + "/hash";
 
-    String RSA_PATH                       = "/rsa";
-    String RSA_PUBLIC_KEY_PATH            = RSA_PATH + "/public";
-    String RSA_PRIVATE_KEY_PATH           = RSA_PATH + "/private";
+    String RSA_PATH                           = "/rsa";
+    String RSA_PUBLIC_KEY_PATH                = RSA_PATH + "/public";
+    String RSA_PRIVATE_KEY_PATH               = RSA_PATH + "/private";
 
-    String SALT_PATH                      = "/salt";
-    String CRYPTO_SERVICE_PATH            = "/cryptoservice";
-    String CRYPTO_SERVICES_PATH           = "/cryptoservices";
-    String VERSIONED_CRYPTO_SERVICES_PATH = "/versioned/cryptoservices";
-    String AES_CRYPTO_SERVICE_PATH       = "/aescryptoservice";
-    String AES_CRYPTO_SERVICES_PATH       = "/aescryptoservices";
+    String SALT_PATH                          = "/salt";
+    String CRYPTO_SERVICE_PATH                = "/cryptoservice";
+    String CRYPTO_SERVICES_PATH               = "/cryptoservices";
+    String VERSIONED_CRYPTO_SERVICES_PATH     = "/versioned/cryptoservices";
+    String AES_CRYPTO_SERVICE_PATH            = "/aescryptoservice";
+    String AES_CRYPTO_SERVICES_PATH           = "/aescryptoservices";
+    String VERSIONED_AES_CRYPTO_SERVICES_PATH = "/versioned/aescryptoservices";
 
-    String OBJECT_ID                      = Names.ID_FIELD;
-    String VERSION                        = "version";
-    String USER                           = "user";
-    String USER_ID_PATH                   = "/{" + USER + "}";
+    String OBJECT_ID                          = Names.ID_FIELD;
+    String VERSION                            = "version";
+    String USER                               = "user";
+    String USER_ID_PATH                       = "/{" + USER + "}";
 
-    String OBJECT_ID_PATH                 = "/id/{" + OBJECT_ID + "}";
-    String VERSION_PATH                   = "/{" + VERSION + "}";
-    String BULK_PATH                      = "/bulk";
+    String OBJECT_ID_PATH                     = "/id/{" + OBJECT_ID + "}";
+    String VERSION_PATH                       = "/{" + VERSION + "}";
+    String BULK_PATH                          = "/bulk";
 
     @GET( CONTROLLER )
     BootstrapKeyIds getBootstrapInformation();
@@ -89,7 +90,7 @@ public interface KeyStorageApi {
      * @param objectId The UUID of the object for which to set a crypto service.
      * @param version The version of the object.
      * @param crypto An encrypted content protection keys
-     * @return
+     * @return An empty body with HTTP 200 status code.
      */
     @Deprecated
     @PUT( CONTROLLER + CRYPTO_SERVICE_PATH + OBJECT_ID_PATH + VERSION_PATH )
@@ -103,9 +104,11 @@ public interface KeyStorageApi {
             @Path( OBJECT_ID ) UUID objectId,
             @Path( VERSION ) long version,
             @Body BlockCiphertext crypto);
+
     /**
      * Cached API to retrieve the object crypto service for a specific version of the object specified by
      * {@code objectId}
+     * 
      * @deprecated Use {@link KeyStorageApi#getAesEncryptedObjectCryptoService(UUID, long)} instead.
      * @param objectId The object for which to retrieve the crypto service.
      * @param version The version of the object for which to retrieve a crpyto service
@@ -120,16 +123,41 @@ public interface KeyStorageApi {
             @Path( OBJECT_ID ) UUID objectId,
             @Path( VERSION ) long version);
 
+    /**
+     * Gets the crypto encrypted crypto services corresponding to a set of UUIDs. This call automatically resolves an
+     * object uuid to its latest version.
+     * 
+     * @deprecated Use {@link KeyStorageApi#getAesEncryptedCryptoServices(VersionedObjectKeySet)} instead.
+     * @param ids A set of UUID for which to retrieve cryptoservices.
+     * @return A map pairing object UUIDs with their corresponding cryptoservices.
+     */
     @Deprecated
     @POST( CONTROLLER + CRYPTO_SERVICES_PATH )
     Map<UUID, byte[]> getObjectCryptoServices( @Body Set<UUID> ids );
 
+    /**
+     * Gets the crypto encrypted crypto services corresponding to a set of UUIDs.
+     * 
+     * @deprecated Use {@link KeyStorageApi#getAesEncryptedCryptoServices(VersionedObjectKeySet)} instead.
+     * @param objectKeys A set of VersiondObjectKeys for which to retrieve cryptoservices.
+     * @return A map pairing VersiondObjectKeys with their corresponding cryptoservices.
+     */
     @Deprecated
     @POST( CONTROLLER + VERSIONED_CRYPTO_SERVICES_PATH )
-    Map<VersionedObjectKey, byte[]> getObjectCryptoServices( @Body VersionedObjectKeySet ids );
+    Map<VersionedObjectKey, byte[]> getObjectCryptoServices( @Body VersionedObjectKeySet objectKeys );
 
     /**
      * Returns AES encrypted crypto services.
+     * 
+     * @param ids
+     * @return
+     */
+    @POST( CONTROLLER + VERSIONED_AES_CRYPTO_SERVICES_PATH )
+    Map<UUID, BlockCiphertext> getAesEncryptedCryptoServices( @Body Set<UUID> ids );
+
+    /**
+     * Returns AES encrypted crypto services.
+     * 
      * @param ids
      * @return
      */

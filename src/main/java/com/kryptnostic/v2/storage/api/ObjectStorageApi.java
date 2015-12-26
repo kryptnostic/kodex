@@ -59,10 +59,10 @@ public interface ObjectStorageApi {
     VersionedObjectKey createObject( @Body CreateObjectRequest request );
 
     @GET( CONTROLLER + OBJECT_ID_PATH )
-    VersionedObjectKey getVersionedObjectKey( @Path( ID ) UUID id );
+    VersionedObjectKey getLatestVersionedObjectKey( @Path( ID ) UUID id );
 
     /**
-     * Lazy Person API for writing base64 encoded block ciphertexts in bulk.
+     * Lazy Person API for bulk reading base64 encoded block ciphertexts in bulk.
      *
      * @param objectIds
      * @return
@@ -70,6 +70,15 @@ public interface ObjectStorageApi {
     @POST( CONTROLLER + BULK_PATH )
     Map<UUID, BlockCiphertext> getObjects( @Body Set<UUID> objectIds );
 
+    /**
+     * Lazy Person API for bulk reading base64 encoded block ciphertexts in bulk.
+     *
+     * @param objectIds
+     * @return
+     */
+    @POST( CONTROLLER + BULK_PATH )
+    Map<VersionedObjectKey, BlockCiphertext> getVersionedObjects( @Body Set<UUID> objectIds );
+    
     /**
      * Lazy Person API for writing base64 encoded block ciphertexts. Objects written via this API will be available
      * through the more efficient byte level APIs.
