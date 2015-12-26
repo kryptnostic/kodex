@@ -84,6 +84,13 @@ public interface KeyStorageApi {
     @GET( CONTROLLER + CRYPTO_SERVICE_PATH + OBJECT_ID_PATH )
     byte[] getObjectCryptoService( @Path( OBJECT_ID ) UUID objectId);
 
+    /**
+     * @deprecated Use {@link KeyStorageApi#setAesEncryptedObjectCryptoService(UUID, long, BlockCiphertext)} instead.
+     * @param objectId The UUID of the object for which to set a crypto service.
+     * @param version The version of the object.
+     * @param crypto An encrypted content protection keys
+     * @return
+     */
     @Deprecated
     @PUT( CONTROLLER + CRYPTO_SERVICE_PATH + OBJECT_ID_PATH + VERSION_PATH )
     Response setObjectCryptoService(
@@ -99,7 +106,7 @@ public interface KeyStorageApi {
     /**
      * Cached API to retrieve the object crypto service for a specific version of the object specified by
      * {@code objectId}
-     *
+     * @deprecated Use {@link KeyStorageApi#getAesEncryptedObjectCryptoService(UUID, long)} instead.
      * @param objectId The object for which to retrieve the crypto service.
      * @param version The version of the object for which to retrieve a crpyto service
      * @return The crypto service corresponding to the object with version specified by {@code version} and object id
