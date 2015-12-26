@@ -6,7 +6,7 @@ public class LoadLevelsJacksonSerializationTest extends BaseJacksonSerialization
 
     @Override
     protected LoadLevel getSampleData() {
-        return LoadLevel.FULL;
+        return LoadLevel.CIPHERTEXT;
     }
 
     @Override
