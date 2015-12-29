@@ -14,19 +14,13 @@ import retrofit.http.POST;
 import retrofit.http.Path;
 
 public interface TypesApi {
-    String SCOPES    = "/types";
-    
-    String SCOPE         = "scope";
-    String SCOPE_PATH    = "/{" + SCOPE + "}";
+    String SCOPES     = "/types";
 
-    String SCOPE_ID      = "scopeId";
-    String SCOPE_ID_PATH = "/{" + SCOPE_ID + "}";
+    String SCOPE      = "scope";
+    String SCOPE_PATH = "/{" + SCOPE + "}";
 
-    String TYPE          = Names.TYPE_FIELD;
-    String TYPE_PATH     = "/{" + TYPE + "}";
-
-    String TYPE_ID       = "typeId";
-    String TYPE_ID_PATH  = "/{" + TYPE_ID + "}";
+    String TYPE       = Names.TYPE_FIELD;
+    String TYPE_PATH  = "/{" + TYPE + "}";
 
     @GET( SCOPES )
     Map<String, UUID> getScopes();
@@ -38,6 +32,6 @@ public interface TypesApi {
     UUID getOrCreateUuidForType( @Path( SCOPE ) String scope, @Path( TYPE ) UUID type );
 
     @POST( SCOPES )
-    ScopeListing getAllTypeInformation(@Body ScopeRequestOptions scopeRequest );
+    ScopeListing getAllTypeInformation( @Body ScopeRequestOptions scopeRequest );
 
 }
