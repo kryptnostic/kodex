@@ -4,12 +4,14 @@ import java.util.Set;
 import java.util.UUID;
 
 import com.kryptnostic.v2.constants.Names;
+import com.kryptnostic.v2.storage.models.VersionedObjectKey;
 
 import retrofit.http.GET;
 import retrofit.http.Path;
 
 /**
- *
+ * This API is used for retrieving paged lists of objects for a user. Ordering is not guaranteed across calls.
+ * 
  * @author Matthew Tamayo-Rios &lt;matthew@kryptnostic.com&gt;
  *
  */
@@ -27,17 +29,6 @@ public interface ObjectListingApi {
     String PAGE_SIZE_PATH = "/{" + PAGE_SIZE + "}";
     String PAGE_PATH      = "/{" + PAGE + "}";
 
-    @GET( CONTROLLER + USER_ID_PATH + PAGE_SIZE_PATH )
-    Set<UUID> getLatestUnfinishedPageOfObjectIds(
-            @Path( ID ) UUID userId,
-            @Path( PAGE_SIZE ) Integer pageSize );
-
-    @GET( CONTROLLER + USER_ID_PATH + TYPE_ID_PATH + PAGE_SIZE_PATH )
-    Set<UUID> getLatestUnfinishedPageOfObjectIdsByType(
-            @Path( ID ) UUID userId,
-            @Path( TYPE ) UUID typeId,
-            @Path( PAGE_SIZE ) Integer pageSize );
-
     /**
      * Retrieves all objects owned by a given a user. This is a slow call / uncached call.
      *
@@ -54,6 +45,9 @@ public interface ObjectListingApi {
             @Path( PAGE_SIZE ) Integer pageSize );
 
     @GET( CONTROLLER + USER_ID_PATH + TYPE_ID_PATH )
+    Set<VersionedObjectKey> getVersionedObjectKeysByType( @Path( ID ) UUID userId, @Path( TYPE ) UUID type );
+
+    @GET( CONTROLLER + USER_ID_PATH + TYPE_ID_PATH )
     Set<UUID> getObjectIdsByType( @Path( ID ) UUID userId, @Path( TYPE ) UUID type );
 
     @GET( CONTROLLER + USER_ID_PATH + TYPE_ID_PATH + PAGE_SIZE_PATH + PAGE_PATH )
@@ -61,8 +55,15 @@ public interface ObjectListingApi {
             @Path( ID ) UUID userId,
             @Path( TYPE ) UUID typeId,
             @Path( PAGE ) Integer offset,
+            @Path( PAGE_SIZE ) Integer pageSize);
+
+    @GET( CONTROLLER + USER_ID_PATH + TYPE_ID_PATH + PAGE_SIZE_PATH + PAGE_PATH )
+    Set<VersionedObjectKey> getVersionedObjectKeysByTypePaged(
+            @Path( ID ) UUID userId,
+            @Path( TYPE ) UUID typeId,
+            @Path( PAGE ) Integer offset,
             @Path( PAGE_SIZE ) Integer pageSize );
 
     @GET( CONTROLLER + TYPE_NAME_PATH )
-    UUID getTypeForName( @Path( TYPE ) String typeName);
+    UUID getTypeForName( @Path( TYPE ) String typeName );
 }

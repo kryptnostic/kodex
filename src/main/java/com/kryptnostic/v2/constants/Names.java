@@ -104,4 +104,8 @@ public final class Names {
     public static final String REQUIRED_CRYPTO_MATS_FIELD      = "requiredCryptoMats";
     public static final String OBJECT_VERSION_FIELD            = "objectVersion";
     public static final String DEPTH                           = "depth";
+    public static final String SCOPE_ID                        = "scopeId";
+    public static final String TYPES                           = "types";
+    public static final String SCOPE_IDS                       = "scopeIds";
+    public static final String SCOPES                          = "scopes";
 }
