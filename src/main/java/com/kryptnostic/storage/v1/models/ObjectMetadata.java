@@ -5,7 +5,6 @@ import java.util.UUID;
 
 import javax.annotation.concurrent.Immutable;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.joda.time.DateTime;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -198,9 +197,9 @@ public class ObjectMetadata {
     public boolean equals( Object obj ) {
         ObjectMetadata other = (ObjectMetadata) obj;
         return id.equals( other.id ) && version == other.version && numBlocks == other.numBlocks
-                && CollectionUtils.isEqualCollection( owners, other.owners )
-                && CollectionUtils.isEqualCollection( writers, other.writers )
-                && CollectionUtils.isEqualCollection( readers, other.readers );
+                && owners.equals( other.owners )
+                && writers.equals( other.writers )
+                && readers.equals( other.readers );
     }
 
     @JsonProperty( Names.USERNAME_FIELD )

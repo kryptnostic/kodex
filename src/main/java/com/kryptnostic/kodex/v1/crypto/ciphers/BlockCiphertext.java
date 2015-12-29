@@ -7,7 +7,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Optional;
-import com.kryptnostic.crypto.Ciphertext;
 import com.kryptnostic.kodex.v1.constants.Names;
 
 /**
@@ -16,9 +15,9 @@ import com.kryptnostic.kodex.v1.constants.Names;
  * @author Matthew Tamayo-Rios &lt;matthew@kryptnostic.com&gt;
  */
 @JsonInclude( Include.NON_NULL )
-public class BlockCiphertext extends Ciphertext {
-    private static final long      serialVersionUID = 5566319942401654333L;
+public class BlockCiphertext {
 
+    private final byte[]           contents;
     private final byte[]           iv;
     private final byte[]           salt;
     private final Optional<byte[]> encryptedLength;
@@ -38,13 +37,18 @@ public class BlockCiphertext extends Ciphertext {
             @JsonProperty( Names.CONTENTS ) byte[] contents,
             @JsonProperty( Names.ENCRYPTED_LENGTH ) Optional<byte[]> encryptedLength,
             @JsonProperty( Names.TAG ) Optional<byte[]> tag) {
-        super( contents, null );
+        this.contents = contents;
         this.iv = iv;
         this.salt = salt;
         this.encryptedLength = encryptedLength;
         this.tag = tag;
     }
 
+    @JsonProperty( Names.CONTENTS )
+    public byte[] getContents() {
+        return contents;
+    }
+    
     @JsonProperty( Names.IV )
     public byte[] getIv() {
         return iv;

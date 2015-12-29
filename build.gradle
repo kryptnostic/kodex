@@ -148,13 +148,9 @@ dependencies {
     compile "commons-codec:commons-codec:${commons_codec_version}"
     if( project.hasProperty('developmentMode') && project.developmentMode ) {
         logger.quiet("$project.name is using project dependencies.")
-        compile( project(":fhe-core:kryptnostic-api") )
-        compile( project(":fhe-core:kryptnostic-core") )
         compile( project(":krypto:krypto-api") )
     } else {
         logger.quiet("$project.name is using jar dependencies.")
-        compile "com.kryptnostic:kryptnostic-api:${fhe_core_version}"
-   	 	  compile "com.kryptnostic:kryptnostic-core:${fhe_core_version}"
         compile "com.kryptnostic:krypto-api:${krypto_version}"
     }
 
