@@ -153,7 +153,7 @@ public interface KeyStorageApi {
      * @return
      */
     @POST( CONTROLLER + VERSIONED_AES_CRYPTO_SERVICES_PATH )
-    Map<UUID, BlockCiphertext> getAesEncryptedCryptoServices( @Body Set<UUID> ids );
+    Map<VersionedObjectKey, BlockCiphertext> getAesEncryptedCryptoServices( @Body Set<UUID> ids );
 
     /**
      * Returns AES encrypted crypto services.
@@ -198,4 +198,5 @@ public interface KeyStorageApi {
      */
     @GET( CONTROLLER + FHE_HASH )
     byte[] getHashFunctionForCurrentUser();
+
 }

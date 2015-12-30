@@ -1,4 +1,4 @@
-package com.kryptnostic.kodex.v1.crypto.keys;
+package com.kryptnostic.kodex.v1.marshalling;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Stopwatch;
+import com.kryptnostic.kodex.v1.crypto.keys.KodexMarshaller;
 import com.kryptnostic.kodex.v1.serialization.jackson.KodexObjectMapperFactory;
 
 public class JacksonKodexMarshaller<T> implements KodexMarshaller<T> {

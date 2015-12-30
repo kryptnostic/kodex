@@ -7,12 +7,6 @@ import java.lang.reflect.Type;
 
 import javax.annotation.Nonnull;
 
-import retrofit.converter.ConversionException;
-import retrofit.converter.Converter;
-import retrofit.mime.TypedByteArray;
-import retrofit.mime.TypedInput;
-import retrofit.mime.TypedOutput;
-
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.InjectableValues.Std;
@@ -24,15 +18,14 @@ import com.fasterxml.jackson.datatype.guava.GuavaModule;
 import com.fasterxml.jackson.datatype.joda.JodaModule;
 import com.fasterxml.jackson.module.afterburner.AfterburnerModule;
 import com.google.common.base.Preconditions;
-import com.kryptnostic.crypto.padding.ZeroPaddingStrategy;
 import com.kryptnostic.kodex.v1.crypto.keys.CryptoServiceLoader;
 import com.kryptnostic.kodex.v1.models.KryptnosticUser;
-import com.kryptnostic.kodex.v1.serialization.crypto.Encryptable;
-import com.kryptnostic.multivariate.gf2.SimplePolynomialFunction;
-import com.kryptnostic.multivariate.polynomial.BasePolynomialFunction;
-import com.kryptnostic.multivariate.polynomial.CompoundPolynomialFunctionGF2;
-import com.kryptnostic.multivariate.polynomial.OptimizedPolynomialFunctionGF2;
-import com.kryptnostic.multivariate.polynomial.ParameterizedPolynomialFunctionGF2;
+
+import retrofit.converter.ConversionException;
+import retrofit.converter.Converter;
+import retrofit.mime.TypedByteArray;
+import retrofit.mime.TypedInput;
+import retrofit.mime.TypedOutput;
 
 /**
  * @author Matthew Tamayo-Rios &lt;matthew@kryptnostic.com&gt;
@@ -41,7 +34,7 @@ import com.kryptnostic.multivariate.polynomial.ParameterizedPolynomialFunctionGF
 public final class KodexObjectMapperFactory {
     private final static ObjectMapper globalJsonMapper;
     private final static ObjectMapper globalSmileMapper;
-    
+
     static {
         globalJsonMapper = newJsonMapper();
         configureNoCryptoOnSerialization( globalJsonMapper );
@@ -53,10 +46,7 @@ public final class KodexObjectMapperFactory {
     private KodexObjectMapperFactory() {};
 
     /**
-     * Returns a global regular json jackson object mapper capable of serializing {@link CompoundPolynomialFunctionGF2},
-     * {@link SimplePolynomialFunction}, {@link BasePolynomialFunction}, {@link ParameterizedPolynomialFunctionGF2},
-     * {@link ZeroPaddingStrategy}, {@link KryptnosticUser}, and {@link Encryptable}. This object mapper will not
-     * decrypt on deserialization.
+     * Returns a global regular json jackson object mapper with {@link JodaModule}, {@link KryptnosticUser}, {@link AfterburnerModule}, and {@link GuavaModule} configured. 
      * 
      * @return
      */
@@ -65,9 +55,7 @@ public final class KodexObjectMapperFactory {
     }
 
     /**
-     * Returns a global binary smile jackson object mapper capable of serializing {@link CompoundPolynomialFunctionGF2},
-     * {@link SimplePolynomialFunction}, {@link BasePolynomialFunction}, {@link ParameterizedPolynomialFunctionGF2},
-     * {@link ZeroPaddingStrategy}, {@link KryptnosticUser}, and {@link Encryptable}. This object mapper will not
+     * Returns a global binary smile jackson object mapper with {@link JodaModule}, {@link KryptnosticUser}, {@link AfterburnerModule}, and {@link GuavaModule} configured.
      * decrypt on deserialization.
      * 
      * @return
@@ -109,17 +97,10 @@ public final class KodexObjectMapperFactory {
     }
 
     private static void configureMapper( @Nonnull ObjectMapper mapper ) {
-        mapper.registerModule( new KodexModule() );
         mapper.registerModule( new GuavaModule() );
         mapper.registerModule( new JodaModule() );
         mapper.registerModule( new AfterburnerModule() );
-        mapper.registerSubtypes(
-                CompoundPolynomialFunctionGF2.class,
-                OptimizedPolynomialFunctionGF2.class,
-                BasePolynomialFunction.class,
-                ParameterizedPolynomialFunctionGF2.class,
-                ZeroPaddingStrategy.class,
-                KryptnosticUser.class );
+        mapper.registerSubtypes( KryptnosticUser.class );
     }
 
     private static ObjectMapper newJsonMapper() {
