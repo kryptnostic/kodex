@@ -20,7 +20,6 @@ import com.fasterxml.jackson.module.afterburner.AfterburnerModule;
 import com.google.common.base.Preconditions;
 import com.kryptnostic.kodex.v1.crypto.keys.CryptoServiceLoader;
 import com.kryptnostic.kodex.v1.models.KryptnosticUser;
-import com.kryptnostic.kodex.v1.serialization.crypto.Encryptable;
 
 import retrofit.converter.ConversionException;
 import retrofit.converter.Converter;
@@ -47,10 +46,7 @@ public final class KodexObjectMapperFactory {
     private KodexObjectMapperFactory() {};
 
     /**
-     * Returns a global regular json jackson object mapper capable of serializing {@link CompoundPolynomialFunctionGF2},
-     * {@link SimplePolynomialFunction}, {@link BasePolynomialFunction}, {@link ParameterizedPolynomialFunctionGF2},
-     * {@link ZeroPaddingStrategy}, {@link KryptnosticUser}, and {@link Encryptable}. This object mapper will not
-     * decrypt on deserialization.
+     * Returns a global regular json jackson object mapper with {@link JodaModule}, {@link KryptnosticUser}, {@link AfterburnerModule}, and {@link GuavaModule} configured. 
      * 
      * @return
      */
@@ -59,9 +55,7 @@ public final class KodexObjectMapperFactory {
     }
 
     /**
-     * Returns a global binary smile jackson object mapper capable of serializing {@link CompoundPolynomialFunctionGF2},
-     * {@link SimplePolynomialFunction}, {@link BasePolynomialFunction}, {@link ParameterizedPolynomialFunctionGF2},
-     * {@link ZeroPaddingStrategy}, {@link KryptnosticUser}, and {@link Encryptable}. This object mapper will not
+     * Returns a global binary smile jackson object mapper with {@link JodaModule}, {@link KryptnosticUser}, {@link AfterburnerModule}, and {@link GuavaModule} configured.
      * decrypt on deserialization.
      * 
      * @return
