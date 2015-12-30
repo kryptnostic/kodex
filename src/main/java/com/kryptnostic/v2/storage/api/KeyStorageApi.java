@@ -48,9 +48,6 @@ public interface KeyStorageApi {
     String VERSION_PATH                       = "/{" + VERSION + "}";
     String BULK_PATH                          = "/bulk";
 
-    @GET( CONTROLLER )
-    BootstrapKeyIds getBootstrapInformation();
-
     @POST( CONTROLLER + RSA_PRIVATE_KEY_PATH )
     Response setRSAPrivateKey( @Body BlockCiphertext encryptedPrivateKey );
 
