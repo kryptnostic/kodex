@@ -27,20 +27,21 @@ import com.squareup.okhttp.OkHttpClient;
 
 /**
  * Provides some utilities for setting up AES encryption
- * 
+ *
  * @author sinaiman
  *
  */
 public class SecurityConfigurationTestUtils extends SerializationTestUtils {
-    protected PasswordCryptoService crypto;
+    protected PasswordCryptoService passwordCryptoService;
     protected KeyPair               pair;
 
     @Before
     public void resetSecurity() throws ExecutionException {
-        this.crypto = new PasswordCryptoService( Cypher.AES_CTR_128, new BigInteger( 130, new SecureRandom() )
-                .toString( 32 ).toCharArray() );
+        this.passwordCryptoService = new PasswordCryptoService(
+                Cypher.AES_CTR_128,
+                new BigInteger( 130, new SecureRandom() ).toString( 32 ).toCharArray() );
         this.loader.clear();
-        this.loader.put( PasswordCryptoService.class.getCanonicalName(), crypto );
+        this.loader.put( PasswordCryptoService.class.getCanonicalName(), passwordCryptoService );
         generateRsaKeyPair();
     }
 

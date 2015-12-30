@@ -1,6 +1,5 @@
 package com.kryptnostic.mail.v1.models;
 
-import java.io.Serializable;
 import java.util.Arrays;
 
 import org.apache.commons.lang3.StringUtils;
@@ -14,9 +13,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.kryptnostic.kodex.v1.constants.Names;
 
-public class EmailRequest implements Serializable {
-    private static final long        serialVersionUID = -1654230107574687685L;
-
+public class EmailRequest {
     private final Optional<String>   from;
     private final String[]           to;
     private final Optional<String[]> cc;
@@ -31,7 +28,7 @@ public class EmailRequest implements Serializable {
             @JsonProperty( Names.CC_FIELD ) Optional<String[]> cc,
             @JsonProperty( Names.BCC_FIELD ) Optional<String[]> bcc,
             @JsonProperty( Names.SUBJECT_FIELD ) Optional<String> subject,
-            @JsonProperty( Names.BODY_FIELD ) Optional<String> body) {
+            @JsonProperty( Names.BODY_FIELD ) Optional<String> body ) {
 
         this.from = Preconditions.checkNotNull( from );
         this.to = ImmutableList.copyOf( Iterables.filter( Arrays.asList( Preconditions.checkNotNull( to ) ),

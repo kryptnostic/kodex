@@ -31,8 +31,8 @@ public class KryptnosticObjectTests extends SecurityConfigurationTestUtils {
             InvalidKeyException, NoSuchAlgorithmException, InvalidAlgorithmParameterException,
             IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, InvalidKeySpecException,
             InvalidParameterSpecException, SignatureException, Exception {
-        loader.put( "test", crypto );
-        loader.put( "test2", crypto );
+        loader.put( "test", passwordCryptoService );
+        loader.put( "test2", passwordCryptoService );
 
         KryptnosticObject d1 = new KryptnosticObject( new ObjectMetadata( "test", null ), "cool document" )
                 .encrypt( loader );
@@ -58,7 +58,7 @@ public class KryptnosticObjectTests extends SecurityConfigurationTestUtils {
             InvalidKeyException, NoSuchAlgorithmException, InvalidAlgorithmParameterException,
             IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, InvalidKeySpecException,
             InvalidParameterSpecException, SignatureException, Exception {
-        loader.put( "test", crypto );
+        loader.put( "test", passwordCryptoService );
 
         KryptnosticObject doc = new KryptnosticObject( new ObjectMetadata( "test", null ), "this is a test" );
         String out = serialize( doc );
@@ -72,14 +72,14 @@ public class KryptnosticObjectTests extends SecurityConfigurationTestUtils {
             ClassNotFoundException, InvalidKeyException, NoSuchAlgorithmException, InvalidAlgorithmParameterException,
             IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, InvalidKeySpecException,
             InvalidParameterSpecException, SignatureException, Exception {
-        loader.put( "test", crypto );
+        loader.put( "test", passwordCryptoService );
 
         KryptnosticObject doc = new KryptnosticObject( new ObjectMetadata( "test", null ), "this is a test" )
                 .encrypt( loader );
         String out = serialize( doc.getBody().getEncryptedData() );
         EncryptableBlock[] result = deserialize( out, EncryptableBlock[].class );
 
-        Assert.assertEquals( doc.getBody().decrypt( loader ).getData(), crypto.decrypt( result[ 0 ].getBlock() ) );
+        Assert.assertEquals( doc.getBody().decrypt( loader ).getData(), passwordCryptoService.decrypt( result[ 0 ].getBlock() ) );
     }
 
     @Test
@@ -89,7 +89,7 @@ public class KryptnosticObjectTests extends SecurityConfigurationTestUtils {
             InvalidParameterSpecException, SignatureException, Exception {
         HashFunction hashFunction = Encryptable.hashFunction;
 
-        loader.put( "test", crypto );
+        loader.put( "test", passwordCryptoService );
 
         KryptnosticObject doc = new KryptnosticObject( new ObjectMetadata( "test", null ), "this is a test" )
                 .encrypt( loader );

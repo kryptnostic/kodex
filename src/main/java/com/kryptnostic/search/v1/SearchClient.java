@@ -3,7 +3,8 @@ package com.kryptnostic.search.v1;
 import java.util.List;
 
 import com.kryptnostic.search.v1.models.request.SearchRequest;
-import com.kryptnostic.search.v1.models.response.SearchResultResponse;
+import com.kryptnostic.v2.search.SearchResultResponse;
+
 
 public interface SearchClient {
     /**

@@ -24,7 +24,7 @@ public class PendingObjectRequest {
     public PendingObjectRequest(
             @JsonProperty( Names.TYPE_FIELD ) String type,
             @JsonProperty( Names.PARENT_OBJECT_ID_FIELD ) String parentObjectId,
-            @JsonProperty( Names.INHERIT_OWNERSHIP_FIELD ) Optional<Boolean> inheritOwnership ) {
+            @JsonProperty( Names.INHERITING_OWNERSHIP_FIELD ) Optional<Boolean> inheritOwnership ) {
         this.type = type;
         this.parentObjectId = parentObjectId;
         this.inheritOwnership = inheritOwnership.or( INHERIT_OWNERSHIP_DEFAULT );
@@ -45,7 +45,7 @@ public class PendingObjectRequest {
         return parentObjectId != null;
     }
     
-    @JsonProperty( Names.INHERIT_OWNERSHIP_FIELD ) 
+    @JsonProperty( Names.INHERITING_OWNERSHIP_FIELD ) 
     public boolean isInheritOwnership() {
         return inheritOwnership;
     }

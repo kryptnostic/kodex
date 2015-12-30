@@ -15,7 +15,7 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * Purposefully named type-safe wrapper for working with Java's insane crypto API.
- * 
+ *
  * @author Matthew Tamayo-Rios &lt;matthew@kryptnostic.com&gt;
  */
 
@@ -30,6 +30,8 @@ public enum Cypher {
             Padding.OAEPWithSHA256AndMGF1Padding, 1024 ), RSA_OAEP_SHA256_2048( CryptoAlgorithm.RSA, Mode.ECB,
             Padding.OAEPWithSHA256AndMGF1Padding, 2048 ), RSA_OAEP_SHA256_4096( CryptoAlgorithm.RSA, Mode.ECB,
             Padding.OAEPWithSHA256AndMGF1Padding, 4096 );
+
+    public static final Cypher      DEFAULT         = AES_CTR_128;
 
     private static final String     CIPHER_ENCODING = "%s/%s/%s";
     private final CipherDescription description;
