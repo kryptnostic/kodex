@@ -3,6 +3,7 @@ package com.kryptnostic.directory.v1.http;
 import java.util.UUID;
 
 import com.kryptnostic.directory.v1.exception.AddUserException;
+import com.kryptnostic.mail.models.EmailRequest;
 import com.kryptnostic.registration.v1.models.UserCreationRequest;
 import com.squareup.okhttp.Response;
 
@@ -40,5 +41,5 @@ public interface RegistrationApi {
     Response verifyConfirmation( @Path( UUID ) String uuid, @Path( TOKEN ) String token);
 
     @POST( CONTROLLER + INVITATION )
-    Response sendInvitationEmail( @Body String[] emails );
+    Response sendInvitationEmail( @Body EmailRequest emailRequest );
 }

@@ -16,9 +16,7 @@ public class EmailRequestTest extends BaseJacksonSerializationTest<EmailRequest>
                 Optional.<String> absent(),
                 new String[] { toAddress },
                 Optional.<String[]> absent(),
-                Optional.<String[]> absent(),
-                Optional.<String> absent(),
-                Optional.<String> absent() );
+                Optional.<String[]> absent() );
     }
 
     @Override
@@ -33,9 +31,7 @@ public class EmailRequestTest extends BaseJacksonSerializationTest<EmailRequest>
                 Optional.<String> absent(),
                 new String[] {},
                 Optional.<String[]> absent(),
-                Optional.<String[]> absent(),
-                Optional.<String> absent(),
-                Optional.<String> absent() );
+                Optional.<String[]> absent() );
     }
 
     @Test(
@@ -45,9 +41,7 @@ public class EmailRequestTest extends BaseJacksonSerializationTest<EmailRequest>
                 Optional.<String> absent(),
                 null,
                 Optional.<String[]> absent(),
-                Optional.<String[]> absent(),
-                Optional.<String> absent(),
-                Optional.<String> absent() );
+                Optional.<String[]> absent() );
     }
 
 }
