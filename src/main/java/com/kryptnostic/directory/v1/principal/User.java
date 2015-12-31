@@ -67,4 +67,7 @@ public interface User extends Principal {
     Optional<String> getFamilyName();
 
     Optional<Object> getAttribute( String key );
+
+    @JsonProperty( Names.CONFIRMATION_STATUS )
+    boolean getConfirmationStatus();
 }
