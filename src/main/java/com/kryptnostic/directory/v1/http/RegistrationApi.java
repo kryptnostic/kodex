@@ -17,6 +17,7 @@ public interface RegistrationApi {
 
     String CONTROLLER   = "/registration";
     String USER         = "/user";
+    String INVITATION   = "/invitation";
     String CONFIRMATION = "/confirmation";
     String VERIFICATION = "/verification";
     String UUID_PATH    = "/{" + UUID + "}";
@@ -37,4 +38,7 @@ public interface RegistrationApi {
 
     @GET( CONTROLLER + VERIFICATION + UUID_PATH + TOKEN_PATH )
     Response verifyConfirmation( @Path( UUID ) String uuid, @Path( TOKEN ) String token);
+
+    @POST( CONTROLLER + INVITATION )
+    Response sendInvitationEmail( @Body String[] emails );
 }
