@@ -3,6 +3,7 @@ package com.kryptnostic.mail.v1.models;
 import org.junit.Test;
 
 import com.google.common.base.Optional;
+import com.kryptnostic.mail.models.EmailRequest;
 import com.kryptnostic.utils.BaseJacksonSerializationTest;
 
 public class EmailRequestTest extends BaseJacksonSerializationTest<EmailRequest> {
