@@ -1,6 +1,5 @@
 package com.kryptnostic.sharing.v1.models;
 
-import java.io.Serializable;
 import java.util.UUID;
 
 import org.joda.time.DateTime;
@@ -17,8 +16,7 @@ import com.kryptnostic.sharing.v1.models.request.SharingRequest;
  * @author Matthew Tamayo-Rios &lt;matthew@kryptnostic.com&gt;
  *
  */
-public class Share implements Serializable {
-    private static final long serialVersionUID = 1145823070022684715L;
+public class Share {
     private final String      objectId;
     private final Optional<BlockCiphertext>      encryptedSharingPair;
     private final byte[]      seal;
