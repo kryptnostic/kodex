@@ -38,7 +38,7 @@ public interface RegistrationApi {
     Response resendConfirmationEmail();
 
     @GET( CONTROLLER + VERIFICATION + UUID_PATH + TOKEN_PATH )
-    Response verifyConfirmation( @Path( UUID ) String uuid, @Path( TOKEN ) String token);
+    Response verifyConfirmation( @Path( UUID ) UUID uuid, @Path( TOKEN ) String token);
 
     @POST( CONTROLLER + INVITATION )
     Response sendInvitationEmail( @Body EmailRequest emailRequest );
