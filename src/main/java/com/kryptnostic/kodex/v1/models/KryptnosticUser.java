@@ -20,6 +20,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Optional;
@@ -381,6 +382,7 @@ public final class KryptnosticUser implements User, Serializable {
     }
 
     @Override
+    @JsonIgnore
     public boolean getConfirmationStatus() {
         return this.confirmationStatus;
     }
