@@ -11,7 +11,6 @@ import static com.kryptnostic.kodex.v1.constants.Names.ID_FIELD;
 import static com.kryptnostic.kodex.v1.constants.Names.REALM_FIELD;
 import static com.kryptnostic.kodex.v1.constants.Names.ROLES_FIELD;
 import static com.kryptnostic.kodex.v1.constants.Names.USERNAME_FIELD;
-import static com.kryptnostic.kodex.v1.constants.Names.CONFIRMATION_STATUS;
 
 import java.io.Serializable;
 import java.util.Arrays;
@@ -20,7 +19,6 @@ import java.util.Set;
 import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Optional;
@@ -50,7 +48,6 @@ public final class KryptnosticUser implements User, Serializable {
     private final Set<UUID>      groups           = Sets.newHashSet();
     private final Set<String>    roles            = Sets.newHashSet();
     private final UserAttributes attributes       = new UserAttributes( Maps.<String, Object> newConcurrentMap() );
-    private final Boolean        confirmationStatus;
 
     /**
      * Either the realm or domain must be specified. If both are specified the realm takes precedence until it is
@@ -76,8 +73,7 @@ public final class KryptnosticUser implements User, Serializable {
             @JsonProperty( CERTIFICATE_FIELD ) Optional<byte[]> certificate,
             @JsonProperty( GROUPS_PROPERTY ) Set<UUID> groups,
             @JsonProperty( ROLES_FIELD ) Set<String> roles,
-            @JsonProperty( ATTRIBUTES_FIELD ) UserAttributes attributes,
-            @JsonProperty( CONFIRMATION_STATUS ) Boolean confirmationStatus) {
+            @JsonProperty( ATTRIBUTES_FIELD ) UserAttributes attributes ) {
         this.id = id;
         this.domain = realm.or( domain.get() );
         this.username = username;
@@ -86,7 +82,6 @@ public final class KryptnosticUser implements User, Serializable {
         this.roles.addAll( roles );
         this.certificate = certificate.or( new byte[ 0 ] );
         this.email = email;
-        this.confirmationStatus = confirmationStatus == null ? false : confirmationStatus;
     }
 
     @Override
@@ -162,7 +157,7 @@ public final class KryptnosticUser implements User, Serializable {
     public String toString() {
         return "KryptnosticUser [id=" + id + ", email=" + email + ", domain=" + domain + ", username=" + username
                 + ", certificate=" + Arrays.toString( certificate ) + ", groups=" + groups + ", roles=" + roles
-                + ", attributes=" + attributes + ", confirmationStatus=" + confirmationStatus + "]";
+                + ", attributes=" + attributes + "]";
     }
 
     @Override
@@ -177,7 +172,6 @@ public final class KryptnosticUser implements User, Serializable {
         result = prime * result + ( ( id == null ) ? 0 : id.hashCode() );
         result = prime * result + ( ( roles == null ) ? 0 : roles.hashCode() );
         result = prime * result + ( ( username == null ) ? 0 : username.hashCode() );
-        result = prime * result + ( ( confirmationStatus == null) ? 0 : confirmationStatus.hashCode());
         return result;
     }
 
@@ -245,13 +239,6 @@ public final class KryptnosticUser implements User, Serializable {
         } else if ( !username.equals( other.username ) ) {
             return false;
         }
-        if(confirmationStatus == null) {
-            if(other.confirmationStatus != null) {
-                return false;
-            }
-        }else if (!confirmationStatus.equals( other.confirmationStatus )){
-            return false;
-        }
         return true;
     }
 
@@ -267,7 +254,6 @@ public final class KryptnosticUser implements User, Serializable {
         public Set<UUID>       groups;
         public Set<String>     roles;
         public UserAttributes  attributes;
-        public boolean         confirmationStatus;
 
         public HeraclesUserBuilder( String email ) {
             this.email = email;
@@ -278,7 +264,6 @@ public final class KryptnosticUser implements User, Serializable {
             this.groups = Sets.newConcurrentHashSet();
             this.attributes = new UserAttributes( Maps.<String, Object> newConcurrentMap() );
             this.roles = Sets.newConcurrentHashSet();
-            this.confirmationStatus = false;
         }
 
         @Deprecated
@@ -371,20 +356,13 @@ public final class KryptnosticUser implements User, Serializable {
                     Optional.of( certificate ),
                     groups,
                     roles,
-                    attributes,
-                    confirmationStatus);
+                    attributes );
         }
     }
 
     @Override
     public int getUserVersion() {
         return (int) MoreObjects.firstNonNull( getAttribute( Names.VERSION_FIELD ), 0 );
-    }
-
-    @Override
-    @JsonIgnore
-    public boolean getConfirmationStatus() {
-        return this.confirmationStatus;
     }
 
 }
