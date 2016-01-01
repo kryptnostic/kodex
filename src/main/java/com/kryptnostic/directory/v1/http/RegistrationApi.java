@@ -32,7 +32,7 @@ public interface RegistrationApi {
      * @throws AddUserException
      */
     @POST( CONTROLLER + USER )
-    UUID register( @Body UserCreationRequest request ) throws AddUserException;
+    UUID register( @Body UserCreationRequest request );
 
     @GET( CONTROLLER + CONFIRMATION )
     Response resendConfirmationEmail();
