@@ -9,6 +9,7 @@ import retrofit.http.GET;
 import retrofit.http.Path;
 
 public interface TypesApi {
+    String CONTROLLER = "/types";
 
     String SCOPE      = "scope";
     String SCOPE_PATH = "/{" + SCOPE + "}";
@@ -30,7 +31,7 @@ public interface TypesApi {
      * @return A mapping of type names to corresponding {@link UUID}s.
      */
     @GET( SCOPE_PATH )
-    Map<String, UUID> getScopeInformation();
+    Map<String, UUID> getScopeInformation( @Path( SCOPE ) String scope);
 
     /**
      * Resolves as scope and type name to a UUID, creating one if necessary.
