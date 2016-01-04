@@ -8,7 +8,8 @@ import com.kryptnostic.v2.storage.models.ObjectMetadata.CryptoMaterial;
 import com.kryptnostic.v2.storage.types.TypeUUIDs;
 
 public class CreateMetadataObjectRequest extends CreateObjectRequest {
-    private final byte[] address;
+    private final byte[]           address;
+    private final Optional<Double> score;
 
     public CreateMetadataObjectRequest( byte[] address ) {
         super(
@@ -20,6 +21,7 @@ public class CreateMetadataObjectRequest extends CreateObjectRequest {
                 Optional.<Boolean> absent(),
                 Optional.<Boolean> absent() );
         this.address = address;
+        this.score = Optional.absent();
     }
 
     @JsonCreator
@@ -27,6 +29,7 @@ public class CreateMetadataObjectRequest extends CreateObjectRequest {
             @JsonProperty( Names.ADDRESS_FIELD ) byte[] address,
             @JsonProperty( Names.PARENT_OBJECT_ID_FIELD ) Optional<VersionedObjectKey> parentObjectId,
             @JsonProperty( Names.ID_FIELD ) Optional<VersionedObjectKey> objectId,
+            @JsonProperty( Names.SCORE_FIELD ) Optional<Double> score,
             @JsonProperty( Names.INHERITING_OWNERSHIP_FIELD ) Optional<Boolean> inheritOwnership,
             @JsonProperty( Names.INHERITING_CRYPTO_SERVICE_FIELD ) Optional<Boolean> inheritCryptoService,
             @JsonProperty( Names.LOCKED_FIELD ) Optional<Boolean> locked) {
@@ -39,10 +42,16 @@ public class CreateMetadataObjectRequest extends CreateObjectRequest {
                 inheritCryptoService,
                 locked );
         this.address = address;
+        this.score = score;
     }
 
     @JsonProperty( Names.ADDRESS_FIELD )
     public byte[] getAddress() {
         return address;
+    }
+    
+    @JsonProperty( Names.SCORE_FIELD )
+    public Optional<Double> getScore() { 
+        return score;
     }
 }

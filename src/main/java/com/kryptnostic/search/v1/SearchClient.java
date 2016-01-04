@@ -2,9 +2,8 @@ package com.kryptnostic.search.v1;
 
 import java.util.List;
 
-import com.kryptnostic.search.v1.models.request.SearchRequest;
 import com.kryptnostic.v2.search.SearchResultResponse;
-
+import com.kryptnostic.v2.search.TermQuery;
 
 public interface SearchClient {
     /**
@@ -12,12 +11,12 @@ public interface SearchClient {
      * 
      * @return Set &lt;Metadatum&gt; a collection of Metadatum associating the query with documents.
      */
-    SearchResultResponse search( String query );
+    TermQuery buildTermQuery( List<String> tokens );
 
-    SearchResultResponse search( String query, SearchRequest request );
+    SearchResultResponse search( String... searchTerms );
 
-    SearchResultResponse search( SearchRequest request );
+    SearchResultResponse search( List<String> searchTerms );
 
-    SearchRequest generateSearchRequest( List<String> tokens );
+    SearchResultResponse submitTermQuery( TermQuery request );
 
 }

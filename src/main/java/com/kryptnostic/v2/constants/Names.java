@@ -108,4 +108,6 @@ public final class Names {
     public static final String TYPES                           = "types";
     public static final String SCOPE_IDS                       = "scopeIds";
     public static final String SCOPES                          = "scopes";
+    public static final String SCORE_FIELD                     = "score";
+    public static final String TERMS_FIELD                     = "terms";
 }
