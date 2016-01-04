@@ -165,10 +165,10 @@ public interface KeyStorageApi {
 
     @Timed
     @GET( CONTROLLER + AES_MASTER_KEY )
-    byte[] getMasterKey();
+    byte[] getMasterCryptoService();
 
     @PUT( CONTROLLER + AES_MASTER_KEY )
-    Response setMasterKey( @Body byte[] masterKey );
+    Response setMasterCryptoService( @Body byte[] masterKey );
 
     /**
      *
