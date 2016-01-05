@@ -4,6 +4,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import com.kryptnostic.kodex.v1.constants.Names;
+import com.kryptnostic.v2.storage.models.TypesUUIDMap;
 
 import retrofit.http.GET;
 import retrofit.http.Path;
@@ -23,7 +24,7 @@ public interface TypesApi {
      * @return A mapping of each scope to a mapping of type names to corresponding {@link UUID}s.
      */
     @GET( "/" )
-    Map<String, Map<String, UUID>> getScopes();
+    Map<String, TypesUUIDMap> getScopes();
 
     /**
      * Used to retrieve type information for a particular scope.
@@ -31,7 +32,7 @@ public interface TypesApi {
      * @return A mapping of type names to corresponding {@link UUID}s.
      */
     @GET( SCOPE_PATH )
-    Map<String, UUID> getScopeInformation( @Path( SCOPE ) String scope);
+    TypesUUIDMap getScopeInformation( @Path( SCOPE ) String scope);
 
     /**
      * Resolves as scope and type name to a UUID, creating one if necessary.
