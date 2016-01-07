@@ -1,5 +1,7 @@
 package com.kryptnostic.v2.search;
 
+import java.util.Map;
+
 import retrofit.http.Body;
 import retrofit.http.POST;
 
@@ -12,5 +14,5 @@ public interface SearchApi {
      * @return SearchResult
      */
     @POST( CONTROLLER )
-    SearchResultResponse submitTermQuery( @Body TermQuery query );
+    SearchResultResponse submitTermQuery( @Body Map<String,byte[]> query );
 }

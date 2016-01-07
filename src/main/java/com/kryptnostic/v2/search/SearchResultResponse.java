@@ -1,32 +1,32 @@
 package com.kryptnostic.v2.search;
 
-import java.util.List;
+import java.util.SortedSet;
+import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.kryptnostic.v2.constants.Names;
 
 public class SearchResultResponse {
-
-    private final List<SearchResult> data;
-    private final int                offset;
+    private final UUID                    queryId;
+    private final SortedSet<SearchResult> results;
 
     @JsonCreator
     public SearchResultResponse(
-            @JsonProperty( Names.DATA_FIELD ) List<SearchResult> data,
-            @JsonProperty( Names.OFFSET_FIELD ) int offset ) {
-        this.data = data;
-        this.offset = offset;
+            @JsonProperty( Names.RESULTS_FIELD ) SortedSet<SearchResult> results,
+            @JsonProperty( Names.QUERY_FIELD ) UUID queryId) {
+        this.queryId = queryId;
+        this.results = results;
     }
 
-    @JsonProperty( Names.DATA_FIELD )
-    public List<SearchResult> getData() {
-        return data;
+    @JsonProperty( Names.RESULTS_FIELD )
+    public SortedSet<SearchResult> getResults() {
+        return results;
     }
 
-    @JsonProperty( Names.OFFSET_FIELD )
-    public int getOffset() {
-        return offset;
+    @JsonProperty( Names.QUERY_FIELD )
+    public UUID getQueryId() {
+        return queryId;
     }
 
 }
