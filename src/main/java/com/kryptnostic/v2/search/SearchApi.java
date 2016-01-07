@@ -1,6 +1,7 @@
 package com.kryptnostic.v2.search;
 
 import java.util.Map;
+import java.util.SortedSet;
 
 import retrofit.http.Body;
 import retrofit.http.POST;
@@ -14,5 +15,5 @@ public interface SearchApi {
      * @return SearchResult
      */
     @POST( CONTROLLER )
-    SearchResultResponse submitTermQuery( @Body Map<String,byte[]> query );
+    SortedSet<SearchResult> submitTermQuery( @Body Map<String, byte[]> query );
 }
