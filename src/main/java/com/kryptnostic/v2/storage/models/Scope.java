@@ -6,14 +6,14 @@ import java.util.UUID;
 
 import com.google.common.collect.ImmutableMap;
 
-public class TypesUUIDMap extends LinkedHashMap<String, UUID> {
+public class Scope extends LinkedHashMap<String, UUID> {
     private static final long serialVersionUID = -3836960389525657170L;
 
-    public TypesUUIDMap() {
+    public Scope() {
         super();
     }
 
-    public TypesUUIDMap( Map<String, UUID> types ) {
+    public Scope( Map<String, UUID> types ) {
         super( ImmutableMap.copyOf( types ) );
     }
 
