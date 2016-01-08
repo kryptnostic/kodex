@@ -4,7 +4,6 @@ import java.util.Map;
 import java.util.UUID;
 
 import com.kryptnostic.kodex.v1.constants.Names;
-import com.kryptnostic.kodex.v1.exceptions.types.ResourceNotFoundException;
 import com.kryptnostic.v2.storage.models.Scope;
 
 import retrofit.http.GET;
@@ -23,19 +22,17 @@ public interface TypesApi {
      * Used to retrieve type information for all available scopes.
      * 
      * @return A mapping of each scope to a mapping of type names to corresponding {@link UUID}s.
-     * @throws ResourceNotFoundException 
      */
     @GET( "/" )
-    Map<String, Scope> getScopes() throws ResourceNotFoundException;
+    Map<String, Scope> getScopes();
 
     /**
      * Used to retrieve type information for a particular scope.
      * 
      * @return A mapping of type names to corresponding {@link UUID}s.
-     * @throws ResourceNotFoundException 
      */
     @GET( SCOPE_PATH )
-    Scope getScopeInformation( @Path( SCOPE ) String scope) throws ResourceNotFoundException;
+    Scope getScopeInformation( @Path( SCOPE ) String scope);
 
     /**
      * Resolves as scope and type name to a UUID, creating one if necessary.
