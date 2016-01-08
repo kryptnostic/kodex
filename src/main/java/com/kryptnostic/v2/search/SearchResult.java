@@ -1,10 +1,10 @@
 package com.kryptnostic.v2.search;
 
-import org.joda.time.DateTime;
+import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.kryptnostic.v2.storage.models.VersionedObjectKeySet;
+import com.kryptnostic.v2.constants.Names;
 
 /**
  * Represents a set of search results for a pa
@@ -12,42 +12,73 @@ import com.kryptnostic.v2.storage.models.VersionedObjectKeySet;
  * @author Matthew Tamayo-Rios &lt;matthew@kryptnostic.com&gt;
  *
  */
-public class SearchResult {
-    private static final String         METADATA = "metadata";
-    private static final String         SCORE    = "score";
-    private static final String         DATE     = "date";
+public class SearchResult implements Comparable<SearchResult> {
 
-    private final VersionedObjectKeySet metadata;
-    private final Integer               score;
-    private final DateTime              date;
+    private final UUID   metadataObjectId;
+    private final double score;
 
     @JsonCreator
     public SearchResult(
-            @JsonProperty( METADATA ) VersionedObjectKeySet metadata,
-            @JsonProperty( SCORE ) Integer score,
-            @JsonProperty( DATE ) DateTime date ) {
-        this.metadata = metadata;
+            @JsonProperty( Names.METADATA_FIELD ) UUID metadataObjectId,
+            @JsonProperty( Names.SCORE_FIELD ) double score) {
+        this.metadataObjectId = metadataObjectId;
         this.score = score;
-        this.date = date;
     }
 
-    @JsonProperty( METADATA )
-    public VersionedObjectKeySet getMetadata() {
-        return metadata;
+    @JsonProperty( Names.METADATA_FIELD )
+    public UUID getMetadata() {
+        return metadataObjectId;
     }
 
-    @JsonProperty( SCORE )
-    public Integer getScore() {
+    @JsonProperty( Names.SCORE_FIELD )
+    public double getScore() {
         return score;
     }
 
-    @JsonProperty( DATE )
-    public DateTime getDate() {
-        return date;
+    @Override
+    public int compareTo( SearchResult o ) {
+        return Double.compare( score, o.getScore() );
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ( ( metadataObjectId == null ) ? 0 : metadataObjectId.hashCode() );
+        long temp;
+        temp = Double.doubleToLongBits( score );
+        result = prime * result + (int) ( temp ^ ( temp >>> 32 ) );
+        return result;
+    }
+
+    @Override
+    public boolean equals( Object obj ) {
+        if ( this == obj ) {
+            return true;
+        }
+        if ( obj == null ) {
+            return false;
+        }
+        if ( !( obj instanceof SearchResult ) ) {
+            return false;
+        }
+        SearchResult other = (SearchResult) obj;
+        if ( metadataObjectId == null ) {
+            if ( other.metadataObjectId != null ) {
+                return false;
+            }
+        } else if ( !metadataObjectId.equals( other.metadataObjectId ) ) {
+            return false;
+        }
+        if ( Double.doubleToLongBits( score ) != Double.doubleToLongBits( other.score ) ) {
+            return false;
+        }
+        return true;
     }
 
     @Override
     public String toString() {
-        return "SearchResult[ metadata=" + metadata + ", score=" + score + ", date=" + date + "]";
+        return "SearchResult [metadataObjectId=" + metadataObjectId + ", score=" + score + "]";
     }
+
 }

@@ -47,7 +47,7 @@ public final class Names {
     public static final String OBJECT_SHARING_PAIR_FIELD       = "sharingPair";
     public static final String OBJECT_SHARING_PAIRS_FIELD      = "sharingPairs";
     public static final String SHARES_FIELD                    = "shares";
-    public static final String DATA_FIELD                      = "data";
+    public static final String RESULTS_FIELD                   = "results";
     public static final String STRATEGY_FIELD                  = "strategy";
     public static final String VERSION_FIELD                   = "version";
     public static final String BODY_FIELD                      = "body";
@@ -110,4 +110,5 @@ public final class Names {
     public static final String SCOPES                          = "scopes";
     public static final String SCORE_FIELD                     = "score";
     public static final String TERMS_FIELD                     = "terms";
+    public static final String COUNTS_FIELD                    = "counts";
 }
