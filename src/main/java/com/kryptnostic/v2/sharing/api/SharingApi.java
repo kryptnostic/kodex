@@ -1,13 +1,12 @@
 package com.kryptnostic.v2.sharing.api;
 
-import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
-import com.kryptnostic.indexing.v1.ObjectSearchPair;
 import com.kryptnostic.v2.sharing.models.RevocationRequest;
 import com.kryptnostic.v2.sharing.models.Share;
 import com.kryptnostic.v2.sharing.models.SharingRequest;
+import com.kryptnostic.v2.sharing.models.VersionedObjectSearchPair;
 import com.kryptnostic.v2.storage.models.VersionedObjectKey;
 
 import retrofit.client.Response;
@@ -30,8 +29,8 @@ public interface SharingApi {
     @GET( SHARE + OBJECT )
     Set<Share> getIncomingShares();
 
-    @POST( SHARE + OBJECT + "/{" + ID + "}" )
-    Response removeIncomingShares( @Path( ID ) VersionedObjectKey uuid);
+    @DELETE( SHARE + OBJECT + "/{" + ID + "}/{" + VERSION + "}" )
+    Response removeIncomingShare( @Path( ID ) UUID objectKey, @Path( VERSION ) long version);
 
     @POST( SHARE + OBJECT + SHARE )
     Response share( @Body SharingRequest request );
@@ -40,13 +39,16 @@ public interface SharingApi {
     Response revokeAccess( @Body RevocationRequest request );
 
     // TODO: Consider creating objects here.
-    @PUT( SHARE + KEYS )
-    Set<UUID> addSearchPairs( @Body Map<VersionedObjectKey, ObjectSearchPair> indexPairs );
+    @POST( SHARE + KEYS )
+    Response addSearchPairs( @Body Set<VersionedObjectSearchPair> versionedObjectSearchPairs );
 
-    @DELETE( SHARE + KEYS )
-    Response removeKeys( @Body Set<VersionedObjectKey> uuids );
+    // TODO: Once versions exceed values supported by JS ~2^54 we will have problems if ecmascript hasn't caught up by
+    @PUT( SHARE + KEYS + "/{" + ID + "}/{" + VERSION + "}" )
+    Response addSearchPair( @Path( ID ) UUID objectId, @Path( VERSION ) long version, @Body byte[] objectSearchPair);
 
-    @GET( SHARE + OBJECT + "/{" + ID + "}/{" + VERSION + "}" )
+    @GET( SHARE + KEYS + "/{" + ID + "}/{" + VERSION + "}" )
     byte[] getSearchPair( @Path( ID ) UUID id, @Path( VERSION ) long version);
 
+    @DELETE( SHARE + KEYS )
+    Response removeSearchPairs( @Body Set<VersionedObjectKey> uuids );
 }
