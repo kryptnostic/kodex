@@ -5,6 +5,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import com.kryptnostic.indexing.v1.ObjectSearchPair;
+import com.kryptnostic.v2.constants.Names;
 import com.kryptnostic.v2.sharing.models.RevocationRequest;
 import com.kryptnostic.v2.sharing.models.Share;
 import com.kryptnostic.v2.sharing.models.SharingRequest;
@@ -19,13 +20,18 @@ import retrofit.http.PUT;
 import retrofit.http.Path;
 
 public interface SharingApi {
+
+    String ID      = Names.ID_FIELD;
+    String VERSION = Names.VERSION_FIELD;
+
+    String OBJECT_ID_PATH = "/id/{" + ID + "}";
+    String VERSION_PATH   = "/{" + VERSION + "}";
+
     String SHARE       = "/share";
     String OBJECT      = "/object";
     String REVOKE      = "/revoke";
     String KEYS        = "/keys";
     String OBJECT_KEYS = "/objectKeys";
-    String ID          = "id";
-    String VERSION     = "version";
 
     @GET( SHARE + OBJECT )
     Set<Share> getIncomingShares();
@@ -46,7 +52,7 @@ public interface SharingApi {
     @DELETE( SHARE + KEYS )
     Response removeKeys( @Body Set<VersionedObjectKey> uuids );
 
-    @GET( SHARE + OBJECT + "/{" + ID + "}/{" + VERSION + "}" )
+    @GET( SHARE + OBJECT + OBJECT_ID_PATH + VERSION_PATH )
     byte[] getSearchPair( @Path( ID ) UUID id, @Path( VERSION ) long version);
 
 }

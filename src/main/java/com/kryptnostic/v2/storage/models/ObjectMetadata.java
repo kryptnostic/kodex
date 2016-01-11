@@ -11,6 +11,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.kryptnostic.kodex.v1.crypto.ciphers.Cypher;
 import com.kryptnostic.v2.constants.Names;
+import com.kryptnostic.v2.sharing.models.ObjectUserKey;
 
 /**
  *
@@ -20,15 +21,15 @@ import com.kryptnostic.v2.constants.Names;
 @Immutable
 public class ObjectMetadata {
 
-    protected final UUID                id;
-    protected final UUID                type;
-    protected final long                version;
-    protected final long                size;
-    protected EnumSet<CryptoMaterial>   uploadedParts;
+    protected final UUID              id;
+    protected final UUID              type;
+    protected final long              version;
+    protected final long              size;
+    protected EnumSet<CryptoMaterial> uploadedParts;
     protected EnumSet<CryptoMaterial> requiredParts;
 
-    protected final UUID     creator;
-    protected final DateTime createdTime;
+    protected final UUID              creator;
+    protected final DateTime          createdTime;
 
     public enum CryptoMaterial {
         IV,
@@ -43,7 +44,7 @@ public class ObjectMetadata {
                 return EnumSet.of( IV, CONTENTS );
             }
             EnumSet<CryptoMaterial> required;
-            switch( cypher ) {
+            switch ( cypher ) {
                 case AES_GCM_128:
                     required = EnumSet.of( TAG, IV, CONTENTS );
                     break;
@@ -66,7 +67,7 @@ public class ObjectMetadata {
             @JsonProperty( Names.TYPE_FIELD ) UUID type,
             @JsonProperty( Names.CREATOR_FIELD ) UUID creator,
             @JsonProperty( Names.REQUIRED_CRYPTO_MATS_FIELD ) EnumSet<CryptoMaterial> requiredMaterials,
-            @JsonProperty( Names.CREATED_TIME ) DateTime createdTime ) {
+            @JsonProperty( Names.CREATED_TIME ) DateTime createdTime) {
         this.id = id;
         this.version = version;
         this.type = type;
@@ -162,7 +163,8 @@ public class ObjectMetadata {
         this.uploadedParts = uploadedParts;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see java.lang.Object#hashCode()
      */
     @Override
@@ -180,7 +182,8 @@ public class ObjectMetadata {
         return result;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see java.lang.Object#equals(java.lang.Object)
      */
     @Override
@@ -246,4 +249,8 @@ public class ObjectMetadata {
         return true;
     }
 
+    // TODO: Annotate with @UserId
+    public ObjectUserKey toObjectUserKey( UUID userId ) {
+        return new ObjectUserKey( this.id, userId );
+    }
 }
