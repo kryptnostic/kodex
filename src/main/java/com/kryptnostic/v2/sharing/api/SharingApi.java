@@ -3,6 +3,7 @@ package com.kryptnostic.v2.sharing.api;
 import java.util.Set;
 import java.util.UUID;
 
+import com.kryptnostic.v2.constants.Names;
 import com.kryptnostic.v2.sharing.models.RevocationRequest;
 import com.kryptnostic.v2.sharing.models.Share;
 import com.kryptnostic.v2.sharing.models.SharingRequest;
@@ -18,13 +19,18 @@ import retrofit.http.PUT;
 import retrofit.http.Path;
 
 public interface SharingApi {
+
+    String ID      = Names.ID_FIELD;
+    String VERSION = Names.VERSION_FIELD;
+
+    String OBJECT_ID_PATH = "/id/{" + ID + "}";
+    String VERSION_PATH   = "/{" + VERSION + "}";
+
     String SHARE       = "/share";
     String OBJECT      = "/object";
     String REVOKE      = "/revoke";
     String KEYS        = "/keys";
     String OBJECT_KEYS = "/objectKeys";
-    String ID          = "id";
-    String VERSION     = "version";
 
     @GET( SHARE + OBJECT )
     Iterable<Share> getIncomingShares();
@@ -43,10 +49,10 @@ public interface SharingApi {
     Response addSearchPairs( @Body Set<VersionedObjectSearchPair> versionedObjectSearchPairs );
 
     // TODO: Once versions exceed values supported by JS ~2^54 we will have problems if ecmascript hasn't caught up by
-    @PUT( SHARE + KEYS + "/{" + ID + "}/{" + VERSION + "}" )
+    @PUT( SHARE + KEYS + OBJECT_ID_PATH + VERSION_PATH )
     Response addSearchPair( @Path( ID ) UUID objectId, @Path( VERSION ) long version, @Body byte[] objectSearchPair);
 
-    @GET( SHARE + KEYS + "/{" + ID + "}/{" + VERSION + "}" )
+    @GET( SHARE + OBJECT + OBJECT_ID_PATH + VERSION_PATH )
     byte[] getSearchPair( @Path( ID ) UUID id, @Path( VERSION ) long version);
 
     @DELETE( SHARE + KEYS )
