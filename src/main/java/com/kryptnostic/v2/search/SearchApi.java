@@ -4,6 +4,7 @@ import java.util.Map;
 import java.util.SortedSet;
 
 import retrofit.http.Body;
+import retrofit.http.GET;
 import retrofit.http.POST;
 
 public interface SearchApi {
@@ -16,4 +17,7 @@ public interface SearchApi {
      */
     @POST( CONTROLLER )
     SortedSet<SearchResult> submitTermQuery( @Body Map<String, byte[]> query );
+    
+    @GET( CONTROLLER + "/object/{id}/{version}" )
+    public Integer getTotalSegments();  
 }

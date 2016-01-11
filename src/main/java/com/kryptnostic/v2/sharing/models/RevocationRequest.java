@@ -21,7 +21,7 @@ public class RevocationRequest {
     }
 
     @JsonProperty( Names.ID_FIELD )
-    public VersionedObjectKey getObjectId() {
+    public VersionedObjectKey getObjectKey() {
         return objectId;
     }
 

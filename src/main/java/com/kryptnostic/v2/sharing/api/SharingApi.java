@@ -27,7 +27,7 @@ public interface SharingApi {
     String VERSION     = "version";
 
     @GET( SHARE + OBJECT )
-    Set<Share> getIncomingShares();
+    Iterable<Share> getIncomingShares();
 
     @DELETE( SHARE + OBJECT + "/{" + ID + "}/{" + VERSION + "}" )
     Response removeIncomingShare( @Path( ID ) UUID objectKey, @Path( VERSION ) long version);

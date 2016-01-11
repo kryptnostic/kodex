@@ -249,8 +249,11 @@ public class ObjectMetadata {
         return true;
     }
 
-    // TODO: Annotate with @UserId
     public ObjectUserKey toObjectUserKey( UUID userId ) {
         return new ObjectUserKey( this.id, userId );
+    }
+
+    public VersionedObjectUserKey toVersionedObjectUserKey( UUID userId ) {
+        return new VersionedObjectUserKey( this.id, userId, this.version );
     }
 }
