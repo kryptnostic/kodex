@@ -20,7 +20,7 @@ public class SearchResultResponse {
     }
 
     @JsonProperty( Names.RESULTS_FIELD )
-    public SortedSet<SearchResult> getResults() {
+    public SortedSet<SearchResult> getData() {
         return results;
     }
 
