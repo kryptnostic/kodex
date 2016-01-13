@@ -35,26 +35,27 @@ public interface SharingApi {
     @GET( SHARE + OBJECT )
     Iterable<Share> getIncomingShares();
 
-    @DELETE( SHARE + OBJECT + "/{" + ID + "}/{" + VERSION + "}" )
+    @DELETE( SHARE + OBJECT + OBJECT_ID_PATH + VERSION_PATH )
     Response removeIncomingShare( @Path( ID ) UUID objectKey, @Path( VERSION ) long version);
 
-    @POST( SHARE + OBJECT + SHARE )
+    @POST( SHARE + OBJECT  )
     Response share( @Body SharingRequest request );
 
-    @POST( SHARE + OBJECT + REVOKE )
+    @DELETE( SHARE + OBJECT )
     Response revokeAccess( @Body RevocationRequest request );
 
     // TODO: Consider creating objects here.
     @POST( SHARE + KEYS )
     Response addSearchPairs( @Body Set<VersionedObjectSearchPair> versionedObjectSearchPairs );
 
+    @DELETE( SHARE + KEYS )
+    Response removeSearchPairs( @Body Set<VersionedObjectKey> uuids );
+
     // TODO: Once versions exceed values supported by JS ~2^54 we will have problems if ecmascript hasn't caught up by
     @PUT( SHARE + KEYS + OBJECT_ID_PATH + VERSION_PATH )
     Response addSearchPair( @Path( ID ) UUID objectId, @Path( VERSION ) long version, @Body byte[] objectSearchPair);
 
-    @GET( SHARE + OBJECT + OBJECT_ID_PATH + VERSION_PATH )
+    @GET( SHARE + KEYS + OBJECT_ID_PATH + VERSION_PATH )
     byte[] getSearchPair( @Path( ID ) UUID id, @Path( VERSION ) long version);
 
-    @DELETE( SHARE + KEYS )
-    Response removeSearchPairs( @Body Set<VersionedObjectKey> uuids );
 }

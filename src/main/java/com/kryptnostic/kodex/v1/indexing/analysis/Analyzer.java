@@ -8,5 +8,5 @@ public interface Analyzer {
      * @param source
      * @return Map of tokens to List of index in document
      */
-    Map<String, List<Integer>> analyze(String source);
+    Map<String, List<List<Integer>>> analyze(String source);
 }

@@ -2,10 +2,9 @@ package com.kryptnostic.search.v1;
 
 import java.util.List;
 import java.util.Map;
-import java.util.SortedSet;
+import java.util.Set;
 
 import com.kryptnostic.v2.search.SearchResult;
-import com.kryptnostic.v2.search.SearchResultResponse;
 
 public interface SearchClient {
     /**
@@ -13,12 +12,12 @@ public interface SearchClient {
      * 
      * @return Set &lt;Metadatum&gt; a collection of Metadatum associating the query with documents.
      */
-    Map<String, byte[]> buildTermQuery( List<String> tokens );
+    Map<byte[], byte[]> buildTermQuery( List<String> tokens );
 
-    SearchResultResponse search( String... searchTerms );
+    Set<SearchResult> search( String... searchTerms );
 
-    SearchResultResponse search( List<String> searchTerms );
+    Set<SearchResult> search( List<String> searchTerms );
 
-    SortedSet<SearchResult> submitTermQuery( Map<String, byte[]> request );
+    Set<SearchResult> submitTermQuery( Map<byte[], byte[]> query );
 
 }
