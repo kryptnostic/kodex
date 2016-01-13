@@ -12,18 +12,21 @@ import com.kryptnostic.v2.storage.models.VersionedObjectKey;
  * @author Matthew Tamayo-Rios &lt;matthew@kryptnostic.com&gt;
  *
  */
-public class Metadata {
+public class BucketedMetadata {
     private final VersionedObjectKey  objectKey;
     private final String              term;
-    private final List<Integer> locations;
+    private final int                 length;
+    private final List<List<Integer>> locations;
 
     @JsonCreator
-    public Metadata(
+    public BucketedMetadata(
             @JsonProperty( Names.KEY_FIELD ) VersionedObjectKey objectId,
             @JsonProperty( Names.TOKEN_FIELD ) String term,
-            @JsonProperty( Names.INDEX_FIELD ) List<Integer> locations) {
+            @JsonProperty( Names.LENGTH_FIELD ) int length,
+            @JsonProperty( Names.INDEX_FIELD ) List<List<Integer>> locations) {
         this.objectKey = objectId;
         this.term = term;
+        this.length = length;
         this.locations = ImmutableList.copyOf( locations );
     }
 
@@ -43,13 +46,13 @@ public class Metadata {
 //    }
 
     @JsonProperty( Names.INDEX_FIELD )
-    public List<Integer> getLocations() {
+    public List<List<Integer>> getLocations() {
         return locations;
     }
 
     @Override
     public String toString() {
-        return "Metadata [objectId=" + objectKey + ", term=" + term + ", locations=" + locations + "]";
+        return "BucketedMetadata [objectId=" + objectKey + ", term=" + term + ", locations=" + locations + "]";
     }
 
     @Override
@@ -70,10 +73,10 @@ public class Metadata {
         if ( obj == null ) {
             return false;
         }
-        if ( !( obj instanceof Metadata ) ) {
+        if ( !( obj instanceof BucketedMetadata ) ) {
             return false;
         }
-        Metadata other = (Metadata) obj;
+        BucketedMetadata other = (BucketedMetadata) obj;
         if ( locations == null ) {
             if ( other.locations != null ) {
                 return false;

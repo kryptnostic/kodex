@@ -10,7 +10,12 @@ import retrofit.http.POST;
 import retrofit.http.Path;
 
 public interface SearchApi {
-    String CONTROLLER = "/search";
+    String CONTROLLER     = "/search";
+
+    String OBJECT_ID      = "objectId";
+    String OBJECT_ID_PATH = "/{" + OBJECT_ID + "}";
+    String VERSION        = "version";
+    String VERSION_PATH   = "/{" + VERSION + "}";
 
     /**
      * Search on stored documents.
@@ -20,6 +25,6 @@ public interface SearchApi {
     @POST( CONTROLLER )
     Set<SearchResult> submitTermQuery( @Body Map<String, byte[]> query );
 
-    @GET( CONTROLLER + "/object/{id}/{version}" )
-    public Integer getTotalSegments( @Path( "id" ) UUID objectId, @Path( "version" ) long version);
+    @GET( CONTROLLER + OBJECT_ID_PATH + VERSION_PATH )
+    public Integer getTotalSegments( @Path( OBJECT_ID ) UUID objectId, @Path( VERSION ) long version);
 }
