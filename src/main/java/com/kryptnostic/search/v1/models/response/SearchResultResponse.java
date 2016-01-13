@@ -15,7 +15,7 @@ public class SearchResultResponse {
     @JsonCreator
     public SearchResultResponse(
             @JsonProperty( Names.DATA_FIELD ) List<SearchResult> data,
-            @JsonProperty( Names.OFFSET_FIELD ) int offset ) {
+            @JsonProperty( Names.OFFSET_FIELD ) int offset) {
         this.data = data;
         this.offset = offset;
     }
