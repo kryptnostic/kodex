@@ -9,7 +9,9 @@ public interface CryptoService {
     BlockCiphertext encrypt( byte[] bytes, byte[] salt ) throws SecurityConfigurationException;
 
     byte[] decryptBytes( BlockCiphertext ciphertext ) throws SecurityConfigurationException;
-
+    
+    byte[] getSecretKey();
+    
     abstract Cypher getCypher();
 
 }

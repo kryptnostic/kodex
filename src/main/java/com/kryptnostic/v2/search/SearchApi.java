@@ -23,7 +23,7 @@ public interface SearchApi {
      * @return SearchResult
      */
     @POST( CONTROLLER )
-    Set<SearchResult> submitTermQuery( @Body Map<String, byte[]> query );
+    Set<SearchResult> submitTermQuery( @Body Map<byte[], byte[]> query );
 
     @GET( CONTROLLER + OBJECT_ID_PATH + VERSION_PATH )
     public Integer getTotalSegments( @Path( OBJECT_ID ) UUID objectId, @Path( VERSION ) long version);

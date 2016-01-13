@@ -12,12 +12,12 @@ public interface SearchClient {
      * 
      * @return Set &lt;Metadatum&gt; a collection of Metadatum associating the query with documents.
      */
-    Map<String, byte[]> buildTermQuery( List<String> tokens );
+    Map<byte[], byte[]> buildTermQuery( List<String> tokens );
 
     Set<SearchResult> search( String... searchTerms );
 
     Set<SearchResult> search( List<String> searchTerms );
 
-    Set<SearchResult> submitTermQuery( Map<String, byte[]> request );
+    Set<SearchResult> submitTermQuery( Map<byte[], byte[]> query );
 
 }
