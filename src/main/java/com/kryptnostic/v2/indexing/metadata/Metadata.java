@@ -21,7 +21,7 @@ public class Metadata {
     @JsonCreator
     public Metadata(
             @JsonProperty( Names.KEY_FIELD ) VersionedObjectKey objectId,
-            @JsonProperty( Names.TOKEN_PROPERTY ) String term,
+            @JsonProperty( Names.TOKEN_FIELD ) String term,
             @JsonProperty( Names.LENGTH_FIELD ) int length,
             @JsonProperty( Names.INDEX_FIELD ) List<Integer> locations ) {
         this.objectKey = objectId;

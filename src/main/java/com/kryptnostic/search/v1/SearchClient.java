@@ -2,7 +2,9 @@ package com.kryptnostic.search.v1;
 
 import java.util.List;
 import java.util.Map;
+import java.util.SortedSet;
 
+import com.kryptnostic.v2.search.SearchResult;
 import com.kryptnostic.v2.search.SearchResultResponse;
 
 public interface SearchClient {
@@ -17,6 +19,6 @@ public interface SearchClient {
 
     SearchResultResponse search( List<String> searchTerms );
 
-    SearchResultResponse submitTermQuery( Map<String, byte[]> request );
+    SortedSet<SearchResult> submitTermQuery( Map<String, byte[]> request );
 
 }

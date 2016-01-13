@@ -16,7 +16,9 @@ import retrofit.http.Path;
  *
  */
 public interface ObjectListingApi {
-    String CONTROLLER     = "/objects";
+    String CONTROLLER     = "/listing";
+    String OBJECTS        = "/objects";
+    String VERSIONED      = "/versioned";
     String TYPE           = "type";
     String PAGE           = Names.PAGE_FIELD;
     String PAGE_SIZE      = Names.SIZE_FIELD;
@@ -35,35 +37,41 @@ public interface ObjectListingApi {
      * @param userId The userId for which to return the list of paged objects.
      * @return The UUID of all objects owned by the user.
      */
-    @GET( CONTROLLER + USER_ID_PATH )
-    Set<UUID> getAllObjectIds( @Path( ID ) UUID userId );
+    @GET( CONTROLLER + OBJECTS + USER_ID_PATH )
+    Set<UUID> getAllObjectIds( @Path( ID ) UUID userId);
 
-    @GET( CONTROLLER + USER_ID_PATH + PAGE_SIZE_PATH + PAGE_PATH )
+    @GET( CONTROLLER + OBJECTS + USER_ID_PATH + PAGE_SIZE_PATH + PAGE_PATH )
     Set<UUID> getAllObjectIdsPaged(
             @Path( ID ) UUID userId,
             @Path( PAGE ) Integer offset,
-            @Path( PAGE_SIZE ) Integer pageSize );
+            @Path( PAGE_SIZE ) Integer pageSize);
 
-    @GET( CONTROLLER + USER_ID_PATH + TYPE_ID_PATH )
-    Set<VersionedObjectKey> getVersionedObjectKeysByType( @Path( ID ) UUID userId, @Path( TYPE ) UUID type );
+    @GET( CONTROLLER + VERSIONED + OBJECTS + USER_ID_PATH + TYPE_ID_PATH )
+    Set<VersionedObjectKey> getVersionedObjectKeysByType( @Path( ID ) UUID userId, @Path( TYPE ) UUID type);
 
-    @GET( CONTROLLER + USER_ID_PATH + TYPE_ID_PATH )
-    Set<UUID> getObjectIdsByType( @Path( ID ) UUID userId, @Path( TYPE ) UUID type );
+    @GET( CONTROLLER + OBJECTS + USER_ID_PATH + TYPE_ID_PATH )
+    Set<UUID> getObjectIdsByType( @Path( ID ) UUID userId, @Path( TYPE ) UUID type);
 
-    @GET( CONTROLLER + USER_ID_PATH + TYPE_ID_PATH + PAGE_SIZE_PATH + PAGE_PATH )
+    @GET( CONTROLLER + OBJECTS + USER_ID_PATH + TYPE_ID_PATH + PAGE_SIZE_PATH + PAGE_PATH )
     Set<UUID> getObjectIdsByTypePaged(
             @Path( ID ) UUID userId,
             @Path( TYPE ) UUID typeId,
             @Path( PAGE ) Integer offset,
             @Path( PAGE_SIZE ) Integer pageSize);
 
-    @GET( CONTROLLER + USER_ID_PATH + TYPE_ID_PATH + PAGE_SIZE_PATH + PAGE_PATH )
+    @GET( CONTROLLER + VERSIONED + OBJECTS + USER_ID_PATH + TYPE_ID_PATH + PAGE_SIZE_PATH + PAGE_PATH )
     Set<VersionedObjectKey> getVersionedObjectKeysByTypePaged(
             @Path( ID ) UUID userId,
             @Path( TYPE ) UUID typeId,
             @Path( PAGE ) Integer offset,
-            @Path( PAGE_SIZE ) Integer pageSize );
+            @Path( PAGE_SIZE ) Integer pageSize);
 
-    @GET( CONTROLLER + TYPE_NAME_PATH )
-    UUID getTypeForName( @Path( TYPE ) String typeName );
+    /**
+     * @deprecated Use {@link TypesApi}
+     * @param typeName
+     * @return
+     */
+    @Deprecated
+    @GET( CONTROLLER + OBJECTS + TYPE_NAME_PATH )
+    UUID getTypeForName( @Path( TYPE ) String typeName);
 }

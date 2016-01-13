@@ -14,15 +14,24 @@ import com.kryptnostic.v2.constants.Names;
  */
 public class SearchResult implements Comparable<SearchResult> {
 
+    private final String searchToken;
     private final UUID   metadataObjectId;
     private final double score;
 
     @JsonCreator
     public SearchResult(
+            @JsonProperty( Names.TOKEN_FIELD ) String searchToken,
             @JsonProperty( Names.METADATA_FIELD ) UUID metadataObjectId,
             @JsonProperty( Names.SCORE_FIELD ) double score) {
+        this.searchToken = searchToken;
         this.metadataObjectId = metadataObjectId;
         this.score = score;
+    }
+
+    @JsonProperty( Names.TOKEN_FIELD )
+    public String getSearchToken() {
+        return searchToken;
+
     }
 
     @JsonProperty( Names.METADATA_FIELD )
@@ -48,6 +57,7 @@ public class SearchResult implements Comparable<SearchResult> {
         long temp;
         temp = Double.doubleToLongBits( score );
         result = prime * result + (int) ( temp ^ ( temp >>> 32 ) );
+        result = prime * result + ( ( searchToken == null ) ? 0 : searchToken.hashCode() );
         return result;
     }
 
@@ -73,12 +83,20 @@ public class SearchResult implements Comparable<SearchResult> {
         if ( Double.doubleToLongBits( score ) != Double.doubleToLongBits( other.score ) ) {
             return false;
         }
+        if ( searchToken == null ) {
+            if ( other.searchToken != null ) {
+                return false;
+            }
+        } else if ( !searchToken.equals( other.searchToken ) ) {
+            return false;
+        }
         return true;
     }
 
     @Override
     public String toString() {
-        return "SearchResult [metadataObjectId=" + metadataObjectId + ", score=" + score + "]";
+        return "SearchResult [searchToken=" + searchToken + ", metadataObjectId=" + metadataObjectId + ", score="
+                + score + "]";
     }
 
 }
