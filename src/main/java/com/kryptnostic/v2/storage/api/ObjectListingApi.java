@@ -11,7 +11,7 @@ import retrofit.http.Path;
 
 /**
  * This API is used for retrieving paged lists of objects for a user. Ordering is not guaranteed across calls.
- * 
+ *
  * @author Matthew Tamayo-Rios &lt;matthew@kryptnostic.com&gt;
  *
  */
@@ -50,7 +50,7 @@ public interface ObjectListingApi {
     Set<VersionedObjectKey> getVersionedObjectKeysByType( @Path( ID ) UUID userId, @Path( TYPE ) UUID type);
 
     @GET( CONTROLLER + OBJECTS + USER_ID_PATH + TYPE_ID_PATH )
-    Set<UUID> getObjectIdsByType( @Path( ID ) UUID userId, @Path( TYPE ) UUID type);
+    Iterable<UUID> getObjectIdsByType( @Path( ID ) UUID userId, @Path( TYPE ) UUID type);
 
     @GET( CONTROLLER + OBJECTS + USER_ID_PATH + TYPE_ID_PATH + PAGE_SIZE_PATH + PAGE_PATH )
     Set<UUID> getObjectIdsByTypePaged(
