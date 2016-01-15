@@ -44,11 +44,11 @@ public interface User extends Principal {
     byte[] getCertificate();
 
     @Nonnull
-    @JsonIgnore
+    @JsonProperty( Names.ROLES_FIELD )
     Set<String> getRoles();
 
     @Nonnull
-    @JsonIgnore
+    @JsonProperty( Names.GROUPS_PROPERTY )
     Set<UUID> getGroups();
 
     @Nonnull
