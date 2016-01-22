@@ -73,7 +73,7 @@ public final class KryptnosticUser implements User, Serializable {
             @JsonProperty( CERTIFICATE_FIELD ) Optional<byte[]> certificate,
             @JsonProperty( GROUPS_PROPERTY ) Set<UUID> groups,
             @JsonProperty( ROLES_FIELD ) Set<String> roles,
-            @JsonProperty( ATTRIBUTES_FIELD ) UserAttributes attributes) {
+            @JsonProperty( ATTRIBUTES_FIELD ) UserAttributes attributes ) {
         this.id = id;
         this.domain = realm.or( domain.get() );
         this.username = username;

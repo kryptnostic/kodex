@@ -4,12 +4,12 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
+import com.codahale.metrics.annotation.Timed;
 import com.google.common.base.Optional;
 import com.kryptnostic.kodex.v1.constants.Names;
 import com.kryptnostic.kodex.v1.crypto.ciphers.BlockCiphertext;
 import com.kryptnostic.v2.storage.models.VersionedObjectKey;
 import com.kryptnostic.v2.storage.models.VersionedObjectKeySet;
-import com.kryptnostic.v2.storage.models.keys.BootstrapKeyIds;
 
 import retrofit.client.Response;
 import retrofit.http.Body;
@@ -35,9 +35,11 @@ public interface KeyStorageApi {
     String CRYPTO_SERVICE_PATH                = "/cryptoservice";
     String CRYPTO_SERVICES_PATH               = "/cryptoservices";
     String VERSIONED_CRYPTO_SERVICES_PATH     = "/versioned/cryptoservices";
-    String AES_CRYPTO_SERVICE_PATH            = "/aescryptoservice";
-    String AES_CRYPTO_SERVICES_PATH           = "/aescryptoservices";
-    String VERSIONED_AES_CRYPTO_SERVICES_PATH = "/versioned/aescryptoservices";
+
+    String AES_MASTER_KEY                     = "/aes";
+    String AES_CRYPTO_SERVICE_PATH            = AES_MASTER_KEY + "/cryptoservice";
+    String AES_CRYPTO_SERVICES_PATH           = AES_MASTER_KEY + "/cryptoservices";
+    String VERSIONED_AES_CRYPTO_SERVICES_PATH = AES_MASTER_KEY + "/versioned/cryptoservices";
 
     String OBJECT_ID                          = Names.ID_FIELD;
     String VERSION                            = "version";
@@ -47,9 +49,6 @@ public interface KeyStorageApi {
     String OBJECT_ID_PATH                     = "/id/{" + OBJECT_ID + "}";
     String VERSION_PATH                       = "/{" + VERSION + "}";
     String BULK_PATH                          = "/bulk";
-
-    @GET( CONTROLLER )
-    BootstrapKeyIds getBootstrapInformation();
 
     @POST( CONTROLLER + RSA_PRIVATE_KEY_PATH )
     Response setRSAPrivateKey( @Body BlockCiphertext encryptedPrivateKey );
@@ -153,7 +152,7 @@ public interface KeyStorageApi {
      * @return
      */
     @POST( CONTROLLER + VERSIONED_AES_CRYPTO_SERVICES_PATH )
-    Map<UUID, BlockCiphertext> getAesEncryptedCryptoServices( @Body Set<UUID> ids );
+    Map<VersionedObjectKey, BlockCiphertext> getAesEncryptedCryptoServices( @Body Set<UUID> ids );
 
     /**
      * Returns AES encrypted crypto services.
@@ -163,6 +162,13 @@ public interface KeyStorageApi {
      */
     @POST( CONTROLLER + AES_CRYPTO_SERVICES_PATH )
     Map<VersionedObjectKey, BlockCiphertext> getAesEncryptedCryptoServices( @Body VersionedObjectKeySet ids );
+
+    @Timed
+    @GET( CONTROLLER + AES_MASTER_KEY )
+    byte[] getMasterCryptoService();
+
+    @PUT( CONTROLLER + AES_MASTER_KEY )
+    Response setMasterCryptoService( @Body byte[] masterKey );
 
     /**
      *
@@ -198,4 +204,5 @@ public interface KeyStorageApi {
      */
     @GET( CONTROLLER + FHE_HASH )
     byte[] getHashFunctionForCurrentUser();
+
 }

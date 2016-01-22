@@ -3,6 +3,7 @@ package com.kryptnostic.mail.v1.models;
 import org.junit.Test;
 
 import com.google.common.base.Optional;
+import com.kryptnostic.mail.models.EmailRequest;
 import com.kryptnostic.utils.BaseJacksonSerializationTest;
 
 public class EmailRequestTest extends BaseJacksonSerializationTest<EmailRequest> {
@@ -15,9 +16,7 @@ public class EmailRequestTest extends BaseJacksonSerializationTest<EmailRequest>
                 Optional.<String> absent(),
                 new String[] { toAddress },
                 Optional.<String[]> absent(),
-                Optional.<String[]> absent(),
-                Optional.<String> absent(),
-                Optional.<String> absent() );
+                Optional.<String[]> absent() );
     }
 
     @Override
@@ -32,9 +31,7 @@ public class EmailRequestTest extends BaseJacksonSerializationTest<EmailRequest>
                 Optional.<String> absent(),
                 new String[] {},
                 Optional.<String[]> absent(),
-                Optional.<String[]> absent(),
-                Optional.<String> absent(),
-                Optional.<String> absent() );
+                Optional.<String[]> absent() );
     }
 
     @Test(
@@ -44,9 +41,7 @@ public class EmailRequestTest extends BaseJacksonSerializationTest<EmailRequest>
                 Optional.<String> absent(),
                 null,
                 Optional.<String[]> absent(),
-                Optional.<String[]> absent(),
-                Optional.<String> absent(),
-                Optional.<String> absent() );
+                Optional.<String[]> absent() );
     }
 
 }

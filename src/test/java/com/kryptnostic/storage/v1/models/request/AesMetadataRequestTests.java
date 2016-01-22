@@ -100,8 +100,9 @@ public class AesMetadataRequestTests extends SecurityConfigurationTestUtils {
         Assert.assertArrayEquals( data.getEncryptedData(), meta.getData().getEncryptedData() );
         Assert.assertArrayEquals( data.getEncryptedClassName().getContents(), meta.getData().getEncryptedClassName()
                 .getContents() );
-        Assert.assertArrayEquals( data.getEncryptedClassName().getLength(), meta.getData().getEncryptedClassName()
-                .getLength() );
+        Assert.assertTrue( data.getEncryptedClassName().getEncryptedLength().isPresent() );
+        Assert.assertArrayEquals( data.getEncryptedClassName().getEncryptedLength().get(), meta.getData().getEncryptedClassName()
+                .getEncryptedLength().get() );
     }
 
     @Test

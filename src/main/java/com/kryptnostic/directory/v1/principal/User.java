@@ -67,4 +67,5 @@ public interface User extends Principal {
     Optional<String> getFamilyName();
 
     Optional<Object> getAttribute( String key );
+
 }

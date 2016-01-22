@@ -15,5 +15,6 @@ import com.kryptnostic.kodex.v1.exceptions.types.IrisException;
  */
 public interface MetadataMapper {
 
-    Map<ByteBuffer, List<Metadata>> mapTokensToKeys( Set<Metadata> metadata, byte[] objectIndexPair ) throws IrisException;
+    Map<ByteBuffer, List<Metadata>> mapTokensToKeys( Set<BucketedMetadata> metadata, byte[] objectIndexPair )
+            throws IrisException;
 }

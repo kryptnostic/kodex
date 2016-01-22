@@ -112,4 +112,9 @@ public class PasswordCryptoService extends AbstractCryptoService {
         Arrays.fill( password, (char) 0 );
         super.finalize();
     }
+
+    @Override
+    public byte[] getSecretKey() {
+        throw new UnsupportedOperationException( "Password crypto service secret key requires salt." );
+    }
 }
