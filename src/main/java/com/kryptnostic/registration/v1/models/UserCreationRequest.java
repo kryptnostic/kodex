@@ -12,6 +12,7 @@ public class UserCreationRequest {
     private final String                   name;
     private final Optional<UserAttributes> attributes;
     private final boolean                  confirmationEmailNeeded;
+    private final BillingPlan                     billingPlan;
 
     @JsonCreator
     public UserCreationRequest(
@@ -19,12 +20,14 @@ public class UserCreationRequest {
             @JsonProperty( Names.NAME_FIELD ) String name,
             @JsonProperty( Names.PASSWORD_FIELD ) String password,
             @JsonProperty( Names.ATTRIBUTES_FIELD ) Optional<UserAttributes> attributes,
-            @JsonProperty( Names.CONFIRMATION_FIELD ) Optional<Boolean> confirmationEmailNeeded ) {
+            @JsonProperty( Names.CONFIRMATION_FIELD ) Optional<Boolean> confirmationEmailNeeded,
+            @JsonProperty( Names.BILLING_PLAN ) Optional<BillingPlan> billingPlan) {
         this.password = password;
         this.email = email;
         this.name = name;
         this.confirmationEmailNeeded = confirmationEmailNeeded.or( false );
         this.attributes = attributes;
+        this.billingPlan = billingPlan.or( BillingPlan.FREE );
     }
 
     @JsonProperty( Names.PASSWORD_FIELD )
@@ -36,7 +39,7 @@ public class UserCreationRequest {
     public String getEmail() {
         return email;
     }
-    
+
     @JsonProperty( Names.NAME_FIELD )
     public String getDisplayName() {
         return name;
@@ -51,4 +54,10 @@ public class UserCreationRequest {
     public boolean isConfirmationEmailNeeded() {
         return confirmationEmailNeeded;
     }
+    
+    @JsonProperty( Names.BILLING_PLAN )
+    public BillingPlan getBillingPlan() {
+        return billingPlan;
+    }
+    
 }
