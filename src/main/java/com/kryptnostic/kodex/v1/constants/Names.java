@@ -98,7 +98,6 @@ public final class Names {
     public static final String INHERIT_OWNERSHIP_FIELD         = "inhertitOwnership";
     public static final String CHILDREN_FIELD                  = "children";
     public static final String CONFIRMATION_STATUS             = "confirmationStatus";
-    public static final String BILLING_PLAN                    = "billingPlan";
     /*
      * emails
      */

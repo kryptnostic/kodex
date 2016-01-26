@@ -7,12 +7,12 @@ import com.kryptnostic.kodex.v1.constants.Names;
 import com.kryptnostic.kodex.v1.models.UserAttributes;
 
 public class UserCreationRequest {
-    private final String                   password;
-    private final String                   email;
-    private final String                   name;
-    private final Optional<UserAttributes> attributes;
-    private final boolean                  confirmationEmailNeeded;
-    private final BillingPlan                     billingPlan;
+    private final String                     password;
+    private final String                     email;
+    private final String                     name;
+    private final Optional<UserAttributes>   attributes;
+    private final boolean                    confirmationEmailNeeded;
+    private final Optional<ResourcesRequest> resourcesRequest;
 
     @JsonCreator
     public UserCreationRequest(
@@ -21,13 +21,13 @@ public class UserCreationRequest {
             @JsonProperty( Names.PASSWORD_FIELD ) String password,
             @JsonProperty( Names.ATTRIBUTES_FIELD ) Optional<UserAttributes> attributes,
             @JsonProperty( Names.CONFIRMATION_FIELD ) Optional<Boolean> confirmationEmailNeeded,
-            @JsonProperty( Names.BILLING_PLAN ) Optional<BillingPlan> billingPlan) {
+            @JsonProperty( com.kryptnostic.v2.constants.Names.RESOURCES_REQUEST ) Optional<ResourcesRequest> resourcesRequest) {
         this.password = password;
         this.email = email;
         this.name = name;
         this.confirmationEmailNeeded = confirmationEmailNeeded.or( false );
         this.attributes = attributes;
-        this.billingPlan = billingPlan.or( BillingPlan.FREE );
+        this.resourcesRequest = resourcesRequest;
     }
 
     @JsonProperty( Names.PASSWORD_FIELD )
@@ -54,10 +54,10 @@ public class UserCreationRequest {
     public boolean isConfirmationEmailNeeded() {
         return confirmationEmailNeeded;
     }
-    
-    @JsonProperty( Names.BILLING_PLAN )
-    public BillingPlan getBillingPlan() {
-        return billingPlan;
+
+    @JsonProperty( com.kryptnostic.v2.constants.Names.RESOURCES_REQUEST )
+    public Optional<ResourcesRequest> getBillingPlan() {
+        return resourcesRequest;
     }
-    
+
 }
