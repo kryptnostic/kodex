@@ -11,7 +11,6 @@ import com.kryptnostic.v2.storage.models.CreateObjectRequest;
 import com.kryptnostic.v2.storage.models.ObjectMetadata;
 import com.kryptnostic.v2.storage.models.ObjectMetadataEncryptedNode;
 import com.kryptnostic.v2.storage.models.ObjectTreeLoadRequest;
-import com.kryptnostic.v2.storage.models.PaddedMetadataObjectIds;
 import com.kryptnostic.v2.storage.models.VersionedObjectKey;
 
 import retrofit.client.Response;
@@ -154,11 +153,4 @@ public interface ObjectStorageApi {
     @POST( CONTROLLER + METADATA_PATH )
     VersionedObjectKey createMetadataObject( @Body CreateMetadataObjectRequest request );
 
-    @POST( CONTROLLER + METADATA_PATH + OBJECT_ID_PATH )
-    Response createMetadataEntry(
-            @Path( ID ) UUID objectId,
-            @Body Set<PaddedMetadataObjectIds> paddedMetadataObjectIds );
-
-    @DELETE( CONTROLLER + METADATA_PATH + OBJECT_ID_PATH )
-    Response createMetadataEntry( @Path( ID ) UUID objectId );
 }
