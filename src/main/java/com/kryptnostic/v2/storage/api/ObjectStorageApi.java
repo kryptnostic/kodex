@@ -31,24 +31,25 @@ public interface ObjectStorageApi {
     // Parameter names
     String ID                   = Names.ID_FIELD;
     String VERSION              = "version";
-    String CONTENT              = "content";
     String BLOCK                = "block";
-    String USER                 = "user";
 
     // Paths
     String OBJECT_ID_PATH       = "/id/{" + ID + "}";
     String VERSION_PATH         = "/{" + VERSION + "}";
-    String BLOCK_PATH           = "/{" + BLOCK + "}";
-    String USER_ID_PATH         = "/{" + ID + "}";
     String CONTENTS_PATH        = "/" + Names.CONTENTS;
 
     String IV_PATH              = "/iv";
     String SALT_PATH            = "/salt";
     String TAG_PATH             = "/tag";
     String LEVELS_PATH          = "/levels";
-    String OBJECT_APPEND_PATH   = "/append";
-    String OBJECT_METADATA_PATH = "/metadata";
+    String METADATA_PATH        = "/metadata";
     String BULK_PATH            = "/bulk";
+    String LATEST               = "/latest";
+    String OBJECTMETADATA_PATH      = "/objectmetadata";
+
+    String OBJECT_METADATA_PATH     = OBJECTMETADATA_PATH + OBJECT_ID_PATH;
+    String VERSIONED_OBJECT_ID_PATH = OBJECT_ID_PATH + VERSION_PATH;
+    String LATEST_OBJECT_ID_PATH = LATEST + OBJECT_ID_PATH;
 
     /**
      * Request a new object be created in a pending state
@@ -58,7 +59,7 @@ public interface ObjectStorageApi {
     @POST( CONTROLLER )
     VersionedObjectKey createObject( @Body CreateObjectRequest request );
 
-    @GET( CONTROLLER + OBJECT_ID_PATH )
+    @GET( CONTROLLER + LATEST_OBJECT_ID_PATH )
     VersionedObjectKey getLatestVersionedObjectKey( @Path( ID ) UUID id );
 
     /**
@@ -70,7 +71,7 @@ public interface ObjectStorageApi {
     @POST( CONTROLLER + BULK_PATH )
     Map<UUID, BlockCiphertext> getObjects( @Body Set<UUID> objectIds );
     //TODO: Consider adding an API the returns the version as part of the value.
-    
+
     /**
      * Lazy Person API for writing base64 encoded block ciphertexts. Objects written via this API will be available
      * through the more efficient byte level APIs.
@@ -93,7 +94,7 @@ public interface ObjectStorageApi {
      * @param version
      * @return
      */
-    @GET( CONTROLLER + OBJECT_ID_PATH + VERSION_PATH )
+    @GET( CONTROLLER + VERSIONED_OBJECT_ID_PATH )
     BlockCiphertext getObjectAsBlockCiphertext( @Path( ID ) UUID objectId, @Path( VERSION ) long version );
 
     /**
@@ -116,19 +117,19 @@ public interface ObjectStorageApi {
     @PUT( CONTROLLER + OBJECT_ID_PATH + VERSION_PATH + TAG_PATH )
     Response setObjectTag( @Path( ID ) UUID objectId, @Path( VERSION ) long version, @Body byte[] tag );
 
-    @GET( CONTROLLER + OBJECT_ID_PATH + VERSION_PATH + CONTENTS_PATH )
+    @GET( CONTROLLER + VERSIONED_OBJECT_ID_PATH + CONTENTS_PATH )
     byte[] getObjectContent( @Path( ID ) UUID objectId, @Path( VERSION ) long version );
 
-    @GET( CONTROLLER + OBJECT_ID_PATH + VERSION_PATH + IV_PATH )
+    @GET( CONTROLLER + VERSIONED_OBJECT_ID_PATH + IV_PATH )
     byte[] getObjectIV( @Path( ID ) UUID objectId, @Path( VERSION ) long version );
 
-    @GET( CONTROLLER + OBJECT_ID_PATH + VERSION_PATH + SALT_PATH )
+    @GET( CONTROLLER + VERSIONED_OBJECT_ID_PATH + SALT_PATH )
     byte[] getObjectSalt( @Path( ID ) UUID objectId, @Path( VERSION ) long version );
 
-    @GET( CONTROLLER + OBJECT_ID_PATH + VERSION_PATH + TAG_PATH )
+    @GET( CONTROLLER + VERSIONED_OBJECT_ID_PATH + TAG_PATH )
     byte[] getObjectTag( @Path( ID ) UUID objectId, @Path( VERSION ) long version );
 
-    @GET( CONTROLLER + OBJECT_ID_PATH + OBJECT_METADATA_PATH )
+    @GET( CONTROLLER + OBJECT_METADATA_PATH )
     ObjectMetadata getObjectMetadata( @Path( ID ) UUID id );
 
     @DELETE( CONTROLLER + OBJECT_ID_PATH + VERSION_PATH )
@@ -150,14 +151,14 @@ public interface ObjectStorageApi {
      *
      * @return The ID of the newly created object
      */
-    @POST( CONTROLLER + OBJECT_METADATA_PATH )
+    @POST( CONTROLLER + METADATA_PATH )
     VersionedObjectKey createMetadataObject( @Body CreateMetadataObjectRequest request );
 
-    @POST( CONTROLLER + OBJECT_METADATA_PATH + OBJECT_ID_PATH )
+    @POST( CONTROLLER + METADATA_PATH + OBJECT_ID_PATH )
     Response createMetadataEntry(
             @Path( ID ) UUID objectId,
             @Body Set<PaddedMetadataObjectIds> paddedMetadataObjectIds );
 
-    @DELETE( CONTROLLER + OBJECT_METADATA_PATH + OBJECT_ID_PATH )
+    @DELETE( CONTROLLER + METADATA_PATH + OBJECT_ID_PATH )
     Response createMetadataEntry( @Path( ID ) UUID objectId );
 }
