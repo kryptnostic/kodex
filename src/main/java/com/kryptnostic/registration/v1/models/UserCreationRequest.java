@@ -56,7 +56,7 @@ public class UserCreationRequest {
     }
 
     @JsonProperty( com.kryptnostic.v2.constants.Names.RESOURCES_REQUEST )
-    public Optional<ResourcesRequest> getBillingPlan() {
+    public Optional<ResourcesRequest> getResoucesRequest() {
         return resourcesRequest;
     }
 
