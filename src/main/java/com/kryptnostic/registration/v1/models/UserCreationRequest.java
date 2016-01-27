@@ -3,6 +3,7 @@ package com.kryptnostic.registration.v1.models;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Optional;
+import com.kryptnostic.directory.v2.model.ResourcesRequest;
 import com.kryptnostic.kodex.v1.constants.Names;
 import com.kryptnostic.kodex.v1.models.UserAttributes;
 

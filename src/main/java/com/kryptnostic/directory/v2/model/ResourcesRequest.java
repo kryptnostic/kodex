@@ -1,4 +1,4 @@
-package com.kryptnostic.registration.v1.models;
+package com.kryptnostic.directory.v2.model;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

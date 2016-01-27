@@ -114,4 +114,6 @@ public final class Names {
     public static final String COUNTS_FIELD                    = "counts";
     public static final String OBJECT_KEY                      = "objectKey";
     public static final String OBJECT_SEARCH_PAIR              = "objectSearchPair";
+    public static final String DOMAIN_AVAILABLE_RESOURCE       = "domainAvailableResource";
+    public static final String DOMAIN_TOTAL_RESOURCE           = "domainTotalResource";
 }
