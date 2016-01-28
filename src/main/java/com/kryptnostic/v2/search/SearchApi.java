@@ -8,11 +8,13 @@ import retrofit.http.POST;
 import retrofit.http.Path;
 
 public interface SearchApi {
-    String CONTROLLER     = "/search";
-    String OBJECT_ID      = "objectId";
-    String OBJECT_ID_PATH = "/{" + OBJECT_ID + "}";
-    String COUNT        = "count";
-    String COUNT_PATH   = "/{" + COUNT + "}";
+    String CONTROLLER              = "/search";
+    String OBJECT_ID               = "objectId";
+    String OBJECT_ID_PATH          = "/{" + OBJECT_ID + "}";
+    String OBJECT_ID_PATH_WITH_DOT = "/{" + OBJECT_ID + ":.+}";
+    String COUNT                   = "count";
+    String COUNT_PATH              = "/{" + COUNT + "}";
+    String COUNT_PATH_WITH_DOT     = "/{" + COUNT + ":.+}";
 
     /**
      * The returned set of UUIDs are object ids at which inverted index segments
@@ -66,5 +68,5 @@ public interface SearchApi {
      * getAndAddSegmentCount is called, no matter what count the client passes in)
      */
     @POST( CONTROLLER + OBJECT_ID_PATH + COUNT_PATH )
-    public Integer getAndAddSegmentCount( @Path( OBJECT_ID ) UUID objectId, @Path( COUNT ) int count );
+    public int getAndAddSegmentCount( @Path( OBJECT_ID ) UUID objectId, @Path( COUNT ) int count );
 }
