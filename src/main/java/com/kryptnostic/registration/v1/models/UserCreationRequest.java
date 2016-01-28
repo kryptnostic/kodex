@@ -58,7 +58,7 @@ public class UserCreationRequest {
     }
 
     @JsonProperty( com.kryptnostic.v2.constants.Names.DESIRED_RESOURCES )
-    public Optional<Map<String, Long>> getResoucesRequest() {
+    public Optional<Map<String, Long>> getDesiredResources() {
         return desiredResources;
     }
 
