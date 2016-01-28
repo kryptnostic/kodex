@@ -20,7 +20,7 @@ public final class Names {
     public static final String GIVEN_NAME_FIELD                = "givenName";
     public static final String FAMILY_NAME_FIELD               = "familyName";
     public static final String METADATA_FIELD                  = "metadata";
-    public static final String RESOURCES_REQUEST               = "resourcesRequest";
+    public static final String DESIRED_RESOURCES               = "desiredResources";
     @Deprecated
     public static final String REALM_FIELD                     = "realm";
     public static final String DOMAIN_FIELD                    = "domain";

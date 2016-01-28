@@ -6,8 +6,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.kryptnostic.v2.constants.Names;
 
 public class DomainResourcesUsage {
-    private Long available;
-    private Long total;
+    private long available;
+    private long total;
 
     @JsonCreator
     public DomainResourcesUsage(
@@ -36,8 +36,8 @@ public class DomainResourcesUsage {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ( ( available == null ) ? 0 : available.hashCode() );
-        result = prime * result + ( ( total == null ) ? 0 : total.hashCode() );
+        result = prime * result + (int) ( available ^ ( available >>> 32 ) );
+        result = prime * result + (int) ( total ^ ( total >>> 32 ) );
         return result;
     }
 
@@ -47,15 +47,9 @@ public class DomainResourcesUsage {
         if ( obj == null ) return false;
         if ( !( obj instanceof DomainResourcesUsage ) ) return false;
         DomainResourcesUsage other = (DomainResourcesUsage) obj;
-        if ( available == null ) {
-            if ( other.available != null ) return false;
-        } else if ( !available.equals( other.available ) ) return false;
-        if ( total == null ) {
-            if ( other.total != null ) return false;
-        } else if ( !total.equals( other.total ) ) return false;
+        if ( available != other.available ) return false;
+        if ( total != other.total ) return false;
         return true;
-    }
-    
-    
+    }   
 
 }
