@@ -21,15 +21,14 @@ import com.kryptnostic.v2.sharing.models.ObjectUserKey;
 @Immutable
 public class ObjectMetadata {
 
-    protected final UUID              id;
-    protected final UUID              type;
-    protected final long              version;
-    protected final long              size;
-    protected EnumSet<CryptoMaterial> uploadedParts;
-    protected EnumSet<CryptoMaterial> requiredParts;
+    private final UUID     id;
+    private final UUID     type;
+    private final long     version;
+    private final long     size;
+    private final Cypher   cipherMethod;
 
-    protected final UUID              creator;
-    protected final DateTime          createdTime;
+    private final UUID     creator;
+    private final DateTime createdTime;
 
     public enum CryptoMaterial {
         IV,
@@ -66,7 +65,7 @@ public class ObjectMetadata {
             @JsonProperty( Names.SIZE_FIELD ) long size,
             @JsonProperty( Names.TYPE_FIELD ) UUID type,
             @JsonProperty( Names.CREATOR_FIELD ) UUID creator,
-            @JsonProperty( Names.REQUIRED_CRYPTO_MATS_FIELD ) EnumSet<CryptoMaterial> requiredMaterials,
+            @JsonProperty( Names.CYPHER_FIELD ) Cypher cypher,
             @JsonProperty( Names.CREATED_TIME ) DateTime createdTime) {
         this.id = id;
         this.version = version;
@@ -76,8 +75,7 @@ public class ObjectMetadata {
 
         this.createdTime = createdTime;
         this.size = size;
-        this.uploadedParts = EnumSet.noneOf( CryptoMaterial.class );
-        this.requiredParts = requiredMaterials;
+        this.cipherMethod = cypher;
     }
 
     public static ObjectMetadata newObject(
@@ -91,7 +89,7 @@ public class ObjectMetadata {
                 0l,
                 request.getType(),
                 creator,
-                request.getRequiredCryptoMaterials(),
+                request.getCipherType(),
                 DateTime.now() );
     }
 
@@ -102,7 +100,7 @@ public class ObjectMetadata {
                 0l,
                 request.getType(),
                 user,
-                request.getRequiredCryptoMaterials(),
+                request.getCipherType(),
                 DateTime.now() );
     }
 
@@ -142,25 +140,8 @@ public class ObjectMetadata {
         return size;
     }
 
-    public EnumSet<CryptoMaterial> getRequiredCryptoMaterial() {
-        return requiredParts;
-    }
-
-    public EnumSet<CryptoMaterial> getCryptoMaterialProgress() {
-        return uploadedParts;
-    }
-
-    public boolean updateUploadProgress( CryptoMaterial nextUploaded ) {
-        uploadedParts.add( nextUploaded );
-        return isFinalized();
-    }
-
-    public boolean isFinalized() {
-        return uploadedParts.containsAll( requiredParts );
-    }
-
-    public void setUploadedParts( EnumSet<CryptoMaterial> uploadedParts ) {
-        this.uploadedParts = uploadedParts;
+    public Cypher getCipherMethod() {
+        return cipherMethod;
     }
 
     /*
@@ -174,10 +155,8 @@ public class ObjectMetadata {
         result = prime * result + ( ( createdTime == null ) ? 0 : createdTime.hashCode() );
         result = prime * result + ( ( creator == null ) ? 0 : creator.hashCode() );
         result = prime * result + ( ( id == null ) ? 0 : id.hashCode() );
-        result = prime * result + ( ( requiredParts == null ) ? 0 : requiredParts.hashCode() );
         result = prime * result + (int) ( size ^ ( size >>> 32 ) );
         result = prime * result + ( ( type == null ) ? 0 : type.hashCode() );
-        result = prime * result + ( ( uploadedParts == null ) ? 0 : uploadedParts.hashCode() );
         result = prime * result + (int) ( version ^ ( version >>> 32 ) );
         return result;
     }
@@ -219,13 +198,6 @@ public class ObjectMetadata {
         } else if ( !id.equals( other.id ) ) {
             return false;
         }
-        if ( requiredParts == null ) {
-            if ( other.requiredParts != null ) {
-                return false;
-            }
-        } else if ( !requiredParts.equals( other.requiredParts ) ) {
-            return false;
-        }
         if ( size != other.size ) {
             return false;
         }
@@ -234,13 +206,6 @@ public class ObjectMetadata {
                 return false;
             }
         } else if ( !type.equals( other.type ) ) {
-            return false;
-        }
-        if ( uploadedParts == null ) {
-            if ( other.uploadedParts != null ) {
-                return false;
-            }
-        } else if ( !uploadedParts.equals( other.uploadedParts ) ) {
             return false;
         }
         if ( version != other.version ) {

@@ -8,6 +8,9 @@ import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import javax.crypto.NoSuchPaddingException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.google.common.base.Preconditions;
@@ -20,16 +23,19 @@ import com.google.common.collect.ImmutableSet;
  */
 
 public enum Cypher {
-    AES_GCM_128( CryptoAlgorithm.AES, Mode.GCM, Padding.NONE, 128 ), AES_CTR_128( CryptoAlgorithm.AES, Mode.CTR,
-            Padding.NONE, 128 ), AES_CTR_256( CryptoAlgorithm.AES, Mode.CTR, Padding.NONE, 256 ), AES_CBC_PKCS5_128(
-            CryptoAlgorithm.AES, Mode.CBC, Padding.PKCS5, 128 ), AES_CBC_PKCS5_256( CryptoAlgorithm.AES, Mode.CBC,
-            Padding.PKCS5, 256 ), RSA_OAEP_SHA1_1024( CryptoAlgorithm.RSA, Mode.ECB,
-            Padding.OAEPWithSHA1AndMGF1Padding, 1024 ), RSA_OAEP_SHA1_2048( CryptoAlgorithm.RSA, Mode.ECB,
-            Padding.OAEPWithSHA1AndMGF1Padding, 2048 ), RSA_OAEP_SHA1_4096( CryptoAlgorithm.RSA, Mode.ECB,
-            Padding.OAEPWithSHA1AndMGF1Padding, 4096 ), RSA_OAEP_SHA256_1024( CryptoAlgorithm.RSA, Mode.ECB,
-            Padding.OAEPWithSHA256AndMGF1Padding, 1024 ), RSA_OAEP_SHA256_2048( CryptoAlgorithm.RSA, Mode.ECB,
-            Padding.OAEPWithSHA256AndMGF1Padding, 2048 ), RSA_OAEP_SHA256_4096( CryptoAlgorithm.RSA, Mode.ECB,
-            Padding.OAEPWithSHA256AndMGF1Padding, 4096 );
+    AES_GCM_128( CryptoAlgorithm.AES, Mode.GCM, Padding.NONE, 128 ),
+    AES_CTR_128( CryptoAlgorithm.AES, Mode.CTR, Padding.NONE, 128 ),
+    AES_CTR_256( CryptoAlgorithm.AES, Mode.CTR, Padding.NONE, 256 ),
+    AES_CBC_PKCS5_128( CryptoAlgorithm.AES, Mode.CBC, Padding.PKCS5, 128 ),
+    AES_CBC_PKCS5_256( CryptoAlgorithm.AES, Mode.CBC, Padding.PKCS5, 256 ),
+    RSA_OAEP_SHA1_1024( CryptoAlgorithm.RSA, Mode.ECB, Padding.OAEPWithSHA1AndMGF1Padding, 1024 ),
+    RSA_OAEP_SHA1_2048( CryptoAlgorithm.RSA, Mode.ECB, Padding.OAEPWithSHA1AndMGF1Padding, 2048 ),
+    RSA_OAEP_SHA1_4096( CryptoAlgorithm.RSA, Mode.ECB, Padding.OAEPWithSHA1AndMGF1Padding, 4096 ),
+    RSA_OAEP_SHA256_1024( CryptoAlgorithm.RSA, Mode.ECB, Padding.OAEPWithSHA256AndMGF1Padding, 1024 ),
+    RSA_OAEP_SHA256_2048( CryptoAlgorithm.RSA, Mode.ECB, Padding.OAEPWithSHA256AndMGF1Padding, 2048 ),
+    RSA_OAEP_SHA256_4096( CryptoAlgorithm.RSA, Mode.ECB, Padding.OAEPWithSHA256AndMGF1Padding, 4096 );
+
+    public static final Logger      logger          = LoggerFactory.getLogger( Cypher.class );
 
     public static final Cypher      DEFAULT         = AES_CTR_128;
 
@@ -87,6 +93,30 @@ public enum Cypher {
         Preconditions.checkArgument(
                 ImmutableSet.of( 128, 256, 1024, 2048, 4096 ).contains( description.getKeySize() ),
                 "Only 128 bit and 256 key sizes are supported." );
+        StringBuilder cypherName = new StringBuilder();
+        cypherName.append( description.getAlgorithm() );
+        cypherName.append( "_" );
+        cypherName.append( description.getMode() );
+        cypherName.append( "_" );
+        switch ( description.getPadding() ) {
+            case NONE:
+                break;
+            case OAEPWithSHA1AndMGF1Padding:
+                cypherName.append( "OAEP_SHA1" );
+                break;
+            case OAEPWithSHA256AndMGF1Padding:
+                cypherName.append( "OAEP_SHA256" );
+                break;
+            case PKCS5:
+                cypherName.append( "PKCS5" );
+                break;
+            default:
+                break;
+        }
+        cypherName.append( "_" );
+        cypherName.append( description.getKeySize() );
+
+        logger.error( cypherName.toString() );
         if ( description.getAlgorithm().equals( CryptoAlgorithm.AES ) ) {
             if ( description.getMode().equals( Mode.CTR ) ) {
                 if ( description.getPadding().equals( Padding.NONE ) ) {
@@ -133,8 +163,6 @@ public enum Cypher {
                     default:
                         return unrecognizedCipher();
                 }
-            } else {
-                return unrecognizedCipher();
             }
         }
         return unrecognizedCipher();
