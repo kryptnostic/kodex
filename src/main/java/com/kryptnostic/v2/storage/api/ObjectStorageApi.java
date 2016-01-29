@@ -86,7 +86,7 @@ public interface ObjectStorageApi {
     @POST( CONTROLLER + INDEX_SEGMENT_PATH )
     VersionedObjectKey createIndexSegment( @Body CreateIndexSegmentRequest request );
 
-    @GET( CONTROLLER + OBJECT_ID_PATH )
+    @GET( CONTROLLER + LATEST_OBJECT_ID_PATH )
     VersionedObjectKey getLatestVersionedObjectKey( @Path( ID ) UUID id );
 
     /**
