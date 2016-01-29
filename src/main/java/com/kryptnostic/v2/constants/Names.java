@@ -113,4 +113,5 @@ public final class Names {
     public static final String COUNTS_FIELD                    = "counts";
     public static final String OBJECT_KEY                      = "objectKey";
     public static final String OBJECT_SEARCH_PAIR              = "objectSearchPair";
+    public static final String CREATE_OBJECT_REQUEST_FIELD     = "createObjectRequest";
 }
