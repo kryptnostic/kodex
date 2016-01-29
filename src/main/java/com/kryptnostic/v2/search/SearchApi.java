@@ -11,10 +11,8 @@ public interface SearchApi {
     String CONTROLLER              = "/search";
     String OBJECT_ID               = "objectId";
     String OBJECT_ID_PATH          = "/{" + OBJECT_ID + "}";
-    String OBJECT_ID_PATH_WITH_DOT = "/{" + OBJECT_ID + ":.+}";
     String COUNT                   = "count";
     String COUNT_PATH              = "/{" + COUNT + "}";
-    String COUNT_PATH_WITH_DOT     = "/{" + COUNT + ":.+}";
 
     /**
      * The returned set of UUIDs are object ids at which inverted index segments
