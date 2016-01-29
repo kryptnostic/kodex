@@ -1,7 +1,11 @@
 package com.kryptnostic.v2.search;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+
+import com.kryptnostic.v2.storage.models.VersionedObjectKey;
 
 import retrofit.http.Body;
 import retrofit.http.POST;
@@ -15,25 +19,26 @@ public interface SearchApi {
     String COUNT_PATH              = "/{" + COUNT + "}";
 
     /**
-     * The returned set of UUIDs are object ids at which inverted index segments
-     * are stored (encrypted by the AES master key for the channel)
+     * The values of the returned map are lists of index segment ids;
+     * WARNING: the list of UUIDs are NOT object ids corresponding to
+     * actual documents containing the search term!
      *
-     * WARNING: The returned set of UUIDs are NOT object ids corresponding to
-     * actual documents containing the search terms!
+     * The keys correspond to the actual objects whose cryptoservices
+     * should be used to decrypt the index segments after loading them
      *
      * To obtain the actual documents containing the search terms, the client
      * needs to:
-     * (1) Load and decrypt the objects specified in the returned Set&lt;UUID&gt;
+     * (1) Load and decrypt the objects specified in the keys
      *     to obtain inverted index segments
      * (2) Filter out those inverted index segments corresponding to terms that
      *     did not appear in the original set of search terms (this filtering
      *     is necessary due to potential hash collisions)
      * (3) Collect the object ids appear in the remaining inverted index
-     *     segments; loading and decrypting these objets will result in the
+     *     segments; loading and decrypting these objects will result in the
      *     actual documents containing the search terms
      */
     @POST( CONTROLLER )
-    Set<UUID> search( @Body Set<byte[]> fheEncryptedSearchTerms );
+    Map<VersionedObjectKey, Set<UUID>> search( @Body List<byte[]> fheEncryptedSearchTerms );
 
     /**
      * For a given inverted index segment corresponding to a particular object id
