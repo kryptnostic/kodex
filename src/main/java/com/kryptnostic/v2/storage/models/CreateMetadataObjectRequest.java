@@ -19,7 +19,6 @@ public class CreateMetadataObjectRequest extends CreateObjectRequest {
                 Cypher.DEFAULT,
                 Optional.<Boolean> absent(),
                 Optional.<Boolean> absent(),
-                Optional.<Boolean> absent(),
                 Optional.<Boolean> absent() );
         this.address = address;
         this.score = Optional.absent();
@@ -39,7 +38,6 @@ public class CreateMetadataObjectRequest extends CreateObjectRequest {
                 parentObjectId,
                 objectId,
                 Cypher.DEFAULT,
-                Optional.<Boolean> absent(),
                 inheritOwnership,
                 inheritCryptoService,
                 locked );

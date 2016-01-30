@@ -13,7 +13,6 @@ public class CreateObjectRequest {
     private static final boolean               INHERITING_OWNERSHIP_DEFAULT      = true;
     private static final boolean               INHERITING_CRYPTO_SERVICE_DEFAULT = true;
     private static final boolean               LOCKED_OBJECT_DEFAULT             = true;
-    private static final boolean               SALTED_BY_DEFAULT                 = true;
 
     private final UUID                         type;
     private final Optional<VersionedObjectKey> objectId;
@@ -22,7 +21,6 @@ public class CreateObjectRequest {
     private final boolean                      inheritingCryptoService;
     private final boolean                      locked;
     private final Cypher                       cipher;
-    private final boolean                            salted;
 
     public CreateObjectRequest() {
         this(
@@ -30,7 +28,6 @@ public class CreateObjectRequest {
                 Optional.<VersionedObjectKey> absent(),
                 Optional.<VersionedObjectKey> absent(),
                 Cypher.DEFAULT,
-                Optional.<Boolean> absent(),
                 Optional.<Boolean> absent(),
                 Optional.<Boolean> absent(),
                 Optional.<Boolean> absent() );
@@ -42,7 +39,6 @@ public class CreateObjectRequest {
             @JsonProperty( Names.PARENT_OBJECT_ID_FIELD ) Optional<VersionedObjectKey> parentObjectId,
             @JsonProperty( Names.ID_FIELD ) Optional<VersionedObjectKey> objectId,
             @JsonProperty( Names.CYPHER_FIELD ) Cypher cypher,
-            @JsonProperty( Names.SALTED_FIELD ) Optional<Boolean> isSalted,
             @JsonProperty( Names.INHERITING_OWNERSHIP_FIELD ) Optional<Boolean> inheritOwnership,
             @JsonProperty( Names.INHERITING_CRYPTO_SERVICE_FIELD ) Optional<Boolean> inheritCryptoService,
             @JsonProperty( Names.LOCKED_FIELD ) Optional<Boolean> locked) {
@@ -53,7 +49,6 @@ public class CreateObjectRequest {
         this.inheritingCryptoService = inheritCryptoService.or( INHERITING_CRYPTO_SERVICE_DEFAULT );
         this.locked = locked.or( LOCKED_OBJECT_DEFAULT );
         this.cipher = cypher;
-        this.salted = isSalted.or( SALTED_BY_DEFAULT );
     }
 
     @JsonProperty( Names.TYPE_FIELD )
@@ -86,11 +81,6 @@ public class CreateObjectRequest {
         return cipher;
     }
 
-    @JsonProperty( Names.SALTED_FIELD )
-    public boolean isSalted() {
-        return salted;
-    }
-
     public boolean isLocked() {
         return locked;
     }
@@ -103,7 +93,6 @@ public class CreateObjectRequest {
         private Optional<Boolean>            inheritCryptoService = Optional.<Boolean> absent();
         private Optional<Boolean>            locked               = Optional.<Boolean> absent();
         private Cypher                       cipher               = Cypher.DEFAULT;
-        private Optional<Boolean>            isSalted             = Optional.absent();
 
         public Builder setType( UUID type ) {
             this.type = type;
@@ -122,11 +111,6 @@ public class CreateObjectRequest {
 
         public Builder setType( Cypher cypher ) {
             this.cipher = cypher;
-            return this;
-        }
-
-        public Builder setSalted( Boolean salt ) {
-            this.isSalted = Optional.<Boolean> of( salt );
             return this;
         }
 
@@ -151,7 +135,6 @@ public class CreateObjectRequest {
                     parentObjectkey,
                     objectId,
                     cipher,
-                    isSalted,
                     inheritOwnership,
                     inheritCryptoService,
                     locked );

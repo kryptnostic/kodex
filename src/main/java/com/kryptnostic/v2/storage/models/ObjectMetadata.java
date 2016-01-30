@@ -38,20 +38,12 @@ public class ObjectMetadata {
 
         public static final EnumSet<CryptoMaterial> DEFAULT_REQUIRED_CRYPTO_MATERIALS = EnumSet.of( IV, CONTENTS );
 
-        public static EnumSet<CryptoMaterial> requiredByCypher( Cypher cypher, boolean salted ) {
-            if ( cypher == null ) {
-                return EnumSet.of( IV, CONTENTS );
+        public static EnumSet<CryptoMaterial> requiredByCypher( Cypher cypher ) {
+            EnumSet<CryptoMaterial> required = EnumSet.of( IV, CONTENTS );
+            if ( Cypher.AES_GCM_128.equals( cypher ) ) {
+                required.add( TAG );
             }
-            EnumSet<CryptoMaterial> required;
-            switch ( cypher ) {
-                case AES_GCM_128:
-                    required = EnumSet.of( TAG, IV, CONTENTS );
-                    break;
-                default:
-                    required = DEFAULT_REQUIRED_CRYPTO_MATERIALS;
-                    break;
-            }
-            if ( salted ) {
+            if ( cypher != null && cypher.isSalted() ) {
                 required.add( SALT );
             }
             return required;

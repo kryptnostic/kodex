@@ -23,17 +23,28 @@ import com.google.common.collect.ImmutableSet;
  */
 
 public enum Cypher {
-    AES_GCM_128( CryptoAlgorithm.AES, Mode.GCM, Padding.NONE, 128 ),
-    AES_CTR_128( CryptoAlgorithm.AES, Mode.CTR, Padding.NONE, 128 ),
-    AES_CTR_256( CryptoAlgorithm.AES, Mode.CTR, Padding.NONE, 256 ),
-    AES_CBC_PKCS5_128( CryptoAlgorithm.AES, Mode.CBC, Padding.PKCS5, 128 ),
-    AES_CBC_PKCS5_256( CryptoAlgorithm.AES, Mode.CBC, Padding.PKCS5, 256 ),
-    RSA_OAEP_SHA1_1024( CryptoAlgorithm.RSA, Mode.ECB, Padding.OAEPWithSHA1AndMGF1Padding, 1024 ),
-    RSA_OAEP_SHA1_2048( CryptoAlgorithm.RSA, Mode.ECB, Padding.OAEPWithSHA1AndMGF1Padding, 2048 ),
-    RSA_OAEP_SHA1_4096( CryptoAlgorithm.RSA, Mode.ECB, Padding.OAEPWithSHA1AndMGF1Padding, 4096 ),
-    RSA_OAEP_SHA256_1024( CryptoAlgorithm.RSA, Mode.ECB, Padding.OAEPWithSHA256AndMGF1Padding, 1024 ),
-    RSA_OAEP_SHA256_2048( CryptoAlgorithm.RSA, Mode.ECB, Padding.OAEPWithSHA256AndMGF1Padding, 2048 ),
-    RSA_OAEP_SHA256_4096( CryptoAlgorithm.RSA, Mode.ECB, Padding.OAEPWithSHA256AndMGF1Padding, 4096 );
+    AES_GCM_128( CryptoAlgorithm.AES, Mode.GCM, Padding.NONE, 128, false ),
+    AES_GCM_128_SALTED( CryptoAlgorithm.AES, Mode.GCM, Padding.NONE, 128, true ),
+    AES_CTR_128( CryptoAlgorithm.AES, Mode.CTR, Padding.NONE, 128, false ),
+    AES_CTR_128_SALTED( CryptoAlgorithm.AES, Mode.CTR, Padding.NONE, 128, true ),
+    AES_CTR_256( CryptoAlgorithm.AES, Mode.CTR, Padding.NONE, 256, false ),
+    AES_CTR_256_SALTED( CryptoAlgorithm.AES, Mode.CTR, Padding.NONE, 256, true ),
+    AES_CBC_PKCS5_128( CryptoAlgorithm.AES, Mode.CBC, Padding.PKCS5, 128, false ),
+    AES_CBC_PKCS5_128_SALTED( CryptoAlgorithm.AES, Mode.CBC, Padding.PKCS5, 128, true ),
+    AES_CBC_PKCS5_256( CryptoAlgorithm.AES, Mode.CBC, Padding.PKCS5, 256, false ),
+    AES_CBC_PKCS5_256_SALTED( CryptoAlgorithm.AES, Mode.CBC, Padding.PKCS5, 256, true ),
+    RSA_OAEP_SHA1_1024( CryptoAlgorithm.RSA, Mode.ECB, Padding.OAEPWithSHA1AndMGF1Padding, 1024, false ),
+    RSA_OAEP_SHA1_1024_SALTED( CryptoAlgorithm.RSA, Mode.ECB, Padding.OAEPWithSHA1AndMGF1Padding, 1024, true ),
+    RSA_OAEP_SHA1_2048( CryptoAlgorithm.RSA, Mode.ECB, Padding.OAEPWithSHA1AndMGF1Padding, 2048, false ),
+    RSA_OAEP_SHA1_2048_SALTED( CryptoAlgorithm.RSA, Mode.ECB, Padding.OAEPWithSHA1AndMGF1Padding, 2048, true ),
+    RSA_OAEP_SHA1_4096( CryptoAlgorithm.RSA, Mode.ECB, Padding.OAEPWithSHA1AndMGF1Padding, 4096, false ),
+    RSA_OAEP_SHA1_4096_SALTED( CryptoAlgorithm.RSA, Mode.ECB, Padding.OAEPWithSHA1AndMGF1Padding, 4096, true ),
+    RSA_OAEP_SHA256_1024( CryptoAlgorithm.RSA, Mode.ECB, Padding.OAEPWithSHA256AndMGF1Padding, 1024, false ),
+    RSA_OAEP_SHA256_1024_SALTED( CryptoAlgorithm.RSA, Mode.ECB, Padding.OAEPWithSHA256AndMGF1Padding, 1024, true ),
+    RSA_OAEP_SHA256_2048( CryptoAlgorithm.RSA, Mode.ECB, Padding.OAEPWithSHA256AndMGF1Padding, 2048, false ),
+    RSA_OAEP_SHA256_2048_SALTED( CryptoAlgorithm.RSA, Mode.ECB, Padding.OAEPWithSHA256AndMGF1Padding, 2048, true ),
+    RSA_OAEP_SHA256_4096( CryptoAlgorithm.RSA, Mode.ECB, Padding.OAEPWithSHA256AndMGF1Padding, 4096, false ),
+    RSA_OAEP_SHA256_4096_SALTED( CryptoAlgorithm.RSA, Mode.ECB, Padding.OAEPWithSHA256AndMGF1Padding, 4096, true );
 
     public static final Logger      logger          = LoggerFactory.getLogger( Cypher.class );
 
@@ -41,8 +52,10 @@ public enum Cypher {
 
     private static final String     CIPHER_ENCODING = "%s/%s/%s";
     private final CipherDescription description;
+    private final boolean salted;
 
-    private Cypher( CryptoAlgorithm algorithm, Mode mode, Padding padding, int keySize ) {
+    private Cypher( CryptoAlgorithm algorithm, Mode mode, Padding padding, int keySize, boolean salted ) {
+        this.salted = salted;
         description = new CipherDescription( algorithm, mode, padding, keySize );
     }
 
@@ -70,6 +83,10 @@ public enum Cypher {
 
     public CryptoAlgorithm getAlgorithm() {
         return description.getAlgorithm();
+    }
+
+    public boolean isSalted() {
+        return salted;
     }
 
     public String getName() {
@@ -175,5 +192,6 @@ public enum Cypher {
     private static final Cypher unrecognizedCipher( String additionalInfo ) {
         throw new InvalidParameterException( "Unrecognized cipher description: " + additionalInfo );
     }
+
 
 }
