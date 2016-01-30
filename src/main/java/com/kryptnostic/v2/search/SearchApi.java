@@ -5,8 +5,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
-import com.kryptnostic.v2.storage.models.VersionedObjectKey;
-
 import retrofit.http.Body;
 import retrofit.http.POST;
 import retrofit.http.Path;
@@ -40,7 +38,7 @@ public interface SearchApi {
      *     actual documents containing the search terms
      */
     @POST( CONTROLLER )
-    Map<VersionedObjectKey, Set<UUID>> search( @Body List<byte[]> fheEncryptedSearchTerms );
+    Map<UUID, Set<UUID>> search( @Body List<byte[]> fheEncryptedSearchTerms );
 
     /**
      * For a given inverted index segment corresponding to a particular object id
