@@ -19,17 +19,19 @@ public interface SearchApi {
     String COUNT_PATH              = "/{" + COUNT + "}";
 
     /**
-     * The values of the returned map are lists of index segment ids;
-     * WARNING: the list of UUIDs are NOT object ids corresponding to
+     * The values of the returned map are sets of index segment ids;
+     * WARNING: the sets of UUIDs are NOT object ids corresponding to
      * actual documents containing the search term!
      *
      * The keys correspond to the actual objects whose cryptoservices
-     * should be used to decrypt the index segments after loading them
+     * should be used to decrypt the index segments
      *
      * To obtain the actual documents containing the search terms, the client
      * needs to:
-     * (1) Load and decrypt the objects specified in the keys
-     *     to obtain inverted index segments
+     * (1) For each key, value pair: load the objects specified
+     *     in the value to obtain (encrypted) inverted index segments;
+     *     decrypt them using the cryptoservice for the object specified
+     *     in the key
      * (2) Filter out those inverted index segments corresponding to terms that
      *     did not appear in the original set of search terms (this filtering
      *     is necessary due to potential hash collisions)
