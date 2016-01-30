@@ -38,7 +38,7 @@ public interface SearchApi {
      *     actual documents containing the search terms
      */
     @POST( CONTROLLER )
-    Map<UUID, Set<UUID>> search( @Body List<byte[]> fheEncryptedSearchTerms );
+    Map<UUID, Set<UUID>> search( @Body List<byte[]> fheEncryptedSearchTokens );
 
     /**
      * For a given inverted index segment corresponding to a particular object id
