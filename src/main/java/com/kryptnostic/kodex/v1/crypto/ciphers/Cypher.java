@@ -110,30 +110,6 @@ public enum Cypher {
         Preconditions.checkArgument(
                 ImmutableSet.of( 128, 256, 1024, 2048, 4096 ).contains( description.getKeySize() ),
                 "Only 128 bit and 256 key sizes are supported." );
-        StringBuilder cypherName = new StringBuilder();
-        cypherName.append( description.getAlgorithm() );
-        cypherName.append( "_" );
-        cypherName.append( description.getMode() );
-        cypherName.append( "_" );
-        switch ( description.getPadding() ) {
-            case NONE:
-                break;
-            case OAEPWithSHA1AndMGF1Padding:
-                cypherName.append( "OAEP_SHA1" );
-                break;
-            case OAEPWithSHA256AndMGF1Padding:
-                cypherName.append( "OAEP_SHA256" );
-                break;
-            case PKCS5:
-                cypherName.append( "PKCS5" );
-                break;
-            default:
-                break;
-        }
-        cypherName.append( "_" );
-        cypherName.append( description.getKeySize() );
-
-        logger.error( cypherName.toString() );
         if ( description.getAlgorithm().equals( CryptoAlgorithm.AES ) ) {
             if ( description.getMode().equals( Mode.CTR ) ) {
                 if ( description.getPadding().equals( Padding.NONE ) ) {
