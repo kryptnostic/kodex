@@ -40,7 +40,7 @@ public class ObjectMetadata {
 
         public static EnumSet<CryptoMaterial> requiredByCypher( Cypher cypher ) {
             EnumSet<CryptoMaterial> required = EnumSet.of( IV, CONTENTS );
-            if ( Cypher.AES_GCM_128.equals( cypher ) ) {
+            if ( Cypher.AES_GCM_128.equals( cypher ) || Cypher.AES_GCM_128_SALTED.equals( cypher ) ) {
                 required.add( TAG );
             }
             if ( cypher != null && cypher.isSalted() ) {
