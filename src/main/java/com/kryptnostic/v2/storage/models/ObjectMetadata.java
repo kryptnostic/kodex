@@ -1,6 +1,5 @@
 package com.kryptnostic.v2.storage.models;
 
-import java.util.EnumSet;
 import java.util.UUID;
 
 import javax.annotation.concurrent.Immutable;
@@ -29,26 +28,6 @@ public class ObjectMetadata {
 
     private final UUID     creator;
     private final DateTime createdTime;
-
-    public enum CryptoMaterial {
-        IV,
-        TAG,
-        CONTENTS,
-        SALT;
-
-        public static final EnumSet<CryptoMaterial> DEFAULT_REQUIRED_CRYPTO_MATERIALS = EnumSet.of( IV, CONTENTS );
-
-        public static EnumSet<CryptoMaterial> requiredByCypher( Cypher cypher ) {
-            EnumSet<CryptoMaterial> required = EnumSet.of( IV, CONTENTS );
-            if ( Cypher.AES_GCM_128.equals( cypher ) || Cypher.AES_GCM_128_SALTED.equals( cypher ) ) {
-                required.add( TAG );
-            }
-            if ( cypher != null && cypher.isSalted() ) {
-                required.add( SALT );
-            }
-            return required;
-        }
-    }
 
     @JsonCreator
     public ObjectMetadata(
