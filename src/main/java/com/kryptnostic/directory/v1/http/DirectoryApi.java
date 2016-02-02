@@ -6,13 +6,11 @@ import java.util.UUID;
 
 import com.codahale.metrics.annotation.Timed;
 import com.google.common.base.Optional;
-import com.kryptnostic.directory.v1.exception.UserUpdateException;
 import com.kryptnostic.directory.v1.model.ByteArrayEnvelope;
 import com.kryptnostic.directory.v1.model.response.PublicKeyEnvelope;
 import com.kryptnostic.kodex.v1.constants.Names;
 import com.kryptnostic.kodex.v1.crypto.ciphers.BlockCiphertext;
 import com.kryptnostic.kodex.v1.exceptions.types.ResourceNotFoundException;
-import com.kryptnostic.kodex.v1.models.UserAttributes;
 import com.kryptnostic.kodex.v1.models.response.BasicResponse;
 import com.kryptnostic.sharing.v1.models.NotificationPreference;
 
@@ -34,7 +32,6 @@ public interface DirectoryApi {
     String RESOLUTION_KEY   = "/resolve";
     String INITIALIZED      = "/initialized";
     String MASTER_KEY       = "/master";
-    String ATTRIBUTES       = "/attributes";
 
     public static final class PARAM {
         private PARAM() {}
@@ -183,8 +180,5 @@ public interface DirectoryApi {
 
     @GET( CONTROLLER + PARAM.REALM + PARAM.USER )
     Optional<UUID> getUUIDFromEmail( @Path( Names.USER_FIELD ) String email );
-
-    @GET( CONTROLLER + ATTRIBUTES )
-    Response setUserAttribute( UserAttributes attributesToAdd ) throws UserUpdateException;
 
 }
