@@ -50,6 +50,8 @@ public interface KeyStorageApi {
     String VERSION_PATH                       = "/{" + VERSION + "}";
     String BULK_PATH                          = "/bulk";
 
+    String BULK_AES_PATH                      = BULK_PATH + CRYPTO_SERVICES_PATH + USER_ID_PATH;
+
     @POST( CONTROLLER + RSA_PRIVATE_KEY_PATH )
     Response setRSAPrivateKey( @Body BlockCiphertext encryptedPrivateKey );
 
@@ -107,7 +109,7 @@ public interface KeyStorageApi {
     /**
      * Cached API to retrieve the object crypto service for a specific version of the object specified by
      * {@code objectId}
-     * 
+     *
      * @deprecated Use {@link KeyStorageApi#getAesEncryptedObjectCryptoService(UUID, long)} instead.
      * @param objectId The object for which to retrieve the crypto service.
      * @param version The version of the object for which to retrieve a crpyto service
@@ -125,7 +127,7 @@ public interface KeyStorageApi {
     /**
      * Gets the crypto encrypted crypto services corresponding to a set of UUIDs. This call automatically resolves an
      * object uuid to its latest version.
-     * 
+     *
      * @deprecated Use {@link KeyStorageApi#getAesEncryptedCryptoServices(VersionedObjectKeySet)} instead.
      * @param ids A set of UUID for which to retrieve cryptoservices.
      * @return A map pairing object UUIDs with their corresponding cryptoservices.
@@ -136,7 +138,7 @@ public interface KeyStorageApi {
 
     /**
      * Gets the crypto encrypted crypto services corresponding to a set of UUIDs.
-     * 
+     *
      * @deprecated Use {@link KeyStorageApi#getAesEncryptedCryptoServices(VersionedObjectKeySet)} instead.
      * @param objectKeys A set of VersiondObjectKeys for which to retrieve cryptoservices.
      * @return A map pairing VersiondObjectKeys with their corresponding cryptoservices.
@@ -145,9 +147,12 @@ public interface KeyStorageApi {
     @POST( CONTROLLER + VERSIONED_CRYPTO_SERVICES_PATH )
     Map<VersionedObjectKey, byte[]> getObjectCryptoServices( @Body VersionedObjectKeySet objectKeys );
 
+    @GET( CONTROLLER + BULK_AES_PATH )
+    Map<VersionedObjectKey, BlockCiphertext> getAesEncryptedCryptoServicesForUser( @Path( Names.ID_FIELD ) UUID userId);
+
     /**
      * Returns AES encrypted crypto services.
-     * 
+     *
      * @param ids
      * @return
      */
@@ -156,7 +161,7 @@ public interface KeyStorageApi {
 
     /**
      * Returns AES encrypted crypto services.
-     * 
+     *
      * @param ids
      * @return
      */
