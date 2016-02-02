@@ -50,7 +50,7 @@ public interface KeyStorageApi {
     String VERSION_PATH                       = "/{" + VERSION + "}";
     String BULK_PATH                          = "/bulk";
 
-    String BULK_AES_PATH                      = BULK_PATH + CRYPTO_SERVICES_PATH + USER_ID_PATH;
+    String BULK_RSA_PATH                      = BULK_PATH + CRYPTO_SERVICES_PATH + USER_ID_PATH;
 
     @POST( CONTROLLER + RSA_PRIVATE_KEY_PATH )
     Response setRSAPrivateKey( @Body BlockCiphertext encryptedPrivateKey );
@@ -147,7 +147,7 @@ public interface KeyStorageApi {
     @POST( CONTROLLER + VERSIONED_CRYPTO_SERVICES_PATH )
     Map<VersionedObjectKey, byte[]> getObjectCryptoServices( @Body VersionedObjectKeySet objectKeys );
 
-    @GET( CONTROLLER + BULK_AES_PATH )
+    @GET( CONTROLLER + BULK_RSA_PATH )
     Map<UUID, byte[]> getRSACryptoServicesForUser( @Path( Names.ID_FIELD ) UUID userId);
 
     /**
