@@ -51,7 +51,7 @@ public interface KeyStorageApi {
     String VERSION_PATH                       = "/{" + VERSION + "}";
     String BULK_PATH                          = "/bulk";
 
-    String BULK_RSA_PATH                      = BULK_PATH + CRYPTO_SERVICES_PATH + USER_ID_PATH;
+    String BULK_RSA_PATH                      = BULK_PATH + CRYPTO_SERVICES_PATH;
 
     @POST( CONTROLLER + RSA_PRIVATE_KEY_PATH )
     Response setRSAPrivateKey( @Body BlockCiphertext encryptedPrivateKey );
@@ -107,7 +107,7 @@ public interface KeyStorageApi {
             @Path( VERSION ) long version,
             @Body BlockCiphertext crypto);
 
-    @PUT( CONTROLLER + AES_CRYPTO_SERVICE_PATH + OBJECT_ID_PATH )
+    @PUT( CONTROLLER + AES_CRYPTO_SERVICE_MIGRATION_PATH + OBJECT_ID_PATH )
     Response setAesEncryptedObjectCryptoServiceForMigration(
             @Path( OBJECT_ID ) UUID objectId,
             @Body BlockCiphertext crypto);
