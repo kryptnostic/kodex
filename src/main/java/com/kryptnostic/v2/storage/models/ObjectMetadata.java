@@ -115,6 +115,14 @@ public class ObjectMetadata {
         return cipherMethod;
     }
 
+    public ObjectUserKey toObjectUserKey( UUID userId ) {
+        return new ObjectUserKey( this.id, userId );
+    }
+
+    public VersionedObjectUserKey toVersionedObjectUserKey( UUID userId ) {
+        return new VersionedObjectUserKey( this.id, userId, this.version );
+    }
+
     /*
      * (non-Javadoc)
      * @see java.lang.Object#hashCode()
@@ -123,6 +131,7 @@ public class ObjectMetadata {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
+        result = prime * result + ( ( cipherMethod == null ) ? 0 : cipherMethod.hashCode() );
         result = prime * result + ( ( createdTime == null ) ? 0 : createdTime.hashCode() );
         result = prime * result + ( ( creator == null ) ? 0 : creator.hashCode() );
         result = prime * result + ( ( id == null ) ? 0 : id.hashCode() );
@@ -138,58 +147,26 @@ public class ObjectMetadata {
      */
     @Override
     public boolean equals( Object obj ) {
-        if ( this == obj ) {
-            return true;
-        }
-        if ( obj == null ) {
-            return false;
-        }
-        if ( getClass() != obj.getClass() ) {
-            return false;
-        }
+        if ( this == obj ) return true;
+        if ( obj == null ) return false;
+        if ( getClass() != obj.getClass() ) return false;
         ObjectMetadata other = (ObjectMetadata) obj;
+        if ( cipherMethod != other.cipherMethod ) return false;
         if ( createdTime == null ) {
-            if ( other.createdTime != null ) {
-                return false;
-            }
-        } else if ( !createdTime.equals( other.createdTime ) ) {
-            return false;
-        }
+            if ( other.createdTime != null ) return false;
+        } else if ( !createdTime.equals( other.createdTime ) ) return false;
         if ( creator == null ) {
-            if ( other.creator != null ) {
-                return false;
-            }
-        } else if ( !creator.equals( other.creator ) ) {
-            return false;
-        }
+            if ( other.creator != null ) return false;
+        } else if ( !creator.equals( other.creator ) ) return false;
         if ( id == null ) {
-            if ( other.id != null ) {
-                return false;
-            }
-        } else if ( !id.equals( other.id ) ) {
-            return false;
-        }
-        if ( size != other.size ) {
-            return false;
-        }
+            if ( other.id != null ) return false;
+        } else if ( !id.equals( other.id ) ) return false;
+        if ( size != other.size ) return false;
         if ( type == null ) {
-            if ( other.type != null ) {
-                return false;
-            }
-        } else if ( !type.equals( other.type ) ) {
-            return false;
-        }
-        if ( version != other.version ) {
-            return false;
-        }
+            if ( other.type != null ) return false;
+        } else if ( !type.equals( other.type ) ) return false;
+        if ( version != other.version ) return false;
         return true;
     }
 
-    public ObjectUserKey toObjectUserKey( UUID userId ) {
-        return new ObjectUserKey( this.id, userId );
-    }
-
-    public VersionedObjectUserKey toVersionedObjectUserKey( UUID userId ) {
-        return new VersionedObjectUserKey( this.id, userId, this.version );
-    }
 }
