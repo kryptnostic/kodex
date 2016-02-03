@@ -38,6 +38,7 @@ public interface KeyStorageApi {
 
     String AES_MASTER_KEY                     = "/aes";
     String AES_CRYPTO_SERVICE_PATH            = AES_MASTER_KEY + "/cryptoservice";
+    String AES_CRYPTO_SERVICE_MIGRATION_PATH  = AES_MASTER_KEY + "/cryptoservice-migration";
     String AES_CRYPTO_SERVICES_PATH           = AES_MASTER_KEY + "/cryptoservices";
     String VERSIONED_AES_CRYPTO_SERVICES_PATH = AES_MASTER_KEY + "/versioned/cryptoservices";
 
@@ -104,6 +105,11 @@ public interface KeyStorageApi {
     Response setAesEncryptedObjectCryptoService(
             @Path( OBJECT_ID ) UUID objectId,
             @Path( VERSION ) long version,
+            @Body BlockCiphertext crypto);
+
+    @PUT( CONTROLLER + AES_CRYPTO_SERVICE_PATH + OBJECT_ID_PATH )
+    Response setAesEncryptedObjectCryptoServiceForMigration(
+            @Path( OBJECT_ID ) UUID objectId,
             @Body BlockCiphertext crypto);
 
     /**
