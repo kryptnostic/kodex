@@ -178,7 +178,6 @@ public interface DirectoryApi {
     @GET( CONTROLLER + INITIALIZED + PARAM.REALM )
     Iterable<UUID> listInitializedUserInRealm( @Path( Names.REALM_FIELD ) String realm );
 
-    @Timed
     @GET( CONTROLLER + PARAM.REALM + PARAM.USER )
     Optional<UUID> getUUIDFromEmail( @Path( Names.USER_FIELD ) String email );
 
