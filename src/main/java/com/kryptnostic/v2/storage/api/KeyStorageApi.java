@@ -148,7 +148,7 @@ public interface KeyStorageApi {
     Map<VersionedObjectKey, byte[]> getObjectCryptoServices( @Body VersionedObjectKeySet objectKeys );
 
     @GET( CONTROLLER + BULK_RSA_PATH )
-    Map<UUID, byte[]> getRSACryptoServicesForUser( @Path( Names.ID_FIELD ) UUID userId);
+    Map<UUID, byte[]> getRSACryptoServicesForUser();
 
     /**
      * Returns AES encrypted crypto services.
