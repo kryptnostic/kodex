@@ -26,6 +26,10 @@ public enum Mode {
             return CTR;
         } else if ( mode.equals( CipherConstants.ECB_MODE ) ) {
             return ECB;
+        } else if ( mode.equals( CipherConstants.GCM_MODE ) ) {
+            return GCM;
+        } else if ( mode.equals( CipherConstants.CBC_MODE ) ) {
+            return CBC;
         }
         throw new InvalidParameterException( "Invalid mode: " + mode );
     }

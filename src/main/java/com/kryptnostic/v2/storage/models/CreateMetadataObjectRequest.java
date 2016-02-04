@@ -3,8 +3,8 @@ package com.kryptnostic.v2.storage.models;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Optional;
+import com.kryptnostic.kodex.v1.crypto.ciphers.Cypher;
 import com.kryptnostic.v2.constants.Names;
-import com.kryptnostic.v2.storage.models.ObjectMetadata.CryptoMaterial;
 import com.kryptnostic.v2.storage.types.TypeUUIDs;
 
 public class CreateMetadataObjectRequest extends CreateObjectRequest {
@@ -16,7 +16,7 @@ public class CreateMetadataObjectRequest extends CreateObjectRequest {
                 TypeUUIDs.INDEX_METADATA,
                 Optional.<VersionedObjectKey> absent(),
                 Optional.<VersionedObjectKey> absent(),
-                CryptoMaterial.DEFAULT_REQUIRED_CRYPTO_MATERIALS,
+                Cypher.DEFAULT,
                 Optional.<Boolean> absent(),
                 Optional.<Boolean> absent(),
                 Optional.<Boolean> absent() );
@@ -37,7 +37,7 @@ public class CreateMetadataObjectRequest extends CreateObjectRequest {
                 TypeUUIDs.INDEX_METADATA,
                 parentObjectId,
                 objectId,
-                CryptoMaterial.DEFAULT_REQUIRED_CRYPTO_MATERIALS,
+                Cypher.DEFAULT,
                 inheritOwnership,
                 inheritCryptoService,
                 locked );
@@ -49,9 +49,9 @@ public class CreateMetadataObjectRequest extends CreateObjectRequest {
     public byte[] getAddress() {
         return address;
     }
-    
+
     @JsonProperty( Names.SCORE_FIELD )
-    public Optional<Double> getScore() { 
+    public Optional<Double> getScore() {
         return score;
     }
 }
