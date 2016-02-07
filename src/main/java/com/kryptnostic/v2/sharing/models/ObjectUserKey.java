@@ -25,7 +25,7 @@ public class ObjectUserKey {
     }
 
     @JsonProperty( Names.USER_FIELD )
-    public UUID getUserKey() {
+    public UUID getUserId() {
         return userKey;
     }
 
