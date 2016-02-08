@@ -17,7 +17,7 @@ import com.kryptnostic.v2.constants.Names;
 public class ObjectTreeLoadRequest {
     private static final int                    DEFAULT_DEPTH = 0;
     private final Set<UUID>                     objectIds;
-    private final Set<VersionedObjectKey>       objectIdsToFilter;
+    private final Set<UUID>                     objectIdsToFilter;
     private final Map<UUID, Set<LoadLevel>>     typeLoadLevels;
     private final Map<UUID, VersionedObjectKey> createdAfter;
     private final int                           loadDepth;
@@ -25,7 +25,7 @@ public class ObjectTreeLoadRequest {
     public ObjectTreeLoadRequest( Set<UUID> objectIds, Map<UUID, Set<LoadLevel>> typeLoadLevels ) {
         this(
                 objectIds,
-                Optional.<Set<VersionedObjectKey>> absent(),
+                Optional.<Set<UUID>> absent(),
                 typeLoadLevels,
                 Optional.<Map<UUID, VersionedObjectKey>> absent(),
                 Optional.of( DEFAULT_DEPTH ) );
@@ -34,12 +34,12 @@ public class ObjectTreeLoadRequest {
     @JsonCreator
     public ObjectTreeLoadRequest(
             @JsonProperty( Names.OBJECT_IDS ) Set<UUID> objectIds,
-            @JsonProperty( Names.OBJECTS_FILTER ) Optional<Set<VersionedObjectKey>> objectIdsToFilter,
+            @JsonProperty( Names.OBJECTS_FILTER ) Optional<Set<UUID>> objectIdsToFilter,
             @JsonProperty( Names.LOAD_LEVELS ) Map<UUID, Set<LoadLevel>> typeLoadLevels,
             @JsonProperty( Names.CREATED_AFTER ) Optional<Map<UUID, VersionedObjectKey>> createdAfter,
             @JsonProperty( Names.DEPTH ) Optional<Integer> loadDepth) {
         this.objectIds = objectIds;
-        this.objectIdsToFilter = objectIdsToFilter.or( ImmutableSet.<VersionedObjectKey> of() );
+        this.objectIdsToFilter = objectIdsToFilter.or( ImmutableSet.<UUID> of() );
         this.typeLoadLevels = typeLoadLevels;
         this.createdAfter = createdAfter.or( ImmutableMap.<UUID, VersionedObjectKey> of() );
         this.loadDepth = loadDepth.or( DEFAULT_DEPTH );
@@ -51,7 +51,7 @@ public class ObjectTreeLoadRequest {
     }
 
     @JsonProperty( Names.OBJECTS_FILTER )
-    public Set<VersionedObjectKey> getObjectIdsToFilter() {
+    public Set<UUID> getObjectIdsToFilter() {
         return objectIdsToFilter;
     }
 
