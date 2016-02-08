@@ -114,4 +114,6 @@ public final class Names {
     public static final String OBJECT_KEY                      = "objectKey";
     public static final String OBJECT_SEARCH_PAIR              = "objectSearchPair";
     public static final String CREATE_OBJECT_REQUEST_FIELD     = "createObjectRequest";
+    public static final String OBJECTS_FILTER                  = "objectIdsToFilter";
+    public static final String CREATED_AFTER                   = "createdAfter";
 }
