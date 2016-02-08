@@ -10,9 +10,9 @@ public enum Permission {
     READ, WRITE, OWNER;
 
     public static void serializeSet( DataOutput out, Set<Permission> set ) throws IOException {
-        out.writeBoolean( set.contains( READ ) );
-        out.writeBoolean( set.contains( WRITE ) );
-        out.writeBoolean( set.contains( OWNER ) );
+        for ( Permission permission : Permission.values() ) {
+            out.writeBoolean( set.contains( permission ) );
+        }
     }
 
     public static Set<Permission> deserializeSet( DataInput in) throws IOException {

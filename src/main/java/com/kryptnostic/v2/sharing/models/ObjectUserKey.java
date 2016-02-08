@@ -8,7 +8,7 @@ import com.kryptnostic.kodex.v1.constants.Names;
 
 public class ObjectUserKey {
     private final UUID         objectId;
-    private final UUID         userKey;
+    private final UUID         userId;
 
     @JsonCreator
     public ObjectUserKey(
@@ -16,7 +16,7 @@ public class ObjectUserKey {
             @JsonProperty( Names.USER_FIELD ) UUID userKey) {
         super();
         this.objectId = objectId;
-        this.userKey = userKey;
+        this.userId = userKey;
     }
 
     @JsonProperty( Names.ID_FIELD )
@@ -26,7 +26,7 @@ public class ObjectUserKey {
 
     @JsonProperty( Names.USER_FIELD )
     public UUID getUserId() {
-        return userKey;
+        return userId;
     }
 
 }
