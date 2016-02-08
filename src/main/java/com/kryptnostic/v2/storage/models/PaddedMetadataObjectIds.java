@@ -13,7 +13,7 @@ public class PaddedMetadataObjectIds {
 
     public PaddedMetadataObjectIds(
             @JsonProperty( Names.KEY_FIELD ) byte[] key,
-            @JsonProperty( Names.OBJECT_IDS ) List<UUID> objectIds ) {
+            @JsonProperty( Names.OBJECT_IDS_FIELD ) List<UUID> objectIds ) {
         this.key = key;
         this.objectIds = objectIds;
     }
