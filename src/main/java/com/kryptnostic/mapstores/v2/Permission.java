@@ -17,14 +17,10 @@ public enum Permission {
 
     public static Set<Permission> deserializeSet( DataInput in) throws IOException {
         EnumSet<Permission> permissions = EnumSet.noneOf( Permission.class );
-        if ( in.readBoolean() ) {
-            permissions.add( READ );
-        }
-        if ( in.readBoolean() ) {
-            permissions.add( WRITE );
-        }
-        if ( in.readBoolean() ) {
-            permissions.add( OWNER );
+        for ( Permission permission : Permission.values() ) {
+            if ( in.readBoolean() ) {
+                permissions.add( permission );
+            }
         }
         return permissions;
     }
