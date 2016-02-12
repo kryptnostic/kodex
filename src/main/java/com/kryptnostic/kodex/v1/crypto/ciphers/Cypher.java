@@ -100,12 +100,12 @@ public enum Cypher {
         throw new InvalidAlgorithmParameterException( "Key generators are only supported for AES algorithm." );
     }
 
-    // @JsonCreator
+    @JsonCreator
     public static Cypher createCipher( String name ) {
         return valueOf( name );
     }
 
-    @JsonCreator
+    // @JsonCreator
     public static Cypher createCipher( CipherDescription description ) {
         Preconditions.checkArgument(
                 ImmutableSet.of( 128, 256, 1024, 2048, 4096 ).contains( description.getKeySize() ),
