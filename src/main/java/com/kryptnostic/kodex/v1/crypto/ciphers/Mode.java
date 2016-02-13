@@ -7,7 +7,8 @@ import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum Mode {
     CTR( CipherConstants.CTR_MODE ), ECB( CipherConstants.ECB_MODE ), CBC( CipherConstants.CBC_MODE ), GCM(
-            CipherConstants.GCM_MODE );
+            CipherConstants.GCM_MODE ),
+    NONE( "" );
 
     private final String mode;
 

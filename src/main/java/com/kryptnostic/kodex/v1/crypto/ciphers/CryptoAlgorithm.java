@@ -7,8 +7,9 @@ import com.kryptnostic.kodex.v1.crypto.keys.PublicKeyAlgorithm;
 
 public enum CryptoAlgorithm {
     AES(CipherConstants.AES_CIPHER),
-    RSA(PublicKeyAlgorithm.RSA.getValue());
-    
+    RSA( PublicKeyAlgorithm.RSA.getValue() ),
+    NONE( "" );
+
     private final String algorithm;
 
     private CryptoAlgorithm(String algorithm) {
@@ -24,7 +25,7 @@ public enum CryptoAlgorithm {
         if (algorithm.equals(CipherConstants.AES_CIPHER)) {
             return AES;
         } else if( algorithm.equals( PublicKeyAlgorithm.RSA.getValue() ) ){
-            return RSA;    
+            return RSA;
         } else {
             throw new InvalidParameterException("Unrecognized algorithm: " + algorithm);
         }
