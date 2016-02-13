@@ -23,6 +23,7 @@ import com.google.common.collect.ImmutableSet;
  */
 
 public enum Cypher {
+    NONE( CryptoAlgorithm.NONE, Mode.NONE, Padding.NONE, 0, false ),
     AES_GCM_128( CryptoAlgorithm.AES, Mode.GCM, Padding.NONE, 128, false ),
     AES_GCM_128_SALTED( CryptoAlgorithm.AES, Mode.GCM, Padding.NONE, 128, true ),
     AES_CTR_128( CryptoAlgorithm.AES, Mode.CTR, Padding.NONE, 128, false ),
