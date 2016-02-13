@@ -12,6 +12,9 @@ public enum CryptoMaterial {
     public static final EnumSet<CryptoMaterial> DEFAULT_REQUIRED_CRYPTO_MATERIALS = EnumSet.of( IV, CONTENTS );
 
     public static EnumSet<CryptoMaterial> requiredByCypher( Cypher cypher ) {
+        if ( Cypher.NONE.equals( cypher ) ) {
+            return EnumSet.noneOf( CryptoMaterial.class );
+        }
         EnumSet<CryptoMaterial> required = EnumSet.of( IV, CONTENTS );
         if ( Cypher.AES_GCM_128.equals( cypher ) || Cypher.AES_GCM_128_SALTED.equals( cypher ) ) {
             required.add( TAG );
