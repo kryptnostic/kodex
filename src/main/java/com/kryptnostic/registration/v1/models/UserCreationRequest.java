@@ -23,7 +23,7 @@ public class UserCreationRequest {
             @JsonProperty( Names.PASSWORD_FIELD ) String password,
             @JsonProperty( Names.ATTRIBUTES_FIELD ) Optional<UserAttributes> attributes,
             @JsonProperty( Names.CONFIRMATION_FIELD ) Optional<Boolean> confirmationEmailNeeded,
-            @JsonProperty( com.kryptnostic.v2.constants.Names.DESIRED_RESOURCES ) Optional<Map<String, Long>> desiredResources ) {
+            @JsonProperty( com.kryptnostic.v2.constants.Names.DESIRED_RESOURCES_FIELD ) Optional<Map<String, Long>> desiredResources ) {
         this.password = password;
         this.email = email;
         this.name = name;
@@ -57,7 +57,7 @@ public class UserCreationRequest {
         return confirmationEmailNeeded;
     }
 
-    @JsonProperty( com.kryptnostic.v2.constants.Names.DESIRED_RESOURCES )
+    @JsonProperty( com.kryptnostic.v2.constants.Names.DESIRED_RESOURCES_FIELD )
     public Optional<Map<String, Long>> getDesiredResources() {
         return desiredResources;
     }
