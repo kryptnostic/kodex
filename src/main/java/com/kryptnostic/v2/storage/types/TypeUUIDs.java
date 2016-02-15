@@ -20,5 +20,7 @@ public final class TypeUUIDs {
     public static final UUID FHE_PRIVATE_KEY        = new UUID( 0L, 5L );
     public static final UUID FHE_SEARCH_PRIVATE_KEY = new UUID( 0L, 6L );
 
+    public static final UUID INDEX_SEGMENT          = new UUID( 0L, 7L );
+
     public static final UUID DEFAULT_TYPE           = UTF8_STRING;
 }

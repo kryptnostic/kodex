@@ -91,8 +91,8 @@ public final class Names {
     public static final String ENCRYPTED_LENGTH                = "encryptedLength";
     public static final String CONTENTS                        = "contents";
     public static final String LENGTH_FIELD                    = "length";
-    public static final String OBJECT_IDS                      = "objectIds";
-    public static final String LOAD_LEVELS                     = "loadLevels";
+    public static final String OBJECT_IDS_FIELD                = "objectIds";
+    public static final String LOAD_LEVELS_FIELD               = "loadLevels";
     public static final String INHERITING_CRYPTO_SERVICE_FIELD = "inheritCryptoService";
     public static final String LOCKED_FIELD                    = "locked";
     public static final String TERM_FIELD                      = "term";
@@ -104,7 +104,7 @@ public final class Names {
     public static final String SALTED_FIELD                    = "salted";
     public static final String REQUIRED_CRYPTO_MATS_FIELD      = "requiredCryptoMats";
     public static final String OBJECT_VERSION_FIELD            = "objectVersion";
-    public static final String DEPTH                           = "depth";
+    public static final String DEPTH_FIELD                     = "depth";
     public static final String SCOPE_ID                        = "scopeId";
     public static final String TYPES                           = "types";
     public static final String SCOPE_IDS                       = "scopeIds";
@@ -116,4 +116,8 @@ public final class Names {
     public static final String OBJECT_SEARCH_PAIR              = "objectSearchPair";
     public static final String DOMAIN_AVAILABLE_RESOURCE       = "domainAvailableResource";
     public static final String DOMAIN_TOTAL_RESOURCE           = "domainTotalResource";
+    public static final String CREATE_OBJECT_REQUEST_FIELD     = "createObjectRequest";
+    public static final String OBJECTS_FILTER_FIELD            = "objectIdsToFilter";
+    public static final String CREATED_AFTER_FIELD             = "createdAfter";
+
 }
