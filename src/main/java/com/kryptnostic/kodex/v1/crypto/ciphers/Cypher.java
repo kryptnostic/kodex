@@ -23,6 +23,7 @@ import com.google.common.collect.ImmutableSet;
  */
 
 public enum Cypher {
+    NONE( CryptoAlgorithm.NONE, Mode.NONE, Padding.NONE, 0, false ),
     AES_GCM_128( CryptoAlgorithm.AES, Mode.GCM, Padding.NONE, 128, false ),
     AES_GCM_128_SALTED( CryptoAlgorithm.AES, Mode.GCM, Padding.NONE, 128, true ),
     AES_CTR_128( CryptoAlgorithm.AES, Mode.CTR, Padding.NONE, 128, false ),
@@ -100,12 +101,12 @@ public enum Cypher {
         throw new InvalidAlgorithmParameterException( "Key generators are only supported for AES algorithm." );
     }
 
-    // @JsonCreator
+    @JsonCreator
     public static Cypher createCipher( String name ) {
         return valueOf( name );
     }
 
-    @JsonCreator
+    // @JsonCreator
     public static Cypher createCipher( CipherDescription description ) {
         Preconditions.checkArgument(
                 ImmutableSet.of( 128, 256, 1024, 2048, 4096 ).contains( description.getKeySize() ),
