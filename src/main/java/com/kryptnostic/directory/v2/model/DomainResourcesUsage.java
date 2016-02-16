@@ -11,19 +11,19 @@ public class DomainResourcesUsage {
 
     @JsonCreator
     public DomainResourcesUsage(
-            @JsonProperty( Names.DOMAIN_AVAILABLE_RESOURCE ) Long available,
-            @JsonProperty( Names.DOMAIN_TOTAL_RESOURCE ) Long total) {
+            @JsonProperty( Names.DOMAIN_AVAILABLE_RESOURCE ) long available,
+            @JsonProperty( Names.DOMAIN_TOTAL_RESOURCE ) long total) {
         this.available = available;
         this.total = total;
     }
 
     @JsonProperty( Names.DOMAIN_AVAILABLE_RESOURCE )
-    public Long getAvailable() {
+    public long getAvailable() {
         return available;
     }
 
     @JsonProperty( Names.DOMAIN_TOTAL_RESOURCE )
-    public Long getTotal() {
+    public long getTotal() {
         return total;
     }
 
