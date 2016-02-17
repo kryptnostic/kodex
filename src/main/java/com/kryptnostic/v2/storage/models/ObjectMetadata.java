@@ -1,5 +1,7 @@
 package com.kryptnostic.v2.storage.models;
 
+import java.util.EnumSet;
+import java.util.Set;
 import java.util.UUID;
 
 import javax.annotation.concurrent.Immutable;
@@ -8,14 +10,14 @@ import org.joda.time.DateTime;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.collect.Sets;
 import com.kryptnostic.kodex.v1.crypto.ciphers.Cypher;
+import com.kryptnostic.mapstores.v2.Permission;
 import com.kryptnostic.v2.constants.Names;
 import com.kryptnostic.v2.sharing.models.ObjectUserKey;
 
 /**
- *
  * @author Matthew Tamayo-Rios &lt;matthew@kryptnostic.com&gt;
- *
  */
 @Immutable
 public class ObjectMetadata {
@@ -29,6 +31,8 @@ public class ObjectMetadata {
     private final UUID     creator;
     private final DateTime createdTime;
 
+    private final EnumSet<Permission> permissions;
+
     @JsonCreator
     public ObjectMetadata(
             @JsonProperty( Names.ID_FIELD ) UUID id,
@@ -37,6 +41,7 @@ public class ObjectMetadata {
             @JsonProperty( Names.TYPE_FIELD ) UUID type,
             @JsonProperty( Names.CREATOR_FIELD ) UUID creator,
             @JsonProperty( Names.CYPHER_FIELD ) Cypher cypher,
+            @JsonProperty( Names.PERMISSIONS_FIELD ) Set<Permission> perms,
             @JsonProperty( Names.CREATED_TIME ) DateTime createdTime) {
         this.id = id;
         this.version = version;
@@ -47,6 +52,10 @@ public class ObjectMetadata {
         this.createdTime = createdTime;
         this.size = size;
         this.cipherMethod = cypher;
+        this.permissions = EnumSet.noneOf( Permission.class );
+        for ( Permission permission : perms ) {
+            permissions.add( permission );
+        }
     }
 
     public static ObjectMetadata newObject(
@@ -61,6 +70,7 @@ public class ObjectMetadata {
                 request.getType(),
                 creator,
                 request.getCipherType(),
+                EnumSet.of( Permission.OWNER ),
                 DateTime.now() );
     }
 
@@ -72,6 +82,7 @@ public class ObjectMetadata {
                 request.getType(),
                 user,
                 request.getCipherType(),
+                EnumSet.of( Permission.OWNER ),
                 DateTime.now() );
     }
 
@@ -111,6 +122,20 @@ public class ObjectMetadata {
         return size;
     }
 
+    @JsonProperty( Names.PERMISSIONS_FIELD )
+    public Set<Permission> getPermissions() {
+        return permissions;
+    }
+
+    public Set<String> getMappedPermissions() {
+        Set<String> set = Sets.newHashSetWithExpectedSize( permissions.size() );
+        for ( Permission permission : permissions ) {
+            set.add( permission.name() );
+        }
+        return set;
+    }
+
+    @JsonProperty( Names.CYPHER_FIELD )
     public Cypher getCipherMethod() {
         return cipherMethod;
     }
