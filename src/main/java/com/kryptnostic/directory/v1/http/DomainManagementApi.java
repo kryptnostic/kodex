@@ -6,6 +6,7 @@ import java.util.UUID;
 import com.codahale.metrics.annotation.Timed;
 import com.google.common.base.Optional;
 import com.kryptnostic.directory.v1.model.DomainUpdate;
+import com.kryptnostic.directory.v2.model.DomainResourcesUsage;
 
 import retrofit.client.Response;
 import retrofit.http.Body;
@@ -23,16 +24,22 @@ import retrofit.http.Path;
  *
  */
 public interface DomainManagementApi {
-    public static final String DOMAIN         = "/domain";
+    public static final String DOMAIN               = "/domain";
 
-    public static final String WHITE_LIST     = "/whitelist";
+    public static final String WHITE_LIST           = "/whitelist";
 
-    public static final String DOMAIN_LIST    = "/domainlist";
+    public static final String DOMAIN_LIST          = "/domainlist";
 
-    public static final String NAME           = "name";
-    public static final String NAME_PATH      = "/{" + NAME + "}";
-    public static final String NAME_WITH_DOT  = "/{" + NAME + ":.+}";
-    public static final String SHARING_POLICY = "/sharingpolicy";
+    public static final String DOMAIN_RESOURCES     = "/domainresources";
+
+    public static final String NAME                 = "name";
+    public static final String DOMAIN_ID            = "domainid";
+    public static final String RESOURCE             = "resource";
+    public static final String NAME_PATH            = "/{" + NAME + "}";
+    public static final String NAME_WITH_DOT        = "/{" + NAME + ":.+}";
+    public static final String SHARING_POLICY       = "/sharingpolicy";
+    public static final String DOMAIN_ID_PATH       = "/{" + DOMAIN_ID + "}";
+    public static final String DOMAIN_RESOURCE_PATH = "/{" + RESOURCE + "}";
 
     /**
      * Update domain settings.
@@ -68,5 +75,8 @@ public interface DomainManagementApi {
 
     @GET( DOMAIN_LIST )
     Set<String> getListableDomainsForWhiteList();
+
+    @GET( DOMAIN_RESOURCES + DOMAIN_ID_PATH + DOMAIN_RESOURCE_PATH )
+    DomainResourcesUsage getDomainResourcesUsage( @Path( DOMAIN_ID ) UUID domainId, @Path( RESOURCE ) String resource);
 
 }

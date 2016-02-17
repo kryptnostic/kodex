@@ -1,5 +1,7 @@
 package com.kryptnostic.registration.v1.models;
 
+import java.util.Map;
+
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Optional;
@@ -7,11 +9,12 @@ import com.kryptnostic.kodex.v1.constants.Names;
 import com.kryptnostic.kodex.v1.models.UserAttributes;
 
 public class UserCreationRequest {
-    private final String                   password;
-    private final String                   email;
-    private final String                   name;
-    private final Optional<UserAttributes> attributes;
-    private final boolean                  confirmationEmailNeeded;
+    private final String                      password;
+    private final String                      email;
+    private final String                      name;
+    private final Optional<UserAttributes>    attributes;
+    private final boolean                     confirmationEmailNeeded;
+    private final Optional<Map<String, Long>> desiredResources;
 
     @JsonCreator
     public UserCreationRequest(
@@ -19,12 +22,14 @@ public class UserCreationRequest {
             @JsonProperty( Names.NAME_FIELD ) String name,
             @JsonProperty( Names.PASSWORD_FIELD ) String password,
             @JsonProperty( Names.ATTRIBUTES_FIELD ) Optional<UserAttributes> attributes,
-            @JsonProperty( Names.CONFIRMATION_FIELD ) Optional<Boolean> confirmationEmailNeeded ) {
+            @JsonProperty( Names.CONFIRMATION_FIELD ) Optional<Boolean> confirmationEmailNeeded,
+            @JsonProperty( com.kryptnostic.v2.constants.Names.DESIRED_RESOURCES_FIELD ) Optional<Map<String, Long>> desiredResources ) {
         this.password = password;
         this.email = email;
         this.name = name;
         this.confirmationEmailNeeded = confirmationEmailNeeded.or( false );
         this.attributes = attributes;
+        this.desiredResources = desiredResources;
     }
 
     @JsonProperty( Names.PASSWORD_FIELD )
@@ -36,7 +41,7 @@ public class UserCreationRequest {
     public String getEmail() {
         return email;
     }
-    
+
     @JsonProperty( Names.NAME_FIELD )
     public String getDisplayName() {
         return name;
@@ -51,4 +56,10 @@ public class UserCreationRequest {
     public boolean isConfirmationEmailNeeded() {
         return confirmationEmailNeeded;
     }
+
+    @JsonProperty( com.kryptnostic.v2.constants.Names.DESIRED_RESOURCES_FIELD )
+    public Optional<Map<String, Long>> getDesiredResources() {
+        return desiredResources;
+    }
+
 }

@@ -20,6 +20,7 @@ public final class Names {
     public static final String GIVEN_NAME_FIELD                = "givenName";
     public static final String FAMILY_NAME_FIELD               = "familyName";
     public static final String METADATA_FIELD                  = "metadata";
+    public static final String DESIRED_RESOURCES_FIELD         = "desiredResources";
     @Deprecated
     public static final String REALM_FIELD                     = "realm";
     public static final String DOMAIN_FIELD                    = "domain";
@@ -113,8 +114,11 @@ public final class Names {
     public static final String COUNTS_FIELD                    = "counts";
     public static final String OBJECT_KEY                      = "objectKey";
     public static final String OBJECT_SEARCH_PAIR              = "objectSearchPair";
+    public static final String DOMAIN_AVAILABLE_RESOURCE       = "domainAvailableResource";
+    public static final String DOMAIN_TOTAL_RESOURCE           = "domainTotalResource";
     public static final String CREATE_OBJECT_REQUEST_FIELD     = "createObjectRequest";
     public static final String PERMISSIONS_FIELD               = "objectPermisisons";
     public static final String OBJECTS_FILTER_FIELD            = "objectIdsToFilter";
     public static final String CREATED_AFTER_FIELD             = "createdAfter";
+
 }
