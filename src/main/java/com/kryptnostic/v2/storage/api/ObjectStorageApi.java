@@ -1,5 +1,6 @@
 package com.kryptnostic.v2.storage.api;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -9,6 +10,7 @@ import com.kryptnostic.v2.constants.Names;
 import com.kryptnostic.v2.storage.models.CreateIndexSegmentRequest;
 import com.kryptnostic.v2.storage.models.CreateMetadataObjectRequest;
 import com.kryptnostic.v2.storage.models.CreateObjectRequest;
+import com.kryptnostic.v2.storage.models.IndexSegmentRequest;
 import com.kryptnostic.v2.storage.models.ObjectMetadata;
 import com.kryptnostic.v2.storage.models.ObjectMetadataEncryptedNode;
 import com.kryptnostic.v2.storage.models.ObjectTreeLoadRequest;
@@ -51,6 +53,7 @@ public interface ObjectStorageApi {
     String VERSIONED_OBJECT_ID_PATH = OBJECT_ID_PATH + VERSION_PATH;
     String LATEST_OBJECT_ID_PATH = LATEST + OBJECT_ID_PATH;
     String INDEX_SEGMENT_PATH   = "/index-segment";
+    String INDEX_SEGMENTS_PATH   = "/index-segments";
 
     /**
      * Request a new object be created in a pending state
@@ -85,6 +88,12 @@ public interface ObjectStorageApi {
      */
     @POST( CONTROLLER + INDEX_SEGMENT_PATH )
     VersionedObjectKey createIndexSegment( @Body CreateIndexSegmentRequest request );
+
+    @POST( CONTROLLER + VERSIONED_OBJECT_ID_PATH + INDEX_SEGMENTS_PATH )
+    Response createIndexSegments(
+            @Path( ID ) UUID parentId,
+            @Path( VERSION ) long parentVersion,
+            @Body List<IndexSegmentRequest> requests);
 
     @GET( CONTROLLER + LATEST_OBJECT_ID_PATH )
     VersionedObjectKey getLatestVersionedObjectKey( @Path( ID ) UUID id );
