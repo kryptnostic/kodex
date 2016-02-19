@@ -13,10 +13,12 @@ import retrofit.http.POST;
 import retrofit.http.Path;
 
 public interface RegistrationApi {
+    String CONTROLLER   = "/registration";
+
     String UUID         = "userId";
     String TOKEN        = "token";
+    String RESEND       = "/resend";
 
-    String CONTROLLER   = "/registration";
     String USER         = "/user";
     String INVITATION   = "/invitation";
     String CONFIRMATION = "/confirmation";
@@ -34,12 +36,15 @@ public interface RegistrationApi {
     @POST( CONTROLLER + USER )
     UUID register( @Body UserCreationRequest request );
 
-    @GET( CONTROLLER + CONFIRMATION )
+    @GET( CONTROLLER + CONFIRMATION + RESEND )
     Response resendConfirmationEmail();
 
     @GET( CONTROLLER + VERIFICATION + UUID_PATH + TOKEN_PATH )
-    Response verifyConfirmation( @Path( UUID ) UUID userId, @Path( TOKEN ) String token);
+    boolean verifyConfirmation( @Path( UUID ) UUID userId, @Path( TOKEN ) String token);
 
     @POST( CONTROLLER + INVITATION )
     Response sendInvitationEmail( @Body EmailRequest emailRequest );
+
+    @GET( CONTROLLER + CONFIRMATION )
+    boolean getConfirmationStatus();
 }
