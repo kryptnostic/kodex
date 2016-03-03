@@ -74,6 +74,7 @@ public final class Names {
     public static final String RESET_TOKEN_FIELD               = "resetToken";
     public static final String REGISTRAR_USER_SUFFIX           = "_registrar";
     public static final String CONFIRMATION_FIELD              = "confirmationEmailNeeded";
+    public static final String NOTIFICATION_EMAIL_FIELD        = "notificationEmail";
     public static final String NAME_FIELD                      = "name";
     public static final String ROLES_FIELD                     = "roles";
     public static final String SIZE_FIELD                      = "size";

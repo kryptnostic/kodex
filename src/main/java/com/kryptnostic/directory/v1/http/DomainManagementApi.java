@@ -52,7 +52,7 @@ public interface DomainManagementApi {
     @Timed
     @POST( DOMAIN )
     Response updateDomain( @Body DomainUpdate request );
-
+    
     @Timed
     @GET( DOMAIN + NAME_PATH )
     Optional<UUID> getDomainId( @Path( NAME ) String domainName);
