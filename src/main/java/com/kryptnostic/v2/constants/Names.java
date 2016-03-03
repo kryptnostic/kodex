@@ -117,7 +117,10 @@ public final class Names {
     public static final String DOMAIN_AVAILABLE_RESOURCE       = "domainAvailableResource";
     public static final String DOMAIN_TOTAL_RESOURCE           = "domainTotalResource";
     public static final String CREATE_OBJECT_REQUEST_FIELD     = "createObjectRequest";
+    public static final String PERMISSIONS_FIELD               = "objectPermisisons";
     public static final String OBJECTS_FILTER_FIELD            = "objectIdsToFilter";
     public static final String CREATED_AFTER_FIELD             = "createdAfter";
+    public static final String ACL_ID_FIELD                    = "aclId";
+    public static final String OBJECT_CLOCK_FIELD                     = "objectClock";
 
 }

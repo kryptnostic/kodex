@@ -1,6 +1,5 @@
 package com.kryptnostic.v2.storage.models;
 
-import java.util.EnumSet;
 import java.util.UUID;
 
 import javax.annotation.concurrent.Immutable;
@@ -14,50 +13,19 @@ import com.kryptnostic.v2.constants.Names;
 import com.kryptnostic.v2.sharing.models.ObjectUserKey;
 
 /**
- *
  * @author Matthew Tamayo-Rios &lt;matthew@kryptnostic.com&gt;
- *
  */
 @Immutable
 public class LegacyObjectMetadata {
 
-    protected final UUID              id;
-    protected final UUID              type;
-    protected final long              version;
-    protected final long              size;
-    protected EnumSet<CryptoMaterial> uploadedParts;
-    protected EnumSet<CryptoMaterial> requiredParts;
+    private final UUID     id;
+    private final long     version;
 
-    protected final UUID              creator;
-    protected final DateTime          createdTime;
-
-    public enum CryptoMaterial {
-        IV,
-        TAG,
-        CONTENTS,
-        SALT;
-
-        public static final EnumSet<CryptoMaterial> DEFAULT_REQUIRED_CRYPTO_MATERIALS = EnumSet.of( IV, CONTENTS );
-
-        public static EnumSet<CryptoMaterial> requiredByCypher( Cypher cypher, boolean salted ) {
-            if ( cypher == null ) {
-                return EnumSet.of( IV, CONTENTS );
-            }
-            EnumSet<CryptoMaterial> required;
-            switch ( cypher ) {
-                case AES_GCM_128:
-                    required = EnumSet.of( TAG, IV, CONTENTS );
-                    break;
-                default:
-                    required = DEFAULT_REQUIRED_CRYPTO_MATERIALS;
-                    break;
-            }
-            if ( salted ) {
-                required.add( SALT );
-            }
-            return required;
-        }
-    }
+    private final UUID     type;
+    private final long     size;
+    private final UUID     creator;
+    private final DateTime createdTime;
+    private final Cypher   cipherMethod;
 
     @JsonCreator
     public LegacyObjectMetadata(
@@ -66,18 +34,50 @@ public class LegacyObjectMetadata {
             @JsonProperty( Names.SIZE_FIELD ) long size,
             @JsonProperty( Names.TYPE_FIELD ) UUID type,
             @JsonProperty( Names.CREATOR_FIELD ) UUID creator,
-            @JsonProperty( Names.REQUIRED_CRYPTO_MATS_FIELD ) EnumSet<CryptoMaterial> requiredMaterials,
+            @JsonProperty( Names.CYPHER_FIELD ) Cypher cypher,
             @JsonProperty( Names.CREATED_TIME ) DateTime createdTime) {
         this.id = id;
         this.version = version;
         this.type = type;
-
         this.creator = creator;
 
         this.createdTime = createdTime;
         this.size = size;
-        this.uploadedParts = EnumSet.noneOf( CryptoMaterial.class );
-        this.requiredParts = requiredMaterials;
+        this.cipherMethod = cypher;
+    }
+
+    public static LegacyObjectMetadata newRevision(
+            CreateObjectRequest request,
+            UUID objectId,
+            long version,
+            UUID creator ) {
+        return new LegacyObjectMetadata(
+                objectId,
+                version,
+                0l,
+                request.getType(),
+                creator,
+                request.getCipherType(),
+                DateTime.now() );
+    }
+
+    /**
+     * This constructor uses the objectId as the ACL Id. As such, this should only be used for root objects
+     *
+     * @param request
+     * @param user
+     * @param objectId
+     * @return
+     */
+    public static LegacyObjectMetadata newRootObject( CreateObjectRequest request, UUID user, UUID objectId ) {
+        return new LegacyObjectMetadata(
+                objectId,
+                0l,
+                0l,
+                request.getType(),
+                user,
+                request.getCipherType(),
+                DateTime.now() );
     }
 
     /**
@@ -116,25 +116,21 @@ public class LegacyObjectMetadata {
         return size;
     }
 
-    public EnumSet<CryptoMaterial> getRequiredCryptoMaterial() {
-        return requiredParts;
+    @JsonProperty( Names.CYPHER_FIELD )
+    public Cypher getCipherMethod() {
+        return cipherMethod;
     }
 
-    public EnumSet<CryptoMaterial> getCryptoMaterialProgress() {
-        return uploadedParts;
+    public ObjectUserKey toObjectUserKey( UUID userId ) {
+        return new ObjectUserKey( this.id, userId );
     }
 
-    public boolean updateUploadProgress( CryptoMaterial nextUploaded ) {
-        uploadedParts.add( nextUploaded );
-        return isFinalized();
+    public VersionedObjectUserKey toVersionedObjectUserKey( UUID userId ) {
+        return new VersionedObjectUserKey( this.id, userId, this.version );
     }
 
-    public boolean isFinalized() {
-        return uploadedParts.containsAll( requiredParts );
-    }
-
-    public void setUploadedParts( EnumSet<CryptoMaterial> uploadedParts ) {
-        this.uploadedParts = uploadedParts;
+    public VersionedObjectKey getVersionedObjectKey() {
+        return new VersionedObjectKey( id, version );
     }
 
     /*
@@ -145,13 +141,12 @@ public class LegacyObjectMetadata {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
+        result = prime * result + ( ( cipherMethod == null ) ? 0 : cipherMethod.hashCode() );
         result = prime * result + ( ( createdTime == null ) ? 0 : createdTime.hashCode() );
         result = prime * result + ( ( creator == null ) ? 0 : creator.hashCode() );
         result = prime * result + ( ( id == null ) ? 0 : id.hashCode() );
-        result = prime * result + ( ( requiredParts == null ) ? 0 : requiredParts.hashCode() );
         result = prime * result + (int) ( size ^ ( size >>> 32 ) );
         result = prime * result + ( ( type == null ) ? 0 : type.hashCode() );
-        result = prime * result + ( ( uploadedParts == null ) ? 0 : uploadedParts.hashCode() );
         result = prime * result + (int) ( version ^ ( version >>> 32 ) );
         return result;
     }
@@ -162,72 +157,26 @@ public class LegacyObjectMetadata {
      */
     @Override
     public boolean equals( Object obj ) {
-        if ( this == obj ) {
-            return true;
-        }
-        if ( obj == null ) {
-            return false;
-        }
-        if ( getClass() != obj.getClass() ) {
-            return false;
-        }
+        if ( this == obj ) return true;
+        if ( obj == null ) return false;
+        if ( getClass() != obj.getClass() ) return false;
         LegacyObjectMetadata other = (LegacyObjectMetadata) obj;
+        if ( cipherMethod != other.cipherMethod ) return false;
         if ( createdTime == null ) {
-            if ( other.createdTime != null ) {
-                return false;
-            }
-        } else if ( !createdTime.equals( other.createdTime ) ) {
-            return false;
-        }
+            if ( other.createdTime != null ) return false;
+        } else if ( !createdTime.equals( other.createdTime ) ) return false;
         if ( creator == null ) {
-            if ( other.creator != null ) {
-                return false;
-            }
-        } else if ( !creator.equals( other.creator ) ) {
-            return false;
-        }
+            if ( other.creator != null ) return false;
+        } else if ( !creator.equals( other.creator ) ) return false;
         if ( id == null ) {
-            if ( other.id != null ) {
-                return false;
-            }
-        } else if ( !id.equals( other.id ) ) {
-            return false;
-        }
-        if ( requiredParts == null ) {
-            if ( other.requiredParts != null ) {
-                return false;
-            }
-        } else if ( !requiredParts.equals( other.requiredParts ) ) {
-            return false;
-        }
-        if ( size != other.size ) {
-            return false;
-        }
+            if ( other.id != null ) return false;
+        } else if ( !id.equals( other.id ) ) return false;
+        if ( size != other.size ) return false;
         if ( type == null ) {
-            if ( other.type != null ) {
-                return false;
-            }
-        } else if ( !type.equals( other.type ) ) {
-            return false;
-        }
-        if ( uploadedParts == null ) {
-            if ( other.uploadedParts != null ) {
-                return false;
-            }
-        } else if ( !uploadedParts.equals( other.uploadedParts ) ) {
-            return false;
-        }
-        if ( version != other.version ) {
-            return false;
-        }
+            if ( other.type != null ) return false;
+        } else if ( !type.equals( other.type ) ) return false;
+        if ( version != other.version ) return false;
         return true;
     }
 
-    public ObjectUserKey toObjectUserKey( UUID userId ) {
-        return new ObjectUserKey( this.id, userId );
-    }
-
-    public VersionedObjectUserKey toVersionedObjectUserKey( UUID userId ) {
-        return new VersionedObjectUserKey( this.id, userId, this.version );
-    }
 }

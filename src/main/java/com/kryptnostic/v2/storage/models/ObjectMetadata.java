@@ -13,34 +13,38 @@ import com.kryptnostic.v2.constants.Names;
 import com.kryptnostic.v2.sharing.models.ObjectUserKey;
 
 /**
- *
  * @author Matthew Tamayo-Rios &lt;matthew@kryptnostic.com&gt;
- *
  */
 @Immutable
 public class ObjectMetadata {
 
     private final UUID     id;
-    private final UUID     type;
     private final long     version;
-    private final long     size;
-    private final Cypher   cipherMethod;
+    private final long     clock;
 
+    private final UUID     type;
+    private final UUID     ACLId;
+    private final long     size;
     private final UUID     creator;
     private final DateTime createdTime;
+    private final Cypher   cipherMethod;
 
     @JsonCreator
     public ObjectMetadata(
             @JsonProperty( Names.ID_FIELD ) UUID id,
             @JsonProperty( Names.VERSION_FIELD ) long version,
+            @JsonProperty( Names.OBJECT_CLOCK_FIELD ) long clock,
             @JsonProperty( Names.SIZE_FIELD ) long size,
             @JsonProperty( Names.TYPE_FIELD ) UUID type,
+            @JsonProperty( Names.ACL_ID_FIELD ) UUID aclId,
             @JsonProperty( Names.CREATOR_FIELD ) UUID creator,
             @JsonProperty( Names.CYPHER_FIELD ) Cypher cypher,
             @JsonProperty( Names.CREATED_TIME ) DateTime createdTime) {
         this.id = id;
         this.version = version;
+        this.clock = clock;
         this.type = type;
+        this.ACLId = aclId;
 
         this.creator = creator;
 
@@ -49,27 +53,40 @@ public class ObjectMetadata {
         this.cipherMethod = cypher;
     }
 
-    public static ObjectMetadata newObject(
+    public static ObjectMetadata newRevision(
             CreateObjectRequest request,
             UUID objectId,
             long version,
+            UUID aclId,
             UUID creator ) {
         return new ObjectMetadata(
                 objectId,
                 version,
                 0l,
+                0l,
                 request.getType(),
+                aclId,
                 creator,
                 request.getCipherType(),
                 DateTime.now() );
     }
 
-    public static ObjectMetadata newObject( CreateObjectRequest request, UUID user, UUID objectId ) {
+    /**
+     * This constructor uses the objectId as the ACL Id. As such, this should only be used for root objects
+     *
+     * @param request
+     * @param user
+     * @param objectId
+     * @return
+     */
+    public static ObjectMetadata newRootObject( CreateObjectRequest request, UUID user, UUID objectId ) {
         return new ObjectMetadata(
                 objectId,
                 0l,
                 0l,
+                0l,
                 request.getType(),
+                objectId,
                 user,
                 request.getCipherType(),
                 DateTime.now() );
@@ -111,8 +128,25 @@ public class ObjectMetadata {
         return size;
     }
 
+    @JsonProperty( Names.CYPHER_FIELD )
     public Cypher getCipherMethod() {
         return cipherMethod;
+    }
+
+    /**
+     * @return the clock
+     */
+    @JsonProperty( Names.OBJECT_CLOCK_FIELD )
+    public long getClock() {
+        return clock;
+    }
+
+    /**
+     * @return the aCLId
+     */
+    @JsonProperty( Names.ACL_ID_FIELD )
+    public UUID getACLId() {
+        return ACLId;
     }
 
     public ObjectUserKey toObjectUserKey( UUID userId ) {
@@ -121,6 +155,10 @@ public class ObjectMetadata {
 
     public VersionedObjectUserKey toVersionedObjectUserKey( UUID userId ) {
         return new VersionedObjectUserKey( this.id, userId, this.version );
+    }
+
+    public VersionedObjectKey getVersionedObjectKey() {
+        return new VersionedObjectKey( id, version );
     }
 
     /*
