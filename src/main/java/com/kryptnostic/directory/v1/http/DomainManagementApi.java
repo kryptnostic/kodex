@@ -26,6 +26,8 @@ import retrofit.http.Path;
 public interface DomainManagementApi {
     public static final String DOMAIN               = "/domain";
 
+    public static final String NOTIFICATION_EMAIL   = "/notificationemail";
+
     public static final String WHITE_LIST           = "/whitelist";
 
     public static final String DOMAIN_LIST          = "/domainlist";
@@ -50,13 +52,19 @@ public interface DomainManagementApi {
     @Timed
     @POST( DOMAIN )
     Response updateDomain( @Body DomainUpdate request );
-
+    
     @Timed
     @GET( DOMAIN + NAME_PATH )
     Optional<UUID> getDomainId( @Path( NAME ) String domainName);
 
     @GET( DOMAIN + SHARING_POLICY )
     String getDomainSharingPolicy();
+
+    @GET( DOMAIN + NOTIFICATION_EMAIL )
+    String getDomainEamilAddress();
+
+    @POST( DOMAIN + NOTIFICATION_EMAIL )
+    Response setDomainEmailAddress( @Body String email );
 
     /**
      * Update white list settings.
