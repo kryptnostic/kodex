@@ -129,6 +129,10 @@ public class LegacyObjectMetadata {
         return new VersionedObjectUserKey( this.id, userId, this.version );
     }
 
+    public VersionedObjectKey getVersionedObjectKey() {
+        return new VersionedObjectKey( id, version );
+    }
+
     /*
      * (non-Javadoc)
      * @see java.lang.Object#hashCode()
