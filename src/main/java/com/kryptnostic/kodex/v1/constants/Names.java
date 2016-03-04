@@ -109,5 +109,6 @@ public final class Names {
     public static final String TEMPLATE_FIELD                  = "template";
     public static final String SUBJECT_FIELD                   = "subject";
     public static final String WRAPPED_CRYPTO_SERVICE          = "publicKeyEncryptedCryptoService";
+    public static final String ATTACHMENT_FIELD                = "attachment";
 
 }
