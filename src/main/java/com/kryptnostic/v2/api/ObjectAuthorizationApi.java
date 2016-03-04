@@ -4,23 +4,26 @@ import java.util.UUID;
 
 import com.kryptnostic.v2.constants.Names;
 
+import retrofit.client.Response;
 import retrofit.http.GET;
 import retrofit.http.Path;
 
 public interface ObjectAuthorizationApi {
 
-    String CONTROLLER   = "/access";
+    String CONTROLLER              = "/access";
 
-    String READERS_PATH = "/readers";
-    String WRITERS_PATH = "/writers";
-    String OWNERS_PATH  = "/owners";
+    String READERS_PATH            = "/readers";
+    String WRITERS_PATH            = "/writers";
+    String OWNERS_PATH             = "/owners";
+    String REVOKE_PATH             = "/revoke";
 
-    String ID                = Names.ID_FIELD;
-    String OBJECT_ID_PATH = "/{" + ID + "}";
+    String ID                      = Names.ID_FIELD;
+    String OBJECT_ID_PATH          = "/{" + ID + "}";
 
-    String FULL_READERS_PATH = READERS_PATH + OBJECT_ID_PATH;
-    String FULL_WRITERS_PATH = WRITERS_PATH + OBJECT_ID_PATH;
-    String FULL_OWNERS_PATH  = OWNERS_PATH + OBJECT_ID_PATH;
+    String FULL_READERS_PATH       = READERS_PATH + OBJECT_ID_PATH;
+    String FULL_WRITERS_PATH       = WRITERS_PATH + OBJECT_ID_PATH;
+    String FULL_OWNERS_PATH        = OWNERS_PATH + OBJECT_ID_PATH;
+    String FULL_REVOKE_ACCESS_PATH = REVOKE_PATH + OBJECT_ID_PATH;
 
     @GET( CONTROLLER + FULL_READERS_PATH )
     Iterable<UUID> getUsersWithReadAccess( @Path( ID ) UUID objectId);
@@ -31,4 +34,6 @@ public interface ObjectAuthorizationApi {
     @GET( CONTROLLER + FULL_OWNERS_PATH )
     Iterable<UUID> getUsersWithOwnerAccess( @Path( ID ) UUID objectId);
 
+    @GET( CONTROLLER + FULL_REVOKE_ACCESS_PATH )
+    Response revokeAccessForUser( @Path( ID ) UUID objectId);
 }
