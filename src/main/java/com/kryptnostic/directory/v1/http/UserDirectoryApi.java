@@ -35,7 +35,7 @@ public interface UserDirectoryApi {
     public static final String EMAIL               = "email";
     public static final String REALM               = "realm";
     public static final String USERNAME            = "username";
-    public static final String ROLE                   = "role";
+    public static final String ROLE                = "role";
 
     public static final String DISCOVERY           = "/discovery";
     public static final String USER                = "/user";
@@ -49,8 +49,8 @@ public interface UserDirectoryApi {
                                                                                           // disambiguate from get user
     public static final String EMAIL_PATH_WITH_DOT = "/" + EMAIL + "/{" + EMAIL + ":.+}";
 
-    public static final String USER_ID_PATH           = USER + ID_PATH;
-    public static final String ROLE_ID_PATH           = "{" + ROLE + "}";
+    public static final String USER_ID_PATH        = USER + ID_PATH;
+    public static final String ROLE_ID_PATH        = "/{" + ROLE + "}";
 
     public static final String SET_ROLE_FOR_USER_PATH = USER_ID_PATH + ROLE_ID_PATH;
     /**
