@@ -3,13 +3,6 @@ package com.kryptnostic.directory.v1.http;
 import java.util.Set;
 import java.util.UUID;
 
-import retrofit.http.Body;
-import retrofit.http.DELETE;
-import retrofit.http.GET;
-import retrofit.http.POST;
-import retrofit.http.PUT;
-import retrofit.http.Path;
-
 import com.google.common.base.Optional;
 import com.kryptnostic.directory.v1.ContactDiscoveryRequest;
 import com.kryptnostic.directory.v1.ContactDiscoveryResponse;
@@ -20,6 +13,14 @@ import com.kryptnostic.directory.v1.exception.UserUpdateException;
 import com.kryptnostic.directory.v1.principal.User;
 import com.kryptnostic.kodex.v1.exceptions.types.BadRequestException;
 
+import retrofit.client.Response;
+import retrofit.http.Body;
+import retrofit.http.DELETE;
+import retrofit.http.GET;
+import retrofit.http.POST;
+import retrofit.http.PUT;
+import retrofit.http.Path;
+
 /**
  * RESTful API for adding, modifying, and removing users on the Kryptnostic platform.
  *
@@ -29,10 +30,13 @@ import com.kryptnostic.kodex.v1.exceptions.types.BadRequestException;
  */
 public interface UserDirectoryApi {
     public static final String CONTROLLER          = "/directory";
+
     public static final String ID                  = "id";
     public static final String EMAIL               = "email";
     public static final String REALM               = "realm";
     public static final String USERNAME            = "username";
+    public static final String ROLE                = "role";
+
     public static final String DISCOVERY           = "/discovery";
     public static final String USER                = "/user";
     public static final String USERS               = "/users";
@@ -45,6 +49,10 @@ public interface UserDirectoryApi {
                                                                                           // disambiguate from get user
     public static final String EMAIL_PATH_WITH_DOT = "/" + EMAIL + "/{" + EMAIL + ":.+}";
 
+    public static final String USER_ID_PATH        = USER + ID_PATH;
+    public static final String ROLE_ID_PATH        = "/{" + ROLE + "}";
+
+    public static final String SET_ROLE_FOR_USER_PATH = USER_ID_PATH + ROLE_ID_PATH;
     /**
      * Get the account details for a given user.
      *
@@ -105,4 +113,14 @@ public interface UserDirectoryApi {
      */
     @POST( CONTROLLER + DISCOVERY )
     ContactDiscoveryResponse discover( ContactDiscoveryRequest request );
+
+    /**
+     * Allows setting a role for a user. The caller must be a developer or super admin
+     *
+     * @param userKey
+     * @return
+     */
+    @POST( CONTROLLER + SET_ROLE_FOR_USER_PATH )
+    Response addRoleForUser( @Path( ID ) UUID userId, @Body String role);
+
 }
