@@ -32,6 +32,7 @@ public interface ObjectStorageApi {
     String ID                   = Names.ID_FIELD;
     String VERSION              = "version";
     String BLOCK                = "block";
+    String TYPE_NAME_FIELD            = "type";
 
     // Paths
     String OBJECT_ID_PATH       = "/id/{" + ID + "}";
@@ -46,11 +47,15 @@ public interface ObjectStorageApi {
     String BULK_PATH            = "/bulk";
     String LATEST               = "/latest";
     String OBJECTMETADATA_PATH      = "/objectmetadata";
+    String TYPE_PATH                  = "/type";
 
+    String TYPE_NAME_PATH             = TYPE_PATH + "/{" + TYPE_NAME_FIELD + "}";
     String OBJECT_METADATA_PATH     = OBJECTMETADATA_PATH + OBJECT_ID_PATH;
     String VERSIONED_OBJECT_ID_PATH = OBJECT_ID_PATH + VERSION_PATH;
     String LATEST_OBJECT_ID_PATH = LATEST + OBJECT_ID_PATH;
     String INDEX_SEGMENT_PATH   = "/index-segment";
+
+    String FULL_UPDATE_TYPE_NAME_PATH = OBJECT_ID_PATH + TYPE_PATH;
 
     /**
      * Request a new object be created in a pending state
@@ -180,5 +185,8 @@ public interface ObjectStorageApi {
      */
     @POST( CONTROLLER + METADATA_PATH )
     VersionedObjectKey createMetadataObject( @Body CreateMetadataObjectRequest request );
+
+    @POST( CONTROLLER + FULL_UPDATE_TYPE_NAME_PATH )
+    UUID updateTypeForObject( @Path( ID ) UUID objectId, @Body String typeName);
 
 }
