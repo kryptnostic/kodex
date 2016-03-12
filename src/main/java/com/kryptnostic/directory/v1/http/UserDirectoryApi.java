@@ -41,6 +41,7 @@ public interface UserDirectoryApi {
     public static final String USER                = "/user";
     public static final String USERS               = "/users";
     public static final String RESET               = "/reset";
+
     public static final String ID_PATH             = "/{" + ID + "}";
     public static final String ID_WITH_DOT         = "/{" + ID + ":.+}";
     public static final String REALM_PATH          = "/{" + REALM + "}";
@@ -52,7 +53,9 @@ public interface UserDirectoryApi {
     public static final String USER_ID_PATH        = USER + ID_PATH;
     public static final String ROLE_ID_PATH        = "/{" + ROLE + "}";
 
+    public static final String DELETE_USER_PATH       = USER + ID_PATH;
     public static final String SET_ROLE_FOR_USER_PATH = USER_ID_PATH + ROLE_ID_PATH;
+
     /**
      * Get the account details for a given user.
      *
@@ -78,7 +81,7 @@ public interface UserDirectoryApi {
      * @return the UUID of the user deleted if any.
      * @throws RealmMismatchException
      */
-    @DELETE( CONTROLLER + USER + ID_PATH )
+    @DELETE( CONTROLLER + DELETE_USER_PATH )
     Optional<UUID> deleteUser( @Path( ID ) UUID userId ) throws RealmMismatchException; // developer
 
     /**
@@ -117,7 +120,7 @@ public interface UserDirectoryApi {
     /**
      * Allows setting a role for a user. The caller must be a developer or super admin
      *
-     * @param userKey
+     * @param userId
      * @return
      */
     @POST( CONTROLLER + SET_ROLE_FOR_USER_PATH )
