@@ -27,35 +27,35 @@ import retrofit.http.Path;
  *
  */
 public interface ObjectStorageApi {
-    String CONTROLLER           = "/object";
+    String CONTROLLER                 = "/object";
     // Parameter names
-    String ID                   = Names.ID_FIELD;
-    String VERSION              = "version";
-    String BLOCK                = "block";
+    String ID                         = Names.ID_FIELD;
+    String VERSION                    = "version";
+    String BLOCK                      = "block";
     String TYPE_NAME_FIELD            = "type";
 
     // Paths
-    String OBJECT_ID_PATH       = "/id/{" + ID + "}";
-    String VERSION_PATH         = "/{" + VERSION + "}";
-    String CONTENTS_PATH        = "/" + Names.CONTENTS;
+    String OBJECT_ID_PATH             = "/id/{" + ID + "}";
+    String VERSION_PATH               = "/{" + VERSION + "}";
+    String CONTENTS_PATH              = "/" + Names.CONTENTS;
 
     String OBJECT_IDS_PATH            = "/ids";
-    String IV_PATH              = "/iv";
-    String SALT_PATH            = "/salt";
-    String TAG_PATH             = "/tag";
-    String LEVELS_PATH          = "/levels";
-    String METADATA_PATH        = "/metadata";
-    String BULK_PATH            = "/bulk";
-    String LATEST               = "/latest";
-    String OBJECTMETADATA_PATH      = "/objectmetadata";
+    String IV_PATH                    = "/iv";
+    String SALT_PATH                  = "/salt";
+    String TAG_PATH                   = "/tag";
+    String LEVELS_PATH                = "/levels";
+    String METADATA_PATH              = "/metadata";
+    String BULK_PATH                  = "/bulk";
+    String LATEST                     = "/latest";
+    String OBJECTMETADATA_PATH        = "/objectmetadata";
     String TYPE_PATH                  = "/type";
 
     String TYPE_NAME_PATH             = TYPE_PATH + "/{" + TYPE_NAME_FIELD + "}";
-    String OBJECT_METADATA_PATH     = OBJECTMETADATA_PATH + OBJECT_ID_PATH;
-    String VERSIONED_OBJECT_ID_PATH = OBJECT_ID_PATH + VERSION_PATH;
-    String LATEST_OBJECT_ID_PATH = LATEST + OBJECT_ID_PATH;
+    String OBJECT_METADATA_PATH       = OBJECTMETADATA_PATH + OBJECT_ID_PATH;
+    String VERSIONED_OBJECT_ID_PATH   = OBJECT_ID_PATH + VERSION_PATH;
+    String LATEST_OBJECT_ID_PATH      = LATEST + OBJECT_ID_PATH;
     String LATEST_OBJECT_IDS_PATH     = LATEST + OBJECT_IDS_PATH;
-    String INDEX_SEGMENT_PATH   = "/index-segment";
+    String INDEX_SEGMENT_PATH         = "/index-segment";
 
     String FULL_UPDATE_TYPE_NAME_PATH = OBJECT_ID_PATH + TYPE_PATH;
 
@@ -68,25 +68,19 @@ public interface ObjectStorageApi {
     VersionedObjectKey createObject( @Body CreateObjectRequest request );
 
     /**
-     * Request a new index segment to be created in a pending state;
-     * note that this differs from createObject in that it also updates
-     * the search service's mapping from "addresses" to "object ids"
+     * Request a new index segment to be created in a pending state; note that this differs from createObject in that it
+     * also updates the search service's mapping from "addresses" to "object ids"
      *
-     * An "address" is a byte array corresponding to a (term, document, counter)
-     * and is computed using:
-     * - The client hash function for the current user
-     * - The search pair for the document (or the nearest ancestor that has
-     *   a search pair, if the document itself does not have one; in kodex,
-     *   what this means in practice is that we always use the search pair
-     *   of the channel)
-     * - The FHE encrypted search term
+     * An "address" is a byte array corresponding to a (term, document, counter) and is computed using: - The client
+     * hash function for the current user - The search pair for the document (or the nearest ancestor that has a search
+     * pair, if the document itself does not have one; in kodex, what this means in practice is that we always use the
+     * search pair of the channel) - The FHE encrypted search term
      *
      * For more information about the counter, see {@link com.kryptnostic.v2.search.SearchApi#getAndAddSegmentCount}
      *
-     * The object id is the ID of the newly created object (i.e. the same
-     * ID that would have been returned with a call to createObject); this
-     * is where the encrypted index segment (aka term position list) should
-     * be stored (e.g. with a call to {@link #setObjectFromBlockCiphertext})
+     * The object id is the ID of the newly created object (i.e. the same ID that would have been returned with a call
+     * to createObject); this is where the encrypted index segment (aka term position list) should be stored (e.g. with
+     * a call to {@link #setObjectFromBlockCiphertext})
      *
      * @return The ID of the newly created index segment
      */
@@ -94,7 +88,7 @@ public interface ObjectStorageApi {
     VersionedObjectKey createIndexSegment( @Body CreateIndexSegmentRequest request );
 
     @GET( CONTROLLER + LATEST_OBJECT_ID_PATH )
-    VersionedObjectKey getLatestVersionedObjectKey( @Path( ID ) UUID id );
+    VersionedObjectKey getLatestVersionedObjectKey( @Path( ID ) UUID id);
 
     @GET( CONTROLLER + LATEST_OBJECT_IDS_PATH )
     Set<VersionedObjectKey> getLatestVersionedObjectKeys( @Body Set<UUID> objectIds );
@@ -107,7 +101,7 @@ public interface ObjectStorageApi {
      */
     @POST( CONTROLLER + BULK_PATH )
     Map<UUID, BlockCiphertext> getObjects( @Body Set<UUID> objectIds );
-    //TODO: Consider adding an API the returns the version as part of the value.
+    // TODO: Consider adding an API the returns the version as part of the value.
 
     /**
      * Lazy Person API for writing base64 encoded block ciphertexts. Objects written via this API will be available
@@ -121,7 +115,7 @@ public interface ObjectStorageApi {
     Response setObjectFromBlockCiphertext(
             @Path( ID ) UUID objectId,
             @Path( VERSION ) long version,
-            @Body BlockCiphertext ciphertext );
+            @Body BlockCiphertext ciphertext);
 
     /**
      * Cached Lazy Person API for reading base64 encoded block ciphertexts. Objects readable by this API will be
@@ -132,7 +126,7 @@ public interface ObjectStorageApi {
      * @return
      */
     @GET( CONTROLLER + VERSIONED_OBJECT_ID_PATH )
-    BlockCiphertext getObjectAsBlockCiphertext( @Path( ID ) UUID objectId, @Path( VERSION ) long version );
+    BlockCiphertext getObjectAsBlockCiphertext( @Path( ID ) UUID objectId, @Path( VERSION ) long version);
 
     /**
      * Sets the IV for an object block
@@ -143,37 +137,37 @@ public interface ObjectStorageApi {
      * @return
      */
     @PUT( CONTROLLER + OBJECT_ID_PATH + VERSION_PATH + IV_PATH )
-    Response setObjectIv( @Path( ID ) UUID objectId, @Path( VERSION ) long version, @Body byte[] iv );
+    Response setObjectIv( @Path( ID ) UUID objectId, @Path( VERSION ) long version, @Body byte[] iv);
 
     @PUT( CONTROLLER + OBJECT_ID_PATH + VERSION_PATH + CONTENTS_PATH )
-    Response setObjectContent( @Path( ID ) UUID objectId, @Path( VERSION ) long version, @Body byte[] content );
+    Response setObjectContent( @Path( ID ) UUID objectId, @Path( VERSION ) long version, @Body byte[] content);
 
     @PUT( CONTROLLER + OBJECT_ID_PATH + VERSION_PATH + SALT_PATH )
-    Response setObjectSalt( @Path( ID ) UUID objectId, @Path( VERSION ) long version, @Body byte[] salt );
+    Response setObjectSalt( @Path( ID ) UUID objectId, @Path( VERSION ) long version, @Body byte[] salt);
 
     @PUT( CONTROLLER + OBJECT_ID_PATH + VERSION_PATH + TAG_PATH )
-    Response setObjectTag( @Path( ID ) UUID objectId, @Path( VERSION ) long version, @Body byte[] tag );
+    Response setObjectTag( @Path( ID ) UUID objectId, @Path( VERSION ) long version, @Body byte[] tag);
 
     @GET( CONTROLLER + VERSIONED_OBJECT_ID_PATH + CONTENTS_PATH )
-    byte[] getObjectContent( @Path( ID ) UUID objectId, @Path( VERSION ) long version );
+    byte[] getObjectContent( @Path( ID ) UUID objectId, @Path( VERSION ) long version);
 
     @GET( CONTROLLER + VERSIONED_OBJECT_ID_PATH + IV_PATH )
-    byte[] getObjectIV( @Path( ID ) UUID objectId, @Path( VERSION ) long version );
+    byte[] getObjectIV( @Path( ID ) UUID objectId, @Path( VERSION ) long version);
 
     @GET( CONTROLLER + VERSIONED_OBJECT_ID_PATH + SALT_PATH )
-    byte[] getObjectSalt( @Path( ID ) UUID objectId, @Path( VERSION ) long version );
+    byte[] getObjectSalt( @Path( ID ) UUID objectId, @Path( VERSION ) long version);
 
     @GET( CONTROLLER + VERSIONED_OBJECT_ID_PATH + TAG_PATH )
-    byte[] getObjectTag( @Path( ID ) UUID objectId, @Path( VERSION ) long version );
+    byte[] getObjectTag( @Path( ID ) UUID objectId, @Path( VERSION ) long version);
 
     @GET( CONTROLLER + OBJECT_METADATA_PATH )
-    ObjectMetadata getObjectMetadata( @Path( ID ) UUID id );
+    ObjectMetadata getObjectMetadata( @Path( ID ) UUID id);
 
     @DELETE( CONTROLLER + OBJECT_ID_PATH + VERSION_PATH )
-    Response delete( @Path( ID ) UUID id, @Path( VERSION ) long version );
+    Response delete( @Path( ID ) UUID id, @Path( VERSION ) long version);
 
     @DELETE( CONTROLLER + OBJECT_ID_PATH )
-    Response delete( @Path( ID ) UUID id );
+    Response delete( @Path( ID ) UUID id);
 
     @DELETE( CONTROLLER )
     Set<UUID> deleteObjectTrees( @Body Set<UUID> objectTrees );
