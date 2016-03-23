@@ -39,6 +39,7 @@ public interface ObjectStorageApi {
     String VERSION_PATH         = "/{" + VERSION + "}";
     String CONTENTS_PATH        = "/" + Names.CONTENTS;
 
+    String OBJECT_IDS_PATH            = "/ids";
     String IV_PATH              = "/iv";
     String SALT_PATH            = "/salt";
     String TAG_PATH             = "/tag";
@@ -53,6 +54,7 @@ public interface ObjectStorageApi {
     String OBJECT_METADATA_PATH     = OBJECTMETADATA_PATH + OBJECT_ID_PATH;
     String VERSIONED_OBJECT_ID_PATH = OBJECT_ID_PATH + VERSION_PATH;
     String LATEST_OBJECT_ID_PATH = LATEST + OBJECT_ID_PATH;
+    String LATEST_OBJECT_IDS_PATH     = LATEST + OBJECT_IDS_PATH;
     String INDEX_SEGMENT_PATH   = "/index-segment";
 
     String FULL_UPDATE_TYPE_NAME_PATH = OBJECT_ID_PATH + TYPE_PATH;
@@ -93,6 +95,9 @@ public interface ObjectStorageApi {
 
     @GET( CONTROLLER + LATEST_OBJECT_ID_PATH )
     VersionedObjectKey getLatestVersionedObjectKey( @Path( ID ) UUID id );
+
+    @GET( CONTROLLER + LATEST_OBJECT_IDS_PATH )
+    Set<VersionedObjectKey> getLatestVersionedObjectKeys( @Body Set<UUID> objectIds );
 
     /**
      * Lazy Person API for bulk reading base64 encoded block ciphertexts in bulk.
