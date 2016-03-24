@@ -26,10 +26,12 @@ public interface SharingApi {
 
     String OBJECT_ID_PATH = "/id/{" + ID + "}";
     String VERSION_PATH   = "/{" + VERSION + "}";
+    String VERSIONED_OBJECT_KEY_PATH  = OBJECT_ID_PATH + VERSION_PATH;
 
     String OBJECT_PATH    = "/object";
     String KEYS           = "/keys";
-    String REMOVE_INCOMING_SHARE_PATH = OBJECT_PATH + OBJECT_ID_PATH + VERSION_PATH;
+
+    String REMOVE_INCOMING_SHARE_PATH = OBJECT_PATH + VERSIONED_OBJECT_KEY_PATH;
 
     @GET( CONTROLLER + OBJECT_PATH )
     Iterable<Share> getIncomingShares();
@@ -51,10 +53,10 @@ public interface SharingApi {
     Response removeSearchPairs( @Body Set<VersionedObjectKey> uuids );
 
     // TODO: Once versions exceed values supported by JS ~2^54 we will have problems if ecmascript hasn't caught up by
-    @PUT( CONTROLLER + KEYS + OBJECT_ID_PATH + VERSION_PATH )
+    @PUT( CONTROLLER + KEYS + VERSIONED_OBJECT_KEY_PATH )
     Response addSearchPair( @Path( ID ) UUID objectId, @Path( VERSION ) long version, @Body byte[] objectSearchPair);
 
-    @GET( CONTROLLER + KEYS + OBJECT_ID_PATH + VERSION_PATH )
+    @GET( CONTROLLER + KEYS + VERSIONED_OBJECT_KEY_PATH )
     byte[] getSearchPair( @Path( ID ) UUID id, @Path( VERSION ) long version);
 
 }
