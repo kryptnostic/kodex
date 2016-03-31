@@ -14,7 +14,7 @@ import com.kryptnostic.kodex.v1.crypto.ciphers.CryptoService;
 import com.kryptnostic.kodex.v1.crypto.ciphers.Cypher;
 import com.kryptnostic.kodex.v1.crypto.keys.CryptoServiceLoader;
 
-public class TestKeyLoader implements CryptoServiceLoader {
+public class TestKeyLoader implements CryptoServiceLoader<String> {
     private ConcurrentMap<String, CryptoService> services = Maps.newConcurrentMap();
 
     @Override
@@ -45,6 +45,7 @@ public class TestKeyLoader implements CryptoServiceLoader {
         return Maps.newHashMap( services );
     }
 
+    @Override
     public void clear() {
         services.clear();
     }

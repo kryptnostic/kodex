@@ -7,13 +7,13 @@ import java.util.concurrent.ExecutionException;
 import com.google.common.base.Optional;
 import com.kryptnostic.kodex.v1.crypto.ciphers.CryptoService;
 
-public interface CryptoServiceLoader {
+public interface CryptoServiceLoader<K> {
 
-    Optional<CryptoService> get( String id ) throws ExecutionException;
+    Optional<CryptoService> get( K id ) throws ExecutionException;
 
-    void put( String id, CryptoService service ) throws ExecutionException;
+    void put( K id, CryptoService service ) throws ExecutionException;
 
-    Map<String, CryptoService> getAll( Set<String> ids ) throws ExecutionException;
+    Map<K, CryptoService> getAll( Set<K> ids ) throws ExecutionException;
 
     void clear();
 }
