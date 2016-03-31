@@ -29,29 +29,31 @@ import retrofit.http.Path;
  *
  */
 public interface UserDirectoryApi {
-    public static final String CONTROLLER          = "/directory";
+    public static final String CONTROLLER             = "/directory";
 
-    public static final String ID                  = "id";
-    public static final String EMAIL               = "email";
-    public static final String REALM               = "realm";
-    public static final String USERNAME            = "username";
-    public static final String ROLE                = "role";
+    public static final String ID                     = "id";
+    public static final String EMAIL                  = "email";
+    public static final String REALM                  = "realm";
+    public static final String USERNAME               = "username";
+    public static final String ROLE                   = "role";
 
-    public static final String DISCOVERY           = "/discovery";
-    public static final String USER                = "/user";
-    public static final String USERS               = "/users";
-    public static final String RESET               = "/reset";
+    public static final String DISCOVERY              = "/discovery";
+    public static final String USER                   = "/user";
+    public static final String USERS                  = "/users";
+    public static final String RESET                  = "/reset";
+    public static final String SET_LOGIN              = "/setlogin";
 
-    public static final String ID_PATH             = "/{" + ID + "}";
-    public static final String ID_WITH_DOT         = "/{" + ID + ":.+}";
-    public static final String REALM_PATH          = "/{" + REALM + "}";
-    public static final String USERNAME_PATH       = "/{" + USERNAME + "}";
-    public static final String EMAIL_PATH          = "/" + EMAIL + "/{" + EMAIL + "}";   // +EMAIL needed to
-                                                                                          // disambiguate from get user
-    public static final String EMAIL_PATH_WITH_DOT = "/" + EMAIL + "/{" + EMAIL + ":.+}";
+    public static final String ID_PATH                = "/{" + ID + "}";
+    public static final String ID_WITH_DOT            = "/{" + ID + ":.+}";
+    public static final String REALM_PATH             = "/{" + REALM + "}";
+    public static final String USERNAME_PATH          = "/{" + USERNAME + "}";
+    public static final String EMAIL_PATH             = "/" + EMAIL + "/{" + EMAIL + "}";   // +EMAIL needed to
+                                                                                            // disambiguate from get
+                                                                                            // user
+    public static final String EMAIL_PATH_WITH_DOT    = "/" + EMAIL + "/{" + EMAIL + ":.+}";
 
-    public static final String USER_ID_PATH        = USER + ID_PATH;
-    public static final String ROLE_ID_PATH        = "/{" + ROLE + "}";
+    public static final String USER_ID_PATH           = USER + ID_PATH;
+    public static final String ROLE_ID_PATH           = "/{" + ROLE + "}";
 
     public static final String DELETE_USER_PATH       = USER + ID_PATH;
     public static final String SET_ROLE_FOR_USER_PATH = USER_ID_PATH + ROLE_ID_PATH;
@@ -63,7 +65,7 @@ public interface UserDirectoryApi {
      * @return The user
      */
     @GET( CONTROLLER + USER + ID_PATH )
-    Optional<User> getUser( @Path( ID ) UUID userId ); // developer
+    Optional<User> getUser( @Path( ID ) UUID userId); // developer
 
     /**
      * Get the account details for a set of users.
@@ -82,7 +84,7 @@ public interface UserDirectoryApi {
      * @throws RealmMismatchException
      */
     @DELETE( CONTROLLER + DELETE_USER_PATH )
-    Optional<UUID> deleteUser( @Path( ID ) UUID userId ) throws RealmMismatchException; // developer
+    Optional<UUID> deleteUser( @Path( ID ) UUID userId) throws RealmMismatchException; // developer
 
     /**
      * Allows resolving an e-mail to a UUID. This is an open API.
@@ -91,7 +93,7 @@ public interface UserDirectoryApi {
      * @return
      */
     @GET( CONTROLLER + USER + EMAIL_PATH )
-    Optional<UUID> resolve( @Path( EMAIL ) String email );
+    Optional<UUID> resolve( @Path( EMAIL ) String email);
 
     /**
      * This API resets the users authenticator. It does not impact key information.
@@ -105,7 +107,7 @@ public interface UserDirectoryApi {
      * @throws MailException
      */
     @PUT( CONTROLLER + USER + ID_PATH )
-    Optional<UUID> resetPassword( @Path( ID ) UUID userKey, @Body String newPassword ) throws UserUpdateException,
+    Optional<UUID> resetPassword( @Path( ID ) UUID userKey, @Body String newPassword) throws UserUpdateException,
             ReservationTakenException, BadRequestException, MailException;
 
     /**
@@ -125,5 +127,8 @@ public interface UserDirectoryApi {
      */
     @POST( CONTROLLER + SET_ROLE_FOR_USER_PATH )
     Response addRoleForUser( @Path( ID ) UUID userId, @Body String role);
+
+    @POST( CONTROLLER + SET_LOGIN )
+    Response setSuccessfulFirstLogin();
 
 }
