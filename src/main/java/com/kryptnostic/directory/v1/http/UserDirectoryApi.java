@@ -65,7 +65,7 @@ public interface UserDirectoryApi {
      * @return The user
      */
     @GET( CONTROLLER + USER + ID_PATH )
-    Optional<User> getUser( @Path( ID ) UUID userId); // developer
+    Optional<User> getUser( @Path( ID ) UUID userId ); // developer
 
     /**
      * Get the account details for a set of users.
@@ -84,7 +84,7 @@ public interface UserDirectoryApi {
      * @throws RealmMismatchException
      */
     @DELETE( CONTROLLER + DELETE_USER_PATH )
-    Optional<UUID> deleteUser( @Path( ID ) UUID userId) throws RealmMismatchException; // developer
+    Optional<UUID> deleteUser( @Path( ID ) UUID userId ) throws RealmMismatchException; // developer
 
     /**
      * Allows resolving an e-mail to a UUID. This is an open API.
@@ -93,7 +93,7 @@ public interface UserDirectoryApi {
      * @return
      */
     @GET( CONTROLLER + USER + EMAIL_PATH )
-    Optional<UUID> resolve( @Path( EMAIL ) String email);
+    Optional<UUID> resolve( @Path( EMAIL ) String email );
 
     /**
      * This API resets the users authenticator. It does not impact key information.
@@ -107,7 +107,7 @@ public interface UserDirectoryApi {
      * @throws MailException
      */
     @PUT( CONTROLLER + USER + ID_PATH )
-    Optional<UUID> resetPassword( @Path( ID ) UUID userKey, @Body String newPassword) throws UserUpdateException,
+    Optional<UUID> resetPassword( @Path( ID ) UUID userKey, @Body String newPassword ) throws UserUpdateException,
             ReservationTakenException, BadRequestException, MailException;
 
     /**
@@ -126,7 +126,7 @@ public interface UserDirectoryApi {
      * @return
      */
     @POST( CONTROLLER + SET_ROLE_FOR_USER_PATH )
-    Response addRoleForUser( @Path( ID ) UUID userId, @Body String role);
+    Response addRoleForUser( @Path( ID ) UUID userId, @Body String role );
 
     @POST( CONTROLLER + SET_LOGIN )
     Response setSuccessfulFirstLogin();
