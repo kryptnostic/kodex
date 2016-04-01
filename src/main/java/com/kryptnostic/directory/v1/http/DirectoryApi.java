@@ -11,22 +11,15 @@ import retrofit.http.Path;
 
 public interface DirectoryApi {
     String CONTROLLER       = "/directory";
-    String PUBLIC_KEY       = "/public";
-    String PRIVATE_KEY      = "/private";
-    String OBJECT_KEY       = "/object";
-    String NOTIFICATION_KEY = "/notifications";
     String SALT_KEY         = "/salt";
     String RESOLUTION_KEY   = "/resolve";
     String INITIALIZED      = "/initialized";
-    String MASTER_KEY       = "/master";
 
     public static final class PARAM {
         private PARAM() {}
 
         private static final String REALM          = "/{" + Names.REALM_FIELD + "}";
         private static final String USER           = "/{" + Names.USER_FIELD + "}";
-        public static final String ID             = "/{" + Names.ID_FIELD + "}";
-        public static final String USER_WITH_DOT  = "/{" + Names.USER_FIELD + ":.+}";
         public static final String REALM_WITH_DOT = "/{" + Names.REALM_FIELD + ":.+}";
     }
 

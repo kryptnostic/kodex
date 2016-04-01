@@ -33,8 +33,6 @@ public interface UserDirectoryApi {
 
     public static final String ID                     = "id";
     public static final String EMAIL                  = "email";
-    public static final String REALM                  = "realm";
-    public static final String USERNAME               = "username";
     public static final String ROLE                   = "role";
 
     public static final String DISCOVERY              = "/discovery";
