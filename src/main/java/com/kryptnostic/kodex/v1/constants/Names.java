@@ -110,5 +110,6 @@ public final class Names {
     public static final String SUBJECT_FIELD                   = "subject";
     public static final String WRAPPED_CRYPTO_SERVICE          = "publicKeyEncryptedCryptoService";
     public static final String ATTACHMENT_FIELD                = "attachment";
+    public static final String BYTEARRAYATTACHMENT_FIELD     = "byteArrayAttachment";
 
 }
