@@ -53,10 +53,10 @@ public interface UserDirectoryApi {
     public static final String EMAIL_PATH_WITH_DOT    = "/" + EMAIL + "/{" + EMAIL + ":.+}";
 
     public static final String USER_ID_PATH           = USER + ID_PATH;
-    public static final String ROLE_ID_PATH           = "/{" + ROLE + "}";
+    public static final String ROLE_PATH              = "/" + ROLE;
 
     public static final String DELETE_USER_PATH       = USER + ID_PATH;
-    public static final String SET_ROLE_FOR_USER_PATH = USER_ID_PATH + ROLE_ID_PATH;
+    public static final String SET_ROLE_FOR_USER_PATH = USER_ID_PATH + ROLE_PATH;
 
     /**
      * Get the account details for a given user.
@@ -126,7 +126,7 @@ public interface UserDirectoryApi {
      * @return
      */
     @POST( CONTROLLER + SET_ROLE_FOR_USER_PATH )
-    Response addRoleForUser( @Path( ID ) UUID userId, @Body String role );
+    UUID addRoleForUser( @Path( ID ) UUID userId, @Body String role);
 
     @POST( CONTROLLER + SET_LOGIN )
     Response setSuccessfulFirstLogin();
