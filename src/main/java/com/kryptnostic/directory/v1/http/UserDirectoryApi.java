@@ -45,8 +45,6 @@ public interface UserDirectoryApi {
 
     public static final String ID_PATH                = "/{" + ID + "}";
     public static final String ID_WITH_DOT            = "/{" + ID + ":.+}";
-    public static final String REALM_PATH             = "/{" + REALM + "}";
-    public static final String USERNAME_PATH          = "/{" + USERNAME + "}";
     public static final String EMAIL_PATH             = "/" + EMAIL + "/{" + EMAIL + "}";   // +EMAIL needed to
                                                                                             // disambiguate from get
                                                                                             // user

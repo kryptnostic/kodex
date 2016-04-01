@@ -6,12 +6,4 @@ public class UserUpdateException extends Exception {
     public UserUpdateException() {
         super();
     }
-
-    public UserUpdateException( String message ) {
-        super( message );
-    }
-
-    public UserUpdateException( Throwable t ) {
-        super( t );
-    }
 }

@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class NotificationPreference {
 
-    public static final String FIELD_GCM_IDS = "gcmIds";
+    private static final String FIELD_GCM_IDS = "gcmIds";
 
     private final List<String> gcmIds;
 

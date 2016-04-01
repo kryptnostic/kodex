@@ -2,12 +2,12 @@ package com.kryptnostic.authentication.v1.http;
 
 import java.util.UUID;
 
-import retrofit.http.Body;
-import retrofit.http.POST;
-
 import com.google.common.base.Optional;
 import com.kryptnostic.authentication.v1.model.AuthenticationRequest;
 import com.kryptnostic.authentication.v1.model.EmailAuthenticationRequest;
+
+import retrofit.http.Body;
+import retrofit.http.POST;
 
 /**
  * The purpose of this class is to enable applications to provide an authentication experience wrapped around
@@ -21,8 +21,6 @@ public interface AuthenticationApi {
 
     String UUID        = "/uuid";
     String EMAIL       = "/email";
-    String LOGIN       = "/login";
-    String CERTIFICATE = "/certificate";
 
     /**
      * Performs a password based authentication against the server. This doesn't require any special protection against

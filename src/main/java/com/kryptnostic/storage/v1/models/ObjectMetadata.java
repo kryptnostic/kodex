@@ -24,7 +24,7 @@ import com.kryptnostic.kodex.v1.models.blocks.ChunkingStrategy;
 @Immutable
 public class ObjectMetadata {
     @JsonIgnore
-    public static final String         DEFAULT_TYPE = "object";
+    private static final String        DEFAULT_TYPE = "object";
     protected final String             id;
     protected final int                version;
     protected final int                numBlocks;
@@ -216,7 +216,7 @@ public class ObjectMetadata {
     public UUID getCreator() {
        return creator;
     }
-    
+
     @JsonProperty( Names.OWNERS_FIELD )
     public Set<UUID> getOwners() {
         return owners;

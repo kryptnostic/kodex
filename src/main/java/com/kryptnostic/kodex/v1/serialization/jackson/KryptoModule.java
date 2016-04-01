@@ -16,7 +16,7 @@ public class KryptoModule extends SimpleModule {
                                                                               "SNAPSHOT",
                                                                               "com.kryptnostic",
                                                                               "krypto" );
-    protected final Optional<CryptoServiceLoader> loader;
+    private final Optional<CryptoServiceLoader> loader;
 
     public KryptoModule() {
         super( "KryptoModule", KRYPTO_JACKSON_MODULE_VERSION );

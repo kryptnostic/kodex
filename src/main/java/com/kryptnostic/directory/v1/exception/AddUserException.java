@@ -9,9 +9,5 @@ public class AddUserException extends RuntimeException {
         super();
     }
 
-    public AddUserException( Throwable e ) {
-        super( e );
-    }
-
     private static final long serialVersionUID = 8293439945393358900L;
 }
