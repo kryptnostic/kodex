@@ -3,7 +3,6 @@ package com.kryptnostic.directory.v1.http;
 import java.util.Set;
 import java.util.UUID;
 
-import com.codahale.metrics.annotation.Timed;
 import com.google.common.base.Optional;
 import com.kryptnostic.directory.v1.ContactDiscoveryRequest;
 import com.kryptnostic.directory.v1.ContactDiscoveryResponse;
@@ -133,7 +132,6 @@ public interface UserDirectoryApi {
     @POST( CONTROLLER + SET_LOGIN )
     Response setSuccessfulFirstLogin();
 
-    @Timed
     @GET( CONTROLLER + REALM_PATH )
     Iterable<UUID> listUserInRealm( @Path( REALM ) String realm );
 
