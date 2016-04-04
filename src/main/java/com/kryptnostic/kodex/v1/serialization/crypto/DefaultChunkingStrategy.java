@@ -15,6 +15,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.kryptnostic.kodex.v1.models.blocks.ChunkingStrategy;
+import com.kryptnostic.kodex.v1.serialization.jackson.KodexObjectMapperFactory;
 
 /**
  * @author sinaiman
@@ -35,7 +36,7 @@ public class DefaultChunkingStrategy implements ChunkingStrategy {
     @Override
     @JsonIgnore
     public <T> Iterable<byte[]> split( T object ) throws IOException {
-        ObjectMapper mapper = Encryptable.getMapper();
+        ObjectMapper mapper = KodexObjectMapperFactory.getObjectMapper();
         ByteBuffer plaintext = null;
 
         try {
@@ -81,7 +82,7 @@ public class DefaultChunkingStrategy implements ChunkingStrategy {
             baos.write( b );
         }
 
-        ObjectMapper mapper = Encryptable.getMapper();
+        ObjectMapper mapper = KodexObjectMapperFactory.getObjectMapper();
         T plainData = null;
         if ( klass.isAssignableFrom( String.class ) ) {
             plainData = (T) StringUtils.newStringUtf8( baos.toByteArray() );

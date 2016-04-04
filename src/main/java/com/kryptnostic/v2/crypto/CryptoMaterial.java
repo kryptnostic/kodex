@@ -10,8 +10,6 @@ import com.kryptnostic.kodex.v1.crypto.ciphers.Cypher;
 public enum CryptoMaterial {
     IV, TAG, CONTENTS, SALT;
 
-    public static final EnumSet<CryptoMaterial> DEFAULT_REQUIRED_CRYPTO_MATERIALS = EnumSet.of( IV, CONTENTS );
-
     public static EnumSet<CryptoMaterial> requiredByCypher( Cypher cypher ) {
         if ( Cypher.NONE.equals( cypher ) ) {
             return EnumSet.noneOf( CryptoMaterial.class );

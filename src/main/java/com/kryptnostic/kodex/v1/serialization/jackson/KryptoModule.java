@@ -2,10 +2,8 @@ package com.kryptnostic.kodex.v1.serialization.jackson;
 
 import com.fasterxml.jackson.core.Version;
 import com.fasterxml.jackson.databind.module.SimpleModule;
-import com.fasterxml.jackson.databind.module.SimpleSerializers;
 import com.google.common.base.Optional;
 import com.kryptnostic.kodex.v1.crypto.keys.CryptoServiceLoader;
-import com.kryptnostic.kodex.v1.serialization.crypto.Encryptable;
 
 public class KryptoModule extends SimpleModule {
     private static final long           serialVersionUID              = 1679451956984264772L;
@@ -18,7 +16,7 @@ public class KryptoModule extends SimpleModule {
                                                                               "SNAPSHOT",
                                                                               "com.kryptnostic",
                                                                               "krypto" );
-    protected final Optional<CryptoServiceLoader> loader;
+    private final Optional<CryptoServiceLoader> loader;
 
     public KryptoModule() {
         super( "KryptoModule", KRYPTO_JACKSON_MODULE_VERSION );
@@ -28,13 +26,5 @@ public class KryptoModule extends SimpleModule {
     public KryptoModule( CryptoServiceLoader loader ) {
         super( "KryptoModule", KRYPTO_JACKSON_MODULE_VERSION );
         this.loader = Optional.of(loader);
-    }
-
-    @Override
-    public void setupModule( SetupContext context ) {
-        super.setupModule( context );
-        SimpleSerializers serializers = new SimpleSerializers();
-        serializers.addSerializer( Encryptable.class, new EncryptableSerializer(  loader  ) );
-        context.addSerializers( serializers );
     }
 }

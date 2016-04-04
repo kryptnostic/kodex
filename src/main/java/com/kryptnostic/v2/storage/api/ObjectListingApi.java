@@ -67,11 +67,9 @@ public interface ObjectListingApi {
             @Path( PAGE_SIZE ) Integer pageSize);
 
     /**
-     * @deprecated Use {@link TypesApi}
      * @param typeName
      * @return
      */
-    @Deprecated
     @GET( CONTROLLER + OBJECTS + TYPE_NAME_PATH )
     UUID getTypeForName( @Path( TYPE ) String typeName);
 }

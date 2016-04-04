@@ -16,7 +16,4 @@ public class BadRequestException extends Exception {
         super( cause );
     }
 
-    public BadRequestException( Throwable e ) {
-        super( e );
-    }
 }

@@ -87,20 +87,6 @@ public interface KeyStorageApi {
     @GET( CONTROLLER + CRYPTO_SERVICE_PATH + OBJECT_ID_PATH )
     byte[] getObjectCryptoService( @Path( OBJECT_ID ) UUID objectId);
 
-    /**
-     * @deprecated Use {@link KeyStorageApi#setAesEncryptedObjectCryptoService(UUID, long, BlockCiphertext)} instead.
-     * @param objectId The UUID of the object for which to set a crypto service.
-     * @param version The version of the object.
-     * @param crypto An encrypted content protection keys
-     * @return An empty body with HTTP 200 status code.
-     */
-    @Deprecated
-    @PUT( CONTROLLER + CRYPTO_SERVICE_PATH + OBJECT_ID_PATH + VERSION_PATH )
-    Response setObjectCryptoService(
-            @Path( OBJECT_ID ) UUID objectId,
-            @Path( VERSION ) long version,
-            @Body byte[] crypto);
-
     @PUT( CONTROLLER + AES_CRYPTO_SERVICE_PATH + OBJECT_ID_PATH + VERSION_PATH )
     Response setAesEncryptedObjectCryptoService(
             @Path( OBJECT_ID ) UUID objectId,
@@ -112,46 +98,10 @@ public interface KeyStorageApi {
             @Path( OBJECT_ID ) UUID objectId,
             @Body BlockCiphertext crypto);
 
-    /**
-     * Cached API to retrieve the object crypto service for a specific version of the object specified by
-     * {@code objectId}
-     *
-     * @deprecated Use {@link KeyStorageApi#getAesEncryptedObjectCryptoService(UUID, long)} instead.
-     * @param objectId The object for which to retrieve the crypto service.
-     * @param version The version of the object for which to retrieve a crpyto service
-     * @return The crypto service corresponding to the object with version specified by {@code version} and object id
-     */
-    @Deprecated
-    @GET( CONTROLLER + CRYPTO_SERVICE_PATH + OBJECT_ID_PATH + VERSION_PATH )
-    byte[] getObjectCryptoService( @Path( OBJECT_ID ) UUID objectId, @Path( VERSION ) long version);
-
     @GET( CONTROLLER + AES_CRYPTO_SERVICE_PATH + OBJECT_ID_PATH + VERSION_PATH )
     BlockCiphertext getAesEncryptedObjectCryptoService(
             @Path( OBJECT_ID ) UUID objectId,
             @Path( VERSION ) long version);
-
-    /**
-     * Gets the crypto encrypted crypto services corresponding to a set of UUIDs. This call automatically resolves an
-     * object uuid to its latest version.
-     *
-     * @deprecated Use {@link KeyStorageApi#getAesEncryptedCryptoServices(VersionedObjectKeySet)} instead.
-     * @param ids A set of UUID for which to retrieve cryptoservices.
-     * @return A map pairing object UUIDs with their corresponding cryptoservices.
-     */
-    @Deprecated
-    @POST( CONTROLLER + CRYPTO_SERVICES_PATH )
-    Map<UUID, byte[]> getObjectCryptoServices( @Body Set<UUID> ids );
-
-    /**
-     * Gets the crypto encrypted crypto services corresponding to a set of UUIDs.
-     *
-     * @deprecated Use {@link KeyStorageApi#getAesEncryptedCryptoServices(VersionedObjectKeySet)} instead.
-     * @param objectKeys A set of VersiondObjectKeys for which to retrieve cryptoservices.
-     * @return A map pairing VersiondObjectKeys with their corresponding cryptoservices.
-     */
-    @Deprecated
-    @POST( CONTROLLER + VERSIONED_CRYPTO_SERVICES_PATH )
-    Map<VersionedObjectKey, byte[]> getObjectCryptoServices( @Body VersionedObjectKeySet objectKeys );
 
     @GET( CONTROLLER + BULK_RSA_PATH )
     Map<UUID, byte[]> getRSACryptoServicesForUser();
