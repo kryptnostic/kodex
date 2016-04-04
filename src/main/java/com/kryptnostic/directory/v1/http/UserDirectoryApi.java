@@ -94,7 +94,7 @@ public interface UserDirectoryApi {
      * @return
      */
     @GET( CONTROLLER + USER + EMAIL_PATH )
-    Optional<UUID> resolve( @Path( EMAIL ) String email);
+    Optional<UUID> resolve( @Path( EMAIL ) String email );
 
     /**
      * This API resets the users authenticator. It does not impact key information.
