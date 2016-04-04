@@ -133,9 +133,9 @@ public interface UserDirectoryApi {
     Response setSuccessfulFirstLogin();
 
     @GET( CONTROLLER + REALM_PATH )
-    Iterable<UUID> listUserInRealm( @Path( REALM ) String realm );
+    Iterable<UUID> listUserInRealm( @Path( REALM ) String realm ) throws BadRequestException;
 
     @GET( CONTROLLER + INITIALIZED + REALM_PATH )
-    Iterable<UUID> listInitializedUserInRealm( @Path( REALM ) String realm );
+    Iterable<UUID> listInitializedUserInRealm( @Path( REALM ) String realm ) throws BadRequestException;
 
 }
