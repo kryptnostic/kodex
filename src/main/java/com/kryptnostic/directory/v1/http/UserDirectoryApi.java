@@ -3,6 +3,7 @@ package com.kryptnostic.directory.v1.http;
 import java.util.Set;
 import java.util.UUID;
 
+import com.codahale.metrics.annotation.Timed;
 import com.google.common.base.Optional;
 import com.kryptnostic.directory.v1.ContactDiscoveryRequest;
 import com.kryptnostic.directory.v1.ContactDiscoveryResponse;
@@ -34,18 +35,22 @@ public interface UserDirectoryApi {
     public static final String ID                     = "id";
     public static final String EMAIL                  = "email";
     public static final String ROLE                   = "role";
+    public static final String REALM                  = "realm";
 
     public static final String DISCOVERY              = "/discovery";
     public static final String USER                   = "/user";
     public static final String USERS                  = "/users";
     public static final String RESET                  = "/reset";
     public static final String SET_LOGIN              = "/setlogin";
+    public static final String INITIALIZED            = "/initialized";
 
     public static final String ID_PATH                = "/{" + ID + "}";
     public static final String ID_WITH_DOT            = "/{" + ID + ":.+}";
     public static final String EMAIL_PATH             = "/" + EMAIL + "/{" + EMAIL + "}";   // +EMAIL needed to
                                                                                             // disambiguate from get
                                                                                             // user
+    public static final String REALM_PATH             = "/{" + REALM + "}";
+
     public static final String EMAIL_PATH_WITH_DOT    = "/" + EMAIL + "/{" + EMAIL + ":.+}";
 
     public static final String USER_ID_PATH           = USER + ID_PATH;
@@ -61,7 +66,7 @@ public interface UserDirectoryApi {
      * @return The user
      */
     @GET( CONTROLLER + USER + ID_PATH )
-    Optional<User> getUser( @Path( ID ) UUID userId ); // developer
+    Optional<User> getUser( @Path( ID ) UUID userId); // developer
 
     /**
      * Get the account details for a set of users.
@@ -80,7 +85,7 @@ public interface UserDirectoryApi {
      * @throws RealmMismatchException
      */
     @DELETE( CONTROLLER + DELETE_USER_PATH )
-    Optional<UUID> deleteUser( @Path( ID ) UUID userId ) throws RealmMismatchException; // developer
+    Optional<UUID> deleteUser( @Path( ID ) UUID userId) throws RealmMismatchException; // developer
 
     /**
      * Allows resolving an e-mail to a UUID. This is an open API.
@@ -89,7 +94,7 @@ public interface UserDirectoryApi {
      * @return
      */
     @GET( CONTROLLER + USER + EMAIL_PATH )
-    Optional<UUID> resolve( @Path( EMAIL ) String email );
+    Optional<UUID> resolve( @Path( EMAIL ) String email);
 
     /**
      * This API resets the users authenticator. It does not impact key information.
@@ -103,7 +108,7 @@ public interface UserDirectoryApi {
      * @throws MailException
      */
     @PUT( CONTROLLER + USER + ID_PATH )
-    Optional<UUID> resetPassword( @Path( ID ) UUID userKey, @Body String newPassword ) throws UserUpdateException,
+    Optional<UUID> resetPassword( @Path( ID ) UUID userKey, @Body String newPassword) throws UserUpdateException,
             ReservationTakenException, BadRequestException, MailException;
 
     /**
@@ -126,5 +131,12 @@ public interface UserDirectoryApi {
 
     @POST( CONTROLLER + SET_LOGIN )
     Response setSuccessfulFirstLogin();
+
+    @Timed
+    @GET( CONTROLLER + REALM_PATH )
+    Iterable<UUID> listUserInRealm( @Path( REALM ) String realm);
+
+    @GET( CONTROLLER + INITIALIZED + REALM_PATH )
+    Iterable<UUID> listInitializedUserInRealm( @Path( REALM ) String realm);
 
 }
