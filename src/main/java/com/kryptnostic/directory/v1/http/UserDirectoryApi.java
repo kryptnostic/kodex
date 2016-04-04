@@ -50,6 +50,7 @@ public interface UserDirectoryApi {
                                                                                             // disambiguate from get
                                                                                             // user
     public static final String REALM_PATH             = "/{" + REALM + "}";
+    public static final String REALM_PATH_WITH_DOT    = "/{" + REALM + ":.+}";
 
     public static final String EMAIL_PATH_WITH_DOT    = "/" + EMAIL + "/{" + EMAIL + ":.+}";
 
