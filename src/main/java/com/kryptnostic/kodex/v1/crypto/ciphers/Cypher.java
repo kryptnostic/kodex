@@ -26,6 +26,8 @@ public enum Cypher {
     NONE( CryptoAlgorithm.NONE, Mode.NONE, Padding.NONE, 0, false ),
     AES_GCM_128( CryptoAlgorithm.AES, Mode.GCM, Padding.NONE, 128, false ),
     AES_GCM_128_SALTED( CryptoAlgorithm.AES, Mode.GCM, Padding.NONE, 128, true ),
+    AES_GCM_256( CryptoAlgorithm.AES, Mode.GCM, Padding.NONE, 256, false ),
+    AES_GCM_256_SALTED( CryptoAlgorithm.AES, Mode.GCM, Padding.NONE, 256, true ),
     AES_CTR_128( CryptoAlgorithm.AES, Mode.CTR, Padding.NONE, 128, false ),
     AES_CTR_128_SALTED( CryptoAlgorithm.AES, Mode.CTR, Padding.NONE, 128, true ),
     AES_CTR_256( CryptoAlgorithm.AES, Mode.CTR, Padding.NONE, 256, false ),
