@@ -6,13 +6,13 @@ import com.fasterxml.jackson.annotation.JsonValue;
 import com.kryptnostic.kodex.v1.crypto.keys.PublicKeyAlgorithm;
 
 public enum CryptoAlgorithm {
-    AES(CipherConstants.AES_CIPHER),
+    AES( CipherConstants.AES_CIPHER ),
     RSA( PublicKeyAlgorithm.RSA.getValue() ),
     NONE( "" );
 
     private final String algorithm;
 
-    private CryptoAlgorithm(String algorithm) {
+    private CryptoAlgorithm( String algorithm ) {
         this.algorithm = algorithm;
     }
 
@@ -21,13 +21,13 @@ public enum CryptoAlgorithm {
         return algorithm;
     }
 
-    public static final CryptoAlgorithm fromString(String algorithm) {
-        if (algorithm.equals(CipherConstants.AES_CIPHER)) {
+    public static final CryptoAlgorithm fromString( String algorithm ) {
+        if ( algorithm.equals( CipherConstants.AES_CIPHER ) ) {
             return AES;
-        } else if( algorithm.equals( PublicKeyAlgorithm.RSA.getValue() ) ){
+        } else if ( algorithm.equals( PublicKeyAlgorithm.RSA.getValue() ) ) {
             return RSA;
         } else {
-            throw new InvalidParameterException("Unrecognized algorithm: " + algorithm);
+            throw new InvalidParameterException( "Unrecognized algorithm: " + algorithm );
         }
     }
 }

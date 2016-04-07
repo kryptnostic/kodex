@@ -26,6 +26,8 @@ public enum Cypher {
     NONE( CryptoAlgorithm.NONE, Mode.NONE, Padding.NONE, 0, false ),
     AES_GCM_128( CryptoAlgorithm.AES, Mode.GCM, Padding.NONE, 128, false ),
     AES_GCM_128_SALTED( CryptoAlgorithm.AES, Mode.GCM, Padding.NONE, 128, true ),
+    AES_GCM_256( CryptoAlgorithm.AES, Mode.GCM, Padding.NONE, 256, false ),
+    AES_GCM_256_SALTED( CryptoAlgorithm.AES, Mode.GCM, Padding.NONE, 256, true ),
     AES_CTR_128( CryptoAlgorithm.AES, Mode.CTR, Padding.NONE, 128, false ),
     AES_CTR_128_SALTED( CryptoAlgorithm.AES, Mode.CTR, Padding.NONE, 128, true ),
     AES_CTR_256( CryptoAlgorithm.AES, Mode.CTR, Padding.NONE, 256, false ),
@@ -53,7 +55,7 @@ public enum Cypher {
 
     private static final String     CIPHER_ENCODING = "%s/%s/%s";
     private final CipherDescription description;
-    private final boolean salted;
+    private final boolean           salted;
 
     private Cypher( CryptoAlgorithm algorithm, Mode mode, Padding padding, int keySize, boolean salted ) {
         this.salted = salted;
@@ -66,16 +68,20 @@ public enum Cypher {
     }
 
     public Cipher getInstance() throws NoSuchAlgorithmException, NoSuchPaddingException {
-        return Cipher.getInstance( toString() );
+        return Cipher.getInstance( asCipher() );
     }
 
-    @Override
-    public String toString() {
+    private String asCipher() {
         return String.format(
                 CIPHER_ENCODING,
                 description.getAlgorithm().getValue(),
                 description.getMode().getValue(),
                 description.getPadding().getValue() );
+    }
+
+    @Override
+    public String toString() {
+        return asCipher();
     }
 
     public int getKeySize() {
@@ -95,10 +101,11 @@ public enum Cypher {
     }
 
     public KeyGenerator getKeyGenerator() throws NoSuchAlgorithmException, InvalidAlgorithmParameterException {
-        if ( description.getAlgorithm() == CryptoAlgorithm.AES ) {
-            return KeyGenerator.getInstance( description.getAlgorithm().getValue() );
+        CryptoAlgorithm algorithm = description.getAlgorithm();
+        if ( algorithm != CryptoAlgorithm.AES ) {
+            throw new InvalidAlgorithmParameterException( "Key generators are only supported for AES algorithm." );
         }
-        throw new InvalidAlgorithmParameterException( "Key generators are only supported for AES algorithm." );
+        return KeyGenerator.getInstance( algorithm.getValue() );
     }
 
     @JsonCreator
@@ -108,32 +115,37 @@ public enum Cypher {
 
     // @JsonCreator
     public static Cypher createCipher( CipherDescription description ) {
+        CryptoAlgorithm algorithm = description.getAlgorithm();
+        Mode mode = description.getMode();
+        Padding padding = description.getPadding();
+        int keySize = description.getKeySize();
         Preconditions.checkArgument(
-                ImmutableSet.of( 128, 256, 1024, 2048, 4096 ).contains( description.getKeySize() ),
+                ImmutableSet.of( 128, 256, 1024, 2048, 4096 ).contains( keySize ),
                 "Only 128 bit and 256 key sizes are supported." );
-        if ( description.getAlgorithm().equals( CryptoAlgorithm.AES ) ) {
-            if ( description.getMode().equals( Mode.CTR ) ) {
-                if ( description.getPadding().equals( Padding.NONE ) ) {
-                    if ( description.getKeySize() == 128 ) {
+
+        if ( algorithm.equals( CryptoAlgorithm.AES ) ) {
+            if ( mode.equals( Mode.CTR ) ) {
+                if ( padding.equals( Padding.NONE ) ) {
+                    if ( keySize == 128 ) {
                         return AES_CTR_128;
-                    } else if ( description.getKeySize() == 256 ) {
+                    } else if ( keySize == 256 ) {
                         return AES_CTR_256;
                     }
-                } else if ( description.getPadding().equals( Padding.PKCS5 ) ) {
-                    if ( description.getKeySize() == 128 ) {
+                } else if ( padding.equals( Padding.PKCS5 ) ) {
+                    if ( keySize == 128 ) {
                         return AES_CBC_PKCS5_128;
-                    } else if ( description.getKeySize() == 256 ) {
+                    } else if ( keySize == 256 ) {
                         return AES_CBC_PKCS5_256;
                     } else {
                         return unrecognizedCipher( "An unsupported key size was specified." );
                     }
                 }
             }
-        } else if ( description.getAlgorithm().equals( CryptoAlgorithm.RSA ) ) {
-            if ( description.getMode().equals( Mode.ECB ) ) {
-                switch ( description.getPadding() ) {
+        } else if ( algorithm.equals( CryptoAlgorithm.RSA ) ) {
+            if ( mode.equals( Mode.ECB ) ) {
+                switch ( padding ) {
                     case OAEPWithSHA1AndMGF1Padding:
-                        switch ( description.getKeySize() ) {
+                        switch ( keySize ) {
                             case 1024:
                                 return RSA_OAEP_SHA1_1024;
                             case 2048:
@@ -144,7 +156,7 @@ public enum Cypher {
                                 return unrecognizedCipher();
                         }
                     case OAEPWithSHA256AndMGF1Padding:
-                        switch ( description.getKeySize() ) {
+                        switch ( keySize ) {
                             case 1024:
                                 return RSA_OAEP_SHA256_1024;
                             case 2048:
@@ -162,13 +174,11 @@ public enum Cypher {
         return unrecognizedCipher();
     }
 
-    private static final Cypher unrecognizedCipher() throws InvalidParameterException {
+    private static Cypher unrecognizedCipher() throws InvalidParameterException {
         return unrecognizedCipher( "An unsupported CipherDescription was received." );
     }
 
-    private static final Cypher unrecognizedCipher( String additionalInfo ) {
+    private static Cypher unrecognizedCipher( String additionalInfo ) {
         throw new InvalidParameterException( "Unrecognized cipher description: " + additionalInfo );
     }
-
-
 }
