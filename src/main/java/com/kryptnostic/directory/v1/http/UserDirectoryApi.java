@@ -34,18 +34,23 @@ public interface UserDirectoryApi {
     public static final String ID                     = "id";
     public static final String EMAIL                  = "email";
     public static final String ROLE                   = "role";
+    public static final String REALM                  = "realm";
 
     public static final String DISCOVERY              = "/discovery";
     public static final String USER                   = "/user";
     public static final String USERS                  = "/users";
     public static final String RESET                  = "/reset";
     public static final String SET_LOGIN              = "/setlogin";
+    public static final String INITIALIZED            = "/initialized";
 
     public static final String ID_PATH                = "/{" + ID + "}";
     public static final String ID_WITH_DOT            = "/{" + ID + ":.+}";
     public static final String EMAIL_PATH             = "/" + EMAIL + "/{" + EMAIL + "}";   // +EMAIL needed to
                                                                                             // disambiguate from get
                                                                                             // user
+    public static final String REALM_PATH             = "/{" + REALM + "}";
+    public static final String REALM_PATH_WITH_DOT    = "/{" + REALM + ":.+}";
+
     public static final String EMAIL_PATH_WITH_DOT    = "/" + EMAIL + "/{" + EMAIL + ":.+}";
 
     public static final String USER_ID_PATH           = USER + ID_PATH;
@@ -122,9 +127,15 @@ public interface UserDirectoryApi {
      * @return
      */
     @POST( CONTROLLER + SET_ROLE_FOR_USER_PATH )
-    UUID addRoleForUser( @Path( ID ) UUID userId, @Body String role);
+    UUID addRoleForUser( @Path( ID ) UUID userId, @Body String role );
 
     @POST( CONTROLLER + SET_LOGIN )
     Response setSuccessfulFirstLogin();
+
+    @GET( CONTROLLER + REALM_PATH )
+    Iterable<UUID> listUserInRealm( @Path( REALM ) String realm ) throws BadRequestException;
+
+    @GET( CONTROLLER + INITIALIZED + REALM_PATH )
+    Iterable<UUID> listInitializedUserInRealm( @Path( REALM ) String realm ) throws BadRequestException;
 
 }
