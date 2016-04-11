@@ -33,6 +33,8 @@ public interface DomainManagementApi {
     public static final String DOMAIN_LIST          = "/domainlist";
     public static final String SHARING_POLICY       = "/sharingpolicy";
     public static final String DOMAIN_RESOURCES     = "/domainresources";
+    public static final String INCOMINGSHARES      = "/incomingshares";
+    public static final String OUTGOINGSHARES      = "/outgoingshares";
 
     public static final String NAME                 = "name";
     public static final String DOMAIN_ID            = "domainid";
@@ -91,6 +93,18 @@ public interface DomainManagementApi {
 
     @GET( DOMAIN_LIST )
     Set<String> getListableDomainsForWhiteList();
+    
+    @GET( DOMAIN + INCOMINGSHARES )
+    boolean getIncomingSharesPermission();
+    
+    @POST( DOMAIN + INCOMINGSHARES )
+    Response setIncomingSharesPermission( @Body boolean permission );
+    
+    @GET( DOMAIN + OUTGOINGSHARES )
+    boolean getOutgoingSharesPermission();
+    
+    @POST( DOMAIN + OUTGOINGSHARES )
+    Response setOutgoingSharesPermission( @Body boolean permission );
 
     @GET( DOMAIN_RESOURCES + DOMAIN_ID_PATH + DOMAIN_RESOURCE_PATH )
     DomainResourcesUsage getDomainResourcesUsage( @Path( DOMAIN_ID ) UUID domainId, @Path( RESOURCE ) String resource );

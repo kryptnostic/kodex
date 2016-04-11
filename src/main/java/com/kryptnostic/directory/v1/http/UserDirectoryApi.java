@@ -42,6 +42,7 @@ public interface UserDirectoryApi {
     public static final String RESET                  = "/reset";
     public static final String SET_LOGIN              = "/setlogin";
     public static final String INITIALIZED            = "/initialized";
+    public static final String OUTGOING               = "/outgoing";
 
     public static final String ID_PATH                = "/{" + ID + "}";
     public static final String ID_WITH_DOT            = "/{" + ID + ":.+}";
@@ -137,5 +138,8 @@ public interface UserDirectoryApi {
 
     @GET( CONTROLLER + INITIALIZED + REALM_PATH )
     Iterable<UUID> listInitializedUserInRealm( @Path( REALM ) String realm ) throws BadRequestException;
+    
+    @POST( CONTROLLER + OUTGOING )
+    boolean checkOutgoingShareForEmail( @Body String email);
 
 }
