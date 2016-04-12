@@ -12,6 +12,8 @@ import com.kryptnostic.directory.v1.exception.ReservationTakenException;
 import com.kryptnostic.directory.v1.exception.UserUpdateException;
 import com.kryptnostic.directory.v1.principal.User;
 import com.kryptnostic.kodex.v1.exceptions.types.BadRequestException;
+import com.kryptnostic.kodex.v1.exceptions.types.ForbiddenException;
+import com.kryptnostic.kodex.v1.exceptions.types.ResourceNotFoundException;
 
 import retrofit.client.Response;
 import retrofit.http.Body;
@@ -42,7 +44,7 @@ public interface UserDirectoryApi {
     public static final String RESET                  = "/reset";
     public static final String SET_LOGIN              = "/setlogin";
     public static final String INITIALIZED            = "/initialized";
-    public static final String OUTGOING               = "/outgoing";
+    public static final String IS_VALID_SHARING       = "/isvalidsharing";
 
     public static final String ID_PATH                = "/{" + ID + "}";
     public static final String ID_WITH_DOT            = "/{" + ID + ":.+}";
@@ -139,7 +141,7 @@ public interface UserDirectoryApi {
     @GET( CONTROLLER + INITIALIZED + REALM_PATH )
     Iterable<UUID> listInitializedUserInRealm( @Path( REALM ) String realm ) throws BadRequestException;
     
-    @POST( CONTROLLER + OUTGOING )
-    boolean checkOutgoingShareForEmail( @Body String email);
+    @GET( CONTROLLER + IS_VALID_SHARING + EMAIL_PATH )
+    UUID isValidSharingDestination( @Path( EMAIL ) String email) throws ResourceNotFoundException, ForbiddenException;
 
 }
