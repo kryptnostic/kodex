@@ -143,6 +143,6 @@ public interface UserDirectoryApi {
     Iterable<UUID> listInitializedUserInRealm( @Path( REALM ) String realm ) throws BadRequestException;
     
     @GET( CONTROLLER + VALIDATE + SHARING + EMAIL_PATH )
-    UUID isValidSharingDestination( @Path( EMAIL ) String email) throws ResourceNotFoundException, ForbiddenException;
+    UUID getUserIdForSharing( @Path( EMAIL ) String email) throws ResourceNotFoundException, ForbiddenException;
 
 }
