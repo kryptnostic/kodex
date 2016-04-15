@@ -44,6 +44,8 @@ public final class Names {
     public static final String OBJECTS_FILTER_FIELD            = "objectIdsToFilter";
     public static final String CREATED_AFTER_FIELD             = "createdAfter";
     public static final String ACL_ID_FIELD                    = "aclId";
-    public static final String OBJECT_CLOCK_FIELD                     = "objectClock";
+    public static final String OBJECT_CLOCK_FIELD              = "objectClock";
+    public static final String PAGE_SIZE                       = "pageSize";
+    public static final String OFFSET                          = "offset";
 
 }

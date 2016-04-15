@@ -48,7 +48,7 @@ public class BlockCiphertext {
     public byte[] getContents() {
         return contents;
     }
-    
+
     @JsonProperty( Names.IV )
     public byte[] getIv() {
         return iv;
