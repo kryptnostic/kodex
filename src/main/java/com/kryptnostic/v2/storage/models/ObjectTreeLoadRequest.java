@@ -20,6 +20,8 @@ public class ObjectTreeLoadRequest {
     private final Map<UUID, Set<LoadLevel>>     typeLoadLevels;
     private final Map<UUID, VersionedObjectKey> createdAfter;
     private final int                           loadDepth;
+    private final Optional<Integer>             pageSize;
+    private final Optional<Integer>             offset;
 
     public ObjectTreeLoadRequest( Set<UUID> objectIds, Map<UUID, Set<LoadLevel>> typeLoadLevels ) {
         this(
@@ -27,7 +29,9 @@ public class ObjectTreeLoadRequest {
                 Optional.<Map<UUID, Set<UUID>>> absent(),
                 typeLoadLevels,
                 Optional.<Map<UUID, VersionedObjectKey>> absent(),
-                Optional.of( DEFAULT_DEPTH ) );
+                Optional.of( DEFAULT_DEPTH ),
+                Optional.<Integer> absent(),
+                Optional.<Integer> absent() );
     }
 
     @JsonCreator
@@ -36,12 +40,16 @@ public class ObjectTreeLoadRequest {
             @JsonProperty( Names.OBJECTS_FILTER_FIELD ) Optional<Map<UUID, Set<UUID>>> objectIdsToFilter,
             @JsonProperty( Names.LOAD_LEVELS_FIELD ) Map<UUID, Set<LoadLevel>> typeLoadLevels,
             @JsonProperty( Names.CREATED_AFTER_FIELD ) Optional<Map<UUID, VersionedObjectKey>> createdAfter,
-            @JsonProperty( Names.DEPTH_FIELD ) Optional<Integer> loadDepth) {
+            @JsonProperty( Names.DEPTH_FIELD ) Optional<Integer> loadDepth,
+            @JsonProperty( Names.PAGE_SIZE ) Optional<Integer> pageSize,
+            @JsonProperty( Names.OFFSET ) Optional<Integer> offset) {
         this.objectIds = objectIds;
         this.objectIdsToFilter = objectIdsToFilter.or( ImmutableMap.<UUID, Set<UUID>> of() );
         this.typeLoadLevels = typeLoadLevels;
         this.createdAfter = createdAfter.or( ImmutableMap.<UUID, VersionedObjectKey> of() );
         this.loadDepth = loadDepth.or( DEFAULT_DEPTH );
+        this.pageSize = pageSize;
+        this.offset = offset;
     }
 
     @JsonProperty( Names.OBJECT_IDS_FIELD )
@@ -67,5 +75,13 @@ public class ObjectTreeLoadRequest {
     @JsonProperty( Names.DEPTH_FIELD )
     public int getLoadDepth() {
         return loadDepth;
+    }
+
+    public Optional<Integer> getPageSize() {
+        return pageSize;
+    }
+
+    public Optional<Integer> getOffset() {
+        return offset;
     }
 }
