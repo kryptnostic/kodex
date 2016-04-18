@@ -9,6 +9,7 @@ import com.google.common.base.Optional;
 import com.kryptnostic.directory.v1.domain.DomainPolicy;
 import com.kryptnostic.directory.v1.model.DomainUpdate;
 import com.kryptnostic.directory.v2.model.DomainResourcesUsage;
+import com.kryptnostic.kodex.v1.exceptions.types.ForbiddenException;
 
 import retrofit.client.Response;
 import retrofit.http.Body;
@@ -50,10 +51,11 @@ public interface DomainManagementApi {
      * 
      * @param request
      * @return
+     * @throws ForbiddenException 
      */
     @Timed
     @POST( DOMAIN )
-    Response updateDomain( @Body DomainUpdate request );
+    Response updateDomain( @Body DomainUpdate request ) throws ForbiddenException;
     
     @Timed
     @GET( DOMAIN + NAME_PATH )
