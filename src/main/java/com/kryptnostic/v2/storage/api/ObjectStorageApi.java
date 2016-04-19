@@ -185,7 +185,7 @@ public interface ObjectStorageApi {
     Map<UUID, ObjectMetadataEncryptedNode> getObjectsByTypeAndLoadLevel( @Body ObjectTreeLoadRequest request );
 
     @POST( CONTROLLER + FULL_LEVELS_INITIAL_PAGE_PATH )
-    ObjectTreeLoadResponse getObjectsByTapeAndLoadLevelPaged(
+    ObjectTreeLoadResponse getObjectsByTypeAndLoadLevelPaged(
             @Path( ACL_ID_VAR ) UUID rootAclId,
             @Path( PAGE_SIZE_VAR ) int pageSize,
             ObjectTreeLoadRequest request );
