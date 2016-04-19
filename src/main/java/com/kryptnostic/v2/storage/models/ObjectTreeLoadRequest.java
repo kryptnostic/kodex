@@ -15,13 +15,18 @@ import com.kryptnostic.v2.constants.Names;
 @Immutable
 public class ObjectTreeLoadRequest {
     private static final int                    DEFAULT_DEPTH = 0;
+    @Deprecated // no longer used once the new getObjectByTypeAndLoadLevelPaged calls are in use
     private final Set<UUID>                     objectIds;
-    private final Map<UUID, Set<UUID>>          objectIdsToFilter;
-    private final Map<UUID, Set<LoadLevel>>     typeLoadLevels;
+    @Deprecated
     private final Map<UUID, VersionedObjectKey> createdAfter;
-    private final int                           loadDepth;
+    @Deprecated
     private final Optional<Integer>             pageSize;
-    private final Optional<Integer>             offset;
+
+    private final Map<UUID, Set<UUID>>          objectIdsToFilter;
+
+    @Deprecated // convert this to just be a Set<LoadLevel>
+    private final Map<UUID, Set<LoadLevel>>     typeLoadLevels;
+    private final int                           loadDepth;
 
     public ObjectTreeLoadRequest( Set<UUID> objectIds, Map<UUID, Set<LoadLevel>> typeLoadLevels ) {
         this(
@@ -30,7 +35,6 @@ public class ObjectTreeLoadRequest {
                 typeLoadLevels,
                 Optional.<Map<UUID, VersionedObjectKey>> absent(),
                 Optional.of( DEFAULT_DEPTH ),
-                Optional.<Integer> absent(),
                 Optional.<Integer> absent() );
     }
 
@@ -41,15 +45,13 @@ public class ObjectTreeLoadRequest {
             @JsonProperty( Names.LOAD_LEVELS_FIELD ) Map<UUID, Set<LoadLevel>> typeLoadLevels,
             @JsonProperty( Names.CREATED_AFTER_FIELD ) Optional<Map<UUID, VersionedObjectKey>> createdAfter,
             @JsonProperty( Names.DEPTH_FIELD ) Optional<Integer> loadDepth,
-            @JsonProperty( Names.PAGE_SIZE ) Optional<Integer> pageSize,
-            @JsonProperty( Names.OFFSET ) Optional<Integer> offset) {
+            @JsonProperty( Names.PAGE_SIZE ) Optional<Integer> pageSize) {
         this.objectIds = objectIds;
-        this.objectIdsToFilter = objectIdsToFilter.or( ImmutableMap.<UUID, Set<UUID>> of() );
+        this.pageSize = pageSize;
         this.typeLoadLevels = typeLoadLevels;
         this.createdAfter = createdAfter.or( ImmutableMap.<UUID, VersionedObjectKey> of() );
         this.loadDepth = loadDepth.or( DEFAULT_DEPTH );
-        this.pageSize = pageSize;
-        this.offset = offset;
+        this.objectIdsToFilter = objectIdsToFilter.or( ImmutableMap.<UUID, Set<UUID>> of() );
     }
 
     @JsonProperty( Names.OBJECT_IDS_FIELD )
@@ -79,9 +81,5 @@ public class ObjectTreeLoadRequest {
 
     public Optional<Integer> getPageSize() {
         return pageSize;
-    }
-
-    public Optional<Integer> getOffset() {
-        return offset;
     }
 }
