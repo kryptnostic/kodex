@@ -13,7 +13,7 @@ import com.google.common.base.Optional;
 public class ObjectTreeLoadResponse {
     private final Map<UUID, ObjectMetadataEncryptedNode> omTree;
     private final Optional<String>                       nextPage;
-    private static final String                          template = "levels/%s/%d/%s/%d";
+    private static final String                          template = "/levels/%s/%d/%s/%d";
 
     @JsonCreator
     public ObjectTreeLoadResponse(
