@@ -18,7 +18,7 @@ public class ObjectTreeLoadResponse {
     @JsonCreator
     public ObjectTreeLoadResponse(
             @JsonProperty( "objectMetadataTree" ) Map<UUID, ObjectMetadataEncryptedNode> results,
-            @JsonProperty( "nextPage" ) Optional<String> nextPage) {
+            @JsonProperty( "scrollUp" ) Optional<String> nextPage) {
         this.omTree = results;
         this.nextPage = nextPage;
     }
@@ -39,7 +39,7 @@ public class ObjectTreeLoadResponse {
         return omTree;
     }
 
-    @JsonProperty( "nextPage" )
+    @JsonProperty( "scrollUp" )
     public Optional<String> getNextPage() {
         return nextPage;
     }
