@@ -24,7 +24,6 @@ public class ObjectTreeLoadRequest {
 
     private final Map<UUID, Set<UUID>>          objectIdsToFilter;
 
-    @Deprecated // convert this to just be a Set<LoadLevel>
     private final Map<UUID, Set<LoadLevel>>     typeLoadLevels;
     private final int                           loadDepth;
 
