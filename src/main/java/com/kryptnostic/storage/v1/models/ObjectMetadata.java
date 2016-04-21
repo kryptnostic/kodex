@@ -21,6 +21,7 @@ import com.kryptnostic.kodex.v1.models.blocks.ChunkingStrategy;
  *
  * @author sinaiman, rbuckheit
  */
+@Deprecated
 @Immutable
 public class ObjectMetadata {
     @JsonIgnore

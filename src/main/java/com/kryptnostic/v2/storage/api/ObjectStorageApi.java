@@ -28,41 +28,41 @@ import retrofit.http.Path;
  *
  */
 public interface ObjectStorageApi {
-    String CONTROLLER                 = "/object";
+    String CONTROLLER                    = "/object";
     // Parameter names
-    String ID                         = Names.ID_FIELD;
-    String VERSION                    = "version";
-    String BLOCK                      = "block";
-    String TYPE_NAME_FIELD            = "type";
-    String ACL_ID_VAR                    = "aclid";
-    String PAGE_SIZE_VAR                 = "pageSize";
-    String LATEST_CLOCK_VAR              = "latestClock";
+    String ID                            = Names.ID_FIELD;
+    String VERSION                       = "version";
+    String BLOCK                         = "block";
+    String TYPE_NAME_FIELD               = "type";
+    String ROOT_OBJECT_ID_VAR            = "aclid";
+    String SCROLL_SIZE_VAR               = "scrollSize";
+    String LATEST_OBJECT_ID_VAR          = "latestObjectId";
 
     // Paths
     String OBJECT_ID_PATH                = "/id/{" + ID + "}";
     String VERSION_PATH                  = "/{" + VERSION + "}";
-    String ACL_ID_PATH                   = "/{" + ACL_ID_VAR + "}";
-    String PAGE_SIZE_PATH                = "/{" + PAGE_SIZE_VAR + "}";
-    String LATEST_CLOCK_PATH             = "/{" + LATEST_CLOCK_VAR + "}";
+    String ACL_ID_PATH                   = "/{" + ROOT_OBJECT_ID_VAR + "}";
+    String PAGE_SIZE_PATH                = "/{" + SCROLL_SIZE_VAR + "}";
+    String LATEST_CLOCK_PATH             = "/{" + LATEST_OBJECT_ID_VAR + "}";
     String CONTENTS_PATH                 = "/" + Names.CONTENTS;
 
-    String OBJECT_IDS_PATH            = "/ids";
-    String IV_PATH                    = "/iv";
-    String SALT_PATH                  = "/salt";
-    String TAG_PATH                   = "/tag";
-    String LEVELS_PATH                = "/levels";
-    String METADATA_PATH              = "/metadata";
-    String BULK_PATH                  = "/bulk";
-    String LATEST                     = "/latest";
-    String OBJECTMETADATA_PATH        = "/objectmetadata";
-    String TYPE_PATH                  = "/type";
+    String OBJECT_IDS_PATH               = "/ids";
+    String IV_PATH                       = "/iv";
+    String SALT_PATH                     = "/salt";
+    String TAG_PATH                      = "/tag";
+    String LEVELS_PATH                   = "/levels";
+    String METADATA_PATH                 = "/metadata";
+    String BULK_PATH                     = "/bulk";
+    String LATEST                        = "/latest";
+    String OBJECTMETADATA_PATH           = "/objectmetadata";
+    String TYPE_PATH                     = "/type";
 
-    String TYPE_NAME_PATH             = TYPE_PATH + "/{" + TYPE_NAME_FIELD + "}";
-    String OBJECT_METADATA_PATH       = OBJECTMETADATA_PATH + OBJECT_ID_PATH;
-    String VERSIONED_OBJECT_ID_PATH   = OBJECT_ID_PATH + VERSION_PATH;
-    String LATEST_OBJECT_ID_PATH      = LATEST + OBJECT_ID_PATH;
-    String LATEST_OBJECT_IDS_PATH     = LATEST + OBJECT_IDS_PATH;
-    String INDEX_SEGMENT_PATH         = "/index-segment";
+    String TYPE_NAME_PATH                = TYPE_PATH + "/{" + TYPE_NAME_FIELD + "}";
+    String OBJECT_METADATA_PATH          = OBJECTMETADATA_PATH + OBJECT_ID_PATH;
+    String VERSIONED_OBJECT_ID_PATH      = OBJECT_ID_PATH + VERSION_PATH;
+    String LATEST_OBJECT_ID_PATH         = LATEST + OBJECT_ID_PATH;
+    String LATEST_OBJECT_IDS_PATH        = LATEST + OBJECT_IDS_PATH;
+    String INDEX_SEGMENT_PATH            = "/index-segment";
 
     String FULL_LEVELS_INITIAL_PAGE_PATH = "/levels" + ACL_ID_PATH + PAGE_SIZE_PATH;
     String FULL_LEVELS_NEXT_PAGE_PATH    = FULL_LEVELS_INITIAL_PAGE_PATH + LATEST_CLOCK_PATH + VERSION_PATH;
@@ -186,16 +186,16 @@ public interface ObjectStorageApi {
 
     @POST( CONTROLLER + FULL_LEVELS_INITIAL_PAGE_PATH )
     ObjectTreeLoadResponse getObjectsByTypeAndLoadLevelPaged(
-            @Path( ACL_ID_VAR ) UUID rootAclId,
-            @Path( PAGE_SIZE_VAR ) int pageSize,
-            ObjectTreeLoadRequest request );
+            @Path( ROOT_OBJECT_ID_VAR ) UUID rootAclId,
+            @Path( SCROLL_SIZE_VAR ) int scrollSize,
+            ObjectTreeLoadRequest request);
 
     @POST( CONTROLLER + FULL_LEVELS_NEXT_PAGE_PATH )
     ObjectTreeLoadResponse continueObjectsByTypeAndLoadLevelPaged(
-            @Path( ACL_ID_VAR ) UUID rootAclId,
-            @Path( PAGE_SIZE_VAR ) int pageSize,
-            @Path( LATEST_CLOCK_VAR ) UUID latestClock,
-            @Path( VERSION ) long latestClockVersion,
+            @Path( ROOT_OBJECT_ID_VAR ) UUID rootAclId,
+            @Path( SCROLL_SIZE_VAR ) int scrollSize,
+            @Path( LATEST_OBJECT_ID_VAR ) UUID latestObjectId,
+            @Path( VERSION ) long latestObjectVersion,
             @Body ObjectTreeLoadRequest request);
 
     // METADATA APIs
