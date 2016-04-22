@@ -11,15 +11,15 @@ import com.google.common.base.Optional;
 
 @Immutable
 public class ObjectTreeLoadResponse {
-    private final Map<UUID, ObjectMetadataEncryptedNode> omTree;
+    private final Map<UUID, ObjectMetadataEncryptedNode> omTrees;
     private final Optional<String>                       nextPage;
     private static final String                          template = "/levels/%s/%d/%s/%d";
 
     @JsonCreator
     public ObjectTreeLoadResponse(
-            @JsonProperty( "objectMetadataTree" ) Map<UUID, ObjectMetadataEncryptedNode> results,
+            @JsonProperty( "objectMetadataTrees" ) Map<UUID, ObjectMetadataEncryptedNode> results,
             @JsonProperty( "scrollUp" ) Optional<String> nextPage) {
-        this.omTree = results;
+        this.omTrees = results;
         this.nextPage = nextPage;
     }
 
@@ -34,9 +34,9 @@ public class ObjectTreeLoadResponse {
                 latestObject.getVersion() );
     }
 
-    @JsonProperty( "objectMetadataTree" )
-    public Map<UUID, ObjectMetadataEncryptedNode> getOmTree() {
-        return omTree;
+    @JsonProperty( "objectMetadataTrees" )
+    public Map<UUID, ObjectMetadataEncryptedNode> getOmTrees() {
+        return omTrees;
     }
 
     @JsonProperty( "scrollUp" )
