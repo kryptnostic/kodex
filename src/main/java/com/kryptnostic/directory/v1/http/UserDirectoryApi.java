@@ -65,7 +65,7 @@ public interface UserDirectoryApi {
 
     public static final String DELETE_USER_PATH       = USER + ID_PATH;
     public static final String SET_ROLE_FOR_USER_PATH = USER_ID_PATH + ROLE_PATH;
-    public static final String FULL_USER_SETTINGS_PATH= USER_ID_PATH + SETTING_PATH;
+    public static final String FULL_USER_SETTINGS_PATH= USER + SETTING_PATH;
 
     /**
      * Get the account details for a given user.
@@ -150,12 +150,12 @@ public interface UserDirectoryApi {
     UUID getUserIdForSharing( @Path( EMAIL ) String email) throws ResourceNotFoundException, ForbiddenException;
     
     @GET( CONTROLLER + FULL_USER_SETTINGS_PATH )
-    Set<String> getUserSetting( @Path( ID ) UUID userId, @Path( SETTINGS_VAR ) String userSetting );
+    Set<String> getUserSetting( @Path( SETTINGS_VAR ) String userSetting );
     
     @PUT( CONTROLLER + FULL_USER_SETTINGS_PATH )
-    Response addToUserSetting( @Path( ID ) UUID userId, @Path( SETTINGS_VAR ) String userSetting, @Body Set<String> items );
+    Response addToUserSetting( @Path( SETTINGS_VAR ) String userSetting, @Body Set<String> items );
     
     @DELETE( CONTROLLER + FULL_USER_SETTINGS_PATH )
-    Response removeFromUserSetting( @Path( ID ) UUID userId, @Path( SETTINGS_VAR ) String userSetting, @Body Set<String> items );
+    Response removeFromUserSetting( @Path( SETTINGS_VAR ) String userSetting, @Body Set<String> items );
 
 }
