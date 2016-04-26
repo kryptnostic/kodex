@@ -37,6 +37,7 @@ public interface UserDirectoryApi {
     public static final String EMAIL                  = "email";
     public static final String ROLE                   = "role";
     public static final String REALM                  = "realm";
+    public static final String SETTING                = "setting";
 
     public static final String DISCOVERY              = "/discovery";
     public static final String USER                   = "/user";
@@ -58,6 +59,8 @@ public interface UserDirectoryApi {
     public static final String EMAIL_PATH_WITH_DOT    = "/" + EMAIL + "/{" + EMAIL + ":.+}";
 
     public static final String USER_ID_PATH           = USER + ID_PATH;
+    public static final String USER_ID_PATH_WITH_DOT  = USER + ID_WITH_DOT;
+    public static final String SETTING_PATH           = "/" + SETTING + "/{" + SETTING + "}";
     public static final String ROLE_PATH              = "/" + ROLE;
 
     public static final String DELETE_USER_PATH       = USER + ID_PATH;
@@ -144,5 +147,14 @@ public interface UserDirectoryApi {
     
     @GET( CONTROLLER + VALIDATE + SHARING + EMAIL_PATH )
     UUID getUserIdForSharing( @Path( EMAIL ) String email) throws ResourceNotFoundException, ForbiddenException;
+    
+    @GET( CONTROLLER + USER_ID_PATH + SETTING_PATH )
+    Set<String> getUserSetting( @Path( ID ) UUID userId, @Path( SETTING ) String userSetting );
+    
+    @PUT( CONTROLLER + USER_ID_PATH + SETTING_PATH )
+    Response addToUserSetting( @Path( ID ) UUID userId, @Path( SETTING ) String userSetting, @Body Set<String> items );
+    
+    @DELETE( CONTROLLER + USER_ID_PATH + SETTING_PATH )
+    Response removeFromUserSetting( @Path( ID ) UUID userId, @Path( SETTING ) String userSetting, @Body Set<String> items );
 
 }
