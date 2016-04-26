@@ -1,7 +1,7 @@
 package com.kryptnostic.directory.v2.model;
 
 public enum UserSettings {
-    SILENCE_CHANNEL,
+    SILENCED_CHANNELS,
     CONFIRMATION_STATUS,
     CONFIRMATION_TOKEN,
     TOKEN_ACTIVE_TIME,

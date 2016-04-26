@@ -59,12 +59,12 @@ public interface UserDirectoryApi {
     public static final String EMAIL_PATH_WITH_DOT    = "/" + EMAIL + "/{" + EMAIL + ":.+}";
 
     public static final String USER_ID_PATH           = USER + ID_PATH;
-    public static final String USER_ID_PATH_WITH_DOT  = USER + ID_WITH_DOT;
     public static final String SETTING_PATH           = "/" + SETTING + "/{" + SETTING + "}";
     public static final String ROLE_PATH              = "/" + ROLE;
 
     public static final String DELETE_USER_PATH       = USER + ID_PATH;
     public static final String SET_ROLE_FOR_USER_PATH = USER_ID_PATH + ROLE_PATH;
+    public static final String FULL_USER_SETTINGS_PATH= USER_ID_PATH + SETTING_PATH;
 
     /**
      * Get the account details for a given user.
@@ -148,13 +148,13 @@ public interface UserDirectoryApi {
     @GET( CONTROLLER + VALIDATE + SHARING + EMAIL_PATH )
     UUID getUserIdForSharing( @Path( EMAIL ) String email) throws ResourceNotFoundException, ForbiddenException;
     
-    @GET( CONTROLLER + USER_ID_PATH + SETTING_PATH )
+    @GET( CONTROLLER + FULL_USER_SETTINGS_PATH )
     Set<String> getUserSetting( @Path( ID ) UUID userId, @Path( SETTING ) String userSetting );
     
-    @PUT( CONTROLLER + USER_ID_PATH + SETTING_PATH )
+    @PUT( CONTROLLER + FULL_USER_SETTINGS_PATH )
     Response addToUserSetting( @Path( ID ) UUID userId, @Path( SETTING ) String userSetting, @Body Set<String> items );
     
-    @DELETE( CONTROLLER + USER_ID_PATH + SETTING_PATH )
+    @DELETE( CONTROLLER + FULL_USER_SETTINGS_PATH )
     Response removeFromUserSetting( @Path( ID ) UUID userId, @Path( SETTING ) String userSetting, @Body Set<String> items );
 
 }
