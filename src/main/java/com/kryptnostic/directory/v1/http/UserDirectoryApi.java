@@ -37,7 +37,7 @@ public interface UserDirectoryApi {
     public static final String EMAIL                  = "email";
     public static final String ROLE                   = "role";
     public static final String REALM                  = "realm";
-    public static final String SETTING                = "setting";
+    public static final String SETTINGS_VAR           = "setting";
 
     public static final String DISCOVERY              = "/discovery";
     public static final String USER                   = "/user";
@@ -47,6 +47,7 @@ public interface UserDirectoryApi {
     public static final String INITIALIZED            = "/initialized";
     public static final String VALIDATE               = "/validate";
     public static final String SHARING                = "/sharing";
+    public static final String SETTING                = "/setting";
 
     public static final String ID_PATH                = "/{" + ID + "}";
     public static final String ID_WITH_DOT            = "/{" + ID + ":.+}";
@@ -59,7 +60,7 @@ public interface UserDirectoryApi {
     public static final String EMAIL_PATH_WITH_DOT    = "/" + EMAIL + "/{" + EMAIL + ":.+}";
 
     public static final String USER_ID_PATH           = USER + ID_PATH;
-    public static final String SETTING_PATH           = "/" + SETTING + "/{" + SETTING + "}";
+    public static final String SETTING_PATH           = SETTING + "/{" + SETTINGS_VAR + "}";
     public static final String ROLE_PATH              = "/" + ROLE;
 
     public static final String DELETE_USER_PATH       = USER + ID_PATH;
@@ -149,12 +150,12 @@ public interface UserDirectoryApi {
     UUID getUserIdForSharing( @Path( EMAIL ) String email) throws ResourceNotFoundException, ForbiddenException;
     
     @GET( CONTROLLER + FULL_USER_SETTINGS_PATH )
-    Set<String> getUserSetting( @Path( ID ) UUID userId, @Path( SETTING ) String userSetting );
+    Set<String> getUserSetting( @Path( ID ) UUID userId, @Path( SETTINGS_VAR ) String userSetting );
     
     @PUT( CONTROLLER + FULL_USER_SETTINGS_PATH )
-    Response addToUserSetting( @Path( ID ) UUID userId, @Path( SETTING ) String userSetting, @Body Set<String> items );
+    Response addToUserSetting( @Path( ID ) UUID userId, @Path( SETTINGS_VAR ) String userSetting, @Body Set<String> items );
     
     @DELETE( CONTROLLER + FULL_USER_SETTINGS_PATH )
-    Response removeFromUserSetting( @Path( ID ) UUID userId, @Path( SETTING ) String userSetting, @Body Set<String> items );
+    Response removeFromUserSetting( @Path( ID ) UUID userId, @Path( SETTINGS_VAR ) String userSetting, @Body Set<String> items );
 
 }
