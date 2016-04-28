@@ -17,12 +17,14 @@ public interface RegistrationApi {
 
     String UUID         = "userId";
     String TOKEN        = "token";
-    String RESEND       = "/resend";
 
     String USER         = "/user";
+    String APPLY        = "/apply";
+    String APPROVE      = "/approve";
     String INVITATION   = "/invitation";
     String CONFIRMATION = "/confirmation";
     String VERIFICATION = "/verification";
+    String RESEND       = "/resend";
     String UUID_PATH    = "/{" + UUID + "}";
     String TOKEN_PATH   = "/{" + TOKEN + "}";
 
@@ -35,12 +37,21 @@ public interface RegistrationApi {
      */
     @POST( CONTROLLER + USER )
     UUID register( @Body UserCreationRequest request );
+    
+    @POST( CONTROLLER + APPLY )
+    int applyKodex(  @Body String email );
+    
+    @GET( CONTROLLER + APPLY )
+    int getApplicationQuantityInQueue();
+    
+    @POST( CONTROLLER + APPROVE )
+    Response approveToJoin( @Body int amount );
 
     @GET( CONTROLLER + CONFIRMATION + RESEND )
     Response resendConfirmationEmail();
 
     @GET( CONTROLLER + VERIFICATION + UUID_PATH + TOKEN_PATH )
-    boolean verifyConfirmation( @Path( UUID ) UUID userId, @Path( TOKEN ) String token);
+    boolean verifyConfirmation( @Path( UUID ) UUID userId, @Path( TOKEN ) String token );
 
     @POST( CONTROLLER + INVITATION )
     Response sendInvitationEmail( @Body EmailRequest emailRequest );
