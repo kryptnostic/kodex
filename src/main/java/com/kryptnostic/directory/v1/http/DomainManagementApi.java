@@ -79,12 +79,6 @@ public interface DomainManagementApi {
     @POST( DOMAIN + NOTIFICATION_EMAIL )
     Response setDomainEmailAddress( @Body String email );
 
-    /**
-     * Update white list settings.
-     * 
-     * @param domains
-     * @return
-     */
     @GET( WHITE_LIST )
     Set<String> getDomainWhiteList();
     
