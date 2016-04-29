@@ -1,11 +1,11 @@
 package com.kryptnostic.v2.storage.models;
 
 import java.util.Collection;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 
 import com.kryptnostic.v2.utils.SetUtils;
 
-public class VersionedObjectKeySet extends HashSet<VersionedObjectKey>{
+public class VersionedObjectKeySet extends LinkedHashSet<VersionedObjectKey>{
 
     private static final long serialVersionUID = -2280678803539884513L;
 
