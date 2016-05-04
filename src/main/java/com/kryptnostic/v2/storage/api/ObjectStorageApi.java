@@ -7,7 +7,6 @@ import java.util.UUID;
 
 import com.kryptnostic.kodex.v1.crypto.ciphers.BlockCiphertext;
 import com.kryptnostic.v2.constants.Names;
-import com.kryptnostic.v2.storage.models.CreateIndexSegmentRequest;
 import com.kryptnostic.v2.storage.models.CreateMetadataObjectRequest;
 import com.kryptnostic.v2.storage.models.CreateObjectRequest;
 import com.kryptnostic.v2.storage.models.IndexSegmentRequest;
@@ -64,7 +63,6 @@ public interface ObjectStorageApi {
     String VERSIONED_OBJECT_ID_PATH      = OBJECT_ID_PATH + VERSION_PATH;
     String LATEST_OBJECT_ID_PATH         = LATEST + OBJECT_ID_PATH;
     String LATEST_OBJECT_IDS_PATH        = LATEST + OBJECT_IDS_PATH;
-    String INDEX_SEGMENT_PATH            = "/index-segment";
     String INDEX_SEGMENTS_PATH           = "/index-segments";
 
     String FULL_LEVELS_INITIAL_PAGE_PATH = "/levels" + ACL_ID_PATH + PAGE_SIZE_PATH;
@@ -78,26 +76,6 @@ public interface ObjectStorageApi {
      */
     @POST( CONTROLLER )
     VersionedObjectKey createObject( @Body CreateObjectRequest request );
-
-    /**
-     * Request a new index segment to be created in a pending state; note that this differs from createObject in that it
-     * also updates the search service's mapping from "addresses" to "object ids"
-     *
-     * An "address" is a byte array corresponding to a (term, document, counter) and is computed using: - The client
-     * hash function for the current user - The search pair for the document (or the nearest ancestor that has a search
-     * pair, if the document itself does not have one; in kodex, what this means in practice is that we always use the
-     * search pair of the channel) - The FHE encrypted search term
-     *
-     * For more information about the counter, see {@link com.kryptnostic.v2.search.SearchApi#getAndAddSegmentCount}
-     *
-     * The object id is the ID of the newly created object (i.e. the same ID that would have been returned with a call
-     * to createObject); this is where the encrypted index segment (aka term position list) should be stored (e.g. with
-     * a call to {@link #setObjectFromBlockCiphertext})
-     *
-     * @return The ID of the newly created index segment
-     */
-    @POST( CONTROLLER + INDEX_SEGMENT_PATH )
-    VersionedObjectKey createIndexSegment( @Body CreateIndexSegmentRequest request );
 
     @POST( CONTROLLER + VERSIONED_OBJECT_ID_PATH + INDEX_SEGMENTS_PATH )
     Response createIndexSegments(
