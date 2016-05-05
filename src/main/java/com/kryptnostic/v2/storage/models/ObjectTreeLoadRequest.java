@@ -22,7 +22,6 @@ public class ObjectTreeLoadRequest {
     private final Map<UUID, VersionedObjectKey> createdAfter;
     @Deprecated
     private final Optional<Integer>             pageSize;
-    private final Integer                       direction;
 
     private final Map<UUID, Set<UUID>>          objectIdsToFilter;
 
@@ -36,8 +35,7 @@ public class ObjectTreeLoadRequest {
                 typeLoadLevels,
                 Optional.<Map<UUID, VersionedObjectKey>> absent(),
                 Optional.of( DEFAULT_DEPTH ),
-                Optional.<Integer> absent(),
-                Optional.of( DEFAULT_DIRECTION ) );
+                Optional.<Integer> absent() );
     }
 
     @JsonCreator
@@ -47,11 +45,9 @@ public class ObjectTreeLoadRequest {
             @JsonProperty( Names.LOAD_LEVELS_FIELD ) Map<UUID, Set<LoadLevel>> typeLoadLevels,
             @JsonProperty( Names.CREATED_AFTER_FIELD ) Optional<Map<UUID, VersionedObjectKey>> createdAfter,
             @JsonProperty( Names.DEPTH_FIELD ) Optional<Integer> loadDepth,
-            @JsonProperty( Names.PAGE_SIZE ) Optional<Integer> pageSize,
-            @JsonProperty( "direction" ) Optional<Integer> direction ) {
+            @JsonProperty( Names.PAGE_SIZE ) Optional<Integer> pageSize ) {
         this.objectIds = objectIds;
         this.pageSize = pageSize;
-        this.direction = direction.or( DEFAULT_DIRECTION );
         this.typeLoadLevels = typeLoadLevels;
         this.createdAfter = createdAfter.or( ImmutableMap.<UUID, VersionedObjectKey> of() );
         this.loadDepth = loadDepth.or( DEFAULT_DEPTH );
@@ -87,7 +83,4 @@ public class ObjectTreeLoadRequest {
         return pageSize;
     }
 
-    public Integer getDirection() {
-        return direction;
-    }
 }
