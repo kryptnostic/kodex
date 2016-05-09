@@ -4,16 +4,12 @@ import java.util.Set;
 import java.util.UUID;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.google.common.base.Optional;
 import com.kryptnostic.kodex.v1.constants.Names;
 import com.kryptnostic.kodex.v1.models.KryptnosticUser;
-import com.kryptnostic.kodex.v1.models.UserAttributes;
 
 /**
  * Interface for user principals
@@ -52,20 +48,7 @@ public interface User extends Principal {
     Set<UUID> getGroups();
 
     @Nonnull
-    @JsonIgnore
-    int getUserVersion();
-
-    @JsonProperty( Names.ATTRIBUTES_FIELD )
-    UserAttributes getAttributes();
-
-    @Nullable
-    @JsonIgnore
-    Optional<String> getGivenName();
-
-    @Nullable
-    @JsonIgnore
-    Optional<String> getFamilyName();
-
-    Optional<Object> getAttribute( String key );
+    @JsonProperty( Names.CONFIRMATION_STATUS_FIELD )
+    boolean getConfirmationStatus();
 
 }

@@ -6,13 +6,11 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Optional;
 import com.kryptnostic.kodex.v1.constants.Names;
-import com.kryptnostic.kodex.v1.models.UserAttributes;
 
 public class UserCreationRequest {
     private final String                      password;
     private final String                      email;
     private final String                      name;
-    private final Optional<UserAttributes>    attributes;
     private final boolean                     confirmationEmailNeeded;
     private final Optional<Map<String, Long>> desiredResources;
 
@@ -21,14 +19,12 @@ public class UserCreationRequest {
             @JsonProperty( Names.EMAIL_FIELD ) String email,
             @JsonProperty( Names.NAME_FIELD ) String name,
             @JsonProperty( Names.PASSWORD_FIELD ) String password,
-            @JsonProperty( Names.ATTRIBUTES_FIELD ) Optional<UserAttributes> attributes,
             @JsonProperty( Names.CONFIRMATION_FIELD ) Optional<Boolean> confirmationEmailNeeded,
             @JsonProperty( com.kryptnostic.v2.constants.Names.DESIRED_RESOURCES_FIELD ) Optional<Map<String, Long>> desiredResources ) {
         this.password = password;
         this.email = email;
         this.name = name;
         this.confirmationEmailNeeded = confirmationEmailNeeded.or( false );
-        this.attributes = attributes;
         this.desiredResources = desiredResources;
     }
 
@@ -45,11 +41,6 @@ public class UserCreationRequest {
     @JsonProperty( Names.NAME_FIELD )
     public String getDisplayName() {
         return name;
-    }
-
-    @JsonProperty( Names.ATTRIBUTES_FIELD )
-    public Optional<UserAttributes> getAttributes() {
-        return attributes;
     }
 
     @JsonProperty( Names.CONFIRMATION_FIELD )

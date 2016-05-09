@@ -20,8 +20,6 @@ public class DeveloperRegistrationRequest {
     protected final String          password;
     private final byte[]            certificate;
     private final String            email;
-    private final String            givenName;
-    private final Optional<String>  familyName;
     private final Optional<String>  organization;
     private final Optional<String>  address;
     private final Optional<String>  state;
@@ -41,8 +39,6 @@ public class DeveloperRegistrationRequest {
             @JsonProperty( Names.PASSWORD_FIELD ) Optional<String> password,
             @JsonProperty( Names.CERTIFICATE_FIELD ) byte[] certificate,
             @JsonProperty( Names.EMAIL_FIELD ) String email,
-            @JsonProperty( Names.GIVEN_NAME_FIELD ) String givenName,
-            @JsonProperty( Names.FAMILY_NAME_FIELD ) Optional<String> familyName,
             @JsonProperty( Names.ORGANIZATION_FIELD ) Optional<String> organization,
             @JsonProperty( Names.ADDRESS_FIELD ) Optional<String> address,
             @JsonProperty( Names.STATE_FIELD ) Optional<String> state,
@@ -58,8 +54,6 @@ public class DeveloperRegistrationRequest {
         this.username = username;
         this.certificate = certificate;
         this.email = email;
-        this.givenName = givenName;
-        this.familyName = familyName;
         this.organization = organization;
         this.address = address;
         this.state = state;
@@ -97,16 +91,6 @@ public class DeveloperRegistrationRequest {
     @JsonProperty( Names.EMAIL_FIELD )
     public String getEmail() {
         return email;
-    }
-
-    @JsonProperty( Names.GIVEN_NAME_FIELD )
-    public String getGivenName() {
-        return givenName;
-    }
-
-    @JsonProperty( Names.FAMILY_NAME_FIELD )
-    public Optional<String> getFamilyName() {
-        return familyName;
     }
 
     @JsonProperty( Names.ORGANIZATION_FIELD )
@@ -174,8 +158,6 @@ public class DeveloperRegistrationRequest {
         result = prime * result + ( ( country == null ) ? 0 : country.hashCode() );
         result = prime * result + ( ( email == null ) ? 0 : email.hashCode() );
         result = prime * result + ( ( expectedNumberOfUsers == null ) ? 0 : expectedNumberOfUsers.hashCode() );
-        result = prime * result + ( ( familyName == null ) ? 0 : familyName.hashCode() );
-        result = prime * result + ( ( givenName == null ) ? 0 : givenName.hashCode() );
         result = prime * result + ( ( organization == null ) ? 0 : organization.hashCode() );
         result = prime * result + ( ( organizationSize == null ) ? 0 : organizationSize.hashCode() );
         result = prime * result + ( ( primaryUseCase == null ) ? 0 : primaryUseCase.hashCode() );
@@ -210,12 +192,6 @@ public class DeveloperRegistrationRequest {
         if ( expectedNumberOfUsers == null ) {
             if ( other.expectedNumberOfUsers != null ) return false;
         } else if ( !expectedNumberOfUsers.equals( other.expectedNumberOfUsers ) ) return false;
-        if ( familyName == null ) {
-            if ( other.familyName != null ) return false;
-        } else if ( !familyName.equals( other.familyName ) ) return false;
-        if ( givenName == null ) {
-            if ( other.givenName != null ) return false;
-        } else if ( !givenName.equals( other.givenName ) ) return false;
         if ( organization == null ) {
             if ( other.organization != null ) return false;
         } else if ( !organization.equals( other.organization ) ) return false;

@@ -31,8 +31,6 @@ public final class DeveloperRegistration extends DeveloperRegistrationRequest {
             @JsonProperty( Names.PASSWORD_FIELD ) String password,
             @JsonProperty( Names.CERTIFICATE_FIELD ) byte[] certificate,
             @JsonProperty( Names.EMAIL_FIELD ) String email,
-            @JsonProperty( Names.GIVEN_NAME_FIELD ) String givenName,
-            @JsonProperty( Names.FAMILY_NAME_FIELD ) Optional<String> familyName,
             @JsonProperty( Names.ORGANIZATION_FIELD ) Optional<String> organization,
             @JsonProperty( Names.ADDRESS_FIELD ) Optional<String> address,
             @JsonProperty( Names.STATE_FIELD ) Optional<String> state,
@@ -51,8 +49,6 @@ public final class DeveloperRegistration extends DeveloperRegistrationRequest {
                 Optional.of( password ),
                 certificate,
                 email,
-                givenName,
-                familyName,
                 organization,
                 address,
                 state,
@@ -75,8 +71,6 @@ public final class DeveloperRegistration extends DeveloperRegistrationRequest {
                 Optional.of( builder.password ),
                 builder.certificate,
                 builder.email,
-                builder.givenName,
-                Optional.fromNullable( builder.familyName ),
                 Optional.fromNullable( builder.organization ),
                 Optional.fromNullable( builder.address ),
                 Optional.fromNullable( builder.state ),
@@ -143,10 +137,8 @@ public final class DeveloperRegistration extends DeveloperRegistrationRequest {
         private String        username;
         private byte[]        certificate;
         private String        email;
-        private String        givenName;
         private RequestStatus status;
 
-        private String        familyName;
         private String        organization;
         private String        address;
         private String        state;
@@ -165,8 +157,6 @@ public final class DeveloperRegistration extends DeveloperRegistrationRequest {
             this.username = request.getUsername();
             this.certificate = request.getCertificate();
             this.email = request.getEmail();
-            this.givenName = request.getGivenName();
-            this.familyName = request.getFamilyName().orNull();
             this.organization = request.getOrganization().orNull();
             this.address = request.getAddress().orNull();
             this.state = request.getState().orNull();
@@ -197,7 +187,6 @@ public final class DeveloperRegistration extends DeveloperRegistrationRequest {
             Preconditions.checkArgument( StringUtils.isNotBlank( realm ) );
             Preconditions.checkArgument( StringUtils.isNotBlank( username ) );
             Preconditions.checkArgument( StringUtils.isNotBlank( email ) );
-            Preconditions.checkArgument( StringUtils.isNotBlank( givenName ) );
             Preconditions.checkArgument( StringUtils.isNotBlank( password ) );
             return new DeveloperRegistration( this );
         }

@@ -1,30 +1,14 @@
 package com.kryptnostic.kodex.v1.models;
 
-import static com.kryptnostic.kodex.v1.constants.Names.ATTRIBUTES_FIELD;
-import static com.kryptnostic.kodex.v1.constants.Names.CERTIFICATE_FIELD;
-import static com.kryptnostic.kodex.v1.constants.Names.DOMAIN_FIELD;
-import static com.kryptnostic.kodex.v1.constants.Names.EMAIL_FIELD;
-import static com.kryptnostic.kodex.v1.constants.Names.FAMILY_NAME_FIELD;
-import static com.kryptnostic.kodex.v1.constants.Names.GIVEN_NAME_FIELD;
-import static com.kryptnostic.kodex.v1.constants.Names.GROUPS_PROPERTY;
-import static com.kryptnostic.kodex.v1.constants.Names.ID_FIELD;
-import static com.kryptnostic.kodex.v1.constants.Names.REALM_FIELD;
-import static com.kryptnostic.kodex.v1.constants.Names.ROLES_FIELD;
-import static com.kryptnostic.kodex.v1.constants.Names.USERNAME_FIELD;
-
 import java.io.Serializable;
 import java.util.Arrays;
-import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.common.base.MoreObjects;
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.kryptnostic.directory.v1.principal.User;
 import com.kryptnostic.kodex.v1.constants.Names;
@@ -47,7 +31,7 @@ public final class KryptnosticUser implements User, Serializable {
     private final byte[]         certificate;
     private final Set<UUID>      groups           = Sets.newHashSet();
     private final Set<String>    roles            = Sets.newHashSet();
-    private final UserAttributes attributes       = new UserAttributes( Maps.<String, Object> newConcurrentMap() );
+    private final boolean        confirmationStatus;
 
     /**
      * Either the realm or domain must be specified. If both are specified the realm takes precedence until it is
@@ -61,24 +45,24 @@ public final class KryptnosticUser implements User, Serializable {
      * @param certificate
      * @param groups
      * @param roles
-     * @param attributes
+     * @param confirmationStatus
      */
     @JsonCreator
     public KryptnosticUser(
-            @JsonProperty( ID_FIELD ) UUID id,
-            @JsonProperty( REALM_FIELD ) Optional<String> realm,
-            @JsonProperty( DOMAIN_FIELD ) Optional<String> domain,
-            @JsonProperty( USERNAME_FIELD ) String username,
-            @JsonProperty( EMAIL_FIELD ) String email,
-            @JsonProperty( CERTIFICATE_FIELD ) Optional<byte[]> certificate,
-            @JsonProperty( GROUPS_PROPERTY ) Set<UUID> groups,
-            @JsonProperty( ROLES_FIELD ) Set<String> roles,
-            @JsonProperty( ATTRIBUTES_FIELD ) UserAttributes attributes ) {
+            @JsonProperty( Names.ID_FIELD ) UUID id,
+            @JsonProperty( Names.REALM_FIELD ) Optional<String> realm,
+            @JsonProperty( Names.DOMAIN_FIELD ) Optional<String> domain,
+            @JsonProperty( Names.USERNAME_FIELD ) String username,
+            @JsonProperty( Names.EMAIL_FIELD ) String email,
+            @JsonProperty( Names.CERTIFICATE_FIELD ) Optional<byte[]> certificate,
+            @JsonProperty( Names.GROUPS_PROPERTY ) Set<UUID> groups,
+            @JsonProperty( Names.ROLES_FIELD ) Set<String> roles,
+            @JsonProperty( Names.CONFIRMATION_STATUS_FIELD  ) boolean confirmationStatus ) {
         this.id = id;
         this.domain = realm.or( domain.get() );
         this.username = username;
         this.groups.addAll( groups );
-        this.attributes.putAll( ( attributes == null ) ? ImmutableMap.<String, String> of() : attributes );
+        this.confirmationStatus = confirmationStatus;
         this.roles.addAll( roles );
         this.certificate = certificate.or( new byte[ 0 ] );
         this.email = email;
@@ -90,62 +74,45 @@ public final class KryptnosticUser implements User, Serializable {
     }
 
     @Override
-    @JsonProperty( EMAIL_FIELD )
+    @JsonProperty( Names.EMAIL_FIELD )
     public String getEmail() {
         return email;
     }
 
     @Override
-    @JsonProperty( GIVEN_NAME_FIELD )
-    public Optional<String> getGivenName() {
-        return Optional.of( (String) MoreObjects.firstNonNull( attributes.get( GIVEN_NAME_FIELD ), "" ) );
-    }
-
-    @Override
-    @JsonProperty( FAMILY_NAME_FIELD )
-    public Optional<String> getFamilyName() {
-        return Optional.of( (String) MoreObjects.firstNonNull( attributes.get( FAMILY_NAME_FIELD ), "" ) );
-    }
-
-    @Override
-    @JsonProperty( CERTIFICATE_FIELD )
+    @JsonProperty( Names.CERTIFICATE_FIELD )
     public byte[] getCertificate() {
         return certificate;
     }
 
     @Override
-    @JsonProperty( ATTRIBUTES_FIELD )
-    public UserAttributes getAttributes() {
-        return attributes;
+    @JsonProperty( Names.CONFIRMATION_STATUS_FIELD )
+    public boolean getConfirmationStatus() {
+        return confirmationStatus;
     }
 
     @Override
-    @JsonProperty( GROUPS_PROPERTY )
+    @JsonProperty( Names.GROUPS_PROPERTY )
     public Set<UUID> getGroups() {
         return groups;
     }
 
     @Override
-    @JsonProperty( USERNAME_FIELD )
+    @JsonProperty( Names.USERNAME_FIELD )
     public String getName() {
         return this.username;
     }
 
     @Override
-    @JsonProperty( REALM_FIELD )
+    @JsonProperty( Names.REALM_FIELD )
     public String getRealm() {
         return getDomain();
     }
 
     @Override
-    @JsonProperty( DOMAIN_FIELD )
+    @JsonProperty( Names.DOMAIN_FIELD )
     public String getDomain() {
         return this.domain;
-    }
-
-    @Override
-    public Optional<Object> getAttribute( String key ) {
-        return Optional.fromNullable( attributes.get( key ) );
     }
 
     @Override
@@ -157,14 +124,13 @@ public final class KryptnosticUser implements User, Serializable {
     public String toString() {
         return "KryptnosticUser [id=" + id + ", email=" + email + ", domain=" + domain + ", username=" + username
                 + ", certificate=" + Arrays.toString( certificate ) + ", groups=" + groups + ", roles=" + roles
-                + ", attributes=" + attributes + "]";
+                + ", confirmationStatus=" + confirmationStatus + "]";
     }
 
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ( ( attributes == null ) ? 0 : attributes.hashCode() );
         result = prime * result + Arrays.hashCode( certificate );
         result = prime * result + ( ( domain == null ) ? 0 : domain.hashCode() );
         result = prime * result + ( ( email == null ) ? 0 : email.hashCode() );
@@ -187,13 +153,6 @@ public final class KryptnosticUser implements User, Serializable {
             return false;
         }
         KryptnosticUser other = (KryptnosticUser) obj;
-        if ( attributes == null ) {
-            if ( other.attributes != null ) {
-                return false;
-            }
-        } else if ( !attributes.equals( other.attributes ) ) {
-            return false;
-        }
         if ( !Arrays.equals( certificate, other.certificate ) ) {
             return false;
         }
@@ -253,7 +212,7 @@ public final class KryptnosticUser implements User, Serializable {
         public byte[]          certificate;
         public Set<UUID>       groups;
         public Set<String>     roles;
-        public UserAttributes  attributes;
+        public boolean         confirmationStatus;
 
         public HeraclesUserBuilder( String email ) {
             this.email = email;
@@ -262,7 +221,7 @@ public final class KryptnosticUser implements User, Serializable {
             this.familyName = "";
             this.certificate = new byte[ 0 ];
             this.groups = Sets.newConcurrentHashSet();
-            this.attributes = new UserAttributes( Maps.<String, Object> newConcurrentMap() );
+            this.confirmationStatus = false;
             this.roles = Sets.newConcurrentHashSet();
         }
 
@@ -289,16 +248,6 @@ public final class KryptnosticUser implements User, Serializable {
 
         public HeraclesUserBuilder withEmail( String email ) {
             this.email = email;
-            return this;
-        }
-
-        public HeraclesUserBuilder withGivenName( String givenName ) {
-            this.givenName = givenName;
-            return this;
-        }
-
-        public HeraclesUserBuilder withFamilyName( String familyName ) {
-            this.familyName = familyName;
             return this;
         }
 
@@ -332,15 +281,17 @@ public final class KryptnosticUser implements User, Serializable {
             this.groups.addAll( groups );
             return this;
         }
+        
+        public HeraclesUserBuilder withConfirmationStatus( boolean confirmationStatus ) {
+            this.confirmationStatus = confirmationStatus;
+            return this;
+        }
 
         private void addRoles( String role ) {
             this.roles.add( role );
         }
 
-        public HeraclesUserBuilder withAttributes( Map<String, String> attributes ) {
-            this.attributes.putAll( attributes );
-            return this;
-        }
+        
 
         public KryptnosticUser build() {
             Preconditions.checkNotNull( this.domain );
@@ -356,13 +307,8 @@ public final class KryptnosticUser implements User, Serializable {
                     Optional.of( certificate ),
                     groups,
                     roles,
-                    attributes );
+                    confirmationStatus );
         }
-    }
-
-    @Override
-    public int getUserVersion() {
-        return (int) MoreObjects.firstNonNull( getAttribute( Names.VERSION_FIELD ), 0 );
     }
 
 }
