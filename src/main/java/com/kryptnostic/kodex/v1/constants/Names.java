@@ -4,15 +4,13 @@ public final class Names {
     private Names() {}
 
     public static final String ADDRESS_FIELD                   = "address";
-    public static final String ATTRIBUTES_FIELD                = "properties";
+    public static final String CONFIRMATION_STATUS_FIELD       = "confirmationStatus";
     public static final String BUSINESS_TYPE_FIELD             = "businessType";
     public static final String CLASS_FIELD                     = "@class";
     public static final String COUNTRY_FIELD                   = "country";
     public static final String CYPHER_FIELD                    = "cypher";
     public static final String EMAIL_FIELD                     = "email";
     public static final String USERNAME_FIELD                  = "name";
-    public static final String GIVEN_NAME_FIELD                = "givenName";
-    public static final String FAMILY_NAME_FIELD               = "familyName";
     public static final String METADATA_FIELD                  = "metadata";
     @Deprecated
     public static final String REALM_FIELD                     = "realm";

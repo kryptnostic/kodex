@@ -44,7 +44,4 @@ public interface RegistrationApi {
 
     @POST( CONTROLLER + INVITATION )
     Response sendInvitationEmail( @Body EmailRequest emailRequest );
-
-    @GET( CONTROLLER + CONFIRMATION )
-    boolean getConfirmationStatus();
 }
