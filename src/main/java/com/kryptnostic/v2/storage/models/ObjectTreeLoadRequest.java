@@ -15,14 +15,12 @@ import com.kryptnostic.v2.constants.Names;
 @Immutable
 public class ObjectTreeLoadRequest {
     private static final int                    DEFAULT_DEPTH = 0;
-    @Deprecated // no longer used once the new getObjectByTypeAndLoadLevelPaged calls are in use
+    @Deprecated
     private final Set<UUID>                     objectIds;
     @Deprecated
     private final Map<UUID, VersionedObjectKey> createdAfter;
     @Deprecated
     private final Optional<Integer>             pageSize;
-
-    private final Map<UUID, Set<UUID>>          objectIdsToFilter;
 
     private final Map<UUID, Set<LoadLevel>>     typeLoadLevels;
     private final int                           loadDepth;
@@ -50,17 +48,11 @@ public class ObjectTreeLoadRequest {
         this.typeLoadLevels = typeLoadLevels;
         this.createdAfter = createdAfter.or( ImmutableMap.<UUID, VersionedObjectKey> of() );
         this.loadDepth = loadDepth.or( DEFAULT_DEPTH );
-        this.objectIdsToFilter = objectIdsToFilter.or( ImmutableMap.<UUID, Set<UUID>> of() );
     }
 
     @JsonProperty( Names.OBJECT_IDS_FIELD )
     public Set<UUID> getObjectIds() {
         return objectIds;
-    }
-
-    @JsonProperty( Names.OBJECTS_FILTER_FIELD )
-    public Map<UUID, Set<UUID>> getObjectIdsToFilter() {
-        return objectIdsToFilter;
     }
 
     @JsonProperty( Names.LOAD_LEVELS_FIELD )
