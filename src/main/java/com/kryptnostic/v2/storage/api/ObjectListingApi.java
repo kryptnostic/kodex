@@ -24,7 +24,6 @@ public interface ObjectListingApi {
     String PAGE_SIZE      = Names.SIZE_FIELD;
     String ID             = Names.ID_FIELD;
 
-    String LATEST_PATH    = "/latest";
     String USER_ID_PATH   = "/{" + ID + "}";
     String TYPE_ID_PATH   = "/type/{" + TYPE + "}";
     String TYPE_NAME_PATH = "/typename/{" + TYPE + "}";

@@ -33,7 +33,6 @@ public interface ObjectStorageApi {
     // Parameter names
     String ID                            = Names.ID_FIELD;
     String VERSION                       = "version";
-    String BLOCK                         = "block";
     String TYPE_NAME_FIELD               = "type";
     String ROOT_OBJECT_ID_VAR            = "rootObjectId";
     String ROOT_OBJECT_VERSION_VAR       = "rootObjectVersion";
@@ -65,7 +64,6 @@ public interface ObjectStorageApi {
     String NEXT_PAGE_PATH                = "/next";
     String INDEX_SEGMENTS_PATH           = "/index-segments";
 
-    String TYPE_NAME_PATH                = TYPE_PATH + "/{" + TYPE_NAME_FIELD + "}";
     String OBJECT_METADATA_PATH          = OBJECTMETADATA_PATH + OBJECT_ID_PATH;
     String VERSIONED_OBJECT_ID_PATH      = OBJECT_ID_PATH + VERSION_PATH;
     String LATEST_OBJECT_ID_PATH         = LATEST + OBJECT_ID_PATH;
