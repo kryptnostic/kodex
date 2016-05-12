@@ -11,10 +11,8 @@ public final class Names {
     public static final String ID_FIELD                        = "id";
     public static final String USER_FIELD                      = "user";
     public static final String TOKEN_FIELD                     = "token";
-    public static final String RESULTS_FIELD                   = "results";
     public static final String VERSION_FIELD                   = "version";
     public static final String INDEX_FIELD                     = "index";
-    public static final String QUERY_FIELD                     = "query";
     public static final String CREATED_TIME                    = "timeCreated";
     public static final String TYPE_FIELD                      = "type";
     public static final String PARENT_OBJECT_ID_FIELD          = "parentObjectId";
@@ -40,12 +38,10 @@ public final class Names {
     public static final String OBJECT_SEARCH_PAIR              = "objectSearchPair";
     public static final String DOMAIN_AVAILABLE_RESOURCE       = "domainAvailableResource";
     public static final String DOMAIN_TOTAL_RESOURCE           = "domainTotalResource";
-    public static final String CREATE_OBJECT_REQUEST_FIELD     = "createObjectRequest";
     public static final String OBJECTS_FILTER_FIELD            = "objectIdsToFilter";
     public static final String CREATED_AFTER_FIELD             = "createdAfter";
     public static final String ACL_ID_FIELD                    = "aclId";
     public static final String OBJECT_CLOCK_FIELD              = "objectClock";
     public static final String PAGE_SIZE                       = "pageSize";
-    public static final String OFFSET                          = "offset";
 
 }

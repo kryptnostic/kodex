@@ -41,8 +41,6 @@ public final class Names {
     public static final String VERSION_FIELD                   = "version";
     public static final String INDEX_FIELD                     = "index";
     public static final String TOTAL_FIELD                     = "total";
-    public static final String OFFSET_FIELD                    = "offset";
-    public static final String MAX_FIELD                       = "max";
     public static final String QUERY_FIELD                     = "query";
     public static final String TIME_FIELD                      = "time";
     public static final String OWNERS_FIELD                    = "owners";

@@ -34,7 +34,6 @@ public interface KeyStorageApi {
     String SALT_PATH                          = "/salt";
     String CRYPTO_SERVICE_PATH                = "/cryptoservice";
     String CRYPTO_SERVICES_PATH               = "/cryptoservices";
-    String VERSIONED_CRYPTO_SERVICES_PATH     = "/versioned/cryptoservices";
 
     String AES_MASTER_KEY                     = "/aes";
     String AES_CRYPTO_SERVICE_PATH            = AES_MASTER_KEY + "/cryptoservice";
