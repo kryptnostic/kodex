@@ -3,47 +3,62 @@ package com.kryptnostic.v2.crypto;
 import java.io.DataInput;
 import java.io.IOException;
 import java.io.ObjectOutput;
+import java.util.BitSet;
 import java.util.EnumSet;
 
+import com.google.common.base.Preconditions;
 import com.kryptnostic.kodex.v1.crypto.ciphers.Cypher;
 
+/**
+ * BlockCiphertext elements.
+ * 
+ * @author Drew Bailey &lt;drew@kryptnostic.com&gt;
+ * @author Matthew Tamayo-Rios &lt;matthew@kryptnostic.com&gt;
+ *
+ */
 public enum CryptoMaterial {
-    IV, TAG, CONTENTS, SALT;
+    IV,
+    TAG,
+    CONTENTS,
+    SALT;
+    private static final int              LENGTH    = CryptoMaterial.values().length;
+    private static final CryptoMaterial[] materials = CryptoMaterial.values();
 
     public static EnumSet<CryptoMaterial> requiredByCypher( Cypher cypher ) {
-        if ( Cypher.NONE.equals( cypher ) ) {
-            return EnumSet.noneOf( CryptoMaterial.class );
-        }
+        Preconditions.checkNotNull( cypher, "Cipher cannot be null." );
         EnumSet<CryptoMaterial> required = EnumSet.of( IV, CONTENTS );
-        if ( Cypher.AES_GCM_128.equals( cypher ) || Cypher.AES_GCM_128_SALTED.equals( cypher ) ) {
-            required.add( TAG );
+        switch ( cypher ) {
+            case NONE:
+                return EnumSet.noneOf( CryptoMaterial.class );
+            case AES_GCM_128:
+            case AES_GCM_128_SALTED:
+                required.add( TAG );
+                break;
+            default:
+                break;
         }
-        if ( cypher != null && cypher.isSalted() ) {
+
+        if ( cypher.isSalted() ) {
             required.add( SALT );
         }
+
         return required;
     }
 
     public static void serializeEnumSet( ObjectOutput out, EnumSet<CryptoMaterial> set ) throws IOException {
-        out.writeBoolean( set.contains( CryptoMaterial.IV ) );
-        out.writeBoolean( set.contains( CryptoMaterial.CONTENTS ) );
-        out.writeBoolean( set.contains( CryptoMaterial.SALT ) );
-        out.writeBoolean( set.contains( CryptoMaterial.TAG ) );
+        BitSet s = new BitSet( LENGTH );
+        for ( CryptoMaterial cm : set ) {
+            s.set( cm.ordinal() );
+        }
+        out.write( s.toByteArray() );
     }
 
     public static EnumSet<CryptoMaterial> deserializeToEnumSet( DataInput in ) throws IOException {
+        byte[] b = new byte[ ( LENGTH / Byte.SIZE ) + ( ( LENGTH % Byte.SIZE ) > 0 ? 1 : 0 ) ];
+        BitSet s = BitSet.valueOf( b );
         EnumSet<CryptoMaterial> mats = EnumSet.<CryptoMaterial> noneOf( CryptoMaterial.class );
-        if ( in.readBoolean() ) {
-            mats.add( CryptoMaterial.IV );
-        }
-        if ( in.readBoolean() ) {
-            mats.add( CryptoMaterial.CONTENTS );
-        }
-        if ( in.readBoolean() ) {
-            mats.add( CryptoMaterial.SALT );
-        }
-        if ( in.readBoolean() ) {
-            mats.add( CryptoMaterial.TAG );
+        for ( int i = s.nextSetBit( 0 ); i >= 0; i = s.nextSetBit( i + 1 ) ) {
+            mats.add( materials[ i ] );
         }
         return mats;
     }
