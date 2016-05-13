@@ -51,6 +51,8 @@ public enum Cypher {
 
     public static final Logger      logger          = LoggerFactory.getLogger( Cypher.class );
 
+    private static final Cypher[]   values          = Cypher.values();
+
     public static final Cypher      DEFAULT         = AES_CTR_128;
 
     private static final String     CIPHER_ENCODING = "%s/%s/%s";
@@ -69,6 +71,10 @@ public enum Cypher {
 
     public Cipher getInstance() throws NoSuchAlgorithmException, NoSuchPaddingException {
         return Cipher.getInstance( asCipher() );
+    }
+
+    public static Cypher[] getValues() {
+        return values;
     }
 
     private String asCipher() {

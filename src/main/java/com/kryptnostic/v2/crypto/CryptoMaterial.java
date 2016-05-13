@@ -11,7 +11,7 @@ import com.kryptnostic.kodex.v1.crypto.ciphers.Cypher;
 
 /**
  * BlockCiphertext elements.
- * 
+ *
  * @author Drew Bailey &lt;drew@kryptnostic.com&gt;
  * @author Matthew Tamayo-Rios &lt;matthew@kryptnostic.com&gt;
  *
@@ -61,5 +61,9 @@ public enum CryptoMaterial {
             mats.add( materials[ i ] );
         }
         return mats;
+    }
+
+    public static CryptoMaterial[] getValues() {
+        return materials;
     }
 }
