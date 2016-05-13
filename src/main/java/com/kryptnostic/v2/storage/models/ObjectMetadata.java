@@ -24,6 +24,7 @@ public class ObjectMetadata {
 
     private final UUID     type;
     private final UUID     ACLId;
+    
     private final long     size;
     private final UUID     creator;
     private final DateTime createdTime;
