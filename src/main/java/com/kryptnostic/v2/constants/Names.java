@@ -43,8 +43,6 @@ public final class Names {
     public static final String ACL_ID_FIELD                    = "aclId";
     public static final String OBJECT_CLOCK_FIELD              = "objectClock";
     public static final String PAGE_SIZE                       = "pageSize";
-    public static final String EVENT_TYPE_FIELD                = "eventType";
-    public static final String SOURCE_TYPE_FIELD               = "sourceType";
-    public static final String SOURCE                          = "source";
-
+    public static final String PROPAGATION_DIRECTION_FIED      = "propagationDirection";
+    public static final String TTL_MILLIS                      = "ttlMillis";
 }

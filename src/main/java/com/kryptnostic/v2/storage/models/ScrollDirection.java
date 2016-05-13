@@ -1,6 +1,6 @@
 package com.kryptnostic.v2.storage.models;
 
-public enum PagingDirection {
+public enum ScrollDirection {
     BACKWARDS,
     FORWARDS
 }
