@@ -9,6 +9,7 @@ import com.kryptnostic.kodex.v1.crypto.ciphers.BlockCiphertext;
 import com.kryptnostic.v2.constants.Names;
 import com.kryptnostic.v2.storage.models.CreateMetadataObjectRequest;
 import com.kryptnostic.v2.storage.models.CreateObjectRequest;
+import com.kryptnostic.v2.storage.models.Event;
 import com.kryptnostic.v2.storage.models.IndexSegmentRequest;
 import com.kryptnostic.v2.storage.models.ObjectMetadata;
 import com.kryptnostic.v2.storage.models.ObjectMetadataEncryptedNode;
@@ -120,6 +121,21 @@ public interface ObjectStorageApi {
             @Path( VERSION ) long version,
             @Body BlockCiphertext ciphertext);
 
+    
+    /**
+     * API for storing plaintext events
+     *
+     * @param objectId
+     * @param ciphertext
+     * @return
+     */
+    @PUT( CONTROLLER + OBJECT_ID_PATH + VERSION_PATH )
+    Response setEvent(
+            @Path( ID ) UUID objectId,
+            @Path( VERSION ) long version,
+            @Body Event ciphertext);
+
+    
     /**
      * Cached Lazy Person API for reading base64 encoded block ciphertexts. Objects readable by this API will be
      * available through the more efficient byte level APIs.

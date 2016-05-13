@@ -21,7 +21,7 @@ public class CreateObjectRequest {
     private final boolean                      inheritingCryptoService;
     private final boolean                      locked;
     private final Cypher                       cipher;
-
+    
     public CreateObjectRequest() {
         this(
                 TypeUUIDs.DEFAULT_TYPE,
