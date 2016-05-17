@@ -3,6 +3,7 @@ package com.kryptnostic.v2.storage.models;
 import java.util.Map;
 import java.util.UUID;
 
+import javax.annotation.CheckForNull;
 import javax.annotation.concurrent.Immutable;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -23,10 +24,14 @@ public class ObjectTreeLoadResponse {
         this.nextPage = nextPage;
     }
 
+    @CheckForNull
     public static String nextPage(
             UUID aclId,
-            int pageSize,
+            Integer pageSize,
             VersionedObjectKey latestObject ) {
+        if ( latestObject == null || aclId == null || pageSize == null ) {
+            return null;
+        }
         return String.format( template,
                 aclId.toString(),
                 pageSize,
