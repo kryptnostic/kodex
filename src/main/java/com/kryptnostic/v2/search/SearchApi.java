@@ -71,5 +71,5 @@ public interface SearchApi {
      * getAndAddSegmentCount is called, no matter what count the client passes in)
      */
     @POST( CONTROLLER + OBJECT_ID_PATH + COUNT_PATH )
-    public int getAndAddSegmentCount( @Path( OBJECT_ID ) UUID objectId, @Path( COUNT ) int count );
+    int getAndAddSegmentCount( @Path( OBJECT_ID ) UUID objectId, @Path( COUNT ) int count );
 }
