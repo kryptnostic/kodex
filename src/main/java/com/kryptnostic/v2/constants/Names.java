@@ -45,4 +45,5 @@ public final class Names {
     public static final String PAGE_SIZE                       = "pageSize";
     public static final String PROPAGATION_DIRECTION_FIED      = "propagationDirection";
     public static final String TTL_MILLIS                      = "ttlMillis";
+    public static final String BLOCK_CIPHERTEXT                = "blockCiphertext";
 }
