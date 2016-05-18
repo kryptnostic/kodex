@@ -115,7 +115,7 @@ public interface ObjectStorageApi {
      * @param ciphertext
      * @return
      */
-    @PUT( CONTROLLER + OBJECT_ID_PATH + VERSION_PATH )
+    @PUT( CONTROLLER + VERSIONED_OBJECT_ID_PATH )
     Response setObjectFromBlockCiphertext(
             @Path( ID ) UUID objectId,
             @Path( VERSION ) long version,
@@ -129,7 +129,7 @@ public interface ObjectStorageApi {
      * @param ciphertext
      * @return
      */
-    @PUT( CONTROLLER + OBJECT_ID_PATH + VERSION_PATH )
+    @PUT( CONTROLLER + VERSIONED_OBJECT_ID_PATH )
     Response setEvent(
             @Path( ID ) UUID objectId,
             @Path( VERSION ) long version,
@@ -155,16 +155,16 @@ public interface ObjectStorageApi {
      * @param iv
      * @return
      */
-    @PUT( CONTROLLER + OBJECT_ID_PATH + VERSION_PATH + IV_PATH )
+    @PUT( CONTROLLER + VERSIONED_OBJECT_ID_PATH + IV_PATH )
     Response setObjectIv( @Path( ID ) UUID objectId, @Path( VERSION ) long version, @Body byte[] iv);
 
-    @PUT( CONTROLLER + OBJECT_ID_PATH + VERSION_PATH + CONTENTS_PATH )
+    @PUT( CONTROLLER + VERSIONED_OBJECT_ID_PATH + CONTENTS_PATH )
     Response setObjectContent( @Path( ID ) UUID objectId, @Path( VERSION ) long version, @Body byte[] content);
 
-    @PUT( CONTROLLER + OBJECT_ID_PATH + VERSION_PATH + SALT_PATH )
+    @PUT( CONTROLLER + VERSIONED_OBJECT_ID_PATH + SALT_PATH )
     Response setObjectSalt( @Path( ID ) UUID objectId, @Path( VERSION ) long version, @Body byte[] salt);
 
-    @PUT( CONTROLLER + OBJECT_ID_PATH + VERSION_PATH + TAG_PATH )
+    @PUT( CONTROLLER + VERSIONED_OBJECT_ID_PATH + TAG_PATH )
     Response setObjectTag( @Path( ID ) UUID objectId, @Path( VERSION ) long version, @Body byte[] tag);
 
     @GET( CONTROLLER + VERSIONED_OBJECT_ID_PATH + CONTENTS_PATH )
@@ -182,7 +182,7 @@ public interface ObjectStorageApi {
     @GET( CONTROLLER + OBJECT_METADATA_PATH )
     ObjectMetadata getObjectMetadata( @Path( ID ) UUID id);
 
-    @DELETE( CONTROLLER + OBJECT_ID_PATH + VERSION_PATH )
+    @DELETE( CONTROLLER + VERSIONED_OBJECT_ID_PATH )
     Response delete( @Path( ID ) UUID id, @Path( VERSION ) long version);
 
     @DELETE( CONTROLLER + OBJECT_ID_PATH )
