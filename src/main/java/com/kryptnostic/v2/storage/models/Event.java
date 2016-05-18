@@ -6,6 +6,7 @@ import java.util.concurrent.TimeUnit;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.kryptnostic.v2.constants.Names;
 
@@ -23,10 +24,10 @@ public class Event {
     @JsonCreator
     public Event(
             @JsonProperty( Names.PROPAGATION_DIRECTION_FIED ) Set<PropagationDirections> propagationDirections,
-            @JsonProperty( Names.TTL_MILLIS ) long ttlMillis,
+            @JsonProperty( Names.TTL_MILLIS ) Optional<Long> ttlMillis,
             @JsonProperty( Names.CONTENTS ) String contents) {
         this.propagationDirections = propagationDirections;
-        this.ttlMillis = ttlMillis;
+        this.ttlMillis = ttlMillis.or( 0L );
         this.contents = contents;
     }
 
@@ -56,7 +57,7 @@ public class Event {
 
     public static final class EventBuilder {
         private Set<PropagationDirections> propagationDirections = EnumSet.noneOf( PropagationDirections.class );
-        private long                       ttlMillis;
+        private Optional<Long>             ttlMillis             = Optional.absent();
         private String                     contents;
 
         public EventBuilder() {}
@@ -70,11 +71,11 @@ public class Event {
         }
 
         public void ttlMillis( long ttlMillis ) {
-            this.ttlMillis = ttlMillis;
+            this.ttlMillis = Optional.of( ttlMillis );
         }
 
         public void ttl( long duration, TimeUnit timeUnit ) {
-            this.ttlMillis = timeUnit.toMillis( duration );
+            this.ttlMillis = Optional.of( timeUnit.toMillis( duration ) );
         }
 
         public EventBuilder data( String contents ) {
