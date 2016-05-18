@@ -3,6 +3,7 @@ package com.kryptnostic.v2.storage.models;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Optional;
+import com.kryptnostic.kodex.v1.crypto.ciphers.BlockCiphertext;
 import com.kryptnostic.kodex.v1.crypto.ciphers.Cypher;
 import com.kryptnostic.v2.constants.Names;
 import com.kryptnostic.v2.storage.types.TypeUUIDs;
@@ -19,7 +20,8 @@ public class CreateMetadataObjectRequest extends CreateObjectRequest {
                 Cypher.DEFAULT,
                 Optional.<Boolean> absent(),
                 Optional.<Boolean> absent(),
-                Optional.<Boolean> absent() );
+                Optional.<Boolean> absent(),
+                Optional.<BlockCiphertext> absent() );
         this.address = address;
         this.score = Optional.absent();
     }
@@ -32,7 +34,8 @@ public class CreateMetadataObjectRequest extends CreateObjectRequest {
             @JsonProperty( Names.SCORE_FIELD ) Optional<Double> score,
             @JsonProperty( Names.INHERITING_OWNERSHIP_FIELD ) Optional<Boolean> inheritOwnership,
             @JsonProperty( Names.INHERITING_CRYPTO_SERVICE_FIELD ) Optional<Boolean> inheritCryptoService,
-            @JsonProperty( Names.LOCKED_FIELD ) Optional<Boolean> locked) {
+            @JsonProperty( Names.LOCKED_FIELD ) Optional<Boolean> locked,
+            @JsonProperty( Names.BLOCK_CIPHERTEXT ) Optional<BlockCiphertext> contents) {
         super(
                 TypeUUIDs.INDEX_METADATA,
                 parentObjectId,
@@ -40,7 +43,8 @@ public class CreateMetadataObjectRequest extends CreateObjectRequest {
                 Cypher.DEFAULT,
                 inheritOwnership,
                 inheritCryptoService,
-                locked );
+                locked,
+                contents );
         this.address = address;
         this.score = score;
     }
