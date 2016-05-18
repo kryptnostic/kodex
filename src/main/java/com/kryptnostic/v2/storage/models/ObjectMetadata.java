@@ -24,7 +24,7 @@ public class ObjectMetadata {
 
     private final UUID     type;
     private final UUID     ACLId;
-    
+
     private final long     size;
     private final UUID     creator;
     private final DateTime createdTime;
@@ -206,6 +206,13 @@ public class ObjectMetadata {
         } else if ( !type.equals( other.type ) ) return false;
         if ( version != other.version ) return false;
         return true;
+    }
+
+    @Override
+    public String toString() {
+        return "ObjectMetadata [id=" + id + ", version=" + version + ", clock=" + clock + ", type=" + type + ", ACLId="
+                + ACLId + ", size=" + size + ", creator=" + creator + ", createdTime=" + createdTime + ", cipherMethod="
+                + cipherMethod + "]";
     }
 
 }
