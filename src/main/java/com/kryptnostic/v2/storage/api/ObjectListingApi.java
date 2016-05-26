@@ -42,8 +42,8 @@ public interface ObjectListingApi {
     @GET( CONTROLLER + OBJECTS + USER_ID_PATH + PAGE_SIZE_PATH + PAGE_PATH )
     Set<UUID> getAllObjectIdsPaged(
             @Path( ID ) UUID userId,
-            @Path( PAGE ) Integer offset,
-            @Path( PAGE_SIZE ) Integer pageSize);
+            @Path( PAGE ) int offset,
+            @Path( PAGE_SIZE ) int pageSize);
 
     @GET( CONTROLLER + VERSIONED + OBJECTS + USER_ID_PATH + TYPE_ID_PATH )
     Set<VersionedObjectKey> getVersionedObjectKeysByType( @Path( ID ) UUID userId, @Path( TYPE ) UUID type);
@@ -55,15 +55,15 @@ public interface ObjectListingApi {
     Set<UUID> getObjectIdsByTypePaged(
             @Path( ID ) UUID userId,
             @Path( TYPE ) UUID typeId,
-            @Path( PAGE ) Integer offset,
-            @Path( PAGE_SIZE ) Integer pageSize);
+            @Path( PAGE ) int offset,
+            @Path( PAGE_SIZE ) int pageSize);
 
     @GET( CONTROLLER + VERSIONED + OBJECTS + USER_ID_PATH + TYPE_ID_PATH + PAGE_SIZE_PATH + PAGE_PATH )
     Set<VersionedObjectKey> getVersionedObjectKeysByTypePaged(
             @Path( ID ) UUID userId,
             @Path( TYPE ) UUID typeId,
-            @Path( PAGE ) Integer offset,
-            @Path( PAGE_SIZE ) Integer pageSize);
+            @Path( PAGE ) int offset,
+            @Path( PAGE_SIZE ) int pageSize);
 
     /**
      * @param typeName
