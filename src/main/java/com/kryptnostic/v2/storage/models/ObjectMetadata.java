@@ -20,7 +20,6 @@ public class ObjectMetadata {
 
     private final UUID     id;
     private final long     version;
-    private final long     clock;
 
     private final UUID     type;
     private final UUID     ACLId;
@@ -34,7 +33,6 @@ public class ObjectMetadata {
     public ObjectMetadata(
             @JsonProperty( Names.ID_FIELD ) UUID id,
             @JsonProperty( Names.VERSION_FIELD ) long version,
-            @JsonProperty( Names.OBJECT_CLOCK_FIELD ) long clock,
             @JsonProperty( Names.SIZE_FIELD ) long size,
             @JsonProperty( Names.TYPE_FIELD ) UUID type,
             @JsonProperty( Names.ACL_ID_FIELD ) UUID aclId,
@@ -43,7 +41,6 @@ public class ObjectMetadata {
             @JsonProperty( Names.CREATED_TIME ) DateTime createdTime) {
         this.id = id;
         this.version = version;
-        this.clock = clock;
         this.type = type;
         this.ACLId = aclId;
 
@@ -64,7 +61,6 @@ public class ObjectMetadata {
                 objectId,
                 version,
                 0l,
-                0l,
                 request.getType(),
                 aclId,
                 creator,
@@ -83,7 +79,6 @@ public class ObjectMetadata {
     public static ObjectMetadata newRootObject( CreateObjectRequest request, UUID user, UUID objectId ) {
         return new ObjectMetadata(
                 objectId,
-                0l,
                 0l,
                 0l,
                 request.getType(),
@@ -132,14 +127,6 @@ public class ObjectMetadata {
     @JsonProperty( Names.CYPHER_FIELD )
     public Cypher getCipherMethod() {
         return cipherMethod;
-    }
-
-    /**
-     * @return the clock
-     */
-    @JsonProperty( Names.OBJECT_CLOCK_FIELD )
-    public long getClock() {
-        return clock;
     }
 
     /**
@@ -210,7 +197,7 @@ public class ObjectMetadata {
 
     @Override
     public String toString() {
-        return "ObjectMetadata [id=" + id + ", version=" + version + ", clock=" + clock + ", type=" + type + ", ACLId="
+        return "ObjectMetadata [id=" + id + ", version=" + version + ",  type=" + type + ", ACLId="
                 + ACLId + ", size=" + size + ", creator=" + creator + ", createdTime=" + createdTime + ", cipherMethod="
                 + cipherMethod + "]";
     }
