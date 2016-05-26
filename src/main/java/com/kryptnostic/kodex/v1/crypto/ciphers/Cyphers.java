@@ -54,15 +54,12 @@ public final class Cyphers {
             Cipher cipher = cypher.getInstance();
             cipher.init( Cipher.DECRYPT_MODE, key );
             return cipher.doFinal( Preconditions.checkNotNull( ciphertext, "Ciphertext cannot be null" ) );
-        } catch ( NoSuchAlgorithmException e ) {
-            throw new SecurityConfigurationException( e );
-        } catch ( NoSuchPaddingException e ) {
-            throw new SecurityConfigurationException( e );
-        } catch ( InvalidKeyException e ) {
-            throw new SecurityConfigurationException( e );
-        } catch ( IllegalBlockSizeException e ) {
-            throw new SecurityConfigurationException( e );
-        } catch ( BadPaddingException e ) {
+        } catch (
+                NoSuchAlgorithmException
+                | NoSuchPaddingException
+                | InvalidKeyException
+                | IllegalBlockSizeException
+                | BadPaddingException e ) {
             throw new SecurityConfigurationException( e );
         }
     }
@@ -73,15 +70,12 @@ public final class Cyphers {
             Cipher cipher = cypher.getInstance();
             cipher.init( Cipher.ENCRYPT_MODE, key );
             return cipher.doFinal( secretKey );
-        } catch ( NoSuchAlgorithmException e ) {
-            throw new SecurityConfigurationException( e );
-        } catch ( NoSuchPaddingException e ) {
-            throw new SecurityConfigurationException( e );
-        } catch ( InvalidKeyException e ) {
-            throw new SecurityConfigurationException( e );
-        } catch ( IllegalBlockSizeException e ) {
-            throw new SecurityConfigurationException( e );
-        } catch ( BadPaddingException e ) {
+        } catch (
+                NoSuchAlgorithmException
+                | NoSuchPaddingException
+                | InvalidKeyException
+                | IllegalBlockSizeException
+                | BadPaddingException e ) {
             throw new SecurityConfigurationException( e );
         }
     }

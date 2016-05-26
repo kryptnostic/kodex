@@ -3,6 +3,7 @@ package com.kryptnostic.kodex.v1.crypto.ciphers;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidParameterException;
 import java.security.NoSuchAlgorithmException;
+import java.util.Set;
 
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
@@ -119,14 +120,14 @@ public enum Cypher {
         return valueOf( name );
     }
 
+    static final Set<Integer> ACCEPTABLE_KEY_SIZES = ImmutableSet.of( 128, 256, 1024, 2048, 4096 );
     // @JsonCreator
     public static Cypher createCipher( CipherDescription description ) {
         CryptoAlgorithm algorithm = description.getAlgorithm();
         Mode mode = description.getMode();
         Padding padding = description.getPadding();
         int keySize = description.getKeySize();
-        Preconditions.checkArgument(
-                ImmutableSet.of( 128, 256, 1024, 2048, 4096 ).contains( keySize ),
+        Preconditions.checkArgument( ACCEPTABLE_KEY_SIZES.contains( Integer.valueOf( keySize ) ),
                 "Only 128 bit and 256 key sizes are supported." );
 
         if ( algorithm.equals( CryptoAlgorithm.AES ) ) {
