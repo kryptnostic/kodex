@@ -5,8 +5,10 @@ import java.io.IOException;
 import java.io.ObjectOutput;
 import java.util.BitSet;
 import java.util.EnumSet;
+import java.util.Map;
 
 import com.google.common.base.Preconditions;
+import com.google.common.collect.Maps;
 import com.kryptnostic.kodex.v1.crypto.ciphers.Cypher;
 
 /**
@@ -23,6 +25,7 @@ public enum CryptoMaterial {
     SALT;
     private static final int              LENGTH    = CryptoMaterial.values().length;
     private static final CryptoMaterial[] materials = CryptoMaterial.values();
+    private static transient Map<Cypher, EnumSet<CryptoMaterial>> cachedReqByCypher = Maps.newConcurrentMap();
 
     public static EnumSet<CryptoMaterial> requiredByCypher( Cypher cypher ) {
         Preconditions.checkNotNull( cypher, "Cipher cannot be null." );
@@ -41,7 +44,7 @@ public enum CryptoMaterial {
         if ( cypher.isSalted() ) {
             required.add( SALT );
         }
-
+        cachedReqByCypher.put( cypher, required );
         return required;
     }
 
