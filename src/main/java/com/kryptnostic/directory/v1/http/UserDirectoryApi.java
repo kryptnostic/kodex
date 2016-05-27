@@ -145,6 +145,12 @@ public interface UserDirectoryApi {
 
     @GET( CONTROLLER + INITIALIZED + REALM_PATH )
     Iterable<UUID> listInitializedUserInRealm( @Path( REALM ) String realm ) throws BadRequestException;
+
+    @GET( CONTROLLER + USERS + INITIALIZED )
+    Iterable<UUID> listUniversalInitializedUsers();
+
+    @GET( CONTROLLER + USERS )
+    Iterable<UUID> listUniversalUsers();
     
     @GET( CONTROLLER + VALIDATE + SHARING + EMAIL_PATH )
     UUID getUserIdForSharing( @Path( EMAIL ) String email) throws ResourceNotFoundException, ForbiddenException;
