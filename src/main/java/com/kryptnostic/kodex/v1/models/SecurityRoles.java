@@ -7,5 +7,4 @@ public final class SecurityRoles {
     public static final String DEVELOPER  = "DEVELOPER";
     public static final String ADMIN      = "ADMIN";
     public static final String REGISTRAR  = "REGISTRAR";
-    public static final String SUPERVISOR = "SUPERVISOR";
 }

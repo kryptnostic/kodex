@@ -4,6 +4,5 @@ public enum SecurityRole {
     USER,
     DEVELOPER,
     ADMIN,
-    REGISTRAR,
-    SUPERVISOR;
+    REGISTRAR;
 }
