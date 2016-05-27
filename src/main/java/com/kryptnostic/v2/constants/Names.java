@@ -46,4 +46,9 @@ public final class Names {
     public static final String PROPAGATION_DIRECTION_FIED      = "propagationDirection";
     public static final String TTL_MILLIS                      = "ttlMillis";
     public static final String BLOCK_CIPHERTEXT                = "blockCiphertext";
+    public static final String OFFSET                          = "offset";
+    public static final String EVENT_TYPE_FIELD                = "eventType";
+    public static final String SOURCE_TYPE_FIELD               = "sourceType";
+    public static final String SOURCE                          = "source";
+
 }
