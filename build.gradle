@@ -61,11 +61,6 @@ repositories {
 
 }
 
-ext.joda_time_version='2.9.1'
-ext.commons_io_version='2.4'
-ext.commonslang3_version='3.4'
-ext.commons_codec_version='1.10'
-ext.codahale_metrics_version='3.0.2'
 dependencies {
 
     // processor comes from org.inferred.processors
@@ -89,7 +84,7 @@ dependencies {
     /*
      JODA TIME - A better datetime class.
      */
-    compile "joda-time:joda-time:${joda_time_version}"
+    compile "joda-time:joda-time:${jodatime_version}"
 
     // Metrics
     // Awesome reporting-- defaults to Graphite
@@ -115,8 +110,8 @@ dependencies {
      * APACHE COMMONS
      * Logging, StringUtils, RandomStringUtils, IOUtils, and more
      */
-    compile "commons-io:commons-io:${commons_io_version}"
-    compile "org.apache.commons:commons-lang3:${commonslang3_version}"
+    compile "commons-io:commons-io:${commonsio_version}"
+    compile "org.apache.commons:commons-lang3:${commonsLang_version}"
     compile "commons-codec:commons-codec:${commons_codec_version}"
     if( project.hasProperty('developmentMode') && project.developmentMode ) {
         logger.quiet("$project.name is using project dependencies.")
@@ -129,7 +124,7 @@ dependencies {
     compile "com.squareup.retrofit:retrofit:${retrofit_version}"
     compile "com.squareup.okhttp:okhttp-urlconnection:${okhttp_version}"
     compile "com.squareup.okhttp:okhttp:${okhttp_version}"
-    compile "com.squareup.retrofit:retrofit-converters:1.9.0"
+    compile "com.squareup.retrofit:retrofit-converters:${retrofit_version}"
 
     /*
      * TESTING
