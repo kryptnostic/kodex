@@ -26,7 +26,6 @@ apply from: "https://raw.githubusercontent.com/kryptnostic/gradles/master/kryptn
 description = "Kryptnostic Java client"
 group = "com.kryptnostic"
 
-apply from: "publish.gradle"
 apply plugin: "maven-publish"
 
 sourceCompatibility=JavaVersion.VERSION_1_7
