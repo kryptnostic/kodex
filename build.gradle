@@ -14,33 +14,18 @@ buildscript {
 
 plugins {
     id 'org.inferred.processors' version '1.1'
+    id "java"
+    id "maven"
+    id "eclipse"
+    id "idea"
+    id "jacoco"
 }
 
-//Easy semantic version based off describe + tags
-def getVersionName = { ->
-    def stdout = new ByteArrayOutputStream()
-    exec {
-        commandLine 'git', 'describe', '--tags', '--dirty', '--long'
-        standardOutput = stdout
-    }
-    def tagVer = stdout.toString().trim()
-    def semVer = (tagVer =~ /v?([\d\.]+)/)[0][1]
-
-    if (tagVer.contains('dev')) {
-        semVer += "-SNAPSHOT"
-    }
-    return semVer
-}
+apply from: "https://raw.githubusercontent.com/kryptnostic/gradles/master/kryptnostic.gradle"
 
 description = "Kryptnostic Java client"
 group = "com.kryptnostic"
-version = getVersionName()
 
-apply plugin: "java"
-apply plugin: "maven"
-apply plugin: "eclipse"
-apply plugin: "idea"
-apply plugin: "jacoco"
 apply from: "publish.gradle"
 apply plugin: "maven-publish"
 
@@ -200,8 +185,4 @@ eclipse {
     ext.downloadSources = true
     ext.downloadJavadoc = true
     ext.sourceCompatibility=JavaVersion.VERSION_1_7
-}
-
-task wrapper(type: Wrapper) {
-    gradleVersion = '2.14'
 }
